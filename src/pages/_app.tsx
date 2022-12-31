@@ -20,6 +20,15 @@ const global = css`
   html {
     font-family: ${notoSans.style.fontFamily} ${notoSansJP.style.fontFamily};
   }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    appearance: none;
+  }
 `
 
 export default function App({ Component, pageProps }: AppProps) {
