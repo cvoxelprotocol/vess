@@ -1,0 +1,96 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
+import { getVESS } from 'vess-sdk'
+import { CERAMIC_NETWORK } from '@/constants/common'
+import {
+  useSetStateAccount,
+  useSetStateChainId,
+  useSetStateConnectionStatus,
+  useSetStateLoginType,
+  useSetStateMyDid,
+  useSetStateOriginalAddress,
+} from '@/jotai/account'
+import { getWeb3ModalService } from '@/lib/Web3ModalService'
+
+type Ath0UserType = {
+  did: string
+  account: string
+  chainId: number
+}
+
+export const useConnectDID = () => {
+  const setMyDid = useSetStateMyDid()
+  const setAccount = useSetStateAccount()
+  const setOriginalAddress = useSetStateOriginalAddress()
+  const setChainId = useSetStateChainId()
+  const setConnectionStatus = useSetStateConnectionStatus()
+  const setStateLoginType = useSetStateLoginType()
+  const web3ModalService = getWeb3ModalService()
+  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  // clear all state
+  const clearState = (): void => {
+    setMyDid(undefined)
+    setAccount(undefined)
+    setOriginalAddress(undefined)
+    setChainId(undefined)
+    setConnectionStatus('disconnected')
+    setStateLoginType(undefined)
+    queryClient.invalidateQueries(['hasAuthorizedSession'])
+  }
+
+  const connectDID = async (): Promise<void> => {
+    setConnectionStatus('connecting')
+    try {
+      const { account, provider } = await web3ModalService.connectWallet()
+      console.log({ account })
+      console.log({ provider })
+      if (account && provider) {
+        // connect vess sdk
+        const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
+        const { session } = await vess.connect(provider.provider, env)
+        console.log({ session })
+        setMyDid(session.did.parent)
+        setAccount(account)
+        setOriginalAddress(web3ModalService.originalAddress)
+        setChainId(web3ModalService.chainId)
+        setConnectionStatus('connected')
+        setStateLoginType('wallet')
+      } else {
+        setConnectionStatus('disconnected')
+      }
+      queryClient.invalidateQueries(['hasAuthorizedSession'])
+    } catch (error) {
+      console.log(error)
+      await disConnectDID()
+      clearState()
+      if (error instanceof Error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const disConnectDID = async (): Promise<void> => {
+    await web3ModalService.disconnectWallet()
+    vess.disconnect()
+    clearState()
+  }
+  const { data: isAuthorized, isLoading: isCheckingAuth } = useQuery<boolean>(
+    ['hasAuthorizedSession'],
+    () => vess.isAuthenticated(),
+    {
+      enabled: !!vess,
+      staleTime: Infinity,
+      cacheTime: 300000,
+    },
+  )
+
+  return {
+    connectDID,
+    disConnectDID,
+    isAuthorized,
+    isCheckingAuth,
+  }
+}

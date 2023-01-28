@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useIsClient } from '@/hooks/useIsClient'
+import { useIsClient } from './useIsClient'
 import { useStateThemeMode, useStateTypeMode } from '@/jotai/ui'
 
 export const useThemeMode = () => {
@@ -10,19 +10,18 @@ export const useThemeMode = () => {
   const setLightMode = useCallback(() => {
     localStorage.removeItem('theme')
     localStorage.theme = 'light'
-    document.documentElement.classList.remove('dark')
     setMode('light')
   }, [])
 
   const setDarkMode = useCallback(() => {
     localStorage.removeItem('theme')
     localStorage.theme = 'dark'
-    document.documentElement.classList.add('dark')
     setMode('dark')
   }, [])
 
   const setThemeMode = useCallback(() => {
     if (!isClient) {
+      setMode('dark')
       return
     }
 
@@ -38,14 +37,29 @@ export const useThemeMode = () => {
     }
   }, [isClient])
 
-  const setTypoMode = useCallback((newTypo: 'en' | 'jp') => {
-    if (!isClient) {
-      return
+  const initTheme = useCallback(() => {
+    if (!localStorage) return
+    if (localStorage.theme === 'dark' || !('theme' in localStorage)) {
+      setDarkMode()
+    } else {
+      setLightMode()
     }
+  }, [])
+
+  const setTypoMode = useCallback((newTypo: 'en' | 'jp') => {
+    if (!localStorage) return
     localStorage.removeItem('typo')
     localStorage.typo = newTypo
     setTypo(newTypo)
   }, [])
 
-  return { setLightMode, setDarkMode, setThemeMode, themeMode: mode, typoMode: typo, setTypoMode }
+  return {
+    setLightMode,
+    setDarkMode,
+    setThemeMode,
+    initTheme,
+    themeMode: mode,
+    typoMode: typo,
+    setTypoMode,
+  }
 }
