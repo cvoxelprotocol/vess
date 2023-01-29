@@ -27,6 +27,7 @@ import { HomeIcon } from './HomeIcon'
 import { ImportIcon } from './ImportIcon'
 import { LeftArrowIcon } from './LeftArrowIcon'
 import { Location } from './Location'
+import { MailIcon } from './MailIcon'
 import { MessageCircleIcon } from './MessageCircleIcon'
 import { MoonIcon } from './MoonIcon'
 import { Pc } from './Pc'
@@ -36,6 +37,7 @@ import { QuestionIcon } from './QuestionIcon'
 import { SettingIcon } from './SettingIcon'
 import { SunIcon } from './SunIcon'
 import { SurinkIcon } from './SurinkIcon'
+import { TelegramIcon } from './TelegramIcon'
 import { TwitterIcon } from './TwitterIcon'
 import { VoxelIcon } from './VoxelIcon'
 import { VoxelslIcon } from './VoxelsIcon'
@@ -80,6 +82,8 @@ export const ICONS = {
   CHAT: 'chat',
   CARD: 'card',
   PC: 'pc',
+  TELEGRAM: 'telegram',
+  MAIL: 'mail',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -358,6 +362,18 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <Pc />
+          </IconContainer>
+        )
+      case 'telegram':
+        return (
+          <IconContainer>
+            <TelegramIcon />
+          </IconContainer>
+        )
+      case 'mail':
+        return (
+          <IconContainer>
+            <MailIcon />
           </IconContainer>
         )
       default:

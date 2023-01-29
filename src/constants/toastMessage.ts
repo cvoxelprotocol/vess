@@ -33,3 +33,6 @@ export const EVENT_ATTENDANCE_HELD_FAILED = 'Failed to get event attendance...'
 
 export const BUSINESS_PROFILE_SET_SUCCEED = 'Stored business profile Successfully!'
 export const BUSINESS_PROFILE_SET_FAILED = 'Failed to store business profile...'
+
+export const SOCIAL_LINKS_SET_SUCCEED = 'Stored social links Successfully!'
+export const SOCIAL_LINKS_SET_FAILED = 'Failed to store social links...'

@@ -1,69 +1,56 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
-import { Flex } from '@/components/atom/Common/Flex'
-import { Icon, IconsType } from '@/components/atom/Icons/Icon'
+import { FC, useMemo } from 'react'
+import { isMobile } from 'react-device-detect'
+import { Icon } from '@/components/atom/Icons/Icon'
+import { getLinkIcon } from '@/constants/link'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
-  icon: IconsType
-  content?: string | string[]
-  borderRadius?: string
+  linkType?: string
+  value?: string
 }
 
-export const SocialLinkItem: FC<Props> = ({ icon, content, borderRadius }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
+  const { currentTheme } = useVESSTheme()
+  const { openSocialLinkModal } = useVESSWidgetModal()
 
-  const Container = styled.div`
-    height: auto;
-    width: 100%;
-  `
+  const icon = useMemo(() => {
+    return getLinkIcon(linkType)
+  }, [linkType])
+
   const IconContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    width: 100%;
     height: 100%;
-    min-height: 75px;
-    max-height: 100px;
-    background: ${currentTheme.surface3};
-    border-radius: ${borderRadius};
-  `
-  const InfoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 90px;
-    height: 100%;
-    min-height: 75px;
-    max-height: 100px;
-    word-wrap: break-word;
-    word-break: break-all;
-    padding: 0px 8px;
-  `
-  const Content = styled.div`
-    color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.label.medium)};
+    background: ${currentTheme.surface2};
+    border-radius: 12px;
+    width: 56px;
+    height: 56px;
+    opacity: ${value || linkType === 'more' ? 1 : 0.4};
   `
 
+  const handleClick = () => {
+    if (linkType === 'twitter' || linkType === 'github' || linkType === 'url') {
+      window.open(value, '_blank')
+      return
+    } else if (linkType === 'telegram') {
+      if (isMobile) {
+        window.open(`t.me/${value}`, '_blank')
+      } else {
+        window.open(`tg://resolve?domain=${value}`)
+      }
+      return
+    } else if (linkType === 'more') {
+      openSocialLinkModal()
+    }
+  }
+
   return (
-    <Container>
-      <Flex height={'100%'}>
-        <IconContainer>
-          <Icon icon={icon} size={'M'} mainColor={currentTheme.onSurface} />
-        </IconContainer>
-        <InfoContainer>
-          {typeof content === 'string' ? (
-            <Content>{content}</Content>
-          ) : (
-            <>
-              {content?.map((c) => {
-                return <Content key={c}>{c}</Content>
-              })}
-            </>
-          )}
-        </InfoContainer>
-      </Flex>
-    </Container>
+    <IconContainer onClick={() => handleClick()}>
+      <Icon icon={icon} size={'L'} mainColor={currentTheme.onSurface} />
+    </IconContainer>
   )
 }

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 import { IconButton } from '../Buttons/IconButton'
-import { ICONS, ICONSIZE } from '../Icons/Icon'
+import { ICONS } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
@@ -11,13 +11,16 @@ type Props = {
   onClick?: () => void
   editable?: boolean
   onClickEdit?: () => void
+  background?: string
+  EditButtonPosition?: string
 }
 
 export const BaseWidget: FC<Props> = ({
   gridCol,
   gridRow,
   children,
-  onClick,
+  background,
+  EditButtonPosition = '12px',
   onClickEdit,
   editable = false,
 }) => {
@@ -26,14 +29,14 @@ export const BaseWidget: FC<Props> = ({
   const Container = styled.div`
     grid-column: ${gridCol};
     grid-row: ${gridRow};
-    background: ${currentTheme.surface2};
+    background: ${background || currentTheme.surface2};
     border-radius: 40px;
     position: relative;
   `
   const EditButton = styled.div`
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: ${EditButtonPosition};
+    right: ${EditButtonPosition};
     z-index: 10;
     display: ${showEdit ? 'block' : 'none'};
   `
@@ -42,7 +45,10 @@ export const BaseWidget: FC<Props> = ({
     if (onClickEdit) onClickEdit()
   }
   return (
-    <Container onMouseEnter={() => setShowEdit(true)} onMouseLeave={() => setShowEdit(false)}>
+    <Container
+      onMouseEnter={editable ? () => setShowEdit(true) : undefined}
+      onMouseLeave={editable ? () => setShowEdit(false) : undefined}
+    >
       {onClickEdit && editable && (
         <EditButton>
           <IconButton

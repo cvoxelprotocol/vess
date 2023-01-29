@@ -20,6 +20,7 @@ type Props<T extends FieldValues> = {
   inputType?: HTMLInputTypeAttribute
   onClickClear?: () => void
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  disabled?: boolean
 }
 
 export const Input = <T extends FieldValues>({
@@ -36,7 +37,7 @@ export const Input = <T extends FieldValues>({
   width,
   inputType = 'text',
   onClickClear,
-  onChange,
+  disabled = false,
 }: Props<T>) => {
   const { currentTheme, currentTypo } = useVESSTheme()
 
@@ -151,7 +152,9 @@ export const Input = <T extends FieldValues>({
           control={control}
           rules={{ required: required || false, pattern: pattern }}
           name={name}
-          render={({ field }) => <Input placeholder={placeholder} {...field} type={inputType} />}
+          render={({ field }) => (
+            <Input disabled={disabled} placeholder={placeholder} {...field} type={inputType} />
+          )}
         />
         {onClickClear && (
           <TailIconButtonWrapper>

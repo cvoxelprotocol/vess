@@ -1,20 +1,16 @@
-import styled from '@emotion/styled'
-import { FC, useEffect } from 'react'
-import { Avatar } from '@/components/atom/Avatars/Avatar'
+import { FC } from 'react'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
-import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { WorkStyleItem } from '@/components/molecure/Profile/WorkStyleItem'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
   did: string
   gridRow: string
   gridCol: string
+  editable?: boolean
   onClick?: () => void
 }
 
@@ -28,7 +24,7 @@ export const WorkStyleWidget: FC<Props> = (props) => {
 
   return (
     <>
-      <BaseWidget onClickEdit={handleEdit} {...props} editable>
+      <BaseWidget onClickEdit={handleEdit} {...props}>
         <Flex flexDirection={'column'}>
           <WorkStyleItem
             icon={ICONS.DOLLAR}

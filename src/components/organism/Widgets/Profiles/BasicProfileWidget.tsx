@@ -14,6 +14,7 @@ type Props = {
   did: string
   gridRow: string
   gridCol: string
+  editable?: boolean
   onClick?: () => void
 }
 
@@ -60,7 +61,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
 
   return (
     <>
-      <BaseWidget onClickEdit={handleEdit} {...props} editable>
+      <BaseWidget onClickEdit={handleEdit} {...props}>
         <HeaderImage>
           <NextImageContainer
             src={'/base_item_header.png'}

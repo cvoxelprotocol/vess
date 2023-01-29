@@ -1,54 +1,70 @@
 import styled from '@emotion/styled'
-import { FC, useEffect } from 'react'
-import { Avatar } from '@/components/atom/Avatars/Avatar'
-import { Flex } from '@/components/atom/Common/Flex'
-import { ICONS } from '@/components/atom/Icons/Icon'
-import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { FC, useMemo } from 'react'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
-import { WorkStyleItem } from '@/components/molecure/Profile/WorkStyleItem'
-import { useBusinessProfile } from '@/hooks/useBusinessProfile'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { SocialLinkItem } from '@/components/molecure/Profile/SocialLinkItem'
+import { isLinkTypeCandidate } from '@/constants/link'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
   did: string
   gridRow: string
   gridCol: string
+  editable?: boolean
   onClick?: () => void
 }
 
 export const SocialLinksWidget: FC<Props> = (props) => {
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(props.did)
-  const { openModal } = useVESSWidgetModal()
+  const { openSocialLinkModal } = useVESSWidgetModal()
+
+  const twitter = useMemo(() => {
+    return socialLinks?.links?.find((link) => link.linkType === 'twitter')?.value
+  }, [socialLinks?.links])
+
+  const discord = useMemo(() => {
+    return socialLinks?.links?.find((link) => link.linkType === 'discord')?.value
+  }, [socialLinks?.links])
+
+  const telegram = useMemo(() => {
+    return socialLinks?.links?.find((link) => link.linkType === 'telegram')?.value
+  }, [socialLinks?.links])
+
+  const github = useMemo(() => {
+    return socialLinks?.links?.find((link) => link.linkType === 'github')?.value
+  }, [socialLinks?.links])
+
+  const otherLink = useMemo(() => {
+    return socialLinks?.links?.find((link) => !isLinkTypeCandidate(link.linkType))
+  }, [socialLinks?.links])
 
   const handleEdit = () => {
-    openModal()
+    openSocialLinkModal()
   }
+
+  const LinkContainer = styled.div`
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 24px;
+  `
 
   return (
     <>
-      <BaseWidget onClickEdit={handleEdit} {...props} editable>
-        <Flex flexDirection={'column'}>
-          <Flex></Flex>
-          <WorkStyleItem
-            icon={ICONS.DOLLAR}
-            content={`${businessProfile?.desiredHourlyFee || '-'}/hr`}
-            borderRadius={'40px 0px 0px 0px'}
-          />
-          <WorkStyleItem
-            icon={ICONS.LOCATION}
-            content={`${businessProfile?.baseLocation || '-'}`}
-          />
-          <WorkStyleItem icon={ICONS.CHAT} content={businessProfile?.languages || '-'} />
-          <WorkStyleItem icon={ICONS.CARD} content={businessProfile?.paymentMethods || '-'} />
-          <WorkStyleItem
-            icon={ICONS.PC}
-            content={`${businessProfile?.desiredWorkStyle || '-'}`}
-            borderRadius={'0 0 0px 40px'}
-          />
-        </Flex>
+      <BaseWidget
+        onClickEdit={handleEdit}
+        {...props}
+        background={'none'}
+        EditButtonPosition={'0px'}
+      >
+        <LinkContainer>
+          <SocialLinkItem linkType={'twitter'} value={twitter} />
+          <SocialLinkItem linkType={'discord'} value={discord} />
+          <SocialLinkItem linkType={'telegram'} value={telegram} />
+          <SocialLinkItem linkType={'github'} value={github} />
+          <SocialLinkItem linkType={otherLink?.linkType} value={otherLink?.value} />
+          <SocialLinkItem linkType={'more'} />
+        </LinkContainer>
       </BaseWidget>
     </>
   )

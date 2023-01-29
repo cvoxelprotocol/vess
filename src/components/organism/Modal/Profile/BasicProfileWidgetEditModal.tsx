@@ -14,7 +14,7 @@ export const BasicProfileWidgetEditModal: FC<Props> = ({ did, businessProfile })
 
   return (
     <VESSModalContainer open={showModal} onOpenChange={setShowModal}>
-      <VESSModal asChild>
+      <VESSModal>
         <BasicProfileWidgetEditForm did={did} businessProfile={businessProfile} />
       </VESSModal>
     </VESSModalContainer>

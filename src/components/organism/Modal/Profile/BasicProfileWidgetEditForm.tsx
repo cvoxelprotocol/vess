@@ -52,9 +52,10 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
     border-radius: 32px;
     display: flex;
     flex-direction: column;
+    position: relative;
+    height: 65vh;
     gap: 16px;
     background: ${currentTheme.surface1};
-    height: 85vh;
     overflow-y: scroll;
     ::-webkit-scrollbar {
       display: none;
@@ -78,6 +79,7 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
     padding: 12px 32px;
     background: ${currentTheme.surface1};
     border-radius: 32px;
+    z-index: 999;
   `
 
   const {
@@ -101,7 +103,6 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
       ...data,
       desiredHourlyFee: Number(data.desiredHourlyFee || 0),
     })
-    console.log({ content })
     await storeBusinessProfile(content)
     closeModal()
   }

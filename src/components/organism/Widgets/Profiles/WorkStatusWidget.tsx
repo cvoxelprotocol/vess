@@ -13,6 +13,7 @@ type Props = {
   did: string
   gridRow: string
   gridCol: string
+  editable?: boolean
   onClick?: () => void
 }
 
@@ -58,7 +59,7 @@ export const WorkStatusWidget: FC<Props> = (props) => {
   `
 
   return (
-    <BaseWidget onClickEdit={handleEdit} {...props} editable>
+    <BaseWidget onClickEdit={handleEdit} {...props}>
       <Container>
         <Flex height={'100%'} flexDirection={'column'} rowGap={'12px'}>
           <WorkStatusSlider {...statusValue} />

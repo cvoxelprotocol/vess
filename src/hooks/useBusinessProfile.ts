@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import type { BusinessProfile, CustomResponse } from 'vess-sdk'
 import { getVESS } from 'vess-sdk'
+import { useDIDAccount } from './useDIDAccount'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CERAMIC_NETWORK } from '@/constants/common'
@@ -11,6 +13,7 @@ export const useBusinessProfile = (did?: string) => {
   const queryClient = useQueryClient()
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
+  const { did: myDid } = useDIDAccount()
 
   const { mutateAsync: storeBusinessProfile, isLoading: isStoringBusinessProfile } = useMutation<
     CustomResponse<{ streamId: string | undefined }>,
@@ -48,10 +51,16 @@ export const useBusinessProfile = (did?: string) => {
       retry: false,
     })
 
+  const isMe = useMemo(() => {
+    if (!did) return false
+    return did.toLowerCase() === myDid?.toLowerCase()
+  }, [did, myDid])
+
   return {
     businessProfile,
     isFetchingBusinessProfile,
     storeBusinessProfile,
     isStoringBusinessProfile,
+    isMe,
   }
 }

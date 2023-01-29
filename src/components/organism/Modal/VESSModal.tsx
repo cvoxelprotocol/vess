@@ -26,7 +26,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
     const DialogContent = styled(DialogPrimitive.Content)`
       border-radius: 32px;
       position: fixed;
-      top: 50%;
+      top: 35%;
       left: 50%;
       will-change: transform;
       transform: translate(-50%, -50%);
@@ -53,6 +53,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       right: 16px;
       background: none;
       border: none;
+      z-index: 999;
     `
     const IconContainer = styled.div`
       width: 100;

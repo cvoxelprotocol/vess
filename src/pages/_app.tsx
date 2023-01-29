@@ -8,6 +8,7 @@ import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { ReactElement, ReactNode, useState } from 'react'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
+import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
 import { theme } from '@/lib/theme'
 
@@ -54,14 +55,15 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     <>
       <Global styles={global} />
       <JotaiProvider>
-      <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
           <Hydrate state={dehydratedState}>
-        <ThemeProvider theme={theme}>
-        {getLayout(<Component {...props} />)}
-                  {isLoading && <LoadingModal />}
-                  <VESSToast />
-        </ThemeProvider>
-        </Hydrate>
+            <ThemeProvider theme={theme}>
+              <Meta />
+              {getLayout(<Component {...props} />)}
+              {isLoading && <LoadingModal />}
+              <VESSToast />
+            </ThemeProvider>
+          </Hydrate>
         </QueryClientProvider>
       </JotaiProvider>
     </>
