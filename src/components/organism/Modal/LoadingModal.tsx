@@ -21,7 +21,7 @@ export default function LoadingModal(props: Props) {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.8);
     z-index: 9999;
   `
   const Loading = styled.div`

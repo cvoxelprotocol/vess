@@ -6,15 +6,16 @@ import { getOrbisHelper, OrbisProfileDetail } from '@/lib/OrbisHelper'
 
 export const useSocialAccount = (did?: string) => {
   const orbisHelper = getOrbisHelper()
-  const { data: orbisProfile, isInitialLoading } = useQuery<OrbisProfileDetail | null>(
-    ['fetchOrbisProfile', did],
-    () => orbisHelper.fetchOrbisProfile(did),
-    {
-      enabled: !!did && did !== '',
-      staleTime: Infinity,
-      cacheTime: 1000000,
-    },
-  )
+  const { data: orbisProfile, isInitialLoading: isFetchingSocialAccount } =
+    useQuery<OrbisProfileDetail | null>(
+      ['fetchOrbisProfile', did],
+      () => orbisHelper.fetchOrbisProfile(did),
+      {
+        enabled: !!did && did !== '',
+        staleTime: Infinity,
+        cacheTime: 1000000,
+      },
+    )
 
   const profile = useMemo<DisplayProfile>(() => {
     return {
@@ -26,6 +27,6 @@ export const useSocialAccount = (did?: string) => {
 
   return {
     profile,
-    isInitialLoading,
+    isFetchingSocialAccount,
   }
 }

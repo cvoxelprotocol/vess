@@ -1,8 +1,13 @@
-import { useStateVESSSocialLinkWidgetModal, useStateVESSWidgetModal } from '@/jotai/ui'
+import {
+  useStateVESSHighlightedMembershipModal,
+  useStateVESSSocialLinkWidgetModal,
+  useStateVESSWidgetModal,
+} from '@/jotai/ui'
 
 export const useVESSWidgetModal = () => {
   const [showModal, setShowModal] = useStateVESSWidgetModal()
   const [showSocialLinkModal, setShowSocialLinkModal] = useStateVESSSocialLinkWidgetModal()
+  const [showMembershipModal, setShowMembershipModal] = useStateVESSHighlightedMembershipModal()
 
   return {
     openModal: () => setShowModal(true),
@@ -13,5 +18,9 @@ export const useVESSWidgetModal = () => {
     closeSocialLinkModal: () => setShowSocialLinkModal(false),
     showSocialLinkModal,
     setShowSocialLinkModal,
+    openMembershipModal: () => setShowMembershipModal(true),
+    closeMembershipModal: () => setShowMembershipModal(false),
+    showMembershipModal,
+    setShowMembershipModal,
   }
 }

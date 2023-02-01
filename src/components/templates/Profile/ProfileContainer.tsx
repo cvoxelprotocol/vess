@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
+import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
+import { HighlightedMembershipWidget } from '@/components/organism/Widgets/Profiles/HighlightedMembershipWidget'
 import { SelfClaimedRoleWidget } from '@/components/organism/Widgets/Profiles/SelfClaimedRoleWidget'
 import { SocialLinksWidget } from '@/components/organism/Widgets/Profiles/SocialLinksWidget'
 import { WorkStatusWidget } from '@/components/organism/Widgets/Profiles/WorkStatusWidget'
@@ -39,6 +41,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     <Container>
       <Profile>
         <BasicProfileWidget did={did} gridRow={'1/5'} gridCol={'1/7'} editable={isMe} />
+        <HighlightedMembershipWidget did={did} gridRow={'6/9'} gridCol={'1/5'} editable={isMe} />
         <SelfClaimedRoleWidget did={did} gridRow={'5/6'} gridCol={'1/7'} editable={isMe} />
         <WorkStyleWidget did={did} gridRow={'1/6'} gridCol={'7/9'} editable={isMe} />
         <SocialLinksWidget did={did} gridRow={'6/9'} gridCol={'5/7'} editable={isMe} />
@@ -50,6 +53,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       {!isFetchingSocialLinks && (
         <SocialLinkWidgetEditModal did={did} socialLinks={socialLinks} editable={isMe} />
       )}
+      <HeldMembershipsModal did={did} editable={isMe} />
     </Container>
   )
 }

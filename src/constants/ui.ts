@@ -21,3 +21,9 @@ export const NAVIGATION_LIST: NAVIGATION_LIST_TYPE[] = [
   { item: NAVIGATION_ITEM.ATTENDANCE, icon: ICONS.EVENT_ATTENDANCE, path: '/events' },
   { item: NAVIGATION_ITEM.SETTING, icon: ICONS.SETTING, path: '/setting' },
 ]
+
+export const DefaultCardColor = {
+  mainColor: '#242424',
+  secondColor: '#505050',
+  textColor: '#FFFFFF',
+}

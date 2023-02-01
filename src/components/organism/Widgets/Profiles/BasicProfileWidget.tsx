@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
+import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
@@ -20,7 +21,7 @@ type Props = {
 
 export const BasicProfileWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getFont } = useVESSTheme()
-  const { profile } = useSocialAccount(props.did)
+  const { profile, isFetchingSocialAccount } = useSocialAccount(props.did)
   const { businessProfile } = useBusinessProfile(props.did)
   const { openModal } = useVESSWidgetModal()
 
@@ -73,7 +74,11 @@ export const BasicProfileWidget: FC<Props> = (props) => {
         <Container>
           <Flex rowGap='4px' colGap='12px' justifyContent={'start'}>
             <PfpContainer>
-              <Avatar url={profile.avatarSrc} size={'XXL'} />
+              {isFetchingSocialAccount ? (
+                <AvatarPlaceholder size={'XXL'} />
+              ) : (
+                <Avatar url={profile.avatarSrc} size={'XXL'} />
+              )}
             </PfpContainer>
             <Flex flexDirection='column' alignItems={'flex-start'}>
               <Name>{profile.displayName}</Name>

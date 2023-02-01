@@ -1,6 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { getVESS } from 'vess-sdk'
+import { useHeldEventAttendances } from './useHeldEventAttendances'
+import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import {
   useSetStateAccount,
@@ -29,6 +31,8 @@ export const useConnectDID = () => {
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { issueHeldMembershipFromBackup } = useHeldMembershipSubject()
+  const { issueHeldEventFromBackup } = useHeldEventAttendances()
 
   // clear all state
   const clearState = (): void => {
@@ -58,6 +62,10 @@ export const useConnectDID = () => {
         setChainId(web3ModalService.chainId)
         setConnectionStatus('connected')
         setStateLoginType('wallet')
+
+        // issue credentials from DB
+        issueHeldEventFromBackup(session.did.parent)
+        issueHeldMembershipFromBackup(session.did.parent)
       } else {
         setConnectionStatus('disconnected')
       }

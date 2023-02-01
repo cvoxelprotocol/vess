@@ -29,6 +29,10 @@ export const vessSocialLinkWidgetModal = atom<boolean>(false)
 
 export const useStateVESSSocialLinkWidgetModal = () => useAtom(vessSocialLinkWidgetModal)
 
+export const vessHighlightedMembershipModal = atom<boolean>(false)
+
+export const useStateVESSHighlightedMembershipModal = () => useAtom(vessHighlightedMembershipModal)
+
 export const vessLoadingModal = atom<boolean>(false)
 
 export const useStateVESSLoadingModal = () => useAtom(vessLoadingModal)

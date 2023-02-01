@@ -117,7 +117,7 @@ export const Input = <T extends FieldValues>({
     z-index: 20;
   `
   const SupportingText = styled.span`
-    color: ${currentTheme.onSurface};
+    color: ${currentTheme.error};
     font-family: ${currentTypo.body.small.fontFamily};
     font-size: ${currentTypo.body.small.fontSize};
     line-height: ${currentTypo.body.small.lineHeight};

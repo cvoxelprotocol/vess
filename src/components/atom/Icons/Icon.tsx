@@ -41,6 +41,7 @@ import { TelegramIcon } from './TelegramIcon'
 import { TwitterIcon } from './TwitterIcon'
 import { VoxelIcon } from './VoxelIcon'
 import { VoxelslIcon } from './VoxelsIcon'
+import { WorkspaceIcon } from './WorkspaceIcon'
 
 export const ICONS = {
   VOXEL: 'voxel',
@@ -84,6 +85,7 @@ export const ICONS = {
   PC: 'pc',
   TELEGRAM: 'telegram',
   MAIL: 'mail',
+  WORKSPACE: 'workspace',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -374,6 +376,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <MailIcon />
+          </IconContainer>
+        )
+      case 'workspace':
+        return (
+          <IconContainer>
+            <WorkspaceIcon />
           </IconContainer>
         )
       default:

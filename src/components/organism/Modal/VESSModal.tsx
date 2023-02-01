@@ -8,11 +8,6 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.DialogContentProps>(
   ({ children, ...props }, forwardedRef) => {
     const { currentTheme } = useVESSTheme()
-    const overlayShow = keyframes({
-      '0%': { opacity: 0 },
-      '100%': { opacity: 1 },
-    })
-
     const contentShow = keyframes({
       '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
       '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
@@ -21,7 +16,8 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
     const DialogOverlay = styled(DialogPrimitive.Overlay)`
       position: fixed;
       inset: 0;
-      animation: ${overlayShow} 300ms cubic-bezier(0.77, 0.2, 0.05, 1);
+      background: ${currentTheme.background};
+      opacity: 0.8;
     `
     const DialogContent = styled(DialogPrimitive.Content)`
       border-radius: 32px;

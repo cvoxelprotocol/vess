@@ -3,7 +3,7 @@ import type { GetStaticProps } from 'next'
 import Router from 'next/router'
 import { ReactElement } from 'react'
 import { getPkhDIDFromAddress, getVESS, isDIDstring, isEthereumAddress } from 'vess-sdk'
-import type { MembershipSubjectWithId, WorkCredentialWithId } from 'vess-sdk'
+import type { MembershipSubjectWithOrg, WorkCredentialWithId } from 'vess-sdk'
 import { NextPageWithLayout } from '../_app'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
@@ -36,15 +36,15 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did: string }> = asy
     try {
       const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
       const orbisHelper = getOrbisHelper()
-      // const heldWorkCredentials = queryClient.prefetchQuery<WorkCredentialWithId[]>(
-      //   ['heldWorkCredentials', did],
-      //   () => vess.getHeldWorkCredentials(did),
-      //   {
-      //     staleTime: Infinity,
-      //     cacheTime: 1000000,
-      //   },
-      // )
-      const HeldMembershipSubjects = queryClient.prefetchQuery<MembershipSubjectWithId[]>(
+      const heldWorkCredentials = queryClient.prefetchQuery<WorkCredentialWithId[]>(
+        ['heldWorkCredentials', did],
+        () => vess.getHeldWorkCredentials(did),
+        {
+          staleTime: Infinity,
+          cacheTime: 1000000,
+        },
+      )
+      const HeldMembershipSubjects = queryClient.prefetchQuery<MembershipSubjectWithOrg[]>(
         ['HeldMembershipSubjects', did],
         () => vess.getHeldMembershipSubjects(did),
         {
@@ -60,7 +60,7 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did: string }> = asy
           cacheTime: 1000000,
         },
       )
-      await Promise.all([HeldMembershipSubjects, Profile])
+      await Promise.all([HeldMembershipSubjects, Profile, heldWorkCredentials])
       return {
         props: { did: did.toLowerCase(), support, dehydratedState: dehydrate(queryClient) },
         revalidate: 60,
