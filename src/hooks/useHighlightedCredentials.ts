@@ -4,7 +4,7 @@ import type { CustomResponse, HighlightedCredentials } from 'vess-sdk'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CERAMIC_NETWORK } from '@/constants/common'
-import { SOCIAL_LINKS_SET_FAILED, SOCIAL_LINKS_SET_SUCCEED } from '@/constants/toastMessage'
+import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
 
 export const useHighlightedCredentials = (did?: string) => {
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
@@ -34,17 +34,17 @@ export const useHighlightedCredentials = (did?: string) => {
     onSuccess(data) {
       if (data.streamId) {
         closeLoading()
-        showToast(SOCIAL_LINKS_SET_SUCCEED)
+        showToast(BUSINESS_PROFILE_SET_SUCCEED)
       } else {
         closeLoading()
-        showToast(SOCIAL_LINKS_SET_FAILED)
+        showToast(BUSINESS_PROFILE_SET_FAILED)
         console.error(data.result)
       }
     },
     onError(error) {
       console.error('error', error)
       closeLoading()
-      showToast(SOCIAL_LINKS_SET_FAILED)
+      showToast(BUSINESS_PROFILE_SET_FAILED)
     },
     onSettled: () => {
       queryClient.invalidateQueries(['highlightedCredentials', did])

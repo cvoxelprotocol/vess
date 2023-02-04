@@ -27,10 +27,31 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     height: max(100vh, 100%);
     grid-template-columns: 80px 1fr;
     grid-template-rows: 80px 1fr;
+    @media (max-width: 1079px) {
+      grid-template-columns: 80px 1fr;
+      grid-template-rows: 80px 1fr;
+    }
+    @media (max-width: 599px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: 64px 1fr;
+    }
+    @media (max-width: 352px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: 64px 1fr;
+    }
     background: ${currentTheme.background};
   `
   const NaviContainer = styled.div`
     grid-column: 1 /2;
+    @media (max-width: 1079px) {
+      grid-column: 1 /2;
+    }
+    @media (max-width: 599px) {
+      display: none;
+    }
+    @media (max-width: 352px) {
+      display: none;
+    }
     width: 80px;
     height: 100vh;
     background: ${currentTheme.depth4};
@@ -45,12 +66,34 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     background: ${currentTheme.depth4};
   `
   const MainContainer = styled.div`
+    background: ${currentTheme.background};
     grid-column: 2;
     grid-row: 2;
     width: 936px;
     margin: 0 auto;
     height: 100vh;
-    @media (max-width: 550px) {
+
+    @media (max-width: 1079px) {
+      grid-column: 2;
+      grid-row: 2;
+      width: 936px;
+      margin: 0 auto;
+    }
+    @media (max-width: 599px) {
+      grid-column: 1/3;
+      grid-row: 2;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      height: max(100vh, 100%);
+    }
+    @media (max-width: 352px) {
+      grid-column: 1/3;
+      grid-row: 2;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      height: max(100vh, 100%);
     }
   `
   const AccountContainer = styled.button`

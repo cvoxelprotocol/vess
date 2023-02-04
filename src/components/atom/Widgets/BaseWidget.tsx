@@ -7,21 +7,27 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 type Props = {
   gridRow: string
   gridCol: string
+  gridRowOnSp: string
+  gridColOnSp: string
   children: React.ReactNode
   onClick?: () => void
   editable?: boolean
   onClickEdit?: () => void
   background?: string
+  border?: string
   EditButtonPosition?: string
 }
 
 export const BaseWidget: FC<Props> = ({
   gridCol,
   gridRow,
+  gridRowOnSp,
+  gridColOnSp,
   children,
   background,
   EditButtonPosition = '12px',
   onClickEdit,
+  border = 'none',
   editable = false,
 }) => {
   const { currentTheme, initTheme } = useVESSTheme()
@@ -29,7 +35,16 @@ export const BaseWidget: FC<Props> = ({
   const Container = styled.div`
     grid-column: ${gridCol};
     grid-row: ${gridRow};
+    @media (max-width: 1079px) {
+      grid-column: ${gridColOnSp};
+      grid-row: ${gridRowOnSp};
+    }
+    @media (max-width: 599px) {
+      grid-column: ${gridColOnSp};
+      grid-row: ${gridRowOnSp};
+    }
     background: ${background || currentTheme.surface2};
+    border: ${border};
     border-radius: 40px;
     position: relative;
   `

@@ -35,7 +35,7 @@ export const Chip: FC<ChipProps> = ({
   tailIconAction,
   ...props
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getFont } = useVESSTheme()
 
   const label = useMemo(() => {
     if (size === 'S') return currentTypo.label.small
@@ -71,7 +71,10 @@ export const Chip: FC<ChipProps> = ({
       position: flex;
       width: fit-content;
       border-width: 1px;
-      padding: 6px 16px 6px 16px;
+      padding: 6px 16px;
+      @media (max-width: 599px) {
+        padding: 4px 12px;
+      }
     `
 
     const ChipText = styled.span`
@@ -80,10 +83,7 @@ export const Chip: FC<ChipProps> = ({
       (variant === 'filled' ? currentTheme.onSurfaceVariant : currentTheme.onSurface)};
       opacity: ${variant === 'filled' ? 1 : 0.4};
       text-align: center;
-      font-family: ${label.fontFamily};
-      font-size: ${label.fontSize};
-      line-height: ${label.lineHeight};
-      font-weight: ${label.fontWeight};
+      font: ${getFont(label)};
       position: relative;
       display: flex;
       align-items: center;
@@ -169,7 +169,10 @@ export const Chip: FC<ChipProps> = ({
     position: flex;
     width: fit-content;
     border-width: 1px;
-    padding: 6px 16px 6px 16px;
+    padding: 6px 16px;
+    @media (max-width: 599px) {
+      padding: 4px 12px;
+    }
   `
 
   const ChipText = styled.span`

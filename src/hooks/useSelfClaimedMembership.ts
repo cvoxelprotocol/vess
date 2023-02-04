@@ -4,7 +4,7 @@ import type { CustomResponse, WithCeramicId, SelfClaimedMembershipSubject } from
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CERAMIC_NETWORK } from '@/constants/common'
-import { SOCIAL_LINKS_SET_FAILED, SOCIAL_LINKS_SET_SUCCEED } from '@/constants/toastMessage'
+import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
 
 export const useSelfClaimedMembership = (did?: string) => {
   // const vess = getVESS()
@@ -35,17 +35,17 @@ export const useSelfClaimedMembership = (did?: string) => {
     onSuccess(data) {
       if (data.streamId) {
         closeLoading()
-        showToast(SOCIAL_LINKS_SET_SUCCEED)
+        showToast(BUSINESS_PROFILE_SET_SUCCEED)
       } else {
         closeLoading()
-        showToast(SOCIAL_LINKS_SET_FAILED)
+        showToast(BUSINESS_PROFILE_SET_FAILED)
         console.error(data.result)
       }
     },
     onError(error) {
       console.error('error', error)
       closeLoading()
-      showToast(SOCIAL_LINKS_SET_FAILED)
+      showToast(BUSINESS_PROFILE_SET_FAILED)
     },
     onSettled: () => {
       queryClient.invalidateQueries(['selfClaimedMembershipSubject', did])

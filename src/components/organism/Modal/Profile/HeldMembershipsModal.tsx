@@ -55,9 +55,18 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
     justify-content: space-evenly;
     gap: 16px;
     width: 100%;
+    @media (max-width: 599px) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   `
   const MembershipCardWrapper = styled.div`
     width: fit-content;
+    min-width: 240px;
+    @media (max-width: 599px) {
+      min-width: 180px;
+    }
   `
 
   const selectMembership = async (id: string) => {

@@ -10,6 +10,8 @@ type Props = {
   did: string
   gridRow: string
   gridCol: string
+  gridRowOnSp: string
+  gridColOnSp: string
   editable?: boolean
   onClick?: () => void
 }

@@ -10,6 +10,8 @@ type Props = {
   did: string
   gridRow: string
   gridCol: string
+  gridRowOnSp: string
+  gridColOnSp: string
   editable?: boolean
   onClick?: () => void
 }
@@ -23,6 +25,12 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
 
   const Container = styled.div`
     padding: 16px 24px;
+    @media (max-width: 1079px) {
+      padding: 16px 24px;
+    }
+    @media (max-width: 599px) {
+      padding: 12px 16px;
+    }
     display: flex;
     flex-direction: column;
     row-gap: 8px;
@@ -33,8 +41,8 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
     font: ${getFont(currentTypo.title.medium)};
   `
   const CardContainer = styled.div`
-    width: 230px;
-    height: 150px;
+    width: 100%;
+    height: auto;
   `
 
   const handleEdit = () => {

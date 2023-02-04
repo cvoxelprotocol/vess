@@ -15,6 +15,8 @@ type Props = {
   did: string
   gridRow: string
   gridCol: string
+  gridRowOnSp: string
+  gridColOnSp: string
   editable?: boolean
   onClick?: () => void
 }
@@ -48,10 +50,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     padding-top: 14px;
     color: ${currentTheme.onSurface};
     text-align: left;
-    font-family: ${currentTypo.body.medium.fontFamily};
-    font-size: ${currentTypo.body.medium.fontSize};
-    line-height: ${currentTypo.body.medium.lineHeight};
-    font-weight: ${currentTypo.body.medium.fontWeight};
+    font: ${getFont(currentTypo.body.medium)};
     height: 100px;
     overflow-y: scroll;
   `

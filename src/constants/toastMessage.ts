@@ -1,11 +1,11 @@
-export const CVOXEL_CREATION_SUCCEED = 'Work Credential Created Successfully!'
-export const CVOXEL_CREATION_FAILED = 'Failed to Create Credential...'
+export const WORK_CREDENTIAL_CREATION_SUCCEED = 'Work Credential Created Successfully!'
+export const WORK_CREDENTIAL_CREATION_FAILED = 'Failed to Create Credential...'
 
-export const CVOXEL_VERIFY_SUCCEED = 'Verified Successfully!'
-export const CVOXEL_VERIFY_FAILED = 'Failed to Verify Credential...'
+export const WORK_CREDENTIAL_VERIFY_SUCCEED = 'Verified Successfully!'
+export const WORK_CREDENTIAL_VERIFY_FAILED = 'Failed to Verify Credential...'
 
-export const CVOXEL_UPDATE_SUCCEED = 'Updated Successfully!'
-export const CVOXEL_UPDATE_FAILED = 'Failed to Update Credential...'
+export const WORK_CREDENTIAL_UPDATE_SUCCEED = 'Updated Successfully!'
+export const WORK_CREDENTIAL_UPDATE_FAILED = 'Failed to Update Credential...'
 
 export const ORGANIZATION_CREATION_SUCCEED = 'New Workspace Created Successfully!'
 export const ORGANIZATION_CREATION_FAILED = 'Failed to Create Workspace...'
@@ -31,8 +31,8 @@ export const EVENT_ATTENDANCE_CREATION_FAILED = 'Failed to issue event attendanc
 export const EVENT_ATTENDANCE_HELD_SUCCEED = 'Successfully got event attendance!'
 export const EVENT_ATTENDANCE_HELD_FAILED = 'Failed to get event attendance...'
 
-export const BUSINESS_PROFILE_SET_SUCCEED = 'Stored business profile Successfully!'
-export const BUSINESS_PROFILE_SET_FAILED = 'Failed to store business profile...'
+export const BUSINESS_PROFILE_SET_SUCCEED = 'Updated business profile Successfully!'
+export const BUSINESS_PROFILE_SET_FAILED = 'Failed to update business profile...'
 
-export const SOCIAL_LINKS_SET_SUCCEED = 'Stored social links Successfully!'
-export const SOCIAL_LINKS_SET_FAILED = 'Failed to store social links...'
+export const SOCIAL_LINKS_SET_SUCCEED = 'Updated social links Successfully!'
+export const SOCIAL_LINKS_SET_FAILED = 'Failed to update social links...'

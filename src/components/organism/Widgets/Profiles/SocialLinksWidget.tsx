@@ -10,6 +10,8 @@ type Props = {
   did: string
   gridRow: string
   gridCol: string
+  gridRowOnSp: string
+  gridColOnSp: string
   editable?: boolean
   onClick?: () => void
 }
@@ -47,6 +49,12 @@ export const SocialLinksWidget: FC<Props> = (props) => {
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 24px;
+    @media (max-width: 1079px) {
+      grid-gap: 24px;
+    }
+    @media (max-width: 599px) {
+      grid-gap: 16px;
+    }
   `
 
   return (

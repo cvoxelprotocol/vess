@@ -29,6 +29,10 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
     border-radius: 12px;
     width: 56px;
     height: 56px;
+    @media (max-width: 599px) {
+      width: 44px;
+      height: 44px;
+    }
     opacity: ${value || linkType === 'more' ? 1 : 0.4};
   `
 
