@@ -15,7 +15,7 @@ export const useHeldEventAttendances = (did?: string) => {
         console.log('heldEvent migration succeeded')
       },
       onError(error) {
-        console.log('error', error)
+        console.error('error', error)
       },
       onSettled: () => {
         queryClient.invalidateQueries(['HeldEventAttendances'])

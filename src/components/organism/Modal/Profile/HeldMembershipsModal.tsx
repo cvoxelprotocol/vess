@@ -76,7 +76,6 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
       works: highlightedCredentials?.works || [],
     }
     const res = await storeHighlightedCredentials(items)
-    console.log({ res })
     if (res.status === 200) {
       setShowMembershipModal(false)
     }

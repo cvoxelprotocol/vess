@@ -3,6 +3,7 @@ import { FC } from 'react'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
+import { ProfleTabs } from '@/components/organism/Tabs/ProfleTabs'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
 import { EventAttendancesWidget } from '@/components/organism/Widgets/Profiles/EventAttendancesWidget'
 import { HighlightedMembershipWidget } from '@/components/organism/Widgets/Profiles/HighlightedMembershipWidget'
@@ -30,11 +31,12 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   `
   const Profile = styled.div`
     display: grid;
-    grid-template-rows: repeat(12, 56px);
+    grid-template-rows: repeat(8, 56px);
     grid-template-columns: repeat(12, 1fr);
     grid-gap: 24px;
+    margin-bottom: 48px;
     @media (max-width: 1079px) {
-      grid-template-rows: repeat(12, 56px);
+      grid-template-rows: repeat(8, 56px);
       grid-template-columns: repeat(12, 1fr);
       grid-gap: 24px;
     }
@@ -115,6 +117,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
           editable={false}
         />
       </Profile>
+      <ProfleTabs did={did} />
       {!isFetchingBusinessProfile && isMe && (
         <BasicProfileWidgetEditModal did={did} businessProfile={businessProfile} />
       )}

@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
 import { FC } from 'react'
+import { isMobileOnly } from 'react-device-detect'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -24,6 +26,7 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getFont } = useVESSTheme()
   const { HeldEventAttendances } = useHeldEventAttendances(props.did)
   const { openModal } = useVESSWidgetModal()
+  const router = useRouter()
 
   const Container = styled.div`
     padding: 16px 24px 32px;
@@ -78,10 +81,17 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
     openModal()
   }
 
+  const handleClickConWidget = () => {
+    // TODO: open detail modal
+    if (isMobileOnly) {
+      router.push('#Attendances')
+    }
+  }
+
   return (
     <>
       <BaseWidget onClickEdit={handleEdit} {...props} border={`1px solid ${currentTheme.outline}`}>
-        <Container>
+        <Container onClick={handleClickConWidget}>
           {HeldEventAttendances &&
             HeldEventAttendances.map((item) => {
               return (

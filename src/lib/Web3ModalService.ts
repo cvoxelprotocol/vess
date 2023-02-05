@@ -71,7 +71,7 @@ export class Web3ModalService {
         provider: this.provider,
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new Error('Could not connect wallet...')
     }
   }
@@ -86,7 +86,7 @@ export class Web3ModalService {
         })
         return true
       } catch (error) {
-        console.log(error)
+        console.error(error)
         return false
       }
     } else {
@@ -102,7 +102,7 @@ export class Web3ModalService {
       this.chainId = undefined
       this.web3Modal = undefined
     } catch (error) {
-      console.log('error', error)
+      console.error('error', error)
       throw new Error('Something went wrong..')
     }
   }

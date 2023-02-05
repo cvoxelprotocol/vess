@@ -63,7 +63,7 @@ export const WorkCredentialsWidget: FC<Props> = (props) => {
   const handleEdit = () => {}
 
   const selectItem = (item: WorkCredentialWithId) => {
-    console.log({ item })
+    // console.log({ item })
   }
 
   const VisualizerPresenterMemo = useMemo(

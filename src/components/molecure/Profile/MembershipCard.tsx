@@ -33,15 +33,15 @@ export const MembershipCard: FC<Props> = ({
   const { currentTheme, currentTypo, getFont } = useVESSTheme()
 
   const logoSize = useMemo(() => {
-    return size === 'M' ? '40px' : size === 'S' ? '32px' : '20px'
+    return size === 'M' ? '40px' : '32px'
   }, [size])
 
   const backLogoSize = useMemo(() => {
-    return size === 'M' ? '120px' : size === 'S' ? '100px' : '64px'
+    return size === 'M' ? '120px' : '100px'
   }, [size])
 
   const backLogoPortion = useMemo(() => {
-    return size === 'M' ? '-12px' : size === 'S' ? '-10px' : '-5px'
+    return size === 'M' ? '-12px' : '-10px'
   }, [size])
 
   const CardContainer = styled.div`
@@ -119,10 +119,7 @@ export const MembershipCard: FC<Props> = ({
   return (
     <CardContainer>
       <BackLogoContainer>
-        <ImageContainer
-          src={icon || 'https://app.vess.id/vess-logo.png'}
-          width={isMobileOnly ? '64px' : backLogoSize}
-        />
+        <ImageContainer src={icon || 'https://app.vess.id/vess-logo.png'} width={'100%'} />
       </BackLogoContainer>
       {vc && (
         <VcMarkContainer>
@@ -144,10 +141,7 @@ export const MembershipCard: FC<Props> = ({
       )}
       <Flex flexDirection='column' rowGap='8px' alignItems='start'>
         <LogoContainer>
-          <ImageContainer
-            src={icon || 'https://app.vess.id/vess-logo.png'}
-            width={isMobileOnly ? '20px' : logoSize}
-          />
+          <ImageContainer src={icon || 'https://app.vess.id/vess-logo.png'} width={'100%'} />
         </LogoContainer>
         <WorkSpaceTitle>{title}</WorkSpaceTitle>
         {roles &&
@@ -159,7 +153,7 @@ export const MembershipCard: FC<Props> = ({
                 variant={'filled'}
                 mainColor={secondColor || DefaultCardColor.secondColor}
                 textColor={textColor || DefaultCardColor.textColor}
-                size={isMobileOnly ? 'S' : size}
+                size={'S'}
               />
             )
           })}

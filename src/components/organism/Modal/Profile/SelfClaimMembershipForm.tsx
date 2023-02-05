@@ -72,7 +72,6 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     const res = await storeSelfClaimedMembership(
       removeUndefined<SelfClaimedMembershipSubject>({ ...data }),
     )
-    console.log({ res })
     if (res.streamId) {
       const items: HighlightedCredentials = {
         memberships: [res.streamId],

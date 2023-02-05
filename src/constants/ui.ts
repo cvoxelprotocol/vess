@@ -1,10 +1,9 @@
 import { ICONS, IconsType } from '@/components/atom/Icons/Icon'
 
 export const NAVIGATION_ITEM = {
-  MEMBERSHIP: 'Membership',
-  ATTENDANCE: 'Attendance',
+  HOME: 'Home',
   PROFILE: 'Profile',
-  SETTING: 'Setting',
+  CLAIM: 'Claim',
 } as const
 
 export type NavigationItemType = typeof NAVIGATION_ITEM[keyof typeof NAVIGATION_ITEM]
@@ -16,11 +15,26 @@ export type NAVIGATION_LIST_TYPE = {
 }
 
 export const NAVIGATION_LIST: NAVIGATION_LIST_TYPE[] = [
-  { item: NAVIGATION_ITEM.PROFILE, icon: ICONS.VOXEL, path: '/' },
-  { item: NAVIGATION_ITEM.MEMBERSHIP, icon: ICONS.VOXELS, path: '/memberships' },
-  { item: NAVIGATION_ITEM.ATTENDANCE, icon: ICONS.EVENT_ATTENDANCE, path: '/events' },
-  { item: NAVIGATION_ITEM.SETTING, icon: ICONS.SETTING, path: '/setting' },
+  { item: NAVIGATION_ITEM.HOME, icon: ICONS.HOME, path: '/' },
+  { item: NAVIGATION_ITEM.PROFILE, icon: ICONS.VOXEL, path: '/did' },
+  { item: NAVIGATION_ITEM.CLAIM, icon: ICONS.VOXELS, path: '/claim' },
 ]
+
+export const getNaviItem = (path: string): NAVIGATION_LIST_TYPE => {
+  if (path === '/')
+    return {
+      item: NAVIGATION_ITEM.HOME,
+      icon: ICONS.HOME,
+      path: '/',
+    }
+  return (
+    NAVIGATION_LIST.find((n) => n.path !== '/' && path.startsWith(n.path)) || {
+      item: NAVIGATION_ITEM.HOME,
+      icon: ICONS.HOME,
+      path: '/',
+    }
+  )
+}
 
 export const DefaultCardColor = {
   mainColor: '#242424',

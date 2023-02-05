@@ -4,6 +4,7 @@ import { FC, useEffect } from 'react'
 import { Avatar } from '../atom/Avatars/Avatar'
 import { Button } from '../atom/Buttons/Button'
 import { Flex } from '../atom/Common/Flex'
+import { NavigationList } from '../molecure/Navigation/NavigationList'
 import LoadingModal from '../organism/Modal/LoadingModal'
 // import { NavigationList } from '../organism/Navigation/NavigationList'
 import { useConnectDID } from '@/hooks/useConnectDID'
@@ -24,7 +25,8 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const LayoutContainer = styled.div`
     display: grid;
     width: 100vw;
-    height: max(100vh, 100%);
+    height: auto;
+    min-height: 100vh;
     grid-template-columns: 80px 1fr;
     grid-template-rows: 80px 1fr;
     @media (max-width: 1079px) {
@@ -56,6 +58,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     height: 100vh;
     background: ${currentTheme.depth4};
     position: fixed;
+    z-index: 999;
   `
   const HeaderContainer = styled.div`
     grid-row: 1 /2;
@@ -64,7 +67,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     position: fixed;
     padding: 12px;
     background: ${currentTheme.depth4};
-    z-index: 999;
+    z-index: 998;
   `
   const MainContainer = styled.div`
     background: ${currentTheme.background};
@@ -72,7 +75,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     grid-row: 2;
     width: 936px;
     margin: 0 auto;
-    height: 100vh;
+    height: max(100%, 100vh);
 
     @media (max-width: 1079px) {
       grid-column: 2;
@@ -85,16 +88,8 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-row: 2;
       width: 100%;
       margin: 0 auto;
-      padding: 16px;
-      height: max(100vh, 100%);
-    }
-    @media (max-width: 352px) {
-      grid-column: 1/3;
-      grid-row: 2;
-      width: 100%;
-      margin: 0 auto;
-      padding: 16px;
-      height: max(100vh, 100%);
+      padding: 8px;
+      height: max(100%, 100vh);
     }
   `
   const AccountContainer = styled.button`
@@ -118,8 +113,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
         </Flex>
       </HeaderContainer>
       <NaviContainer>
-        {/* <BasicHeader /> */}
-        {/* <NavigationList /> */}
+        <NavigationList />
       </NaviContainer>
       <MainContainer>{children}</MainContainer>
       {isLoading && <LoadingModal />}

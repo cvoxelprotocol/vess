@@ -65,7 +65,7 @@ export const useWorkCredentials = (did?: string) => {
     {
       onSuccess() {},
       onError(error) {
-        console.log(error)
+        console.error(error)
       },
       onSettled: () => {
         queryClient.invalidateQueries(['heldWorkCredentials'])
@@ -104,7 +104,7 @@ export const useWorkCredential = () => {
       }
     },
     onError(error) {
-      console.log('error', error)
+      console.error('error', error)
       closeLoading()
       showToast(WORK_CREDENTIAL_CREATION_FAILED)
     },
@@ -224,7 +224,7 @@ export const useWorkCredential = () => {
       showToast(WORK_CREDENTIAL_UPDATE_SUCCEED)
       return true
     } catch (error) {
-      console.log('error', error)
+      console.error('error', error)
       closeLoading()
       showToast(WORK_CREDENTIAL_UPDATE_FAILED)
       return false
@@ -240,7 +240,7 @@ export const useWorkCredential = () => {
       await vess.updateWorkCredential(id, newItem)
       return true
     } catch (error) {
-      console.log('error', error)
+      console.error('error', error)
       return false
     }
   }

@@ -1,5 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { BaseToastProps } from '@/components/atom/Toasts/BaseToast'
+import { NavigationItemType, NAVIGATION_ITEM } from '@/constants/ui'
 
 export const themeMode = atom<'light' | 'dark'>('light')
 
@@ -40,3 +41,7 @@ export const useStateVESSLoadingModal = () => useAtom(vessLoadingModal)
 export const vessToastProps = atom<BaseToastProps | null>(null)
 
 export const useStateVessToastProps = () => useAtom(vessToastProps)
+
+export const selectedNavigationItem = atom<NavigationItemType>(NAVIGATION_ITEM.HOME)
+
+export const useStateSelectedNavigationItem = () => useAtom(selectedNavigationItem)

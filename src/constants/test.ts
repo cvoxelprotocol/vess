@@ -4,10 +4,12 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '1',
     id: '1',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
         genre: 'Art',
@@ -15,7 +17,7 @@ export const initVoxel: WorkCredentialWithId[] = [
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -25,18 +27,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '2',
     id: '2',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -46,18 +50,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '3',
     id: '3',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -67,18 +73,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '4',
     id: '4',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -88,18 +96,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '5',
     id: '5',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -109,18 +119,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '6',
     id: '6',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -130,18 +142,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '7',
     id: '7',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -151,18 +165,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '8',
     id: '8',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -172,18 +188,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '9',
     id: '9',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -193,18 +211,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '10',
     id: '10',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -214,18 +234,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '11',
     id: '11',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -235,18 +257,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '12',
     id: '12',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -256,18 +280,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '13',
     id: '13',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -277,18 +303,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '14',
     id: '14',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -298,18 +326,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '15',
     id: '15',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -319,18 +349,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '16',
     id: '16',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -340,18 +372,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '17',
     id: '17',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -361,18 +395,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '18',
     id: '18',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -383,18 +419,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '19',
     id: '19',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -404,18 +442,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '20',
     id: '20',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -425,18 +465,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '21',
     id: '21',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -446,18 +488,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '22',
     id: '22',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -467,18 +511,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '23',
     id: '23',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -488,18 +534,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '24',
     id: '24',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -509,18 +557,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '25',
     id: '25',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -530,18 +580,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '26',
     id: '26',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',
@@ -551,18 +603,20 @@ export const initVoxel: WorkCredentialWithId[] = [
   {
     ceramicId: '27',
     id: '27',
+    createdAt: '1675577686',
     subject: {
       work: {
         id: 'did:pkh:hoge',
-        summary: '', // work summary
+        summary: 'test work crdl', // work summary
+        tags: ['test', 'tags'],
         value: '58400',
         issuedAt: '', //block timestamp
-        genre: 'Donation&Investment',
+        genre: 'Dev',
       },
       tx: {
         txHash: '',
       },
-      deliverables: [],
+      deliverables: [{ format: 'url', value: 'https://vess.id/' }],
     },
     signature: {
       holderSig: 'hgoe',

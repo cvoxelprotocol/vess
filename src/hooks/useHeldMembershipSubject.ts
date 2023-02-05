@@ -31,7 +31,7 @@ export const useHeldMembershipSubject = (did?: string) => {
         console.log('MembershipSubjects migration succeeded')
       },
       onError(error) {
-        console.log('error', error)
+        console.error('error', error)
       },
       onSettled: () => {
         queryClient.invalidateQueries(['HeldMembershipSubjects', did])
@@ -55,8 +55,6 @@ export const useHeldMembershipSubject = (did?: string) => {
   }, [HeldMembershipSubjects, highlightedCredentials, highlightedCredentials?.memberships])
 
   const highlightedSelfClaimedMembership = useMemo(() => {
-    console.log({ selfClaimedMemberships })
-    console.log({ highlightedCredentials })
     if (!selfClaimedMemberships) return undefined
     if (
       highlightedCredentials &&

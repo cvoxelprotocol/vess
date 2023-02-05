@@ -66,16 +66,19 @@ export const useConnectDID = () => {
         // issue credentials from DB
         issueHeldEventFromBackup(session.did.parent)
         issueHeldMembershipFromBackup(session.did.parent)
+        if (router.asPath !== `/${session.did.parent}`) {
+          router.push(`/${session.did.parent}`)
+        }
       } else {
         setConnectionStatus('disconnected')
       }
       queryClient.invalidateQueries(['hasAuthorizedSession'])
     } catch (error) {
-      console.log(error)
+      console.error(error)
       await disConnectDID()
       clearState()
       if (error instanceof Error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }
