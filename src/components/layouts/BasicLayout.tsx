@@ -75,7 +75,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     grid-row: 2;
     width: 936px;
     margin: 0 auto;
-    height: max(100%, 100vh);
+    height: min(100%, 100vh);
 
     @media (max-width: 1079px) {
       grid-column: 2;
@@ -87,9 +87,8 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-column: 1/3;
       grid-row: 2;
       width: 100%;
-      margin: 0 auto;
+      margin: 12px auto;
       padding: 8px;
-      height: max(100%, 100vh);
     }
   `
   const AccountContainer = styled.button`

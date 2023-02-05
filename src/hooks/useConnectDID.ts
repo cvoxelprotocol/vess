@@ -66,9 +66,9 @@ export const useConnectDID = () => {
         // issue credentials from DB
         issueHeldEventFromBackup(session.did.parent)
         issueHeldMembershipFromBackup(session.did.parent)
-        if (router.asPath !== `/${session.did.parent}`) {
-          router.push(`/${session.did.parent}`)
-        }
+        // if (router.asPath !== `/${session.did.parent}`) {
+        //   router.push(`/${session.did.parent}`)
+        // }
       } else {
         setConnectionStatus('disconnected')
       }

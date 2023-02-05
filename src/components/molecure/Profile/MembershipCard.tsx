@@ -119,7 +119,7 @@ export const MembershipCard: FC<Props> = ({
   return (
     <CardContainer>
       <BackLogoContainer>
-        <ImageContainer src={icon || 'https://app.vess.id/vess-logo.png'} width={'100%'} />
+        <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
       </BackLogoContainer>
       {vc && (
         <VcMarkContainer>
@@ -141,7 +141,7 @@ export const MembershipCard: FC<Props> = ({
       )}
       <Flex flexDirection='column' rowGap='8px' alignItems='start'>
         <LogoContainer>
-          <ImageContainer src={icon || 'https://app.vess.id/vess-logo.png'} width={'100%'} />
+          <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
         </LogoContainer>
         <WorkSpaceTitle>{title}</WorkSpaceTitle>
         {roles &&
