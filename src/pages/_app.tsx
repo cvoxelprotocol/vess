@@ -26,7 +26,7 @@ const notoSansJP = Noto_Sans_JP({
 
 const global = css`
   html {
-    font-family: ${notoSans.style.fontFamily} ${notoSansJP.style.fontFamily};
+    font-family: ${notoSans.style.fontFamily}, ${notoSansJP.style.fontFamily};
   }
 `
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
