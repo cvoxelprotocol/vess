@@ -7,6 +7,7 @@ import { Calendar } from './Calendar'
 import { Card } from './Card'
 import { ChainIcon } from './ChainIcon'
 import { Chat } from './Chat'
+import { CheckContainerIcon } from './CheckContainerIcon'
 import { CheckedCircleIcon } from './CheckedCircleIcon'
 import { CheckedIcon } from './CheckedIcon'
 import { CheckedSquareIcon } from './CheckedSquareIcon'
@@ -86,6 +87,7 @@ export const ICONS = {
   TELEGRAM: 'telegram',
   MAIL: 'mail',
   WORKSPACE: 'workspace',
+  CHECK_CONTAINER: 'checkContainer',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -382,6 +384,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <WorkspaceIcon />
+          </IconContainer>
+        )
+      case 'checkContainer':
+        return (
+          <IconContainer>
+            <CheckContainerIcon />
           </IconContainer>
         )
       default:

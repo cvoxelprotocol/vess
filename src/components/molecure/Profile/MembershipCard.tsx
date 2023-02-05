@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react'
 import { isMobileOnly } from 'react-device-detect'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
-import { IconSize } from '@/components/atom/Icons/Icon'
+import { Icon, ICONS, IconSize } from '@/components/atom/Icons/Icon'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { DefaultCardColor } from '@/constants/ui'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -17,6 +17,7 @@ type Props = {
   textColor?: string
   isSelected?: boolean
   size?: IconSize
+  vc?: boolean
 }
 export const MembershipCard: FC<Props> = ({
   roles,
@@ -27,6 +28,7 @@ export const MembershipCard: FC<Props> = ({
   textColor,
   isSelected = false,
   size = 'M',
+  vc = false,
 }) => {
   const { currentTheme, currentTypo, getFont } = useVESSTheme()
 
@@ -60,6 +62,7 @@ export const MembershipCard: FC<Props> = ({
     opacity: 0.8;
     width: ${logoSize};
     height: ${logoSize};
+    margin-top: 12px;
     @media (max-width: 1079px) {
       width: ${logoSize};
       height: ${logoSize};
@@ -67,6 +70,7 @@ export const MembershipCard: FC<Props> = ({
     @media (max-width: 599px) {
       width: ${'20px'};
       height: ${'20px'};
+      margin-top: 12px;
     }
   `
   const BackLogoContainer = styled.div`
@@ -93,10 +97,18 @@ export const MembershipCard: FC<Props> = ({
       bottom: ${'-5px'};
     }
   `
-  const MarkContainer = styled.div`
-    width: 100%;
-    height: 12px;
-    text-align: right;
+  const VcMarkContainer = styled.div`
+    position: relative;
+  `
+  const VcMark = styled.div`
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    right: 0;
+    top: 0;
   `
 
   const WorkSpaceTitle = styled.div`
@@ -112,8 +124,25 @@ export const MembershipCard: FC<Props> = ({
           width={isMobileOnly ? '64px' : backLogoSize}
         />
       </BackLogoContainer>
+      {vc && (
+        <VcMarkContainer>
+          <VcMark>
+            <Icon
+              icon={ICONS.CHECK_CONTAINER}
+              size={'M'}
+              mainColor={secondColor || DefaultCardColor.secondColor}
+            />
+          </VcMark>
+          <VcMark>
+            <Icon
+              icon={ICONS.CHECKED}
+              size={'XS'}
+              mainColor={textColor || DefaultCardColor.textColor}
+            />
+          </VcMark>
+        </VcMarkContainer>
+      )}
       <Flex flexDirection='column' rowGap='8px' alignItems='start'>
-        <MarkContainer></MarkContainer>
         <LogoContainer>
           <ImageContainer
             src={icon || 'https://app.vess.id/vess-logo.png'}

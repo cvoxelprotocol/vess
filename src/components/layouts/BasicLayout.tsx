@@ -64,6 +64,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     position: fixed;
     padding: 12px;
     background: ${currentTheme.depth4};
+    z-index: 999;
   `
   const MainContainer = styled.div`
     background: ${currentTheme.background};

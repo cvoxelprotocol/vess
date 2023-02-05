@@ -62,6 +62,7 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
                 mainColor={highlightedMembership.workspace?.primaryColor}
                 secondColor={highlightedMembership.workspace?.secondaryColor}
                 textColor={highlightedMembership.workspace?.optionColor}
+                vc
               />
             ) : (
               <>

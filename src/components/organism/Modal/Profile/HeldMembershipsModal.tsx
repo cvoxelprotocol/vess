@@ -102,6 +102,7 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
                       secondColor={item.workspace?.secondaryColor}
                       textColor={item.workspace?.optionColor}
                       isSelected={item.ceramicId === highlightedMembership?.ceramicId}
+                      vc
                     />
                   </MembershipCardWrapper>
                 )
