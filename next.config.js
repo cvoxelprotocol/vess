@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: ['ipfs.io', 'ipfs.infura.io', 'storage.googleapis.com', 'arweave.net'],
   },
+  optimizeFonts: false,
 }
 
 module.exports = nextConfig

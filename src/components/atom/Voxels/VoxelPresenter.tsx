@@ -1,4 +1,3 @@
-import { ThreeEvent } from '@react-three/fiber'
 import { FC, useRef, useState, useMemo } from 'react'
 import * as THREE from 'three'
 import { VoxelVisType } from '@/interfaces/ui'
@@ -29,18 +28,12 @@ const VoxelPresenter: FC<Props> = ({
   const voxelRef = useRef<THREE.Mesh>(null!)
   const [hover, setHover] = useState<boolean>(false)
 
-  const handleVoxelClick = (e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation()
-    handleClick?.()
-  }
-
   return (
     <group
       position={voxelPosition}
       scale={!disableHover && hover ? [1.2, 1.2, 1.2] : [1, 1, 1]}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}
-      onClick={handleVoxelClick}
     >
       <mesh receiveShadow castShadow position={[0, 0, 0]} ref={voxelRef} scale={scale}>
         <boxGeometry args={[1, 1, 1]} />
