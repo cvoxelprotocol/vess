@@ -36,6 +36,7 @@
     "modern-css-reset": "^1.4.0",
     "next": "13.1.1",
     "react": "18.2.0",
+    "react-date-picker": "^9.2.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",

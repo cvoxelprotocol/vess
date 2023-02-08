@@ -20,7 +20,7 @@ export const ClaimTabs: FC = () => {
 
   const TabsList = styled(Tabs.List)`
     flex-shrink: 0;
-    border: 1px solid ${currentTheme.surfaceVariant};
+    border-bottom: 1px solid ${currentTheme.outline};
     border-width: 0px 0px 1px 0px;
     display: flex;
     flex-direction: row;
@@ -74,10 +74,10 @@ export const ClaimTabs: FC = () => {
           <TabsTrigger value='Experiences'>Experiences</TabsTrigger>
           <TabsTrigger value='Works'>Works</TabsTrigger>
         </TabsList>
-        <TabsContent value='Experiences'>
+        <TabsContent value='Experiences' asChild>
           <SelfClaimMembershipContent />
         </TabsContent>
-        <TabsContent value='Works'>
+        <TabsContent value='Works' asChild>
           <CreateWorkCredentialContent />
         </TabsContent>
       </TabsContainer>

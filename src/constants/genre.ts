@@ -1,14 +1,13 @@
 import color from 'color'
 import type { StylesConfig } from 'react-select'
+import { TagOption } from './tags'
 
-export type Genre = {
+export interface Genre extends TagOption {
   id: number
-  label: string
-  value: string
   colorCode: string
   bgColor: string
 }
-export const genreListV2: Genre[] = [
+export const GENRE_LIST: Genre[] = [
   {
     id: 0,
     label: 'Dev',
