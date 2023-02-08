@@ -95,34 +95,15 @@ export const TagUniqueSelect = <T extends FieldValues>({
   `
 
   const ChipContainer = styled.div`
-    background: ${currentTheme.primaryContainer};
-    color: ${currentTheme.onPrimaryContainer};
-    &:hover {
-      background: ${currentTheme.primaryContainer};
-      transition: all 0.15s ease-out;
-    }
-    &:active {
-      transition: all 0.15s ease-out;
-      background: ${currentTheme.primaryContainer};
-    }
-    &:focus {
-      transition: all 0.15s ease-out;
-      background: ${currentTheme.primaryContainer};
-    }
-    border-radius: 67px;
+    border-radius: 8px;
     border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: 0;
-    width: fit-content;
-    height: fit-content;
     margin: 4px;
+    width: 100%;
   `
   const ChipLayer = styled.div`
-    background: ${currentTheme.primaryContainer};
-    color: ${currentTheme.onPrimaryContainer};
+    background: ${currentTheme.secondaryContainer};
+    color: ${currentTheme.onSecondaryContainer};
     &:hover {
       background: ${currentTheme.onPrimaryContainerOpacity10};
       transition: all 0.15s ease-out;
@@ -136,16 +117,15 @@ export const TagUniqueSelect = <T extends FieldValues>({
       background: ${currentTheme.onPrimaryContainerOpacity40};
     }
     border: none;
-    border-radius: 67px;
+    border-radius: 8px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    position: flex;
     width: fit-content;
     border-width: 1px;
-    padding: 0px 8px;
+    padding: 4px 8px;
     font: ${getFont(currentTypo.label.medium)};
   `
   const IconWrapper = styled.div`
@@ -154,17 +134,17 @@ export const TagUniqueSelect = <T extends FieldValues>({
     z-index: 20;
   `
 
-  const SignleValueContainer = (props: ControlProps<TagOption, false>) => {
+  const SignleValueContainer = ({ children, ...props }: ControlProps<TagOption, false>) => {
     return (
       <>
         {props.hasValue ? (
           <ChipContainer>
-            <ChipLayer>
-              <components.Control {...props} />
-            </ChipLayer>
+            <components.Control {...props}>
+              <ChipLayer>{children}</ChipLayer>
+            </components.Control>
           </ChipContainer>
         ) : (
-          <components.Control {...props} />
+          <components.Control {...props}>{children}</components.Control>
         )}
       </>
     )
@@ -201,7 +181,6 @@ export const TagUniqueSelect = <T extends FieldValues>({
               value={options.find((x) => x.value === field.value)}
               options={options}
               placeholder={placeholder || 'Enter tags as you like..'}
-              isClearable
             />
           )}
         />
