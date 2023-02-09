@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { FC, useEffect } from 'react'
-// import { BasicHeader } from '../organism/Headers/BasicHeader'
+import { getAuthorizedSession } from 'vess-sdk'
 import { Avatar } from '../atom/Avatars/Avatar'
 import { Button } from '../atom/Buttons/Button'
 import { Flex } from '../atom/Common/Flex'
+import { CommonSpinner } from '../atom/Loading/CommonSpinner'
 import { NavigationList } from '../molecure/Navigation/NavigationList'
 import LoadingModal from '../organism/Modal/LoadingModal'
-// import { NavigationList } from '../organism/Navigation/NavigationList'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
@@ -20,7 +20,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { isLoading } = useVESSLoading()
   const { currentTheme, initTheme } = useVESSTheme()
   const { connectDID, disConnectDID, isAuthorized } = useConnectDID()
-  const { did } = useDIDAccount()
+  const { did, connection } = useDIDAccount()
   const { profile } = useSocialAccount(did)
   const LayoutContainer = styled.div`
     display: grid;
@@ -34,10 +34,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-template-rows: 80px 1fr;
     }
     @media (max-width: 599px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: 64px 1fr;
-    }
-    @media (max-width: 352px) {
       grid-template-columns: 1fr;
       grid-template-rows: 64px 1fr;
     }
@@ -68,6 +64,9 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     padding: 12px;
     background: ${currentTheme.depth4};
     z-index: 998;
+    @media (max-width: 599px) {
+      height: 64px;
+    }
   `
   const MainContainer = styled.div`
     background: ${currentTheme.background};
@@ -98,16 +97,36 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   useEffect(() => {
     initTheme()
   }, [])
+
+  useEffect(() => {
+    async function autoConnect() {
+      if (!did) {
+        const session = await getAuthorizedSession()
+        if (session) {
+          await connectDID()
+        }
+      }
+    }
+    autoConnect()
+  }, [])
+
+  console.log({ connection })
   return (
     <LayoutContainer>
       <HeaderContainer>
         <Flex alignItems='center' justifyContent={'flex-end'} height={'100%'}>
-          {isAuthorized ? (
-            <AccountContainer onClick={() => disConnectDID()}>
-              <Avatar url={profile.avatarSrc} size={'XXL'} />
-            </AccountContainer>
+          {connection === 'connecting' ? (
+            <CommonSpinner />
           ) : (
-            <Button text={'Connect'} onClick={() => connectDID()}></Button>
+            <>
+              {isAuthorized ? (
+                <AccountContainer onClick={() => disConnectDID()}>
+                  <Avatar url={profile.avatarSrc} size={'XL'} />
+                </AccountContainer>
+              ) : (
+                <Button text={'Connect'} onClick={() => connectDID()}></Button>
+              )}
+            </>
           )}
         </Flex>
       </HeaderContainer>

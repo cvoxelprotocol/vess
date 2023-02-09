@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/router'
 import { getVESS } from 'vess-sdk'
 import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
@@ -14,12 +13,6 @@ import {
 } from '@/jotai/account'
 import { getWeb3ModalService } from '@/lib/Web3ModalService'
 
-type Ath0UserType = {
-  did: string
-  account: string
-  chainId: number
-}
-
 export const useConnectDID = () => {
   const setMyDid = useSetStateMyDid()
   const setAccount = useSetStateAccount()
@@ -29,7 +22,6 @@ export const useConnectDID = () => {
   const setStateLoginType = useSetStateLoginType()
   const web3ModalService = getWeb3ModalService()
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
-  const router = useRouter()
   const queryClient = useQueryClient()
   const { issueHeldMembershipFromBackup } = useHeldMembershipSubject()
   const { issueHeldEventFromBackup } = useHeldEventAttendances()
@@ -49,8 +41,6 @@ export const useConnectDID = () => {
     setConnectionStatus('connecting')
     try {
       const { account, provider } = await web3ModalService.connectWallet()
-      console.log({ account })
-      console.log({ provider })
       if (account && provider) {
         // connect vess sdk
         const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
@@ -66,9 +56,6 @@ export const useConnectDID = () => {
         // issue credentials from DB
         issueHeldEventFromBackup(session.did.parent)
         issueHeldMembershipFromBackup(session.did.parent)
-        // if (router.asPath !== `/${session.did.parent}`) {
-        //   router.push(`/${session.did.parent}`)
-        // }
       } else {
         setConnectionStatus('disconnected')
       }

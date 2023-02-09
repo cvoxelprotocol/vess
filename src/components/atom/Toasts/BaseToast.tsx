@@ -27,7 +27,7 @@ export const BaseToast: FC<BaseToastProps> = ({
   onClickTailIcon,
   duration,
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getFont } = useVESSTheme()
   const [open, setOpen] = useStateOpenToast()
 
   const VIEWPORT_PADDING = 25
@@ -39,7 +39,7 @@ export const BaseToast: FC<BaseToastProps> = ({
 
   const ToastViewport = styled(Toast.Viewport)`
     position: fixed;
-    top: 0;
+    bottom: 0;
     right: 0;
     display: flex;
     flex-direction: column;
@@ -80,6 +80,9 @@ export const BaseToast: FC<BaseToastProps> = ({
     max-width: 100vw;
     position: relative;
     box-shadow: var(--vess-theme-card-box-shadow, 0px 2px 0px 0px rgba(175, 169, 173, 1));
+    @media (max-width: 599px) {
+      width: 90vw;
+    }
 
     &[data-state='open'] {
       animation: ${slideIn} 150ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -103,14 +106,14 @@ export const BaseToast: FC<BaseToastProps> = ({
     color: ${currentTheme.inverseOnSurface};
     grid-area: title;
     text-align: left;
-    font-family: ${currentTypo.body.medium.fontFamily};
-    font-size: ${currentTypo.body.medium.fontSize};
-    line-height: ${currentTypo.body.medium.lineHeight};
-    font-weight: ${currentTypo.body.medium.fontWeight};
+    font: ${getFont(currentTypo.body.medium)};
     position: relative;
     flex: 1;
     flex-wrap: nowrap;
     overflow: hidden;
+    @media (max-width: 599px) {
+      font: ${getFont(currentTypo.body.small)};
+    }
   `
 
   const ToastActionContainer = styled.div`
@@ -143,7 +146,7 @@ export const BaseToast: FC<BaseToastProps> = ({
   }
 
   return (
-    <Toast.Provider swipeDirection='right' duration={duration || 10000}>
+    <Toast.Provider swipeDirection='right' duration={duration || 3000}>
       {trigger && <TriggerWrapper onClick={() => setOpen(true)}>{trigger}</TriggerWrapper>}
 
       <ToastRoot open={open} onOpenChange={setOpen}>

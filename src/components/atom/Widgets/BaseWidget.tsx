@@ -59,6 +59,13 @@ export const BaseWidget: FC<Props> = ({
     setShowEdit(false)
     if (onClickEdit) onClickEdit()
   }
+
+  // useEffect(() => {
+  //   if (isMobileOnly && editable) {
+  //     setShowEdit(true)
+  //   }
+  // }, [])
+
   return (
     <Container
       onMouseEnter={editable ? () => setShowEdit(true) : undefined}

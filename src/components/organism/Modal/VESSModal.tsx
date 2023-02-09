@@ -33,8 +33,12 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       gap: 29px;
       animation: ${contentShow} 300ms cubic-bezier(0.77, 0.2, 0.05, 1);
       z-index: 90;
+      margin-top: 80px;
       &:focus {
         outline: none;
+      }
+      @media (max-width: 599px) {
+        margin-top: 64px;
       }
     `
     const DialogInnerContent = styled.div`

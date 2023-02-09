@@ -3,14 +3,12 @@ import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { isMobileOnly } from 'react-device-detect'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
-import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
-import { Flex } from '@/components/atom/Common/Flex'
-import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { NoItem } from '@/components/atom/Common/NoItem'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { shortenStr } from '@/utils/objectUtil'
 
 type Props = {
   did: string
@@ -24,7 +22,9 @@ type Props = {
 
 export const EventAttendancesWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getFont } = useVESSTheme()
-  const { HeldEventAttendances } = useHeldEventAttendances(props.did)
+  const { HeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances(
+    props.did,
+  )
   const { openModal } = useVESSWidgetModal()
   const router = useRouter()
 
@@ -76,6 +76,14 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
     grid-template-columns: repeat(auto-fill, 1fr);
     grid-template-rows: repeat(auto-fill, 1fr);
   `
+  const NoItemContainer = styled.div`
+    grid-column: 1/4;
+    grid-row: 1/4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 240px;
+  `
 
   const handleEdit = () => {
     openModal()
@@ -92,14 +100,27 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
     <>
       <BaseWidget onClickEdit={handleEdit} {...props} border={`1px solid ${currentTheme.outline}`}>
         <Container onClick={handleClickConWidget}>
-          {HeldEventAttendances &&
-            HeldEventAttendances.map((item) => {
-              return (
-                <IconContainer key={item.ceramicId}>
-                  <Avatar url={item.credentialSubject.eventIcon} size={'XXL'} />
-                </IconContainer>
-              )
-            })}
+          {isFetchingHeldEventAttendances ? (
+            <CommonSpinner />
+          ) : (
+            <>
+              {!HeldEventAttendances || HeldEventAttendances.length === 0 ? (
+                <NoItemContainer>
+                  <NoItem text='No Item yet' />
+                </NoItemContainer>
+              ) : (
+                <>
+                  {HeldEventAttendances.map((item) => {
+                    return (
+                      <IconContainer key={item.ceramicId}>
+                        <Avatar url={item.credentialSubject.eventIcon} size={'XXL'} />
+                      </IconContainer>
+                    )
+                  })}
+                </>
+              )}
+            </>
+          )}
         </Container>
         <FooterContainer>
           <FooterTitle>Event Attendances</FooterTitle>

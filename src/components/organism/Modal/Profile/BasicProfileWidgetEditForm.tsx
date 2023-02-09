@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import type { BusinessProfile } from 'vess-sdk'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Input } from '@/components/atom/Forms/Input'
-import { MultiInput } from '@/components/atom/Forms/MultiInput'
 import { TagSelect } from '@/components/atom/Forms/TagSelect'
 import { TagUniqueSelect } from '@/components/atom/Forms/TagUniqueSelect'
 import { ICONS } from '@/components/atom/Icons/Icon'
@@ -14,6 +13,7 @@ import {
   WORK_STATUS,
   WORK_STYLES,
 } from '@/constants/businessProfile'
+import { TAGS } from '@/constants/tags'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -56,6 +56,7 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
     height: 65vh;
     gap: 16px;
     background: ${currentTheme.surface1};
+    margin-bottom: 60px;
     overflow-y: scroll;
     ::-webkit-scrollbar {
       display: none;
@@ -111,7 +112,14 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
     <>
       <Form id={'BasicProfileEditForm'} onSubmit={handleSubmit(onClickSubmit)}>
         <FormContent>
-          <MultiInput label={'bio'} name={`bio`} control={control} error={errors.bio?.message} />
+          {/* <MultiInput label={'bio'} name={`bio`} control={control} error={errors.bio?.message} /> */}
+          <TagSelect
+            control={control}
+            name={'tags'}
+            label={'Tags'}
+            error={errors.tags?.message}
+            options={TAGS}
+          />
           <Input
             label={'Base Location'}
             name={`baseLocation`}
@@ -173,13 +181,12 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
             label={'Skills'}
             error={errors.skills?.message}
           />
-          <TagSelect
+          {/* <TagSelect
             control={control}
             name={'roles'}
             label={'Roles'}
             error={errors.roles?.message}
-          />
-          <TagSelect control={control} name={'tags'} label={'Tags'} error={errors.tags?.message} />
+          /> */}
         </FormContent>
         <ButtonContainer>
           <Button variant='text' text='Cancel' type='button' onClick={() => closeModal()} />

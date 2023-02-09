@@ -3,6 +3,7 @@ import { FC } from 'react'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
+import { SocialProfileEditModal } from '@/components/organism/Modal/Profile/SocialProfileEditModal'
 import { ProfleTabs } from '@/components/organism/Tabs/ProfleTabs'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
 import { EventAttendancesWidget } from '@/components/organism/Widgets/Profiles/EventAttendancesWidget'
@@ -20,7 +21,7 @@ type Props = {
   did: string
 }
 export const ProfileContainer: FC<Props> = ({ did }) => {
-  const { currentTheme, initTheme } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
   const { businessProfile, isFetchingBusinessProfile, isMe } = useBusinessProfile(did)
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(did)
 
@@ -125,6 +126,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
         <SocialLinkWidgetEditModal did={did} socialLinks={socialLinks} editable={isMe} />
       )}
       <HeldMembershipsModal did={did} editable={isMe} />
+      <SocialProfileEditModal did={did} />
     </Container>
   )
 }

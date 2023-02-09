@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import dynamic from 'next/dynamic'
 import { FC, useMemo } from 'react'
 import type { WorkCredentialWithId } from 'vess-sdk'
+import { NoItem } from '@/components/atom/Common/NoItem'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
-import { initVoxel } from '@/constants/test'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useWorkCredentials } from '@/hooks/useWorkCredential'
 
@@ -55,9 +55,12 @@ export const WorkCredentialsWidget: FC<Props> = (props) => {
     color: ${currentTheme.primary};
     font: ${getFont(currentTypo.title.small)};
   `
-  const IconContainer = styled.div`
-    grid-template-columns: repeat(auto-fill, 1fr);
-    grid-template-rows: repeat(auto-fill, 1fr);
+  const NoItemContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   `
 
   const handleEdit = () => {}
@@ -69,7 +72,7 @@ export const WorkCredentialsWidget: FC<Props> = (props) => {
   const VisualizerPresenterMemo = useMemo(
     () => (
       <VisualizerPresenterWrapper
-        content={workCredentials && workCredentials.length > 0 ? workCredentials : initVoxel}
+        content={workCredentials && workCredentials.length > 0 ? workCredentials : []}
         showDetailBox={selectItem}
       />
     ),
@@ -79,7 +82,15 @@ export const WorkCredentialsWidget: FC<Props> = (props) => {
   return (
     <>
       <BaseWidget onClickEdit={handleEdit} {...props} border={`1px solid ${currentTheme.outline}`}>
-        <Container>{VisualizerPresenterMemo}</Container>
+        <Container>
+          {!workCredentials || workCredentials.length === 0 ? (
+            <NoItemContainer>
+              <NoItem text='Coming Soon...' />
+            </NoItemContainer>
+          ) : (
+            <>{VisualizerPresenterMemo}</>
+          )}
+        </Container>
         <FooterContainer>
           <FooterTitle>Work Credentials</FooterTitle>
         </FooterContainer>

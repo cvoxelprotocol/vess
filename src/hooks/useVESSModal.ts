@@ -1,4 +1,5 @@
 import {
+  useStateSocialProfileEditModal,
   useStateVESSHighlightedMembershipModal,
   useStateVESSSocialLinkWidgetModal,
   useStateVESSWidgetModal,
@@ -8,6 +9,7 @@ export const useVESSWidgetModal = () => {
   const [showModal, setShowModal] = useStateVESSWidgetModal()
   const [showSocialLinkModal, setShowSocialLinkModal] = useStateVESSSocialLinkWidgetModal()
   const [showMembershipModal, setShowMembershipModal] = useStateVESSHighlightedMembershipModal()
+  const [showSocialProfileModal, setShowSocialProfileModal] = useStateSocialProfileEditModal()
 
   return {
     openModal: () => setShowModal(true),
@@ -22,5 +24,7 @@ export const useVESSWidgetModal = () => {
     closeMembershipModal: () => setShowMembershipModal(false),
     showMembershipModal,
     setShowMembershipModal,
+    showSocialProfileModal,
+    setShowSocialProfileModal,
   }
 }

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
 import type { EventAttendanceWithId } from 'vess-sdk'
+import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { EventCard } from '@/components/molecure/Event/EventCard'
 import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
@@ -52,14 +53,20 @@ export const EventTabContent: FC<Props> = ({ did }) => {
         </LoadingContainer>
       ) : (
         <MembersContainer>
-          {HeldEventAttendances &&
-            HeldEventAttendances.map((event) => {
-              return (
-                <Content key={event.ceramicId} onClick={() => goToEventPage(event)}>
-                  <EventCard ceramicId={event.credentialSubject.eventId} />
-                </Content>
-              )
-            })}
+          {!HeldEventAttendances || HeldEventAttendances.length === 0 ? (
+            <NoItem text={'No Item yet'} />
+          ) : (
+            <>
+              {HeldEventAttendances &&
+                HeldEventAttendances.map((event) => {
+                  return (
+                    <Content key={event.ceramicId} onClick={() => goToEventPage(event)}>
+                      <EventCard ceramicId={event.credentialSubject.eventId} />
+                    </Content>
+                  )
+                })}
+            </>
+          )}
         </MembersContainer>
       )}
     </Wrapper>

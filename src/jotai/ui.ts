@@ -45,3 +45,7 @@ export const useStateVessToastProps = () => useAtom(vessToastProps)
 export const selectedNavigationItem = atom<NavigationItemType>(NAVIGATION_ITEM.HOME)
 
 export const useStateSelectedNavigationItem = () => useAtom(selectedNavigationItem)
+
+export const socialProfileEditModal = atom<boolean>(false)
+
+export const useStateSocialProfileEditModal = () => useAtom(socialProfileEditModal)

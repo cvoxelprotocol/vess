@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
-import { FC } from 'react'
-import type { EventAttendanceWithId } from 'vess-sdk'
+import { FC, useMemo } from 'react'
+import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { MembershipCard } from '@/components/molecure/Profile/MembershipCard'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
@@ -12,7 +11,6 @@ type Props = {
 }
 
 export const MembershipsTabContent: FC<Props> = ({ did }) => {
-  const router = useRouter()
   const { HeldMembershipSubjects, isFetchingHeldMembershipSubjects } = useHeldMembershipSubject(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
   const Wrapper = styled.div`
@@ -44,9 +42,13 @@ export const MembershipsTabContent: FC<Props> = ({ did }) => {
     height: 100%;
   `
 
-  const goToEventPage = (event: EventAttendanceWithId) => {
-    // router.push(`/events/${removeCeramicPrefix(event.ceramicId)}`)
-  }
+  const hasMemberships = useMemo(() => {
+    if (isFetchingHeldMembershipSubjects) return false
+    return (
+      (HeldMembershipSubjects && HeldMembershipSubjects.length > 0) ||
+      (selfClaimedMemberships && selfClaimedMemberships.length > 0)
+    )
+  }, [HeldMembershipSubjects, selfClaimedMemberships, isFetchingHeldMembershipSubjects])
 
   return (
     <Wrapper>
@@ -57,29 +59,35 @@ export const MembershipsTabContent: FC<Props> = ({ did }) => {
         </LoadingContainer>
       ) : (
         <MembersContainer>
-          {HeldMembershipSubjects &&
-            HeldMembershipSubjects.map((item) => {
-              return (
-                <MembershipCardWrapper key={item.ceramicId}>
-                  <MembershipCard
-                    title={item.credentialSubject.organizationName}
-                    roles={[item.credentialSubject.membershipName]}
-                    mainColor={item.workspace?.primaryColor}
-                    secondColor={item.workspace?.secondaryColor}
-                    textColor={item.workspace?.optionColor}
-                    vc
-                  />
-                </MembershipCardWrapper>
-              )
-            })}
-          {selfClaimedMemberships &&
-            selfClaimedMemberships.map((item) => {
-              return (
-                <MembershipCardWrapper key={item.ceramicId}>
-                  <MembershipCard title={item.organizationName} roles={[item.membershipName]} />
-                </MembershipCardWrapper>
-              )
-            })}
+          {!hasMemberships ? (
+            <NoItem text={'No Item yet'} />
+          ) : (
+            <>
+              {HeldMembershipSubjects &&
+                HeldMembershipSubjects.map((item) => {
+                  return (
+                    <MembershipCardWrapper key={item.ceramicId}>
+                      <MembershipCard
+                        title={item.credentialSubject.organizationName}
+                        roles={[item.credentialSubject.membershipName]}
+                        mainColor={item.workspace?.primaryColor}
+                        secondColor={item.workspace?.secondaryColor}
+                        textColor={item.workspace?.optionColor}
+                        vc
+                      />
+                    </MembershipCardWrapper>
+                  )
+                })}
+              {selfClaimedMemberships &&
+                selfClaimedMemberships.map((item) => {
+                  return (
+                    <MembershipCardWrapper key={item.ceramicId}>
+                      <MembershipCard title={item.organizationName} roles={[item.membershipName]} />
+                    </MembershipCardWrapper>
+                  )
+                })}
+            </>
+          )}
         </MembersContainer>
       )}
     </Wrapper>

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
-import { isMobileOnly } from 'react-device-detect'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, ICONS, IconSize } from '@/components/atom/Icons/Icon'
@@ -77,22 +76,18 @@ export const MembershipCard: FC<Props> = ({
     opacity: 0.2;
     width: ${backLogoSize};
     height: ${backLogoSize};
-    @media (max-width: 1079px) {
-      width: ${backLogoSize};
-      height: ${backLogoSize};
-    }
-    @media (max-width: 599px) {
-      width: ${'64px'};
-      height: ${'64px'};
-    }
     position: absolute;
     right: ${backLogoPortion};
     bottom: ${backLogoPortion};
     @media (max-width: 1079px) {
+      width: ${backLogoSize};
+      height: ${backLogoSize};
       right: ${backLogoPortion};
       bottom: ${backLogoPortion};
     }
     @media (max-width: 599px) {
+      width: ${'64px'};
+      height: ${'64px'};
       right: ${'-5px'};
       bottom: ${'-5px'};
     }

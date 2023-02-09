@@ -1,12 +1,11 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
-import type { EventAttendanceWithId, WorkCredentialWithId } from 'vess-sdk'
+import type { WorkCredentialWithId } from 'vess-sdk'
+import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
-import { EventCard } from '@/components/molecure/Event/EventCard'
+
 import { WorkCredentialCard } from '@/components/molecure/Work/WorkCredentialCard'
-import { initVoxel } from '@/constants/test'
-import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
 import { useWorkCredentials } from '@/hooks/useWorkCredential'
 
 type Props = {
@@ -14,7 +13,6 @@ type Props = {
 }
 
 export const WorkTabContent: FC<Props> = ({ did }) => {
-  const router = useRouter()
   const { workCredentials, isInitialLoading } = useWorkCredentials(did)
   const Wrapper = styled.div`
     width: 100%;
@@ -41,10 +39,6 @@ export const WorkTabContent: FC<Props> = ({ did }) => {
     height: 100%;
   `
 
-  const goToEventPage = (event: WorkCredentialWithId) => {
-    // router.push(`/events/${removeCeramicPrefix(event.ceramicId)}`)
-  }
-
   return (
     <Wrapper>
       {isInitialLoading ? (
@@ -54,22 +48,20 @@ export const WorkTabContent: FC<Props> = ({ did }) => {
         </LoadingContainer>
       ) : (
         <MembersContainer>
-          {initVoxel &&
-            initVoxel.map((work) => {
-              return (
-                <Content key={work.ceramicId} onClick={() => goToEventPage(work)}>
-                  <WorkCredentialCard workCredential={work} />
-                </Content>
-              )
-            })}
-          {/* {workCredentials &&
-            workCredentials.map((work) => {
-              return (
-                <Content key={work.ceramicId} onClick={() => goToEventPage(work)}>
-                  <WorkCredentialCard workCredential={work} />
-                </Content>
-              )
-            })} */}
+          {!workCredentials || workCredentials.length === 0 ? (
+            <NoItem text={'Coming Soon...'} />
+          ) : (
+            <>
+              {workCredentials &&
+                workCredentials.map((work) => {
+                  return (
+                    <Content key={work.ceramicId}>
+                      <WorkCredentialCard workCredential={work} />
+                    </Content>
+                  )
+                })}
+            </>
+          )}
         </MembersContainer>
       )}
     </Wrapper>

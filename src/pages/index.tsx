@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
 import { NextPageWithLayout } from './_app'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
-import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
+import { HomeContainer } from '@/components/templates/Home/HomeContainer'
 const Home: NextPageWithLayout = () => {
-  return <div>this is home </div>
+  return <HomeContainer />
 }
 
 Home.getLayout = function getLayout(page: ReactElement) {

@@ -5,7 +5,6 @@ import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
-import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -24,8 +23,7 @@ type Props = {
 export const BasicProfileWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getFont } = useVESSTheme()
   const { profile, isFetchingSocialAccount } = useSocialAccount(props.did)
-  const { businessProfile } = useBusinessProfile(props.did)
-  const { openModal } = useVESSWidgetModal()
+  const { setShowSocialProfileModal } = useVESSWidgetModal()
 
   const HeaderImage = styled.div`
     width: 100%;
@@ -56,7 +54,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
   `
 
   const handleEdit = () => {
-    openModal()
+    setShowSocialProfileModal(true)
   }
 
   return (
@@ -84,7 +82,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
               <Address>{shortenStr(props.did, 16)}</Address>
             </Flex>
           </Flex>
-          <Description>{businessProfile?.bio}</Description>
+          <Description>{profile?.bio}</Description>
         </Container>
       </BaseWidget>
     </>
