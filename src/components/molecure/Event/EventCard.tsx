@@ -15,7 +15,7 @@ type Props = {
 export const EventCard: FC<Props> = ({ ceramicId }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const router = useRouter()
-  const { IssuedEventAttendanceVCbyEvent, eventDetail } = useEventAttendance(ceramicId)
+  const { eventDetail } = useEventAttendance(ceramicId)
   const { organization } = useOrganization(eventDetail?.organizationId)
 
   const CardContainer = styled.div`
@@ -100,10 +100,6 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
         </PfpContainer>
         <Name>{eventDetail?.name}</Name>
         <Flex>
-          <InfoItem>
-            <Icon icon={ICONS.PERSON} size={'MM'} />
-            {`${IssuedEventAttendanceVCbyEvent.length}`}
-          </InfoItem>
           <InfoItem>
             <Icon icon={ICONS.CALENDAR} size={'MM'} />
             {`${formatDate(eventDetail?.startDate)}`}
