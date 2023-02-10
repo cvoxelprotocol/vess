@@ -21,7 +21,7 @@ type Props = {
 
 export const SelfClaimedRoleWidget: FC<Props> = (props) => {
   const { businessProfile, isFetchingBusinessProfile } = useBusinessProfile(props.did)
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { openModal } = useVESSWidgetModal()
 
   const handleEdit = () => {

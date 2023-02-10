@@ -11,7 +11,7 @@ type Props = {
 }
 
 export const WorkStyleItem: FC<Props> = ({ icon, content, borderRadius }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const Container = styled.div`
     height: auto;
@@ -43,7 +43,7 @@ export const WorkStyleItem: FC<Props> = ({ icon, content, borderRadius }) => {
   `
   const Content = styled.div`
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
   `
 
   return (

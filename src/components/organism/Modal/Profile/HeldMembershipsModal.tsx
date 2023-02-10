@@ -18,7 +18,7 @@ type Props = {
 }
 
 export const HeldMembershipsModal: FC<Props> = (props) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { showMembershipModal, setShowMembershipModal } = useVESSWidgetModal()
   const { HeldMembershipSubjects, highlightedMembership, highlightedSelfClaimedMembership } =
     useHeldMembershipSubject(props.did)
@@ -43,11 +43,11 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
   `
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
   `
   const Desc = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
   `
   const InnerContent = styled.div`
     display: flex;

@@ -7,7 +7,7 @@ type Props = {
   text?: string
 }
 export default function LoadingModal(props: Props) {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const Container = styled.div`
     position: fixed;
     top: 0;
@@ -32,10 +32,7 @@ export default function LoadingModal(props: Props) {
   const LoadingText = styled.p`
     color: ${currentTheme.onSurface};
     text-align: left;
-    font-family: ${currentTypo.body.medium.fontFamily};
-    font-size: ${currentTypo.body.medium.fontSize};
-    line-height: ${currentTypo.body.medium.lineHeight};
-    font-weight: ${currentTypo.body.medium.fontWeight};
+    ${getBasicFont(currentTypo.body.medium)}
   `
   return (
     <Container>

@@ -9,10 +9,10 @@ type Props = {
   color?: string
 }
 export const NoItem: FC<Props> = ({ text, font, color }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const Text = styled.h1`
     color: ${color || currentTheme.onBackground};
-    font: ${getFont(font || currentTypo.title.large)};
+    ${getBasicFont(font || currentTypo.title.large)};
   `
 
   return <Text>{text}</Text>

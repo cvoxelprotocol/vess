@@ -27,7 +27,7 @@ export const BaseToast: FC<BaseToastProps> = ({
   onClickTailIcon,
   duration,
 }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const [open, setOpen] = useStateOpenToast()
 
   const VIEWPORT_PADDING = 25
@@ -106,13 +106,13 @@ export const BaseToast: FC<BaseToastProps> = ({
     color: ${currentTheme.inverseOnSurface};
     grid-area: title;
     text-align: left;
-    font: ${getFont(currentTypo.body.medium)};
+    ${getBasicFont(currentTypo.body.medium)};
     position: relative;
     flex: 1;
     flex-wrap: nowrap;
     overflow: hidden;
     @media (max-width: 599px) {
-      font: ${getFont(currentTypo.body.small)};
+      ${getBasicFont(currentTypo.body.small)};
     }
   `
 

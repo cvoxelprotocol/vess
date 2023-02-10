@@ -29,7 +29,7 @@ export const MembershipCard: FC<Props> = ({
   size = 'M',
   vc = false,
 }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const logoSize = useMemo(() => {
     return size === 'M' ? '40px' : '32px'
@@ -55,6 +55,7 @@ export const MembershipCard: FC<Props> = ({
     aspect-ratio: 1.58 / 1;
     position: relative;
     overflow: hidden;
+    max-width: 280px;
   `
 
   const LogoContainer = styled.div`
@@ -108,7 +109,7 @@ export const MembershipCard: FC<Props> = ({
 
   const WorkSpaceTitle = styled.div`
     color: ${textColor || DefaultCardColor.textColor};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
   `
 
   return (

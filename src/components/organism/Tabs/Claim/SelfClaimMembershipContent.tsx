@@ -18,7 +18,7 @@ type Input = {
 }
 
 export const SelfClaimMembershipContent: FC = () => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { did } = useDIDAccount()
   const { storeSelfClaimedMembership } = useSelfClaimedMembership(did)
 
@@ -54,11 +54,11 @@ export const SelfClaimMembershipContent: FC = () => {
 
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.title.large)};
+    ${getBasicFont(currentTypo.title.large)};
   `
   const Desc = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
   `
   const CardContainer = styled.div`
     width: 220px;

@@ -24,7 +24,7 @@ export const BaseDialog: FC<Props> = ({
   rightActionTitle,
   rightAction,
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const [open, setOpen] = useStateOpenBaseDialog()
   const overlayShow = keyframes({
     '0%': { opacity: 0 },
@@ -79,18 +79,12 @@ export const BaseDialog: FC<Props> = ({
     color: ${currentTheme.onSurface};
     text-align: left;
     margin: 0;
-    font-family: ${currentTypo.headLine.small.fontFamily};
-    font-size: ${currentTypo.headLine.small.fontSize};
-    line-height: ${currentTypo.headLine.small.lineHeight};
-    font-weight: ${currentTypo.headLine.small.fontWeight};
+    ${getBasicFont(currentTypo.headLine.small)}
   `
   const DialogDescription = styled(Dialog.Description)`
     color: ${currentTheme.onSurface};
     text-align: left;
-    font-family: ${currentTypo.body.medium.fontFamily};
-    font-size: ${currentTypo.body.medium.fontSize};
-    line-height: ${currentTypo.body.medium.lineHeight};
-    font-weight: ${currentTypo.body.medium.fontWeight};
+    ${getBasicFont(currentTypo.body.medium)}
   `
 
   const ActionBtn = styled.div`

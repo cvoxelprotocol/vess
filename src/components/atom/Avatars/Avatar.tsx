@@ -12,7 +12,7 @@ interface AvatarProps {
 }
 
 export const Avatar: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
 
   const AvatarContainer = styled(radixAvatar.Root)`
     display: inline-flex;
@@ -40,9 +40,6 @@ export const Avatar: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
     justify-content: center;
     background-color: ${currentTheme.bodyBackground};
     color: ${currentTheme.primary};
-    font-size: ${currentTypo.body.small.fontSize};
-    line-height: ${currentTypo.body.small.lineHeight};
-    font-weight: ${currentTypo.body.small.fontWeight};
   `
 
   return (

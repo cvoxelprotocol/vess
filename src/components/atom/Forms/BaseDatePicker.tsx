@@ -26,7 +26,7 @@ export const BaseDatePicker = <T extends FieldValues>({
   required,
   defaultDate,
 }: Props<T>) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const ContainerWidth = useMemo(() => {
     return !width ? '100%' : `${width}px`
@@ -43,12 +43,12 @@ export const BaseDatePicker = <T extends FieldValues>({
   `
   const Label = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.label.large)};
+    ${getBasicFont(currentTypo.label.large)};
   `
   const RequiredMark = styled.span`
     padding: 0 4px;
     color: ${currentTheme.error};
-    font: ${getFont(currentTypo.label.large)};
+    ${getBasicFont(currentTypo.label.large)};
   `
   const InputLayer = styled.div`
     background: none;
@@ -78,7 +78,7 @@ export const BaseDatePicker = <T extends FieldValues>({
   `
   const SupportingText = styled.span`
     color: ${currentTheme.error};
-    font: ${getFont(currentTypo.body.small)};
+    ${getBasicFont(currentTypo.body.small)};
   `
 
   const DatePickerContent = styled(DatePicker)`
@@ -98,7 +98,7 @@ export const BaseDatePicker = <T extends FieldValues>({
   `
   const PickAction = styled.label`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.label.large)};
+    ${getBasicFont(currentTypo.label.large)};
   `
 
   const defaultVal = useMemo(() => {

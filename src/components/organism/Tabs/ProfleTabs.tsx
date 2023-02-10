@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const ProfleTabs: FC<Props> = ({ did }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const [isClient, setClient] = useState(false)
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   const TabsTrigger = styled(Tabs.Trigger)`
     all: unset;
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
     padding: 0 20px;
     height: 100%;
     flex: 1;
@@ -78,7 +78,7 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   const SPTabHeader = styled.div`
     border-radius: 16px 16px 0px 0px;
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.title.large)};
+    ${getBasicFont(currentTypo.title.large)};
     padding: 2px;
     border: 1px solid ${currentTheme.surfaceVariant};
     border-width: 0px 0px 1px 0px;

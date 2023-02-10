@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const EventCard: FC<Props> = ({ ceramicId }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const router = useRouter()
   const { IssuedEventAttendanceVCbyEvent, eventDetail } = useEventAttendance(ceramicId)
   const { organization } = useOrganization(eventDetail?.organizationId)
@@ -57,9 +57,9 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
 
   const Name = styled.div`
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
     @media (max-width: 599px) {
-      font: ${getFont(currentTypo.title.small)};
+      ${getBasicFont(currentTypo.title.small)};
     }
     word-break: break-all;
   `
@@ -72,9 +72,9 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
   const InfoItem = styled.p`
     color: ${currentTheme.onSurface};
     text-align: left;
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
     @media (max-width: 599px) {
-      font: ${getFont(currentTypo.label.small)};
+      ${getBasicFont(currentTypo.label.small)};
     }
     display: flex;
     align-items: center;
@@ -83,9 +83,9 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
   const Organizer = styled.div`
     color: ${currentTheme.onSurfaceVariant};
     text-align: left;
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
     @media (max-width: 599px) {
-      font: ${getFont(currentTypo.label.small)};
+      ${getBasicFont(currentTypo.label.small)};
     }
     display: flex;
     align-items: center;

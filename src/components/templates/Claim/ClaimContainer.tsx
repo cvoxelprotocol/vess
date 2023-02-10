@@ -4,7 +4,7 @@ import { ClaimTabs } from '@/components/organism/Tabs/Claim/ClaimTabs'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const ClaimContainer: FC = () => {
-  const { currentTheme, getFont, currentTypo } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
 
   const Container = styled.div`
     width: 100%;

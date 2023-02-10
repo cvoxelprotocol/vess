@@ -24,7 +24,7 @@ export const Button: FC<ButtonProps> = ({
   mainColor,
   ...props
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   if (props.disabled) {
     const ButtonContainer = styled.button`
@@ -60,10 +60,7 @@ export const Button: FC<ButtonProps> = ({
       color: ${currentTheme.onSurfaceVariant};
       opacity: ${variant === 'filled' ? 0.4 : 1};
       text-align: center;
-      font-family: ${currentTypo.label.large.fontFamily};
-      font-size: ${currentTypo.label.large.fontSize};
-      line-height: ${currentTypo.label.large.lineHeight};
-      font-weight: ${currentTypo.label.large.fontWeight};
+      ${getBasicFont(currentTypo.label.large)}
       position: relative;
       display: flex;
       align-items: center;
@@ -148,10 +145,7 @@ export const Button: FC<ButtonProps> = ({
       color: ${variant === 'filled' ? currentTheme.primaryContainer : currentTheme.primary};
     }
     text-align: center;
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
     position: relative;
     display: flex;
     align-items: center;

@@ -6,7 +6,7 @@ import { SelfClaimMembershipContent } from './SelfClaimMembershipContent'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const ClaimTabs: FC = () => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const TabsRoot = styled(Tabs.Root)`
     width: 100%;
@@ -34,7 +34,7 @@ export const ClaimTabs: FC = () => {
   const TabsTrigger = styled(Tabs.Trigger)`
     all: unset;
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.title.large)};
+    ${getBasicFont(currentTypo.title.large)};
     margin: 16px 0px;
     height: 100%;
     flex: 1;
@@ -60,7 +60,7 @@ export const ClaimTabs: FC = () => {
   const SPTabHeader = styled.div`
     border-radius: 16px 16px 0px 0px;
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.title.large)};
+    ${getBasicFont(currentTypo.title.large)};
     padding: 2px;
     border: 1px solid ${currentTheme.surfaceVariant};
     border-width: 0px 0px 1px 0px;

@@ -20,7 +20,7 @@ export const NavigationItem: FC<Props> = ({
   selected = false,
   ...props
 }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const NavigationItemContainer = styled.button`
     background: none;
@@ -52,7 +52,7 @@ export const NavigationItem: FC<Props> = ({
     background: none;
     color: ${selected ? currentTheme.secondary : currentTheme.onSecondaryContainer};
     text-align: center;
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
     white-space: nowrap;
   `
 

@@ -21,7 +21,7 @@ type Props = {
 }
 
 export const BasicProfileWidget: FC<Props> = (props) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { profile, isFetchingSocialAccount } = useSocialAccount(props.did)
   const { setShowSocialProfileModal } = useVESSWidgetModal()
 
@@ -37,18 +37,18 @@ export const BasicProfileWidget: FC<Props> = (props) => {
   `
   const Name = styled.div`
     color: ${currentTheme.onPrimaryContainer};
-    font: ${getFont(currentTypo.headLine.small)};
+    ${getBasicFont(currentTypo.headLine.small)};
   `
   const Address = styled.div`
     color: ${currentTheme.outline};
-    font: ${getFont(currentTypo.label.large)};
+    ${getBasicFont(currentTypo.label.large)};
   `
 
   const Description = styled.p`
     padding-top: 14px;
     color: ${currentTheme.onSurface};
     text-align: left;
-    font: ${getFont(currentTypo.body.medium)};
+    ${getBasicFont(currentTypo.body.medium)};
     height: 100px;
     overflow-y: scroll;
   `

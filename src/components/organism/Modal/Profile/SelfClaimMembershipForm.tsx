@@ -22,7 +22,7 @@ type Input = {
 }
 
 export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { closeMembershipModal } = useVESSWidgetModal()
   const { storeSelfClaimedMembership } = useSelfClaimedMembership(did)
   const { highlightedCredentials, storeHighlightedCredentials } = useHighlightedCredentials(did)
@@ -44,11 +44,11 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
 
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
   `
   const Desc = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
   `
 
   const {

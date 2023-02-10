@@ -21,7 +21,7 @@ type Props = {
 }
 
 export const EventAttendancesWidget: FC<Props> = (props) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { HeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances(
     props.did,
   )
@@ -70,7 +70,7 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
   `
   const FooterTitle = styled.div`
     color: ${currentTheme.primary};
-    font: ${getFont(currentTypo.title.small)};
+    ${getBasicFont(currentTypo.title.small)};
   `
   const IconContainer = styled.div`
     grid-template-columns: repeat(auto-fill, 1fr);

@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const router = useRouter()
 
   const work = useMemo(() => {
@@ -49,7 +49,7 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
 
   const Name = styled.div`
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
     word-break: break-all;
   `
   const ChipsContainer = styled.div`
@@ -76,7 +76,7 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
   const InfoItem = styled.p`
     color: ${currentTheme.onSurface};
     text-align: left;
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
     display: flex;
     align-items: center;
     column-gap: 4px;
@@ -84,7 +84,7 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
   const LinkText = styled.div`
     color: ${currentTheme.secondary};
     text-align: left;
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
   `
 
   return (

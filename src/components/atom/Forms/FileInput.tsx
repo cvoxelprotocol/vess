@@ -25,7 +25,7 @@ interface Props {
 }
 
 export const FileInput: FC<Props> = ({ required = false, label, supportingText, width }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const [files, setFiles] = useState<FileWithPreview[] | null>()
   const [errors, setErrors] = useState('')
 
@@ -43,26 +43,17 @@ export const FileInput: FC<Props> = ({ required = false, label, supportingText, 
   `
   const Label = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
   `
   const SupportingText = styled.span`
     color: ${currentTheme.onSurface};
-    font-family: ${currentTypo.body.small.fontFamily};
-    font-size: ${currentTypo.body.small.fontSize};
-    line-height: ${currentTypo.body.small.lineHeight};
-    font-weight: ${currentTypo.body.small.fontWeight};
+    ${getBasicFont(currentTypo.body.small)}
   `
 
   const RequiredMark = styled.span`
     padding: 0 4px;
     color: ${currentTheme.error};
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
   `
 
   const DropzoneContainer = styled.div`
@@ -98,10 +89,7 @@ export const FileInput: FC<Props> = ({ required = false, label, supportingText, 
 
   const DropzoneText = styled.p`
     color: ${currentTheme.onPrimaryContainer};
-    font-family: ${currentTypo.title.medium.fontFamily};
-    font-size: ${currentTypo.title.medium.fontSize};
-    line-height: ${currentTypo.title.medium.lineHeight};
-    font-weight: ${currentTypo.title.medium.fontWeight};
+    ${getBasicFont(currentTypo.title.medium)}
   `
 
   const FilePreviewContainer = styled.div`
@@ -120,10 +108,7 @@ export const FileInput: FC<Props> = ({ required = false, label, supportingText, 
 
   const FilePreviewText = styled.div`
     color: ${currentTheme.onBackground};
-    font-family: ${currentTypo.title.small.fontFamily};
-    font-size: ${currentTypo.title.small.fontSize};
-    line-height: ${currentTypo.title.small.lineHeight};
-    font-weight: ${currentTypo.title.small.fontWeight};
+    ${getBasicFont(currentTypo.title.small)}
   `
 
   const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {

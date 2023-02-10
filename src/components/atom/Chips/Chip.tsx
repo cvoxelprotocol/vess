@@ -35,7 +35,7 @@ export const Chip: FC<ChipProps> = ({
   tailIconAction,
   ...props
 }) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const label = useMemo(() => {
     if (size === 'S') return currentTypo.label.small
@@ -83,7 +83,7 @@ export const Chip: FC<ChipProps> = ({
       (variant === 'filled' ? currentTheme.onSurfaceVariant : currentTheme.onSurface)};
       opacity: ${variant === 'filled' ? 1 : 0.4};
       text-align: center;
-      font: ${getFont(label)};
+      ${getBasicFont(label)};
       position: relative;
       display: flex;
       align-items: center;
@@ -189,10 +189,7 @@ export const Chip: FC<ChipProps> = ({
       color: ${variant === 'filled' ? currentTheme.onPrimary : currentTheme.onPrimaryContainer};
     }
     text-align: center;
-    font-family: ${label.fontFamily};
-    font-size: ${label.fontSize};
-    line-height: ${label.lineHeight};
-    font-weight: ${label.fontWeight};
+    ${getBasicFont(label)}
     position: relative;
     display: flex;
     align-items: center;

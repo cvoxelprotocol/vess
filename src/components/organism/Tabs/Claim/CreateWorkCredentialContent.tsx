@@ -16,7 +16,7 @@ import { useWorkCredentials } from '@/hooks/useWorkCredential'
 
 export const CreateWorkCredentialContent: FC = () => {
   const router = useRouter()
-  const { currentTheme, getFont, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { did } = useDIDAccount()
   const { workCredentials, isInitialLoading } = useWorkCredentials(did)
 
@@ -65,7 +65,7 @@ export const CreateWorkCredentialContent: FC = () => {
   `
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.title.large)};
+    ${getBasicFont(currentTypo.title.large)};
   `
 
   const DatePickerContainer = styled.div`

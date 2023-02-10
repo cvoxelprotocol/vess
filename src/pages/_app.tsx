@@ -17,11 +17,13 @@ const notoSans = Noto_Sans({
   style: 'normal',
   weight: ['400', '500', '700'],
   subsets: ['latin'],
+  display: 'swap',
 })
 const notoSansJP = Noto_Sans_JP({
   style: 'normal',
   weight: ['400', '500', '700'],
   subsets: ['japanese'],
+  display: 'swap',
 })
 
 const global = css`

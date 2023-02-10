@@ -34,7 +34,7 @@ export const Plate: FC<PlateProps> = ({
   onClickTailIcon,
   ...props
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const typo = useMemo(() => {
     return size === 'L' ? currentTypo.title.medium : currentTypo.label.large
@@ -100,16 +100,13 @@ export const Plate: FC<PlateProps> = ({
     const PlateText = styled.span`
       background: none;
       text-align: center;
-      font-family: ${typo.fontFamily};
-      font-size: ${typo.fontSize};
-      line-height: ${typo.lineHeight};
-      font-weight: ${typo.fontWeight};
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       white-space: nowrap;
       color: ${currentTheme.onSurfaceVariant};
+      ${getBasicFont(typo)}
       opacity: 1;
     `
     return (
@@ -207,10 +204,7 @@ export const Plate: FC<PlateProps> = ({
       color: ${currentTheme.onPrimary};
     }
     text-align: center;
-    font-family: ${typo.fontFamily};
-    font-size: ${typo.fontSize};
-    line-height: ${typo.lineHeight};
-    font-weight: ${typo.fontWeight};
+    ${getBasicFont(typo)}
     position: relative;
     display: flex;
     align-items: center;

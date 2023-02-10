@@ -25,7 +25,7 @@ export const InformativeChip: FC<ChipProps> = ({
   mainColor = 'light:bg-light-primary dark:bg-dark-primary',
   ...props
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const ChipContainer = styled.div`
     background: none;
@@ -60,10 +60,7 @@ export const InformativeChip: FC<ChipProps> = ({
     background: none;
     color: ${variant === 'filled' ? currentTheme.onPrimaryContainer : currentTheme.onSurface};
     text-align: center;
-    font-family: ${currentTypo.label.small.fontFamily};
-    font-size: ${currentTypo.label.small.fontSize};
-    line-height: ${currentTypo.label.small.lineHeight};
-    font-weight: ${currentTypo.label.small.fontWeight};
+    ${getBasicFont(currentTypo.label.small)}
     position: relative;
     display: flex;
     align-items: center;

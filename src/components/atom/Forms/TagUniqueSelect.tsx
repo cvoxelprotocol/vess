@@ -36,7 +36,7 @@ export const TagUniqueSelect = <T extends FieldValues>({
   iconSize = 'S',
   iconColor,
 }: Props<T>) => {
-  const { currentTheme, currentTypo, themeMode, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, themeMode, getBasicFont } = useVESSTheme()
 
   const defaultVal = useMemo(() => {
     if (!options) return undefined
@@ -58,7 +58,7 @@ export const TagUniqueSelect = <T extends FieldValues>({
   `
   const Label = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.label.large)};
+    ${getBasicFont(currentTypo.label.large)};
   `
   const InputLayer = styled.div`
     &:hover {
@@ -85,13 +85,13 @@ export const TagUniqueSelect = <T extends FieldValues>({
   `
   const SupportingText = styled.span`
     color: ${currentTheme.onSurface};
-    font: ${getFont(currentTypo.body.small)};
+    ${getBasicFont(currentTypo.body.small)};
   `
 
   const RequiredMark = styled.span`
     padding: 0 4px;
     color: ${currentTheme.error};
-    font: ${getFont(currentTypo.label.large)};
+    ${getBasicFont(currentTypo.label.large)};
   `
 
   const ChipContainer = styled.div`
@@ -126,7 +126,7 @@ export const TagUniqueSelect = <T extends FieldValues>({
     width: fit-content;
     border-width: 1px;
     padding: 4px 8px;
-    font: ${getFont(currentTypo.label.medium)};
+    ${getBasicFont(currentTypo.label.medium)};
   `
   const IconWrapper = styled.div`
     position: absolute;

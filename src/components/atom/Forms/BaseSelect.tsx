@@ -31,7 +31,7 @@ export const BaseSelect: FC<Props> = ({
   defaultVal,
   ...props
 }) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const ContainerWidth = useMemo(() => {
     return !width ? '100%' : `${width}px`
@@ -48,10 +48,7 @@ export const BaseSelect: FC<Props> = ({
   `
   const Label = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
   `
   const InputLayer = styled.div`
     background: none;
@@ -94,16 +91,10 @@ export const BaseSelect: FC<Props> = ({
     background-color: transparent;
     width: 100%;
     color: ${currentTheme.onSurfaceVariant};
-    font-family: ${currentTypo.body.large.fontFamily};
-    font-size: ${currentTypo.body.large.fontSize};
-    line-height: ${currentTypo.body.large.lineHeight};
-    font-weight: ${currentTypo.body.large.fontWeight};
+    ${getBasicFont(currentTypo.body.large)}
     &[data-placeholder] {
       color: ${currentTheme.onSurfaceVariant};
-      font-family: ${currentTypo.body.large.fontFamily};
-      font-size: ${currentTypo.body.large.fontSize};
-      line-height: ${currentTypo.body.large.lineHeight};
-      font-weight: ${currentTypo.body.large.fontWeight};
+      ${getBasicFont(currentTypo.body.large)}
     }
   `
 
@@ -131,19 +122,13 @@ export const BaseSelect: FC<Props> = ({
   `
   const SupportingText = styled.span`
     color: ${currentTheme.onSurface};
-    font-family: ${currentTypo.body.small.fontFamily};
-    font-size: ${currentTypo.body.small.fontSize};
-    line-height: ${currentTypo.body.small.lineHeight};
-    font-weight: ${currentTypo.body.small.fontWeight};
+    ${getBasicFont(currentTypo.body.small)}
   `
 
   const RequiredMark = styled.span`
     padding: 0 4px;
     color: ${currentTheme.error};
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
   `
 
   const StyledItem = styled(Select.Item)`
@@ -168,10 +153,7 @@ export const BaseSelect: FC<Props> = ({
   `
   const ItemText = styled(Select.ItemText)`
     color: ${currentTheme.onSurface};
-    font-family: ${currentTypo.body.large.fontFamily};
-    font-size: ${currentTypo.body.large.fontSize};
-    line-height: ${currentTypo.body.large.lineHeight};
-    font-weight: ${currentTypo.body.large.fontWeight};
+    ${getBasicFont(currentTypo.body.large)}
   `
 
   const SelectLabel = styled(Select.Label)`

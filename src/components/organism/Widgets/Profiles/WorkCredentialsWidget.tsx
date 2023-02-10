@@ -27,7 +27,7 @@ type Props = {
 export const WorkCredentialsWidget: FC<Props> = (props) => {
   const { workCredentials } = useWorkCredentials(props.did)
 
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const Container = styled.div`
     padding: 16px 24px;
@@ -53,7 +53,7 @@ export const WorkCredentialsWidget: FC<Props> = (props) => {
   `
   const FooterTitle = styled.div`
     color: ${currentTheme.primary};
-    font: ${getFont(currentTypo.title.small)};
+    ${getBasicFont(currentTypo.title.small)};
   `
   const NoItemContainer = styled.div`
     width: 100%;

@@ -39,7 +39,7 @@ export const Input = <T extends FieldValues>({
   onClickClear,
   disabled = false,
 }: Props<T>) => {
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const ContainerWidth = useMemo(() => {
     return !width ? '100%' : `${width}px`
@@ -56,10 +56,7 @@ export const Input = <T extends FieldValues>({
   `
   const Label = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
   `
   const InputLayer = styled.div`
     background: none;
@@ -89,10 +86,7 @@ export const Input = <T extends FieldValues>({
       outline: none;
     }
     color: ${currentTheme.onSurface};
-    font-family: ${currentTypo.body.large.fontFamily};
-    font-size: ${currentTypo.body.large.fontSize};
-    line-height: ${currentTypo.body.large.lineHeight};
-    font-weight: ${currentTypo.body.large.fontWeight};
+    ${getBasicFont(currentTypo.body.large)}
     flex-grow: 1;
     border: none;
     background: transparent;
@@ -118,19 +112,13 @@ export const Input = <T extends FieldValues>({
   `
   const SupportingText = styled.span`
     color: ${currentTheme.error};
-    font-family: ${currentTypo.body.small.fontFamily};
-    font-size: ${currentTypo.body.small.fontSize};
-    line-height: ${currentTypo.body.small.lineHeight};
-    font-weight: ${currentTypo.body.small.fontWeight};
+    ${getBasicFont(currentTypo.body.small)}
   `
 
   const RequiredMark = styled.span`
     padding: 0 4px;
     color: ${currentTheme.error};
-    font-family: ${currentTypo.label.large.fontFamily};
-    font-size: ${currentTypo.label.large.fontSize};
-    line-height: ${currentTypo.label.large.lineHeight};
-    font-weight: ${currentTypo.label.large.fontWeight};
+    ${getBasicFont(currentTypo.label.large)}
   `
 
   return (

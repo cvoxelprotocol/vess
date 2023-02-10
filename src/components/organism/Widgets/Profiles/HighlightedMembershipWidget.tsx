@@ -17,7 +17,7 @@ type Props = {
 }
 
 export const HighlightedMembershipWidget: FC<Props> = (props) => {
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { highlightedMembership, highlightedSelfClaimedMembership } = useHeldMembershipSubject(
     props.did,
   )
@@ -38,7 +38,7 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
 
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
-    font: ${getFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.medium)};
   `
   const CardContainer = styled.div`
     width: 100%;

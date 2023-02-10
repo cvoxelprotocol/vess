@@ -15,8 +15,10 @@ export const useVESSTheme = () => {
     return theme.typography[typoMode]
   }, [typoMode, theme])
 
-  const getFont = (font: Font) => {
-    return `${font.fontWeight} ${font.fontSize}/${font.lineHeight} ${font.fontFamily}`
+  const getBasicFont = (font: Font) => {
+    return `font-weight:${font.fontWeight}; \n
+    font-size: ${font.fontSize}; \n
+    line-height: ${font.lineHeight};`
   }
 
   return {
@@ -25,7 +27,7 @@ export const useVESSTheme = () => {
     setThemeMode,
     initTheme,
     themeMode,
-    getFont,
+    getBasicFont,
     currentTheme,
     currentTypo,
   }

@@ -10,7 +10,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 export const HomeContainer: FC = () => {
   const { connectDID } = useConnectDID()
   const { did } = useDIDAccount()
-  const { currentTheme, currentTypo, getFont } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const router = useRouter()
 
   const Wrapper = styled.main`
@@ -45,7 +45,7 @@ export const HomeContainer: FC = () => {
   const HeaderTitle = styled.h1`
     background: ${currentTheme.surface3};
     color: ${currentTheme.onPrimaryContainer};
-    font: ${getFont(currentTypo.title.large)};
+    ${getBasicFont(currentTypo.title.large)};
   `
   const ActionContainer = styled.div`
     display: flex;
