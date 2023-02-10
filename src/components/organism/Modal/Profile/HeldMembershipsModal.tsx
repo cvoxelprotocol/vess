@@ -20,7 +20,7 @@ type Props = {
 export const HeldMembershipsModal: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { showMembershipModal, setShowMembershipModal } = useVESSWidgetModal()
-  const { HeldMembershipSubjects, highlightedMembership, highlightedSelfClaimedMembership } =
+  const { displayHeldMembership, highlightedMembership, highlightedSelfClaimedMembership } =
     useHeldMembershipSubject(props.did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(props.did)
   const { highlightedCredentials, storeHighlightedCredentials } = useHighlightedCredentials(
@@ -87,8 +87,8 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
           <Title>Your Memberships</Title>
           <Desc>Please Pick your highlighted membership</Desc>
           <InnerContent>
-            {HeldMembershipSubjects &&
-              HeldMembershipSubjects.map((item) => {
+            {displayHeldMembership &&
+              displayHeldMembership.map((item) => {
                 return (
                   <MembershipCardWrapper
                     key={item.ceramicId}
@@ -96,7 +96,7 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
                   >
                     <MembershipCard
                       title={item.credentialSubject.organizationName}
-                      roles={[item.credentialSubject.membershipName]}
+                      roles={item.roles}
                       mainColor={item.workspace?.primaryColor}
                       secondColor={item.workspace?.secondaryColor}
                       textColor={item.workspace?.optionColor}

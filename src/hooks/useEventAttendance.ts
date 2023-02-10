@@ -23,7 +23,7 @@ export const useEventAttendance = (eventId?: string) => {
 
   const {
     data: HeldEventAttendanceVerifiableCredentials,
-    isInitialLoading: isFetchingHeldMembershipSubjects,
+    isInitialLoading: isFetchingHeldEventAttendanceVerifiableCredentials,
   } = useQuery<EventAttendanceWithId[] | null>(
     ['HeldEventAttendanceVerifiableCredentials', did],
     () => vess.getHeldEventAttendanceVerifiableCredentials(did),
@@ -53,7 +53,7 @@ export const useEventAttendance = (eventId?: string) => {
   return {
     IssuedEventAttendanceVerifiableCredentials,
     HeldEventAttendanceVerifiableCredentials,
-    isFetchingHeldMembershipSubjects,
+    isFetchingHeldEventAttendanceVerifiableCredentials,
     eventDetail,
     isLoadingEventDetail,
     isInitialLoading,

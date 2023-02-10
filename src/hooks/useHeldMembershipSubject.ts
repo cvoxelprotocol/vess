@@ -5,6 +5,7 @@ import type { MembershipSubjectWithOrg } from 'vess-sdk'
 import { useHighlightedCredentials } from './useHighlightedCredentials'
 import { useSelfClaimedMembership } from './useSelfClaimedMembership'
 import { CERAMIC_NETWORK } from '@/constants/common'
+import { DisplayMembership } from '@/interfaces/ui'
 
 export const useHeldMembershipSubject = (did?: string) => {
   // const vess = getVESS()
@@ -39,19 +40,41 @@ export const useHeldMembershipSubject = (did?: string) => {
     },
   )
 
+  const displayHeldMembership: DisplayMembership[] = useMemo(() => {
+    if (!HeldMembershipSubjects || HeldMembershipSubjects.length === 0) return []
+    let temp: { [key: string]: DisplayMembership } = {}
+    HeldMembershipSubjects.forEach((m) => {
+      if (!Object.keys(temp).includes(m.credentialSubject.organizationId!)) {
+        temp[m.credentialSubject.organizationId!] = {
+          ...m,
+          roles: [m.credentialSubject.membershipName],
+        }
+      } else {
+        temp[m.credentialSubject.organizationId!].roles.push(m.credentialSubject.membershipName)
+      }
+    })
+    return Object.values(temp)
+  }, [HeldMembershipSubjects])
+
   const highlightedMembership = useMemo(() => {
-    if (!HeldMembershipSubjects) return undefined
+    if (!displayHeldMembership) return undefined
     if (
       highlightedCredentials &&
       highlightedCredentials.memberships &&
       highlightedCredentials.memberships.length > 0
     ) {
       const target = highlightedCredentials.memberships[0]
-      return HeldMembershipSubjects?.find(
+      const targetItem = HeldMembershipSubjects?.find(
         (m) => removeCeramicPrefix(m.ceramicId) === removeCeramicPrefix(target),
       )
+      const targetOrgId = targetItem?.credentialSubject.organizationId
+      return displayHeldMembership?.find(
+        (m) =>
+          removeCeramicPrefix(m.credentialSubject.organizationId) ===
+          removeCeramicPrefix(targetOrgId),
+      )
     }
-    return HeldMembershipSubjects[0] || undefined
+    return displayHeldMembership[0] || undefined
   }, [HeldMembershipSubjects, highlightedCredentials, highlightedCredentials?.memberships])
 
   const highlightedSelfClaimedMembership = useMemo(() => {
@@ -87,10 +110,10 @@ export const useHeldMembershipSubject = (did?: string) => {
   }
 
   return {
-    HeldMembershipSubjects,
     isFetchingHeldMembershipSubjects,
     issueHeldMembershipFromBackup,
     highlightedMembership,
     highlightedSelfClaimedMembership,
+    displayHeldMembership,
   }
 }

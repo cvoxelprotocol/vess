@@ -73,7 +73,7 @@ export const Chip: FC<ChipProps> = ({
       border-width: 1px;
       padding: 6px 16px;
       @media (max-width: 599px) {
-        padding: 4px 12px;
+        padding: ${size === 'S' ? '2px: 4px' : '4px 12px'};
       }
     `
 
@@ -171,7 +171,7 @@ export const Chip: FC<ChipProps> = ({
     border-width: 1px;
     padding: 6px 16px;
     @media (max-width: 599px) {
-      padding: 4px 12px;
+      padding: ${size === 'S' ? '2px 6px' : '4px 12px'};
     }
   `
 

@@ -58,7 +58,7 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
             {highlightedMembership ? (
               <MembershipCard
                 title={highlightedMembership.credentialSubject.organizationName}
-                roles={[highlightedMembership.credentialSubject.membershipName]}
+                roles={highlightedMembership.roles}
                 mainColor={highlightedMembership.workspace?.primaryColor}
                 secondColor={highlightedMembership.workspace?.secondaryColor}
                 textColor={highlightedMembership.workspace?.optionColor}

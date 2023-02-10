@@ -129,19 +129,21 @@ export const MembershipCard: FC<Props> = ({
           <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
         </LogoContainer>
         <WorkSpaceTitle>{title}</WorkSpaceTitle>
-        {roles &&
-          roles.map((role) => {
-            return (
-              <Chip
-                key={role}
-                text={role}
-                variant={'filled'}
-                mainColor={secondColor || DefaultCardColor.secondColor}
-                textColor={textColor || DefaultCardColor.textColor}
-                size={'S'}
-              />
-            )
-          })}
+        <Flex flexDirection='row' rowGap='4px'>
+          {roles &&
+            roles.map((role) => {
+              return (
+                <Chip
+                  key={role}
+                  text={role}
+                  variant={'filled'}
+                  mainColor={secondColor || DefaultCardColor.secondColor}
+                  textColor={textColor || DefaultCardColor.textColor}
+                  size={'S'}
+                />
+              )
+            })}
+        </Flex>
       </Flex>
     </CardContainer>
   )

@@ -11,7 +11,7 @@ type Props = {
 }
 
 export const MembershipsTabContent: FC<Props> = ({ did }) => {
-  const { HeldMembershipSubjects, isFetchingHeldMembershipSubjects } = useHeldMembershipSubject(did)
+  const { displayHeldMembership, isFetchingHeldMembershipSubjects } = useHeldMembershipSubject(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
   const Wrapper = styled.div`
     width: 100%;
@@ -45,10 +45,10 @@ export const MembershipsTabContent: FC<Props> = ({ did }) => {
   const hasMemberships = useMemo(() => {
     if (isFetchingHeldMembershipSubjects) return false
     return (
-      (HeldMembershipSubjects && HeldMembershipSubjects.length > 0) ||
+      (displayHeldMembership && displayHeldMembership.length > 0) ||
       (selfClaimedMemberships && selfClaimedMemberships.length > 0)
     )
-  }, [HeldMembershipSubjects, selfClaimedMemberships, isFetchingHeldMembershipSubjects])
+  }, [displayHeldMembership, selfClaimedMemberships, isFetchingHeldMembershipSubjects])
 
   return (
     <Wrapper>
@@ -63,13 +63,13 @@ export const MembershipsTabContent: FC<Props> = ({ did }) => {
             <NoItem text={'No Item yet'} />
           ) : (
             <>
-              {HeldMembershipSubjects &&
-                HeldMembershipSubjects.map((item) => {
+              {displayHeldMembership &&
+                displayHeldMembership.map((item) => {
                   return (
                     <MembershipCardWrapper key={item.ceramicId}>
                       <MembershipCard
                         title={item.credentialSubject.organizationName}
-                        roles={[item.credentialSubject.membershipName]}
+                        roles={item.roles}
                         mainColor={item.workspace?.primaryColor}
                         secondColor={item.workspace?.secondaryColor}
                         textColor={item.workspace?.optionColor}

@@ -9,6 +9,7 @@ type Props = {
   rowGap?: string
   colGap?: string
   height?: string
+  flexWrap?: string
 }
 export const Flex: FC<Props> = ({
   children,
@@ -18,6 +19,7 @@ export const Flex: FC<Props> = ({
   rowGap,
   colGap,
   height = 'auto',
+  flexWrap = 'wrap',
 }) => {
   const Flex = styled.div`
     display: flex;
@@ -27,6 +29,7 @@ export const Flex: FC<Props> = ({
     row-gap: ${rowGap};
     column-gap: ${colGap || rowGap};
     height: ${height};
+    flex-wrap: ${flexWrap};
   `
   return <Flex>{children}</Flex>
 }
