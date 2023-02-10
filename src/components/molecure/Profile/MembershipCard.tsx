@@ -119,18 +119,7 @@ export const MembershipCard: FC<Props> = ({
       {vc && (
         <VcMarkContainer>
           <VcMark>
-            <Icon
-              icon={ICONS.CHECK_CONTAINER}
-              size={'M'}
-              mainColor={secondColor || DefaultCardColor.secondColor}
-            />
-          </VcMark>
-          <VcMark>
-            <Icon
-              icon={ICONS.CHECKED}
-              size={'XS'}
-              mainColor={textColor || DefaultCardColor.textColor}
-            />
+            <Icon icon={ICONS.VERIFIED} size={'M'} mainColor={currentTheme.tertiary} />
           </VcMark>
         </VcMarkContainer>
       )}

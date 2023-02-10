@@ -7,7 +7,6 @@ import { Calendar } from './Calendar'
 import { Card } from './Card'
 import { ChainIcon } from './ChainIcon'
 import { Chat } from './Chat'
-import { CheckContainerIcon } from './CheckContainerIcon'
 import { CheckedCircleIcon } from './CheckedCircleIcon'
 import { CheckedIcon } from './CheckedIcon'
 import { CheckedSquareIcon } from './CheckedSquareIcon'
@@ -40,6 +39,7 @@ import { SunIcon } from './SunIcon'
 import { SurinkIcon } from './SurinkIcon'
 import { TelegramIcon } from './TelegramIcon'
 import { TwitterIcon } from './TwitterIcon'
+import { VerifiedIcon } from './VerifiedIcon'
 import { VoxelIcon } from './VoxelIcon'
 import { VoxelslIcon } from './VoxelsIcon'
 import { WorkspaceIcon } from './WorkspaceIcon'
@@ -87,7 +87,7 @@ export const ICONS = {
   TELEGRAM: 'telegram',
   MAIL: 'mail',
   WORKSPACE: 'workspace',
-  CHECK_CONTAINER: 'checkContainer',
+  VERIFIED: 'verified',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -387,10 +387,10 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
             <WorkspaceIcon />
           </IconContainer>
         )
-      case 'checkContainer':
+      case 'verified':
         return (
           <IconContainer>
-            <CheckContainerIcon />
+            <VerifiedIcon />
           </IconContainer>
         )
       default:

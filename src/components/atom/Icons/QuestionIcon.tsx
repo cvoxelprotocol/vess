@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const QuestionIcon: React.FC = () => (
-  <svg viewBox='0 0 34 34' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <svg width='34' height='34' viewBox='0 0 34 34' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path
       d='M16.9999 31.1666C24.824 31.1666 31.1666 24.824 31.1666 16.9999C31.1666 9.17588 24.824 2.83325 16.9999 2.83325C9.17588 2.83325 2.83325 9.17588 2.83325 16.9999C2.83325 24.824 9.17588 31.1666 16.9999 31.1666Z'
       stroke='currentColor'

@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const EventAttendanceIcon: React.FC = () => (
-  <svg viewBox='0 0 33 33' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <svg width='33' height='33' viewBox='0 0 33 33' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path
       d='M10.2051 24.0134L16.8046 11.9312L23.6073 23.5058'
       stroke='currentColor'

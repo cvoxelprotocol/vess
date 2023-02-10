@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const SunIcon: React.FC = () => (
-  <svg viewBox='0 0 34 34' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <svg width='34' height='34' viewBox='0 0 34 34' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <g clipPath='url(#clip0_2503_371)'>
       <path
         d='M17.0001 24.0833C20.9121 24.0833 24.0834 20.912 24.0834 17C24.0834 13.0879 20.9121 9.91663 17.0001 9.91663C13.0881 9.91663 9.91675 13.0879 9.91675 17C9.91675 20.912 13.0881 24.0833 17.0001 24.0833Z'

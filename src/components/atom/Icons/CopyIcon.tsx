@@ -1,5 +1,5 @@
 export const CopyIcon = () => (
-  <svg viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path
       d='M26.6667 12H14.6667C13.1939 12 12 13.1939 12 14.6667V26.6667C12 28.1394 13.1939 29.3333 14.6667 29.3333H26.6667C28.1394 29.3333 29.3333 28.1394 29.3333 26.6667V14.6667C29.3333 13.1939 28.1394 12 26.6667 12Z'
       stroke='currentColor'

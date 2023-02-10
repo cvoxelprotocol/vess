@@ -1,5 +1,5 @@
 export const Card = () => (
-  <svg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path
       d='M4 4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V7H18V6C18 5.46957 17.7893 4.96086 17.4142 4.58579C17.0391 4.21071 16.5304 4 16 4H4Z'
       fill='currentColor'

@@ -1,5 +1,5 @@
 export const CrossFilledIcon = () => (
-  <svg viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <g clipPath='url(#clip0_2581_846)'>
       <path
         fillRule='evenodd'
