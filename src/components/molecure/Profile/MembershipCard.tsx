@@ -129,7 +129,7 @@ export const MembershipCard: FC<Props> = ({
           <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
         </LogoContainer>
         <WorkSpaceTitle>{title}</WorkSpaceTitle>
-        <Flex flexDirection='row' rowGap='4px'>
+        <Flex flexDirection='row' rowGap='4px' justifyContent={'start'}>
           {roles &&
             roles.map((role) => {
               return (
