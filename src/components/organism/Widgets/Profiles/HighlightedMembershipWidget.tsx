@@ -43,6 +43,9 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
   const CardContainer = styled.div`
     width: 100%;
     height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   `
 
   const handleEdit = () => {

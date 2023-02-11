@@ -48,14 +48,15 @@ export const MembershipCard: FC<Props> = ({
     border: ${isSelected ? `4px solid ${currentTheme.secondary}` : 'none'};
     border-radius: 16px;
     padding: ${isSelected ? '12px' : '12px'};
-    @media (max-width: 599px) {
-      padding: ${isSelected ? '8px' : '8px'};
-    }
     width: 100%;
     aspect-ratio: 1.58 / 1;
     position: relative;
     overflow: hidden;
     max-width: 280px;
+    @media (max-width: 599px) {
+      padding: ${isSelected ? '8px' : '8px'};
+      max-width: 180px;
+    }
   `
 
   const LogoContainer = styled.div`

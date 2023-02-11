@@ -27,7 +27,7 @@ export const WorkStyleWidget: FC<Props> = (props) => {
   return (
     <>
       <BaseWidget onClickEdit={handleEdit} {...props}>
-        <Flex flexDirection={'column'}>
+        <Flex flexDirection={'column'} flexWrap={'nowrap'}>
           <WorkStyleItem
             icon={ICONS.DOLLAR}
             content={`${businessProfile?.desiredHourlyFee || '-'}/hr`}

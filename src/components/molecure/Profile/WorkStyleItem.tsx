@@ -48,7 +48,7 @@ export const WorkStyleItem: FC<Props> = ({ icon, content, borderRadius }) => {
 
   return (
     <Container>
-      <Flex height={'100%'}>
+      <Flex height={'100%'} flexWrap={'auto'}>
         <IconContainer>
           <Icon icon={icon} size={'M'} mainColor={currentTheme.onSurface} />
         </IconContainer>
