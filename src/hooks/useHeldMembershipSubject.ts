@@ -26,20 +26,33 @@ export const useHeldMembershipSubject = (did?: string) => {
       },
     )
 
-  const { mutateAsync: setHeldMembershipSubjects } = useMutation<void, unknown, string[]>(
-    (param) => vess.setHeldMembershipSubjects(param),
-    {
-      onSuccess() {
-        console.log('MembershipSubjects migration succeeded')
-      },
-      onError(error) {
-        console.error('error', error)
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries(['HeldMembershipSubjects', did])
-      },
+  const { mutateAsync: setHeldMembershipSubjects, isLoading } = useMutation<
+    void,
+    unknown,
+    string[]
+  >((param) => vess.setHeldMembershipSubjects(param), {
+    onSuccess() {
+      console.log('MembershipSubjects migration succeeded')
     },
-  )
+    onError(error) {
+      console.error('error', error)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['HeldMembershipSubjects', did])
+    },
+  })
+
+  const deleteVC = async () => {
+    try {
+      const res = await vess.deleteHeldMembershipSubjectsFromIDX(
+        'kjzl6cwe1jw14biav52gueozssjogaifwf2sucqoacqy6hzd29d5lwm85c9nflu',
+      )
+      queryClient.invalidateQueries(['HeldMembershipSubjects', did])
+      console.log({ res })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const displayHeldMembership: DisplayMembership[] = useMemo(() => {
     if (!HeldMembershipSubjects || HeldMembershipSubjects.length === 0) return []
@@ -52,7 +65,13 @@ export const useHeldMembershipSubject = (did?: string) => {
           roles: [m.credentialSubject.membershipName],
         }
       } else {
-        temp[m.credentialSubject.organizationId!].roles.push(m.credentialSubject.membershipName)
+        if (
+          !temp[m.credentialSubject.organizationId!].roles.includes(
+            m.credentialSubject.membershipName,
+          )
+        ) {
+          temp[m.credentialSubject.organizationId!].roles.push(m.credentialSubject.membershipName)
+        }
       }
     })
     return Object.values(temp)
@@ -106,6 +125,7 @@ export const useHeldMembershipSubject = (did?: string) => {
       ?.map((m) => removeCeramicPrefix(m.ceramicId))
       .filter((id) => !existedSubjects?.includes(id))
     if (targetIds && targetIds.length > 0) {
+      if (isLoading) return
       console.log('membership issuing from DB: execute', targetIds)
       await setHeldMembershipSubjects(targetIds.map((id) => addCeramicPrefix(id)))
     }
@@ -117,5 +137,6 @@ export const useHeldMembershipSubject = (did?: string) => {
     highlightedMembership,
     highlightedSelfClaimedMembership,
     displayHeldMembership,
+    deleteVC,
   }
 }

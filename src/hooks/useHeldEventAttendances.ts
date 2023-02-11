@@ -8,20 +8,21 @@ export const useHeldEventAttendances = (did?: string) => {
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const queryClient = useQueryClient()
 
-  const { mutateAsync: setHeldEventAttendancesSilently } = useMutation<void, unknown, string[]>(
-    (param) => vess.setHeldEventAttendanceVerifiableCredentials(param),
-    {
-      onSuccess() {
-        console.log('heldEvent migration succeeded')
-      },
-      onError(error) {
-        console.error('error', error)
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries(['HeldEventAttendances'])
-      },
+  const { mutateAsync: setHeldEventAttendancesSilently, isLoading } = useMutation<
+    void,
+    unknown,
+    string[]
+  >((param) => vess.setHeldEventAttendanceVerifiableCredentials(param), {
+    onSuccess() {
+      console.log('heldEvent migration succeeded')
     },
-  )
+    onError(error) {
+      console.error('error', error)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['HeldEventAttendances'])
+    },
+  })
 
   const { data: HeldEventAttendances, isInitialLoading: isFetchingHeldEventAttendances } = useQuery<
     EventAttendanceWithId[] | null
@@ -42,6 +43,7 @@ export const useHeldEventAttendances = (did?: string) => {
       ?.map((m) => removeCeramicPrefix(m.ceramicId))
       .filter((id) => !existedSubjects?.includes(id))
     if (targetIds && targetIds.length > 0) {
+      if (isLoading) return
       console.log('event issuing from DB: execute', targetIds)
       await setHeldEventAttendancesSilently(targetIds.map((id) => addCeramicPrefix(id)))
     }
