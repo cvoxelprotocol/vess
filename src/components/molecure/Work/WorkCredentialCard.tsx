@@ -33,6 +33,7 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
     border-width: 1px;
     width: 295px;
     min-height: 160px;
+    height: 100%;
     padding: 16px;
     display: flex;
     flex-direction: column;

@@ -29,6 +29,7 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
     border-width: 1px;
     width: 216px;
     min-height: 280px;
+    height: 100%;
     padding: 28px 12px 20px;
     @media (max-width: 599px) {
       width: 168px;

@@ -42,11 +42,9 @@ export const useHeldMembershipSubject = (did?: string) => {
     },
   })
 
-  const deleteVC = async () => {
+  const deleteRole = async (streamId: string) => {
     try {
-      const res = await vess.deleteHeldMembershipSubjectsFromIDX(
-        'kjzl6cwe1jw14biav52gueozssjogaifwf2sucqoacqy6hzd29d5lwm85c9nflu',
-      )
+      const res = await vess.deleteHeldMembershipSubjectsFromIDX(streamId)
       queryClient.invalidateQueries(['HeldMembershipSubjects', did])
       console.log({ res })
     } catch (error) {
@@ -57,6 +55,7 @@ export const useHeldMembershipSubject = (did?: string) => {
   const displayHeldMembership: DisplayMembership[] = useMemo(() => {
     if (!HeldMembershipSubjects || HeldMembershipSubjects.length === 0) return []
     let temp: { [key: string]: DisplayMembership } = {}
+    console.log({ HeldMembershipSubjects })
     HeldMembershipSubjects.forEach((m) => {
       if (isExpired(m.expirationDate)) return
       if (!Object.keys(temp).includes(m.credentialSubject.organizationId!)) {
@@ -137,6 +136,6 @@ export const useHeldMembershipSubject = (did?: string) => {
     highlightedMembership,
     highlightedSelfClaimedMembership,
     displayHeldMembership,
-    deleteVC,
+    deleteRole,
   }
 }
