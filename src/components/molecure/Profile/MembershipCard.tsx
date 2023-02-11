@@ -47,7 +47,7 @@ export const MembershipCard: FC<Props> = ({
     background: ${mainColor || DefaultCardColor.mainColor};
     border: ${isSelected ? `4px solid ${currentTheme.secondary}` : 'none'};
     border-radius: 16px;
-    padding: ${isSelected ? '12px' : '12px'};
+    padding: 8px 12px;
     width: 100%;
     aspect-ratio: 1.58 / 1;
     position: relative;
@@ -125,7 +125,7 @@ export const MembershipCard: FC<Props> = ({
           </VcMark>
         </VcMarkContainer>
       )}
-      <Flex flexDirection='column' rowGap='8px' alignItems='start'>
+      <Flex flexDirection='column' rowGap='4px' alignItems='start'>
         <LogoContainer>
           <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
         </LogoContainer>

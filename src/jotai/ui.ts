@@ -49,3 +49,7 @@ export const useStateSelectedNavigationItem = () => useAtom(selectedNavigationIt
 export const socialProfileEditModal = atom<boolean>(false)
 
 export const useStateSocialProfileEditModal = () => useAtom(socialProfileEditModal)
+
+export const showHeaderMenu = atom<boolean>(false)
+
+export const useStateShowHeaderMenu = () => useAtom(showHeaderMenu)

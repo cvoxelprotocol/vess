@@ -13,7 +13,8 @@ type Props = {
 
 export const EventTabContent: FC<Props> = ({ did }) => {
   const router = useRouter()
-  const { HeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances(did)
+  const { displayHeldEventAttendances, isFetchingHeldEventAttendances } =
+    useHeldEventAttendances(did)
   const Wrapper = styled.div`
     width: 100%;
   `
@@ -53,12 +54,12 @@ export const EventTabContent: FC<Props> = ({ did }) => {
         </LoadingContainer>
       ) : (
         <MembersContainer>
-          {!HeldEventAttendances || HeldEventAttendances.length === 0 ? (
+          {!displayHeldEventAttendances || displayHeldEventAttendances.length === 0 ? (
             <NoItem text={'No Item yet'} />
           ) : (
             <>
-              {HeldEventAttendances &&
-                HeldEventAttendances.map((event) => {
+              {displayHeldEventAttendances &&
+                displayHeldEventAttendances.map((event) => {
                   return (
                     <Content key={event.ceramicId} onClick={() => goToEventPage(event)}>
                       <EventCard ceramicId={event.credentialSubject.eventId} />

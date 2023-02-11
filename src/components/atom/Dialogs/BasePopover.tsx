@@ -30,11 +30,11 @@ export const BasePopover = forwardRef<HTMLDivElement, PopoverPrimitive.PopoverCo
     })
 
     const PopoverContent = styled(PopoverPrimitive.Content)`
-      background: ${currentTheme.depth1};
+      background: ${currentTheme.surface2};
       &:focus {
         outline: none;
       }
-      padding: 32px;
+      padding: 24px;
       border-radius: 32px;
       animation-duration: 400ms;
       animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
@@ -53,6 +53,7 @@ export const BasePopover = forwardRef<HTMLDivElement, PopoverPrimitive.PopoverCo
           animation: ${slideRightAndFade};
         }
       }
+      z-index: 999;
     `
 
     const PopoverArrow = styled(PopoverPrimitive.Arrow)`
@@ -73,17 +74,11 @@ export const BasePopover = forwardRef<HTMLDivElement, PopoverPrimitive.PopoverCo
 
     return (
       <PopoverPrimitive.Portal>
-        <PopoverContent
-          side={'bottom'}
-          align={'center'}
-          sideOffset={5}
-          {...props}
-          ref={forwardedRef}
-        >
+        <PopoverContent side={'bottom'} align={'end'} sideOffset={5} {...props} ref={forwardedRef}>
           {children}
           <PopoverClose aria-label='Close'>
             <IconContainer>
-              <Icon icon={ICONS.CROSS} size={'SS'} />
+              <Icon icon={ICONS.CROSS} size={'SS'} mainColor={currentTheme.onSecondaryContainer} />
             </IconContainer>
           </PopoverClose>
           <PopoverArrow width={30} height={15} fill={currentTheme.depth1} />

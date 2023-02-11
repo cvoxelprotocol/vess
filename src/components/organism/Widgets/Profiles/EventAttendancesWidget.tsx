@@ -22,7 +22,7 @@ type Props = {
 
 export const EventAttendancesWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { HeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances(
+  const { displayHeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances(
     props.did,
   )
   const { openModal } = useVESSWidgetModal()
@@ -104,13 +104,13 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
             <CommonSpinner />
           ) : (
             <>
-              {!HeldEventAttendances || HeldEventAttendances.length === 0 ? (
+              {!displayHeldEventAttendances || displayHeldEventAttendances.length === 0 ? (
                 <NoItemContainer>
                   <NoItem text='No Item yet' />
                 </NoItemContainer>
               ) : (
                 <>
-                  {HeldEventAttendances.map((item) => {
+                  {displayHeldEventAttendances.map((item) => {
                     return (
                       <IconContainer key={item.ceramicId}>
                         <Avatar url={item.credentialSubject.eventIcon} size={'XXL'} />

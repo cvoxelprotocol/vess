@@ -24,9 +24,9 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
   const { openMembershipModal } = useVESSWidgetModal()
 
   const Container = styled.div`
-    padding: 16px 24px;
+    padding: 16px 20px;
     @media (max-width: 1079px) {
-      padding: 16px 24px;
+      padding: 16px 20px;
     }
     @media (max-width: 599px) {
       padding: 12px 16px;
@@ -39,6 +39,9 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
     ${getBasicFont(currentTypo.title.medium)};
+    @media (max-width: 599px) {
+      ${getBasicFont(currentTypo.title.small)};
+    }
   `
   const CardContainer = styled.div`
     width: 100%;
@@ -60,8 +63,12 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
           <CardContainer>
             {highlightedMembership ? (
               <MembershipCard
-                title={highlightedMembership.credentialSubject.organizationName}
+                title={
+                  highlightedMembership.workspace?.name ||
+                  highlightedMembership.credentialSubject.organizationName
+                }
                 roles={highlightedMembership.roles}
+                icon={highlightedMembership.workspace?.icon}
                 mainColor={highlightedMembership.workspace?.primaryColor}
                 secondColor={highlightedMembership.workspace?.secondaryColor}
                 textColor={highlightedMembership.workspace?.optionColor}

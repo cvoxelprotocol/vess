@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { addCeramicPrefix, getVESS, removeCeramicPrefix } from 'vess-sdk'
 import type { EventAttendanceWithId } from 'vess-sdk'
 import { CERAMIC_NETWORK } from '@/constants/common'
+import { isExpired } from '@/utils/date'
 
 export const useHeldEventAttendances = (did?: string) => {
   // const vess = getVESS()
@@ -32,6 +34,15 @@ export const useHeldEventAttendances = (did?: string) => {
     cacheTime: 300000,
   })
 
+  const displayHeldEventAttendances = useMemo(() => {
+    if (!HeldEventAttendances || HeldEventAttendances.length === 0) return []
+    const onlyValids = HeldEventAttendances.filter((a) => !isExpired(a.expirationDate))
+    const uniques = [
+      ...new Map<string, typeof onlyValids[number]>(onlyValids.map((a) => [a.id, a])).values(),
+    ]
+    return uniques
+  }, [HeldEventAttendances])
+
   const issueHeldEventFromBackup = async (did: string): Promise<void> => {
     console.log('event issuing from DB: check')
     const heldEvent = await vess.getHeldEventAttendanceVerifiableCredentials(did)
@@ -50,7 +61,7 @@ export const useHeldEventAttendances = (did?: string) => {
   }
 
   return {
-    HeldEventAttendances,
+    displayHeldEventAttendances,
     isFetchingHeldEventAttendances,
     setHeldEventAttendancesSilently,
     issueHeldEventFromBackup,

@@ -1,15 +1,11 @@
 import styled from '@emotion/styled'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
-import { Avatar } from '../atom/Avatars/Avatar'
-import { Button } from '../atom/Buttons/Button'
-import { Flex } from '../atom/Common/Flex'
-import { CommonSpinner } from '../atom/Loading/CommonSpinner'
 import { NavigationList } from '../molecure/Navigation/NavigationList'
+import { BaseHeader } from '../organism/Header/BaseHeader'
 import LoadingModal from '../organism/Modal/LoadingModal'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
@@ -19,9 +15,8 @@ type Props = {
 export const BasicLayout: FC<Props> = ({ children }) => {
   const { isLoading } = useVESSLoading()
   const { currentTheme, initTheme } = useVESSTheme()
-  const { connectDID, disConnectDID, isAuthorized } = useConnectDID()
-  const { did, connection } = useDIDAccount()
-  const { profile } = useSocialAccount(did)
+  const { connectDID } = useConnectDID()
+  const { did } = useDIDAccount()
   const LayoutContainer = styled.div`
     display: grid;
     width: 100vw;
@@ -56,18 +51,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     position: fixed;
     z-index: 999;
   `
-  const HeaderContainer = styled.div`
-    grid-row: 1 /2;
-    width: 100%;
-    height: 80px;
-    position: fixed;
-    padding: 12px;
-    background: ${currentTheme.depth4};
-    z-index: 998;
-    @media (max-width: 599px) {
-      height: 64px;
-    }
-  `
   const MainContainer = styled.div`
     background: ${currentTheme.background};
     grid-column: 2;
@@ -90,10 +73,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       padding: 8px;
     }
   `
-  const AccountContainer = styled.button`
-    background: none;
-    border: none;
-  `
   useEffect(() => {
     initTheme()
   }, [])
@@ -112,23 +91,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   return (
     <LayoutContainer>
-      <HeaderContainer>
-        <Flex alignItems='center' justifyContent={'flex-end'} height={'100%'}>
-          {connection === 'connecting' ? (
-            <CommonSpinner />
-          ) : (
-            <>
-              {isAuthorized ? (
-                <AccountContainer onClick={() => disConnectDID()}>
-                  <Avatar url={profile.avatarSrc} size={'XL'} />
-                </AccountContainer>
-              ) : (
-                <Button text={'Connect'} onClick={() => connectDID()}></Button>
-              )}
-            </>
-          )}
-        </Flex>
-      </HeaderContainer>
+      <BaseHeader />
       <NaviContainer>
         <NavigationList />
       </NaviContainer>

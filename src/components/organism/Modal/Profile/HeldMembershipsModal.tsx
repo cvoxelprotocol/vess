@@ -95,8 +95,9 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
                     onClick={() => selectMembership(item.ceramicId)}
                   >
                     <MembershipCard
-                      title={item.credentialSubject.organizationName}
+                      title={item.workspace?.name || item.credentialSubject.organizationName}
                       roles={item.roles}
+                      icon={item.workspace?.icon}
                       mainColor={item.workspace?.primaryColor}
                       secondColor={item.workspace?.secondaryColor}
                       textColor={item.workspace?.optionColor}
