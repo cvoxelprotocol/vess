@@ -6,6 +6,7 @@ import { useHighlightedCredentials } from './useHighlightedCredentials'
 import { useSelfClaimedMembership } from './useSelfClaimedMembership'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { DisplayMembership } from '@/interfaces/ui'
+import { isExpired } from '@/utils/date'
 
 export const useHeldMembershipSubject = (did?: string) => {
   // const vess = getVESS()
@@ -44,6 +45,7 @@ export const useHeldMembershipSubject = (did?: string) => {
     if (!HeldMembershipSubjects || HeldMembershipSubjects.length === 0) return []
     let temp: { [key: string]: DisplayMembership } = {}
     HeldMembershipSubjects.forEach((m) => {
+      if (isExpired(m.expirationDate)) return
       if (!Object.keys(temp).includes(m.credentialSubject.organizationId!)) {
         temp[m.credentialSubject.organizationId!] = {
           ...m,
@@ -75,7 +77,7 @@ export const useHeldMembershipSubject = (did?: string) => {
       )
     }
     return displayHeldMembership[0] || undefined
-  }, [HeldMembershipSubjects, highlightedCredentials, highlightedCredentials?.memberships])
+  }, [HeldMembershipSubjects, highlightedCredentials, displayHeldMembership])
 
   const highlightedSelfClaimedMembership = useMemo(() => {
     if (!selfClaimedMemberships) return undefined
@@ -90,7 +92,7 @@ export const useHeldMembershipSubject = (did?: string) => {
       )
     }
     return selfClaimedMemberships[0] || undefined
-  }, [selfClaimedMemberships, highlightedCredentials, highlightedCredentials?.memberships])
+  }, [selfClaimedMemberships, highlightedCredentials])
 
   // set held data from DB
   const issueHeldMembershipFromBackup = async (targetDid: string): Promise<void> => {

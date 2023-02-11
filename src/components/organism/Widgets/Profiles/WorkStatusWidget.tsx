@@ -63,7 +63,7 @@ export const WorkStatusWidget: FC<Props> = (props) => {
   return (
     <BaseWidget onClickEdit={handleEdit} {...props}>
       <Container>
-        <Flex height={'100%'} flexDirection={'column'} rowGap={'12px'}>
+        <Flex height={'100%'} flexDirection={'column'} rowGap={'12px'} flexWrap={'noWrap'}>
           <WorkStatusSlider {...statusValue} />
           <Chip
             text={statusKey}

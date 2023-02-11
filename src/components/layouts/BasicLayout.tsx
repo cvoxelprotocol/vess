@@ -110,7 +110,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     autoConnect()
   }, [])
 
-  console.log({ connection })
   return (
     <LayoutContainer>
       <HeaderContainer>

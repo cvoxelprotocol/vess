@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format, isBefore, parseISO } from 'date-fns'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 export const parseISOStrToDate = (iso: string): Date => {
@@ -14,4 +14,9 @@ export const convertTimestampToDateStr = (timestamp?: string): string => {
   if (!timestamp) return ''
   const d = new Date(Number(timestamp) * 1000)
   return formatDate(d.toISOString())
+}
+export const isExpired = (date?: string): boolean => {
+  if (!date) return false
+  const now = new Date()
+  return isBefore(parseISOStrToDate(date), now)
 }

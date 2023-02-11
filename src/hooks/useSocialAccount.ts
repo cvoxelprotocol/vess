@@ -38,7 +38,6 @@ export const useSocialAccount = (did?: string) => {
       showLoading()
     },
     onSuccess(data) {
-      console.log({ data })
       if (data.status === 200) {
         closeLoading()
         showToast(BUSINESS_PROFILE_SET_SUCCEED)
