@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { DeleteRoleModal } from '../DevUseOnly/DeleteRoleModal'
 import { HeaderMenu } from './HeaderMenu'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -10,7 +11,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const BaseHeader: FC = () => {
   const { currentTheme } = useVESSTheme()
-  const { connection } = useDIDAccount()
+  const { connection, did } = useDIDAccount()
   const { connectDID, isAuthorized } = useConnectDID()
 
   const HeaderContainer = styled.div`
@@ -41,6 +42,7 @@ export const BaseHeader: FC = () => {
           </>
         )}
       </Flex>
+      {did && <DeleteRoleModal did={did} />}
     </HeaderContainer>
   )
 }
