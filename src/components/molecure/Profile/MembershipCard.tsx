@@ -6,6 +6,7 @@ import { Icon, ICONS, IconSize } from '@/components/atom/Icons/Icon'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { DefaultCardColor } from '@/constants/ui'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { formatDate } from '@/utils/date'
 
 type Props = {
   title: string
@@ -17,6 +18,10 @@ type Props = {
   isSelected?: boolean
   size?: IconSize
   vc?: boolean
+  spMaxWidth?: string
+  spPadding?: string
+  startDate?: string
+  endDate?: string
 }
 export const MembershipCard: FC<Props> = ({
   roles,
@@ -28,6 +33,10 @@ export const MembershipCard: FC<Props> = ({
   isSelected = false,
   size = 'M',
   vc = false,
+  spMaxWidth = '180px',
+  spPadding = '8px',
+  startDate,
+  endDate,
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
@@ -43,6 +52,24 @@ export const MembershipCard: FC<Props> = ({
     return size === 'M' ? '-12px' : '-10px'
   }, [size])
 
+  const logoSizeSP = useMemo(() => {
+    return size === 'M' ? '32px' : '20px'
+  }, [size])
+
+  const backLogoSizeSP = useMemo(() => {
+    return size === 'M' ? '100px' : '64px'
+  }, [size])
+
+  const backLogoPortionSP = useMemo(() => {
+    return size === 'M' ? '-10px' : '-5px'
+  }, [size])
+
+  const period = useMemo(() => {
+    return `${startDate ? formatDate(startDate) : '?'} - ${
+      endDate ? formatDate(endDate) : 'Present'
+    }`
+  }, [startDate, endDate])
+
   const CardContainer = styled.div`
     background: ${mainColor || DefaultCardColor.mainColor};
     border: ${isSelected ? `4px solid ${currentTheme.secondary}` : 'none'};
@@ -54,24 +81,20 @@ export const MembershipCard: FC<Props> = ({
     overflow: hidden;
     max-width: 280px;
     @media (max-width: 599px) {
-      padding: ${isSelected ? '8px' : '8px'};
-      max-width: 180px;
+      padding: ${spPadding};
+      max-width: ${spMaxWidth};
     }
   `
 
   const LogoContainer = styled.div`
-    opacity: 0.8;
+    opacity: 1;
     width: ${logoSize};
     height: ${logoSize};
-    margin-top: 12px;
-    @media (max-width: 1079px) {
-      width: ${logoSize};
-      height: ${logoSize};
-    }
+    margin-top: 8px;
     @media (max-width: 599px) {
-      width: ${'20px'};
-      height: ${'20px'};
-      margin-top: 12px;
+      width: ${logoSizeSP};
+      height: ${logoSizeSP};
+      margin-top: 0;
     }
   `
   const BackLogoContainer = styled.div`
@@ -81,17 +104,11 @@ export const MembershipCard: FC<Props> = ({
     position: absolute;
     right: ${backLogoPortion};
     bottom: ${backLogoPortion};
-    @media (max-width: 1079px) {
-      width: ${backLogoSize};
-      height: ${backLogoSize};
-      right: ${backLogoPortion};
-      bottom: ${backLogoPortion};
-    }
     @media (max-width: 599px) {
-      width: ${'64px'};
-      height: ${'64px'};
-      right: ${'-5px'};
-      bottom: ${'-5px'};
+      width: ${backLogoSizeSP};
+      height: ${backLogoSizeSP};
+      right: ${backLogoPortionSP};
+      bottom: ${backLogoPortionSP};
     }
   `
   const VcMarkContainer = styled.div`
@@ -110,14 +127,22 @@ export const MembershipCard: FC<Props> = ({
 
   const WorkSpaceTitle = styled.div`
     color: ${textColor || DefaultCardColor.textColor};
-    ${getBasicFont(currentTypo.title.medium)};
+    ${getBasicFont(currentTypo.title.large)};
+    @media (max-width: 599px) {
+      ${getBasicFont(currentTypo.title.medium)};
+    }
+  `
+  const Label = styled.p`
+    padding-top: 8px;
+    color: ${textColor || DefaultCardColor.textColor};
+    ${getBasicFont(currentTypo.label.small)};
+    @media (max-width: 599px) {
+      ${getBasicFont(currentTypo.label.small)};
+    }
   `
 
   return (
     <CardContainer>
-      <BackLogoContainer>
-        <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
-      </BackLogoContainer>
       {vc && (
         <VcMarkContainer>
           <VcMark>
@@ -145,7 +170,11 @@ export const MembershipCard: FC<Props> = ({
               )
             })}
         </Flex>
+        <Label>{period}</Label>
       </Flex>
+      <BackLogoContainer>
+        <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
+      </BackLogoContainer>
     </CardContainer>
   )
 }

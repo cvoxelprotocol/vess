@@ -1,6 +1,5 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import { Noto_Sans_JP, Noto_Sans } from '@next/font/google'
-import 'modern-css-reset/dist/reset.min.css'
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import { Provider as JotaiProvider } from 'jotai'
@@ -12,6 +11,8 @@ import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
 import { theme } from '@/lib/theme'
+import 'modern-css-reset/dist/reset.min.css'
+import '@/styles/globals.css'
 
 const notoSans = Noto_Sans({
   style: 'normal',

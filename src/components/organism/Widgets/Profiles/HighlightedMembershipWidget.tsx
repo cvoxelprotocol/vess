@@ -73,6 +73,8 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
                 secondColor={highlightedMembership.workspace?.secondaryColor}
                 textColor={highlightedMembership.workspace?.optionColor}
                 vc
+                startDate={highlightedMembership.credentialSubject.startDate}
+                endDate={highlightedMembership.credentialSubject.endDate}
               />
             ) : (
               <>
@@ -80,6 +82,8 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
                   <MembershipCard
                     title={highlightedSelfClaimedMembership.organizationName}
                     roles={[highlightedSelfClaimedMembership.membershipName]}
+                    startDate={highlightedSelfClaimedMembership.startDate}
+                    endDate={highlightedSelfClaimedMembership.endDate}
                   />
                 ) : (
                   <MembershipCard title={'Your membership'} roles={['Pick one']} />

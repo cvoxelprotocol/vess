@@ -3,6 +3,7 @@ import { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
 import type { SelfClaimedMembershipSubject, HighlightedCredentials } from 'vess-sdk'
 import { Button } from '@/components/atom/Buttons/Button'
+import { BaseDatePicker } from '@/components/atom/Forms/BaseDatePicker'
 import { Input } from '@/components/atom/Forms/Input'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { useHighlightedCredentials } from '@/hooks/useHighlightedCredentials'
@@ -19,6 +20,8 @@ type Input = {
   id: string
   organizationName: string
   membershipName: string
+  startDate?: Date
+  endDate?: Date
 }
 
 export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
@@ -50,6 +53,17 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     color: ${currentTheme.onSurfaceVariant};
     ${getBasicFont(currentTypo.label.medium)};
   `
+  const DatePickerContainer = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    @media (max-width: 599px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  `
 
   const {
     handleSubmit,
@@ -69,8 +83,10 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
   const onClickSubmit = async (data: Input, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
+    const start = data.startDate?.toISOString() || ''
+    const end = data.endDate?.toISOString() || ''
     const res = await storeSelfClaimedMembership(
-      removeUndefined<SelfClaimedMembershipSubject>({ ...data }),
+      removeUndefined<SelfClaimedMembershipSubject>({ ...data, startDate: start, endDate: end }),
     )
     if (res.streamId) {
       const items: HighlightedCredentials = {
@@ -88,8 +104,8 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
 
   return (
     <Form id={'SocialLinkWidgetEditForm'} onSubmit={handleSubmit(onClickSubmit)}>
-      <Title>Claim your membership</Title>
-      <Desc>Please write down your membership</Desc>
+      <Title>Self Claim</Title>
+      <Desc>Please claim your experience</Desc>
       <Input
         label={'Organization'}
         name={`organizationName`}
@@ -112,6 +128,20 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
         onClickClear={() => setValue('membershipName', '')}
         placeholder={'Developer'}
       />
+      <DatePickerContainer>
+        <BaseDatePicker
+          label='Start Date'
+          name='startDate'
+          control={control}
+          error={errors.startDate?.message}
+        />
+        <BaseDatePicker
+          label='End Date'
+          name='endDate'
+          control={control}
+          error={errors.endDate?.message}
+        />
+      </DatePickerContainer>
       <ButtonContainer>
         <Button variant='filled' text='Claim' type={'submit'} />
       </ButtonContainer>

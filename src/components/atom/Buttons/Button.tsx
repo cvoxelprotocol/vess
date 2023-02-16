@@ -122,7 +122,7 @@ export const Button: FC<ButtonProps> = ({
         : currentTheme.primaryContainer)};
     }
     border-radius: 79px;
-    padding: 10px 20px 10px 20px;
+    padding: ${size === 'S' ? '8px 12px' : '10px 20px '};
     display: flex;
     flex-direction: row;
     gap: 4px;

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
@@ -118,6 +119,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
           editable={false}
         />
       </Profile>
+      <ExperiencesContainer did={did} />
       <ProfleTabs did={did} />
       {!isFetchingBusinessProfile && isMe && (
         <BasicProfileWidgetEditModal did={did} businessProfile={businessProfile} />

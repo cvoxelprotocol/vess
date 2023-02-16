@@ -40,6 +40,10 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
     ::-webkit-scrollbar {
       display: none;
     }
+    @media (max-width: 599px) {
+      height: 70vh;
+      padding: 8px;
+    }
   `
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
@@ -56,9 +60,9 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
     gap: 16px;
     width: 100%;
     @media (max-width: 599px) {
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      gap: 8px;
     }
   `
   const MembershipCardWrapper = styled.div`
@@ -84,8 +88,9 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
     <VESSModalContainer open={showMembershipModal} onOpenChange={setShowMembershipModal}>
       <VESSModal>
         <Container>
-          <Title>Your Memberships</Title>
-          <Desc>Please Pick your highlighted membership</Desc>
+          <SelfClaimMembershipForm did={props.did} />
+          <Title>Or... Pick Your Experience</Title>
+          <Desc>Please Pick your highlighted experience VC</Desc>
           <InnerContent>
             {displayHeldMembership &&
               displayHeldMembership.map((item) => {
@@ -103,6 +108,8 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
                       textColor={item.workspace?.optionColor}
                       isSelected={item.ceramicId === highlightedMembership?.ceramicId}
                       vc
+                      startDate={item.credentialSubject.startDate}
+                      endDate={item.credentialSubject.endDate}
                     />
                   </MembershipCardWrapper>
                 )
@@ -118,12 +125,13 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
                       title={item.organizationName}
                       roles={[item.membershipName]}
                       isSelected={item.ceramicId === highlightedSelfClaimedMembership?.ceramicId}
+                      startDate={item.startDate}
+                      endDate={item.endDate}
                     />
                   </MembershipCardWrapper>
                 )
               })}
           </InnerContent>
-          <SelfClaimMembershipForm did={props.did} />
         </Container>
       </VESSModal>
     </VESSModalContainer>

@@ -15,6 +15,7 @@ type Props<T extends FieldValues> = {
   width?: number
   required?: string
   defaultDate?: Date
+  format?: string
 }
 
 export const BaseDatePicker = <T extends FieldValues>({
@@ -25,6 +26,7 @@ export const BaseDatePicker = <T extends FieldValues>({
   width = 220,
   required,
   defaultDate,
+  format = 'yyyy-MM-dd',
 }: Props<T>) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
@@ -126,7 +128,7 @@ export const BaseDatePicker = <T extends FieldValues>({
               <DatePickerContent
                 onChange={onChange}
                 value={value as Date}
-                format={'MM/dd/yyyy'}
+                format={format}
                 defaultValue={defaultVal}
                 calendarIcon={<PickAction>▼</PickAction>}
                 clearIcon={

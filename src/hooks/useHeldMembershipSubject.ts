@@ -84,7 +84,7 @@ export const useHeldMembershipSubject = (did?: string) => {
       highlightedCredentials.memberships.length > 0
     ) {
       const target = highlightedCredentials.memberships[0]
-      const targetItem = HeldMembershipSubjects?.find(
+      const targetItem = displayHeldMembership?.find(
         (m) => removeCeramicPrefix(m.ceramicId) === removeCeramicPrefix(target),
       )
       const targetOrgId = targetItem?.credentialSubject.organizationId
@@ -95,7 +95,7 @@ export const useHeldMembershipSubject = (did?: string) => {
       )
     }
     return displayHeldMembership[0] || undefined
-  }, [HeldMembershipSubjects, highlightedCredentials, displayHeldMembership])
+  }, [highlightedCredentials, displayHeldMembership])
 
   const highlightedSelfClaimedMembership = useMemo(() => {
     if (!selfClaimedMemberships) return undefined

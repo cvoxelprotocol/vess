@@ -88,8 +88,6 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   if (isClient) {
     return (
       <SPContainer>
-        <SPTabHeader id={'Experiences'}>Experiences</SPTabHeader>
-        <MembershipsTabContent did={did} />
         <SPTabHeader id={'Attendances'}>Attendances</SPTabHeader>
         <EventTabContent did={did} />
         <SPTabHeader id={'Works'}>Works</SPTabHeader>
@@ -99,16 +97,12 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   }
 
   return (
-    <TabsRoot defaultValue='Experiences' asChild id={'List'}>
+    <TabsRoot defaultValue='Attendances' asChild id={'List'}>
       <TabsContainer>
         <TabsList aria-label='Profiles'>
-          <TabsTrigger value='Experiences'>Experiences</TabsTrigger>
           <TabsTrigger value='Attendances'>Attendances</TabsTrigger>
           <TabsTrigger value='Works'>Works</TabsTrigger>
         </TabsList>
-        <TabsContent value='Experiences'>
-          <MembershipsTabContent did={did} />
-        </TabsContent>
         <TabsContent value='Attendances'>
           <EventTabContent did={did} />
         </TabsContent>

@@ -70,7 +70,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-row: 2;
       width: 100%;
       margin: 12px auto;
-      padding: 8px;
+      padding: 8px 16px;
     }
   `
   useEffect(() => {
