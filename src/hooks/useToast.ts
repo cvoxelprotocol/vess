@@ -3,7 +3,7 @@ import { BaseToastProps } from '@/components/atom/Toasts/BaseToast'
 import { useStateOpenToast, useStateVessToastProps } from '@/jotai/ui'
 
 export const useToast = () => {
-  const [open, setOpen] = useStateOpenToast()
+  const [_, setOpen] = useStateOpenToast()
   const [props, setProps] = useStateVessToastProps()
 
   const show = (
@@ -29,7 +29,6 @@ export const useToast = () => {
       actionTitle?: string,
       onClickAction?: () => void,
     ) => show(text, tailIcon, actionTitle, onClickAction),
-    isOpen: open,
     props,
   }
 }

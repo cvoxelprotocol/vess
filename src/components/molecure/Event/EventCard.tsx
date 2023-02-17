@@ -95,7 +95,7 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
     <CardContainer>
       <Container>
         <PfpContainer>
-          {eventDetail?.icon && <Avatar url={eventDetail.icon} size={'100'} />}
+          <Avatar url={eventDetail?.icon} size={'100'} />
         </PfpContainer>
         <Name>{eventDetail?.name}</Name>
         <Flex>

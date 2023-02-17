@@ -3,9 +3,9 @@ import { BaseToast } from './BaseToast'
 import { useToast } from '@/hooks/useToast'
 
 export const VESSToast: FC = () => {
-  const { props, isOpen } = useToast()
+  const { props } = useToast()
 
   if (!props) return <></>
 
-  return <>{isOpen && <BaseToast {...props} />}</>
+  return <BaseToast {...props} />
 }

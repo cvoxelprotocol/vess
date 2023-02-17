@@ -1,4 +1,3 @@
-import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import React from 'react'
@@ -8,10 +7,6 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.DialogContentProps>(
   ({ children, ...props }, forwardedRef) => {
     const { currentTheme } = useVESSTheme()
-    const contentShow = keyframes({
-      '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.96)' },
-      '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
-    })
 
     const DialogOverlay = styled(DialogPrimitive.Overlay)`
       position: fixed;
@@ -31,7 +26,6 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       max-height: 85vh;
       min-height: 20vh;
       gap: 29px;
-      /* animation: ${contentShow} 300ms cubic-bezier(0.77, 0.2, 0.05, 1); */
       z-index: 90;
       margin-top: 80px;
       &:focus {

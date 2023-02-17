@@ -137,7 +137,7 @@ export const EventDetailContent: FC<Props> = ({ streamId }) => {
     <Container>
       <InfoContainer>
         <PfpContainer>
-          {eventDetail?.icon && <Avatar url={eventDetail.icon} size={'200'} />}
+          <Avatar url={eventDetail?.icon} size={'200'} />
         </PfpContainer>
         <InfoContent>
           <Title>{eventDetail?.name}</Title>
