@@ -3,8 +3,6 @@ import * as Tabs from '@radix-ui/react-tabs'
 import { FC, useEffect, useState } from 'react'
 import { isMobileOnly } from 'react-device-detect'
 import { EventTabContent } from './EventTabContent'
-
-import { MembershipsTabContent } from './MembershipsTabContent'
 import { WorkTabContent } from './WorkTabContent'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 type Props = {
@@ -88,9 +86,9 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   if (isClient) {
     return (
       <SPContainer>
-        <SPTabHeader id={'Attendances'}>Attendances</SPTabHeader>
+        <SPTabHeader>Attendances</SPTabHeader>
         <EventTabContent did={did} />
-        <SPTabHeader id={'Works'}>Works</SPTabHeader>
+        <SPTabHeader>Works</SPTabHeader>
         <WorkTabContent did={did} />
       </SPContainer>
     )

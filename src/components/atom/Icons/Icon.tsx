@@ -21,6 +21,7 @@ import { EthereumIcon } from './EthereumIcon'
 import { EventAttendanceIcon } from './EventAttendanceIcon'
 import { ExpandIcon } from './ExpandIcon'
 import { ExportIcon } from './ExportIcon'
+import { ExternalIcon } from './ExternalIcon'
 import { GithubIcon } from './GithubIcon'
 import { GlassIcon } from './GlassIcon'
 import { HomeIcon } from './HomeIcon'
@@ -90,6 +91,7 @@ export const ICONS = {
   WORKSPACE: 'workspace',
   VERIFIED: 'verified',
   QR: 'qr',
+  EXTERNAL: 'external',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -399,6 +401,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <QrIcon />
+          </IconContainer>
+        )
+      case 'external':
+        return (
+          <IconContainer>
+            <ExternalIcon />
           </IconContainer>
         )
       default:

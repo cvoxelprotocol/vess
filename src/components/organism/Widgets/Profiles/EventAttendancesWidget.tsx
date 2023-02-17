@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
-import { isMobileOnly } from 'react-device-detect'
+import type { EventAttendanceWithId } from 'vess-sdk'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
@@ -9,6 +9,7 @@ import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { useSetSelectAttendance } from '@/jotai/item'
 
 type Props = {
   did: string
@@ -25,8 +26,8 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
   const { displayHeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances(
     props.did,
   )
-  const { openModal } = useVESSWidgetModal()
-  const router = useRouter()
+  const selectAttendance = useSetSelectAttendance()
+  const { openModal, setShowDetailModal } = useVESSWidgetModal()
 
   const Container = styled.div`
     padding: 16px 24px 32px;
@@ -89,17 +90,15 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
     openModal()
   }
 
-  const handleClickConWidget = () => {
-    // TODO: open detail modal
-    if (isMobileOnly) {
-      router.push('#Attendances')
-    }
+  const showDetail = (item: EventAttendanceWithId) => {
+    selectAttendance(item)
+    setShowDetailModal(true)
   }
 
   return (
     <>
       <BaseWidget onClickEdit={handleEdit} {...props} border={`1px solid ${currentTheme.outline}`}>
-        <Container onClick={handleClickConWidget}>
+        <Container>
           {isFetchingHeldEventAttendances ? (
             <CommonSpinner />
           ) : (
@@ -112,7 +111,7 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
                 <>
                   {displayHeldEventAttendances.map((item) => {
                     return (
-                      <IconContainer key={item.ceramicId}>
+                      <IconContainer key={item.ceramicId} onClick={() => showDetail(item)}>
                         <Avatar url={item.credentialSubject.eventIcon} size={'XXL'} />
                       </IconContainer>
                     )

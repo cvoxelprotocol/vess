@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
@@ -14,7 +13,6 @@ type Props = {
 
 export const EventCard: FC<Props> = ({ ceramicId }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const router = useRouter()
   const { eventDetail } = useEventAttendance(ceramicId)
   const { organization } = useOrganization(eventDetail?.organizationId)
 

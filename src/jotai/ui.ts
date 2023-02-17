@@ -57,3 +57,7 @@ export const useStateShowHeaderMenu = () => useAtom(showHeaderMenu)
 export const showQRModal = atom<boolean>(false)
 
 export const useStateshowQRModal = () => useAtom(showQRModal)
+
+export const showDetailModal = atom<boolean>(false)
+
+export const useStateShowDetailModal = () => useAtom(showDetailModal)

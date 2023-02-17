@@ -3,6 +3,7 @@ import { FC } from 'react'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
+import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
@@ -21,6 +22,7 @@ import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { useSelectedAttendance } from '@/jotai/item'
 
 type Props = {
   did: string
@@ -30,6 +32,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const { businessProfile, isFetchingBusinessProfile, isMe } = useBusinessProfile(did)
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(did)
   const { setShowQRModal } = useVESSWidgetModal()
+  const selectedAttendance = useSelectedAttendance()
 
   const Container = styled.div`
     width: 100%;
@@ -153,6 +156,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       <HeldMembershipsModal did={did} editable={isMe} />
       <SocialProfileEditModal did={did} />
       <ProfileQRModal />
+      <EventDetailModal streamId={selectedAttendance?.credentialSubject.eventId} />
     </Container>
   )
 }

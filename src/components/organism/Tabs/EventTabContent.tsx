@@ -1,20 +1,22 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { FC } from 'react'
 import type { EventAttendanceWithId } from 'vess-sdk'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { EventCard } from '@/components/molecure/Event/EventCard'
 import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
+import { useSetSelectAttendance } from '@/jotai/item'
 
 type Props = {
   did: string
 }
 
 export const EventTabContent: FC<Props> = ({ did }) => {
-  const router = useRouter()
   const { displayHeldEventAttendances, isFetchingHeldEventAttendances } =
     useHeldEventAttendances(did)
+  const { setShowDetailModal } = useVESSWidgetModal()
+  const selectAttendance = useSetSelectAttendance()
   const Wrapper = styled.div`
     width: 100%;
   `
@@ -42,7 +44,8 @@ export const EventTabContent: FC<Props> = ({ did }) => {
   `
 
   const goToEventPage = (event: EventAttendanceWithId) => {
-    // router.push(`/events/${removeCeramicPrefix(event.ceramicId)}`)
+    selectAttendance(event)
+    setShowDetailModal(true)
   }
 
   return (
