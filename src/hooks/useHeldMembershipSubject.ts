@@ -55,7 +55,6 @@ export const useHeldMembershipSubject = (did?: string) => {
   const displayHeldMembership: DisplayMembership[] = useMemo(() => {
     if (!HeldMembershipSubjects || HeldMembershipSubjects.length === 0) return []
     let temp: { [key: string]: DisplayMembership } = {}
-    console.log({ HeldMembershipSubjects })
     HeldMembershipSubjects.forEach((m) => {
       if (isExpired(m.expirationDate)) return
       if (!Object.keys(temp).includes(m.credentialSubject.organizationId!)) {

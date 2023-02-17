@@ -53,3 +53,7 @@ export const useStateSocialProfileEditModal = () => useAtom(socialProfileEditMod
 export const showHeaderMenu = atom<boolean>(false)
 
 export const useStateShowHeaderMenu = () => useAtom(showHeaderMenu)
+
+export const showQRModal = atom<boolean>(false)
+
+export const useStateshowQRModal = () => useAtom(showQRModal)

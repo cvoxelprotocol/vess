@@ -42,7 +42,7 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
       return
     } else if (linkType === 'telegram') {
       if (isMobile) {
-        window.open(`t.me/${value}`, '_blank')
+        window.open(`tg://resolve?domain=${value}`, '_blank')
       } else {
         window.open(`tg://resolve?domain=${value}`)
       }

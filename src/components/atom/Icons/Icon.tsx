@@ -33,6 +33,7 @@ import { MoonIcon } from './MoonIcon'
 import { Pc } from './Pc'
 import { Person } from './Person'
 import { PointsIcon } from './PointsIcon'
+import { QrIcon } from './QrIcon'
 import { QuestionIcon } from './QuestionIcon'
 import { SettingIcon } from './SettingIcon'
 import { SunIcon } from './SunIcon'
@@ -88,6 +89,7 @@ export const ICONS = {
   MAIL: 'mail',
   WORKSPACE: 'workspace',
   VERIFIED: 'verified',
+  QR: 'qr',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -391,6 +393,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <VerifiedIcon />
+          </IconContainer>
+        )
+      case 'qr':
+        return (
+          <IconContainer>
+            <QrIcon />
           </IconContainer>
         )
       default:

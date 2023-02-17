@@ -150,7 +150,7 @@ export const MembershipCard: FC<Props> = ({
           </VcMark>
         </VcMarkContainer>
       )}
-      <Flex flexDirection='column' rowGap='4px' alignItems='start'>
+      <Flex flexDirection='column' rowGap='2px' alignItems='start'>
         <LogoContainer>
           <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />
         </LogoContainer>

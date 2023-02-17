@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { IconButton } from '@/components/atom/Buttons/IconButton'
+import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
 import { SocialProfileEditModal } from '@/components/organism/Modal/Profile/SocialProfileEditModal'
+import { ProfileQRModal } from '@/components/organism/Modal/QR/ProfileQRModal'
 import { ProfleTabs } from '@/components/organism/Tabs/ProfleTabs'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
 import { EventAttendancesWidget } from '@/components/organism/Widgets/Profiles/EventAttendancesWidget'
@@ -16,6 +19,7 @@ import { WorkStatusWidget } from '@/components/organism/Widgets/Profiles/WorkSta
 import { WorkStyleWidget } from '@/components/organism/Widgets/Profiles/WorkStyleWidget'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
@@ -25,6 +29,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const { currentTheme } = useVESSTheme()
   const { businessProfile, isFetchingBusinessProfile, isMe } = useBusinessProfile(did)
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(did)
+  const { setShowQRModal } = useVESSWidgetModal()
 
   const Container = styled.div`
     width: 100%;
@@ -46,6 +51,15 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       grid-template-rows: repeat(auto-fill, 56px);
       grid-template-columns: repeat(6, 1fr);
       grid-gap: 12px;
+    }
+  `
+  const ShareContainer = styled.div`
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    @media (max-width: 599px) {
+      bottom: 24px;
+      right: 24px;
     }
   `
   if (!did) {
@@ -121,6 +135,15 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       </Profile>
       <ExperiencesContainer did={did} />
       <ProfleTabs did={did} />
+      <ShareContainer>
+        <IconButton
+          icon={ICONS.QR}
+          size={'XL'}
+          mainColor={currentTheme.onPrimary}
+          backgroundColor={currentTheme.primary}
+          onClick={() => setShowQRModal(true)}
+        />
+      </ShareContainer>
       {!isFetchingBusinessProfile && isMe && (
         <BasicProfileWidgetEditModal did={did} businessProfile={businessProfile} />
       )}
@@ -129,6 +152,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       )}
       <HeldMembershipsModal did={did} editable={isMe} />
       <SocialProfileEditModal did={did} />
+      <ProfileQRModal />
     </Container>
   )
 }

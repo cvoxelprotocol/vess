@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import * as radixAvatar from '@radix-ui/react-avatar'
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { ICONSIZE, IconSize } from '../Icons/Icon'
 import { AvatarPlaceholder } from './AvatarPlaceholder'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -11,7 +11,7 @@ interface AvatarProps {
   size?: IconSize
 }
 
-export const Avatar: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
+const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
   const { currentTheme } = useVESSTheme()
 
   const AvatarContainer = styled(radixAvatar.Root)`
@@ -51,3 +51,6 @@ export const Avatar: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
     </AvatarContainer>
   )
 }
+
+export const Avatar = memo<AvatarProps>((props) => <AvatarContent {...props} />)
+Avatar.displayName = 'Avatar'
