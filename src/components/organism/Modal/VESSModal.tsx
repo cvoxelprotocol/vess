@@ -31,7 +31,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       max-height: 85vh;
       min-height: 20vh;
       gap: 29px;
-      animation: ${contentShow} 300ms cubic-bezier(0.77, 0.2, 0.05, 1);
+      /* animation: ${contentShow} 300ms cubic-bezier(0.77, 0.2, 0.05, 1); */
       z-index: 90;
       margin-top: 80px;
       &:focus {
@@ -53,6 +53,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       right: 16px;
       background: none;
       border: none;
+      outline: none;
       z-index: 999;
     `
     const IconContainer = styled.div`
@@ -60,6 +61,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       height: 100%;
       background: none;
       border: none;
+      outline: none;
     `
 
     return (
