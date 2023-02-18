@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { addCeramicPrefix } from 'vess-sdk'
 import type { HighlightedCredentials, SocialLinks } from 'vess-sdk'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
@@ -10,6 +10,8 @@ import { useHighlightedCredentials } from '@/hooks/useHighlightedCredentials'
 import { useSelfClaimedMembership } from '@/hooks/useSelfClaimedMembership'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { sortedMembership } from '@/interfaces/ui'
+import { convertDateStrToTimestamp } from '@/utils/date'
 
 type Props = {
   did: string
@@ -26,6 +28,26 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
   const { highlightedCredentials, storeHighlightedCredentials } = useHighlightedCredentials(
     props.did,
   )
+
+  const sortedMemberships = useMemo(() => {
+    if (!displayHeldMembership && !selfClaimedMemberships) return []
+    let sorted: sortedMembership[] = []
+    displayHeldMembership.forEach((m) => {
+      sorted.push({
+        item: m,
+        startDate: m.credentialSubject.startDate,
+        endDate: m.credentialSubject.endDate,
+      })
+    })
+    selfClaimedMemberships?.forEach((m) => {
+      sorted.push({ selfClaim: m, startDate: m.startDate, endDate: m.endDate })
+    })
+    return sorted.sort((a, b) => {
+      return convertDateStrToTimestamp(a.startDate) > convertDateStrToTimestamp(b.startDate)
+        ? -1
+        : 1
+    })
+  }, [displayHeldMembership, selfClaimedMemberships])
 
   const Container = styled.div`
     padding: 32px;
@@ -73,7 +95,8 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
     }
   `
 
-  const selectMembership = async (id: string) => {
+  const selectMembership = async (id?: string) => {
+    if (!id) return
     const items: HighlightedCredentials = {
       memberships: [addCeramicPrefix(id)],
       attendances: highlightedCredentials?.attendances || [],
@@ -84,6 +107,14 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
       setShowMembershipModal(false)
     }
   }
+
+  const isSelected = (item: sortedMembership) => {
+    return (
+      (highlightedMembership && item.item?.ceramicId === highlightedMembership?.ceramicId) ||
+      (highlightedSelfClaimedMembership &&
+        item.selfClaim?.ceramicId === highlightedSelfClaimedMembership?.ceramicId)
+    )
+  }
   return (
     <VESSModalContainer open={showMembershipModal} onOpenChange={setShowMembershipModal}>
       <VESSModal>
@@ -92,39 +123,32 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
           <Title>Or... Pick Your Experience</Title>
           <Desc>Please Pick your highlighted experience VC</Desc>
           <InnerContent>
-            {displayHeldMembership &&
-              displayHeldMembership.map((item) => {
+            {sortedMemberships &&
+              sortedMemberships.map((item) => {
                 return (
                   <MembershipCardWrapper
-                    key={item.ceramicId}
-                    onClick={() => selectMembership(item.ceramicId)}
+                    key={item.item?.ceramicId || item.selfClaim?.ceramicId}
+                    onClick={() =>
+                      selectMembership(item.item?.ceramicId || item.selfClaim?.ceramicId)
+                    }
                   >
                     <MembershipCard
-                      title={item.workspace?.name || item.credentialSubject.organizationName}
-                      roles={item.roles}
-                      icon={item.workspace?.icon}
-                      mainColor={item.workspace?.primaryColor}
-                      secondColor={item.workspace?.secondaryColor}
-                      textColor={item.workspace?.optionColor}
-                      isSelected={item.ceramicId === highlightedMembership?.ceramicId}
-                      vc
-                      startDate={item.credentialSubject.startDate}
-                      endDate={item.credentialSubject.endDate}
-                    />
-                  </MembershipCardWrapper>
-                )
-              })}
-            {selfClaimedMemberships &&
-              selfClaimedMemberships.map((item) => {
-                return (
-                  <MembershipCardWrapper
-                    key={item.ceramicId}
-                    onClick={() => selectMembership(item.ceramicId)}
-                  >
-                    <MembershipCard
-                      title={item.organizationName}
-                      roles={[item.membershipName]}
-                      isSelected={item.ceramicId === highlightedSelfClaimedMembership?.ceramicId}
+                      title={
+                        item.item?.workspace?.name ||
+                        item.item?.credentialSubject.organizationName ||
+                        item.selfClaim?.organizationName ||
+                        ''
+                      }
+                      roles={
+                        item.item?.roles ||
+                        (item.selfClaim?.membershipName ? [item.selfClaim?.membershipName] : [])
+                      }
+                      icon={item.item?.workspace?.icon}
+                      mainColor={item.item?.workspace?.primaryColor}
+                      secondColor={item.item?.workspace?.secondaryColor}
+                      textColor={item.item?.workspace?.optionColor}
+                      isSelected={isSelected(item)}
+                      vc={!!item.item}
                       startDate={item.startDate}
                       endDate={item.endDate}
                     />

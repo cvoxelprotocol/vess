@@ -1,4 +1,8 @@
-import type { MembershipSubjectWithOrg } from 'vess-sdk'
+import type {
+  MembershipSubjectWithOrg,
+  SelfClaimedMembershipSubject,
+  WithCeramicId,
+} from 'vess-sdk'
 
 export type VoxelVisType = {
   color: string
@@ -14,4 +18,11 @@ export type VoxelThree = VoxelVisType & {
 
 export interface DisplayMembership extends MembershipSubjectWithOrg {
   roles: string[]
+}
+
+export type sortedMembership = {
+  item?: DisplayMembership
+  selfClaim?: WithCeramicId<SelfClaimedMembershipSubject>
+  startDate?: string
+  endDate?: string
 }

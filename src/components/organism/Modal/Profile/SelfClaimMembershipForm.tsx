@@ -89,16 +89,8 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
       removeUndefined<SelfClaimedMembershipSubject>({ ...data, startDate: start, endDate: end }),
     )
     if (res.streamId) {
-      const items: HighlightedCredentials = {
-        memberships: [res.streamId],
-        attendances: highlightedCredentials?.attendances || [],
-        works: highlightedCredentials?.works || [],
-      }
-      const result = await storeHighlightedCredentials(items)
-      if (result.status === 200) {
-        reset()
-        closeMembershipModal()
-      }
+      reset()
+      closeMembershipModal()
     }
   }
 

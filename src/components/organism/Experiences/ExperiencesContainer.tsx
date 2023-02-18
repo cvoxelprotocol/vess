@@ -7,6 +7,8 @@ import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
 import { useSelfClaimedMembership } from '@/hooks/useSelfClaimedMembership'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { sortedMembership } from '@/interfaces/ui'
+import { convertDateStrToTimestamp } from '@/utils/date'
 
 type Props = {
   did?: string
@@ -24,6 +26,26 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
       (selfClaimedMemberships && selfClaimedMemberships.length > 0)
     )
   }, [displayHeldMembership, selfClaimedMemberships, isFetchingHeldMembershipSubjects])
+
+  const sortedMemberships = useMemo(() => {
+    if (!displayHeldMembership && !selfClaimedMemberships) return []
+    let sorted: sortedMembership[] = []
+    displayHeldMembership.forEach((m) => {
+      sorted.push({
+        item: m,
+        startDate: m.credentialSubject.startDate,
+        endDate: m.credentialSubject.endDate,
+      })
+    })
+    selfClaimedMemberships?.forEach((m) => {
+      sorted.push({ selfClaim: m, startDate: m.startDate, endDate: m.endDate })
+    })
+    return sorted.sort((a, b) => {
+      return convertDateStrToTimestamp(a.startDate) > convertDateStrToTimestamp(b.startDate)
+        ? -1
+        : 1
+    })
+  }, [displayHeldMembership, selfClaimedMemberships])
 
   const Container = styled.div`
     display: flex;
@@ -67,13 +89,15 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
           <NoItem text={'No Item yet'} />
         ) : (
           <>
-            {displayHeldMembership &&
-              displayHeldMembership.map((item) => {
-                return <ExperienceCard key={item.ceramicId} item={item} />
-              })}
-            {selfClaimedMemberships &&
-              selfClaimedMemberships.map((item) => {
-                return <ExperienceCard key={item.ceramicId} selfClaim={item} />
+            {sortedMemberships &&
+              sortedMemberships.map((item) => {
+                return (
+                  <ExperienceCard
+                    key={item.item?.ceramicId || item.selfClaim?.ceramicId}
+                    item={item.item}
+                    selfClaim={item.selfClaim}
+                  />
+                )
               })}
           </>
         )}

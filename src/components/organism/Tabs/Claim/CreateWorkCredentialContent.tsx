@@ -89,17 +89,6 @@ export const CreateWorkCredentialContent: FC = () => {
     e?.preventDefault()
     e?.stopPropagation()
     console.log({ data })
-    // if (res.streamId) {
-    //   const items: HighlightedCredentials = {
-    //     memberships: [res.streamId],
-    //     attendances: highlightedCredentials?.attendances || [],
-    //     works: highlightedCredentials?.works || [],
-    //   }
-    //   const result = await storeHighlightedCredentials(items)
-    //   if (result.status === 200) {
-    //     reset()
-    //   }
-    // }
   }
 
   return (

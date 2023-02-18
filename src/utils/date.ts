@@ -15,6 +15,12 @@ export const convertTimestampToDateStr = (timestamp?: string): string => {
   const d = new Date(Number(timestamp) * 1000)
   return formatDate(d.toISOString())
 }
+
+export const convertDateStrToTimestamp = (str?: string): number => {
+  if (!str) return 0
+  return new Date(str).getTime()
+}
+
 export const isExpired = (date?: string): boolean => {
   if (!date) return false
   const now = new Date()
