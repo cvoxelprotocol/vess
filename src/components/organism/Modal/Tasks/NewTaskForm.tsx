@@ -16,6 +16,7 @@ import { useHeldTaskCredentials } from '@/hooks/useHeldTaskCredentials'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { removeUndefined } from '@/utils/objectUtil'
+import { urlRegExp } from '@/utils/url'
 
 type Props = {
   did: string
@@ -23,8 +24,8 @@ type Props = {
 }
 
 interface TaskCredentialInput extends TaskCredential {
-  tx: string
-  link: string
+  tx?: string
+  link?: string
   start?: Date
   end?: Date
   clientStr?: string
@@ -125,22 +126,21 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
     defaultValues: {
       id: did,
       summary: '',
-      tx: '',
-      link: '',
     },
   })
 
   const onClickSubmit = async (data: TaskCredentialInput, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
+    const today = new Date()
     const { tx, link, start, end, clientStr, ...rawData } = data
     const txItem: DeliverableItem = {
       format: 'tx',
-      value: tx || '',
+      value: tx,
     }
     const linkItem: DeliverableItem = {
       format: 'url',
-      value: link || '',
+      value: link,
     }
 
     const client: Client = {
@@ -153,6 +153,8 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
       startDate: start?.toISOString() || '',
       endDate: end?.toISOString() || '',
       client: client,
+      createdAt: today.toISOString(),
+      updatedAt: today.toISOString(),
       ...rawData,
     })
     console.log({ content })
@@ -233,6 +235,7 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
                 onClickClear={() => setValue('link', '')}
                 icon={ICONS.CHAIN}
                 iconSize={'MM'}
+                pattern={{ value: urlRegExp, message: 'only https link accepted' }}
               />
               <Input
                 label={'Tx'}
@@ -242,6 +245,7 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
                 onClickClear={() => setValue('tx', '')}
                 icon={ICONS.TX}
                 iconSize={'MM'}
+                pattern={{ value: urlRegExp, message: 'only https link accepted' }}
               />
             </ProofContent>
           </ProofContainer>

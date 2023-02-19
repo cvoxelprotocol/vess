@@ -63,8 +63,8 @@ export const WorkTabContent: FC<Props> = ({ did }) => {
               {heldTaskCredentials.length > 0 &&
                 heldTaskCredentials.map((item) => {
                   return (
-                    <Content key={item.ceramicId} onClick={() => showDetail(item)}>
-                      <TaskCredentialCard crdl={item} />
+                    <Content key={item.ceramicId}>
+                      <TaskCredentialCard crdl={item} handleClick={showDetail} />
                     </Content>
                   )
                 })}
