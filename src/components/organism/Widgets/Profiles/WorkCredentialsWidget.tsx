@@ -109,7 +109,7 @@ export const WorkCredentialsWidget: FC<Props> = (props) => {
             <>
               {!heldTaskCredentials || heldTaskCredentials.length === 0 ? (
                 <NoItemContainer>
-                  <NoItem text='No credential yet...' />
+                  <NoItem text='No item yet' />
                 </NoItemContainer>
               ) : (
                 <>{VisualizerPresenterMemo}</>

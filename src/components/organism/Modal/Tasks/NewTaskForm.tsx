@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
-import type { DeliverableItem, TaskCredential } from 'vess-sdk'
+import type { Client, DeliverableItem, TaskCredential } from 'vess-sdk'
 import { Button } from '@/components/atom/Buttons/Button'
 import { BaseDatePicker } from '@/components/atom/Forms/BaseDatePicker'
+import { ClientSelect } from '@/components/atom/Forms/ClientSelect'
 import { Input } from '@/components/atom/Forms/Input'
 import { MultiInput } from '@/components/atom/Forms/MultiInput'
 import { TagSelect } from '@/components/atom/Forms/TagSelect'
@@ -26,6 +27,7 @@ interface TaskCredentialInput extends TaskCredential {
   link: string
   start?: Date
   end?: Date
+  clientStr?: string
 }
 
 export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
@@ -131,7 +133,7 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
   const onClickSubmit = async (data: TaskCredentialInput, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
-    const { tx, link, start, end, ...rawData } = data
+    const { tx, link, start, end, clientStr, ...rawData } = data
     const txItem: DeliverableItem = {
       format: 'tx',
       value: tx || '',
@@ -141,10 +143,16 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
       value: link || '',
     }
 
+    const client: Client = {
+      format: clientStr?.startsWith('did:') ? 'did' : 'name',
+      value: clientStr,
+    }
+
     const content: TaskCredential = removeUndefined<TaskCredential>({
       deliverables: [txItem, linkItem],
       startDate: start?.toISOString() || '',
       endDate: end?.toISOString() || '',
+      client: client,
       ...rawData,
     })
     console.log({ content })
@@ -169,7 +177,14 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
             required={'this is required item'}
             error={errors.summary?.message}
             onClickClear={() => setValue('summary', '')}
-            placeholder={'title'}
+            placeholder={'Task title'}
+          />
+          <ClientSelect
+            control={control}
+            name={'clientStr'}
+            label={'Client'}
+            error={errors.clientStr?.message}
+            placeholder={`${'Client DID or name'}`}
           />
           <MultiInput
             label={'description(optional)'}

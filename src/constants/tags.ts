@@ -5,6 +5,10 @@ export type TagOption = {
   label: string
 }
 
+export const CLIENTS: TagOption[] = [
+  { value: 'did:pkh:eip155:1:0xf6dcc520f11ad600da7e01da44e0e70d094ea246', label: 'VESS Labs' },
+]
+
 export const TAGS: TagOption[] = [
   { value: 'web3', label: 'web3' },
   { value: 'NFT', label: 'NFT' },

@@ -67,6 +67,7 @@ export const TaskDetailContent: FC<Props> = ({ streamId }) => {
   const Project = styled.div`
     display: flex;
     align-items: center;
+    gap: 8px;
   `
   const ProjectName = styled.p`
     color: ${currentTheme.onBackground};
@@ -197,25 +198,27 @@ export const TaskDetailContent: FC<Props> = ({ streamId }) => {
             </ChipsContainer>
           </Flex>
           {taskDetail?.client && (
-            <Flex>
+            <>
               <SectionContent>Client</SectionContent>
-              {organization ? (
-                <Project>
-                  <ImageContainer
-                    src={organization?.icon || 'https://workspace.vess.id/company.png'}
-                    width={'26px'}
-                  />
-                  <ProjectName>{organization?.name}</ProjectName>
-                </Project>
-              ) : (
-                <Project>
-                  <ImageContainer src={'https://workspace.vess.id/company.png'} width={'26px'} />
-                  <ProjectName>
-                    {taskDetail?.client?.format === 'name' ? taskDetail.client.value : '-'}
-                  </ProjectName>
-                </Project>
-              )}
-            </Flex>
+              <Flex>
+                {organization ? (
+                  <Project>
+                    <ImageContainer
+                      src={organization?.icon || 'https://workspace.vess.id/company.png'}
+                      width={'26px'}
+                    />
+                    <ProjectName>{organization?.name}</ProjectName>
+                  </Project>
+                ) : (
+                  <Project>
+                    <ImageContainer src={'https://workspace.vess.id/company.png'} width={'20px'} />
+                    <ProjectName>
+                      {taskDetail?.client?.format === 'name' ? taskDetail.client.value : '-'}
+                    </ProjectName>
+                  </Project>
+                )}
+              </Flex>
+            </>
           )}
           <InfoItem>
             <Icon icon={ICONS.CALENDAR} size={'MM'} />
