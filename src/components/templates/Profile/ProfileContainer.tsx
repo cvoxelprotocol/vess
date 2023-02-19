@@ -4,11 +4,13 @@ import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
+import { TaskDetailModal } from '@/components/organism/Modal/Detail/Tasks/TaskDetailModal'
 import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
 import { SocialProfileEditModal } from '@/components/organism/Modal/Profile/SocialProfileEditModal'
 import { ProfileQRModal } from '@/components/organism/Modal/QR/ProfileQRModal'
+import { NewTaskWidgetModal } from '@/components/organism/Modal/Tasks/NewTaskWidgetModal'
 import { ProfleTabs } from '@/components/organism/Tabs/ProfleTabs'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
 import { EventAttendancesWidget } from '@/components/organism/Widgets/Profiles/EventAttendancesWidget'
@@ -22,7 +24,7 @@ import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { useSelectedAttendance } from '@/jotai/item'
+import { useSelectedAttendance, useSelectedTask } from '@/jotai/item'
 
 type Props = {
   did: string
@@ -33,6 +35,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(did)
   const { setShowQRModal } = useVESSWidgetModal()
   const selectedAttendance = useSelectedAttendance()
+  const selectedTask = useSelectedTask()
 
   const Container = styled.div`
     width: 100%;
@@ -133,7 +136,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
           gridCol={'9/13'}
           gridRowOnSp={'13/17'}
           gridColOnSp={'3/7'}
-          editable={false}
+          editable={isMe}
         />
       </Profile>
       <ExperiencesContainer did={did} />
@@ -157,6 +160,8 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       <SocialProfileEditModal did={did} />
       <ProfileQRModal />
       <EventDetailModal streamId={selectedAttendance?.credentialSubject.eventId} />
+      <TaskDetailModal streamId={selectedTask} />
+      <NewTaskWidgetModal did={did} />
     </Container>
   )
 }

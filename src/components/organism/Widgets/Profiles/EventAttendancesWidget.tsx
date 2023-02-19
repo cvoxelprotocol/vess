@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { FC } from 'react'
 import type { EventAttendanceWithId } from 'vess-sdk'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
@@ -51,7 +50,7 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
       padding: 8px 12px 32px;
     }
     max-height: 240px;
-    overflow-y: scroll;
+    overflow-y: hidden;
     ::-webkit-scrollbar {
       display: none;
     }
@@ -69,9 +68,10 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
     border-radius: 0 0 40px 40px;
     margin: 4px;
   `
-  const FooterTitle = styled.div`
+  const FooterTitle = styled.a`
     color: ${currentTheme.primary};
     ${getBasicFont(currentTypo.title.small)};
+    text-decoration: none;
   `
   const IconContainer = styled.div`
     grid-template-columns: repeat(auto-fill, 1fr);
@@ -122,7 +122,7 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
           )}
         </Container>
         <FooterContainer>
-          <FooterTitle>Event Attendances</FooterTitle>
+          <FooterTitle href={'#Attendances'}>Event Attendances</FooterTitle>
         </FooterContainer>
       </BaseWidget>
     </>

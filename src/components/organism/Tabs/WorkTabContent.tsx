@@ -1,19 +1,22 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { FC } from 'react'
-import type { WorkCredentialWithId } from 'vess-sdk'
+import type { TaskCredential, WithCeramicId } from 'vess-sdk'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 
-import { WorkCredentialCard } from '@/components/molecure/Work/WorkCredentialCard'
-import { useWorkCredentials } from '@/hooks/useWorkCredential'
+import { TaskCredentialCard } from '@/components/molecure/Work/TaskCredentialCard'
+import { useHeldTaskCredentials } from '@/hooks/useHeldTaskCredentials'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
+import { useSetSelectTask } from '@/jotai/item'
 
 type Props = {
   did: string
 }
 
 export const WorkTabContent: FC<Props> = ({ did }) => {
-  const { workCredentials, isInitialLoading } = useWorkCredentials(did)
+  const { heldTaskCredentials, isFetchingHeldTaskCredentials } = useHeldTaskCredentials(did)
+  const selectTask = useSetSelectTask()
+  const { setShowTaskDetailModal } = useVESSWidgetModal()
   const Wrapper = styled.div`
     width: 100%;
   `
@@ -39,24 +42,29 @@ export const WorkTabContent: FC<Props> = ({ did }) => {
     height: 100%;
   `
 
+  const showDetail = (item: WithCeramicId<TaskCredential>) => {
+    selectTask(item.ceramicId)
+    setShowTaskDetailModal(true)
+  }
+
   return (
     <Wrapper>
-      {isInitialLoading ? (
+      {isFetchingHeldTaskCredentials ? (
         <LoadingContainer>
           {' '}
           <CommonSpinner />
         </LoadingContainer>
       ) : (
         <MembersContainer>
-          {!workCredentials || workCredentials.length === 0 ? (
-            <NoItem text={'Coming Soon...'} />
+          {!heldTaskCredentials || heldTaskCredentials.length === 0 ? (
+            <NoItem text={'No Item yet...'} />
           ) : (
             <>
-              {workCredentials &&
-                workCredentials.map((work) => {
+              {heldTaskCredentials.length > 0 &&
+                heldTaskCredentials.map((item) => {
                   return (
-                    <Content key={work.ceramicId}>
-                      <WorkCredentialCard workCredential={work} />
+                    <Content key={item.ceramicId} onClick={() => showDetail(item)}>
+                      <TaskCredentialCard crdl={item} />
                     </Content>
                   )
                 })}

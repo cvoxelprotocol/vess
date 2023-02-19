@@ -1,7 +1,7 @@
 import color from 'color'
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import type { WorkCredentialWithId } from 'vess-sdk'
+import type { WithCeramicId, TaskCredential } from 'vess-sdk'
 import { VoxelThree, VoxelVisType } from '@/interfaces/ui'
 import { getGenreColor } from '@/utils/genreUtil'
 
@@ -15,7 +15,7 @@ type CVoxelVisTypeWithId = VoxelVisType & { id: string }
 
 const sigmoid_a: number = 1
 
-export const useMultipleVoxelStyler = (crdls: WorkCredentialWithId[]) => {
+export const useMultipleVoxelStyler = (crdls: WithCeramicId<TaskCredential>[]) => {
   const displayVoxels = useMemo(() => {
     const styledVoxel: CVoxelVisTypeWithId[] = []
     let stackedVoxels: CVoxelThreeWithId[] = []
@@ -25,41 +25,23 @@ export const useMultipleVoxelStyler = (crdls: WorkCredentialWithId[]) => {
         let voxelTemp: CVoxelVisTypeWithId = {
           id: voxel.ceramicId,
           color: '',
-          opacity: 0.45,
+          opacity: 0.75,
           lattice: false,
           scale: 1.0,
         }
-        const { signature } = voxel
-        const { work, deliverables } = voxel.subject
-        const holderSig = signature?.holderSig || ''
-        const partnerSig = signature?.partnerSig || ''
-        const genre = work?.genre
 
         let hue, lightness, saturation: number
 
-        /* Set opacity from sigs */
-        if (holderSig && partnerSig) {
-          voxelTemp['opacity'] = 0.75
-        }
-
         /* Set lattice from deliverable */
-        if (deliverables && deliverables.length > 0) {
+        if (voxel.deliverables && voxel.deliverables.length > 0) {
           voxelTemp['lattice'] = true
         }
 
-        // masked value effects temporarily
-        /* Set vividness from value based on ETH currently */
-        // const sigmoidValue =
-        //   1.0 /
-        //   (1.0 +
-        //     Math.exp(-sigmoid_a * Math.log10(parseFloat(fiatValue || value))));
-        // lightness = 100 - sigmoidValue * 50;
-        // saturation = sigmoidValue * 70;
         lightness = 50
         saturation = 70
 
         /* Set hue from hoge (unassinged yet) */
-        const hexColor = getGenreColor(genre)
+        const hexColor = getGenreColor(voxel.genre)
         const genreHue = hexColor ? color(hexColor).hsl().hue() : 330
         hue = genreHue || 330
         voxelTemp['color'] = `hsl(${hue}, ${saturation.toFixed()}%, ${lightness.toFixed()}%)`
@@ -176,15 +158,11 @@ export const useMultipleVoxelStyler = (crdls: WorkCredentialWithId[]) => {
   }
 }
 
-export const useVoxelStyler = (crdl?: WorkCredentialWithId) => {
+export const useVoxelStyler = (crdl?: WithCeramicId<TaskCredential>) => {
   const displayVoxel = useMemo(() => {
     if (!(crdl && crdl.ceramicId)) return
     const initPosition = new THREE.Vector3(0, 0, 0)
-    const { signature } = crdl
-    const { work, deliverables } = crdl.subject
-    const holderSig = signature?.holderSig
-    const partnerSig = signature?.partnerSig
-    const genre = work?.genre
+    const genre = crdl?.genre
     let hue, lightness, saturation: number
     lightness = 50
     saturation = 70
@@ -197,8 +175,8 @@ export const useVoxelStyler = (crdl?: WorkCredentialWithId) => {
     const styledVoxel: CVoxelThreeWithId = {
       id: crdl.ceramicId,
       color: `hsl(${hue}, ${saturation.toFixed()}%, ${lightness.toFixed()}%)`,
-      opacity: holderSig && holderSig !== '' && partnerSig && partnerSig !== '' ? 0.75 : 0.45,
-      lattice: !!deliverables && deliverables.length > 0,
+      opacity: 0.75,
+      lattice: !!crdl.deliverables && crdl.deliverables.length > 0,
       scale: 1.0,
       position: initPosition,
       offset: initPosition,

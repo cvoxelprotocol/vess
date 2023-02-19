@@ -23,6 +23,7 @@ export const WorkStatusSlider: FC<Props> = ({ num, icon, color }) => {
     height: 100%;
     flex-direction: column;
     width: 36px;
+    touch-action: auto !important;
   `
 
   const SliderTrack = styled(Slider.Track)`

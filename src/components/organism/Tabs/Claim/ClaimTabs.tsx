@@ -68,16 +68,16 @@ export const ClaimTabs: FC = () => {
   `
 
   return (
-    <TabsRoot defaultValue='Experiences' asChild id={'List'}>
+    <TabsRoot defaultValue='Works' id={'List'}>
       <TabsContainer>
         <TabsList aria-label='Claim'>
-          <TabsTrigger value='Experiences'>Experiences</TabsTrigger>
           <TabsTrigger value='Works'>Works</TabsTrigger>
+          <TabsTrigger value='Experiences'>Experiences</TabsTrigger>
         </TabsList>
-        <TabsContent value='Experiences' asChild>
+        <TabsContent value='Experiences'>
           <SelfClaimMembershipContent />
         </TabsContent>
-        <TabsContent value='Works' asChild>
+        <TabsContent value='Works'>
           <CreateWorkCredentialContent />
         </TabsContent>
       </TabsContainer>

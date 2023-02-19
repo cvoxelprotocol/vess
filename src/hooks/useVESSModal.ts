@@ -1,6 +1,8 @@
 import {
   useStateShowDetailModal,
   useStateshowQRModal,
+  useStateShowTaskDetailModal,
+  useStateShowTaskFormModal,
   useStateSocialProfileEditModal,
   useStateVESSHighlightedMembershipModal,
   useStateVESSSocialLinkWidgetModal,
@@ -14,6 +16,8 @@ export const useVESSWidgetModal = () => {
   const [showSocialProfileModal, setShowSocialProfileModal] = useStateSocialProfileEditModal()
   const [showQRModal, setShowQRModal] = useStateshowQRModal()
   const [showDetailModal, setShowDetailModal] = useStateShowDetailModal()
+  const [showTaskDetailModal, setShowTaskDetailModal] = useStateShowTaskDetailModal()
+  const [showTaskModal, setShowTaskModal] = useStateShowTaskFormModal()
 
   return {
     openModal: () => setShowModal(true),
@@ -34,5 +38,9 @@ export const useVESSWidgetModal = () => {
     setShowQRModal,
     showDetailModal,
     setShowDetailModal,
+    setShowTaskModal,
+    showTaskModal,
+    showTaskDetailModal,
+    setShowTaskDetailModal,
   }
 }

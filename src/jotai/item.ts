@@ -12,3 +12,9 @@ export const useSelectedAttendance = () => useAtomValue(selectAttendance)
 export const selectExperience = atom<VerifiableMembershipSubjectCredential | undefined>(undefined)
 
 export const useStateSelectExperience = () => useAtom(selectExperience)
+
+export const selectTask = atom<string | undefined>(undefined)
+
+export const useSetSelectTask = () => useSetAtom(selectTask)
+
+export const useSelectedTask = () => useAtomValue(selectTask)

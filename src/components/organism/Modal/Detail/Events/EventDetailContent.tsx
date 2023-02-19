@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
+import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
@@ -92,27 +93,6 @@ export const EventDetailContent: FC<Props> = ({ streamId }) => {
     color: ${currentTheme.secondary};
     text-decoration: none;
   `
-  const VcMarkContainer = styled.div`
-    width: 100%;
-    flex-grow: 1;
-    position: relative;
-    padding: 8px 0;
-  `
-  const VcMark = styled.div`
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-    right: 0;
-    bottom: 0;
-    gap: 6px;
-  `
-  const VcText = styled.div`
-    color: ${currentTheme.tertiary};
-    ${getBasicFont(currentTypo.label.medium)};
-    word-wrap: break-word;
-  `
 
   const Section = styled.div`
     width: 100%;
@@ -159,13 +139,7 @@ export const EventDetailContent: FC<Props> = ({ streamId }) => {
               30,
             )}`}</LinkText>
           </InfoItem>
-          <VcMarkContainer>
-            <VcMark>
-              <Icon icon={ICONS.VERIFIED} size={'MM'} mainColor={currentTheme.tertiary} />
-              <VcText>Verified</VcText>
-              <Icon icon={ICONS.EXTERNAL} size={'MM'} mainColor={currentTheme.tertiary} />
-            </VcMark>
-          </VcMarkContainer>
+          <VerifiedMark withText={'Verified'} tailIcon={ICONS.EXTERNAL} />
         </InfoContent>
       </InfoContainer>
       <Section>

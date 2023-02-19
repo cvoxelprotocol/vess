@@ -5,6 +5,8 @@ type Props<T extends FieldValues> = {
   control: Control<T>
   watchName: Path<T>
   watchMembershipName: Path<T>
+  watchStartDate: Path<T>
+  watchEndDate: Path<T>
   watchMainColor?: Path<T>
   watchSecondColor?: Path<T>
   watchTextColor?: Path<T>
@@ -22,6 +24,8 @@ export const MembershipCardWithWatch = <T extends FieldValues>({
   watchSecondColor,
   watchTextColor,
   watchMembershipName,
+  watchStartDate,
+  watchEndDate,
   ...props
 }: Props<T>) => {
   const workspaceName = useWatch({
@@ -32,10 +36,20 @@ export const MembershipCardWithWatch = <T extends FieldValues>({
     control,
     name: watchMembershipName,
   })
+  const startDate = useWatch({
+    control,
+    name: watchStartDate,
+  })
+  const endDate = useWatch({
+    control,
+    name: watchEndDate,
+  })
   return (
     <MembershipCard
       title={workspaceName || 'Project Name'}
       roles={[membershipName || 'Role']}
+      startDate={startDate ? startDate.toISOString() : ''}
+      endDate={endDate ? endDate.toISOString() : ''}
       {...props}
     />
   )

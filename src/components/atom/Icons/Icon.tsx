@@ -41,6 +41,7 @@ import { SunIcon } from './SunIcon'
 import { SurinkIcon } from './SurinkIcon'
 import { TelegramIcon } from './TelegramIcon'
 import { TwitterIcon } from './TwitterIcon'
+import { TxIcon } from './TxIcon'
 import { VerifiedIcon } from './VerifiedIcon'
 import { VoxelIcon } from './VoxelIcon'
 import { VoxelslIcon } from './VoxelsIcon'
@@ -92,6 +93,7 @@ export const ICONS = {
   VERIFIED: 'verified',
   QR: 'qr',
   EXTERNAL: 'external',
+  TX: 'tx',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -139,6 +141,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
   `
   const IconComponent = useMemo(() => {
     switch (icon) {
+      case 'tx':
+        return (
+          <IconContainer>
+            <TxIcon />
+          </IconContainer>
+        )
       case 'voxel':
         return (
           <IconContainer>

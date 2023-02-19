@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
+import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, ICONS, IconSize } from '@/components/atom/Icons/Icon'
@@ -111,19 +112,6 @@ export const MembershipCard: FC<Props> = ({
       bottom: ${backLogoPortionSP};
     }
   `
-  const VcMarkContainer = styled.div`
-    position: relative;
-  `
-  const VcMark = styled.div`
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 20px;
-    height: 20px;
-    right: 0;
-    top: 0;
-  `
 
   const WorkSpaceTitle = styled.div`
     color: ${textColor || DefaultCardColor.textColor};
@@ -143,13 +131,7 @@ export const MembershipCard: FC<Props> = ({
 
   return (
     <CardContainer>
-      {vc && (
-        <VcMarkContainer>
-          <VcMark>
-            <Icon icon={ICONS.VERIFIED} size={'M'} mainColor={currentTheme.tertiary} />
-          </VcMark>
-        </VcMarkContainer>
-      )}
+      {vc && <VerifiedMark size='L' />}
       <Flex flexDirection='column' rowGap='2px' alignItems='start'>
         <LogoContainer>
           <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />

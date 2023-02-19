@@ -1,26 +1,17 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
-import { FC, useMemo } from 'react'
-import type { WorkCredentialWithId } from 'vess-sdk'
-import { Avatar } from '@/components/atom/Avatars/Avatar'
+import { FC } from 'react'
+import type { TaskCredential, WithCeramicId } from 'vess-sdk'
 import { Chip } from '@/components/atom/Chips/Chip'
-import { Icon, ICONS } from '@/components/atom/Icons/Icon'
-import { useOrganization } from '@/hooks/useOrganization'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { convertTimestampToDateStr, formatDate } from '@/utils/date'
+import { convertTimestampToDateStr } from '@/utils/date'
 import { shortenStr } from '@/utils/objectUtil'
 
 type Props = {
-  workCredential: WorkCredentialWithId
+  crdl: WithCeramicId<TaskCredential>
 }
 
-export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
+export const TaskCredentialCard: FC<Props> = ({ crdl }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const router = useRouter()
-
-  const work = useMemo(() => {
-    return workCredential.subject.work
-  }, [workCredential])
 
   const CardContainer = styled.div`
     background: ${currentTheme.surface};
@@ -61,15 +52,6 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
     gap: 8px;
   `
 
-  const ButtonContainer = styled.div`
-    padding-top: 16px;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  `
   const Flex = styled.div`
     display: flex;
     gap: 8px;
@@ -91,11 +73,11 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
   return (
     <CardContainer>
       <Container>
-        <InfoItem>{`${convertTimestampToDateStr(workCredential.createdAt)}`}</InfoItem>
-        <Name>{work?.summary}</Name>
-        {workCredential?.subject.deliverables &&
-          workCredential?.subject.deliverables.length > 0 &&
-          workCredential?.subject.deliverables.map((deliverable) => (
+        <InfoItem>{crdl.createdAt ? `${convertTimestampToDateStr(crdl.createdAt)}` : ''}</InfoItem>
+        <Name>{crdl?.summary}</Name>
+        {crdl.deliverables &&
+          crdl.deliverables.length > 0 &&
+          crdl.deliverables.map((deliverable) => (
             <a
               href={`${
                 deliverable.format === 'url'
@@ -104,7 +86,7 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
               }`}
               target='_blank'
               rel='noreferrer'
-              key={deliverable.value}
+              key={`${deliverable.format}_${deliverable.value}`}
             >
               <LinkText>
                 {deliverable.format === 'url' ? deliverable.value : shortenStr(deliverable.value)}
@@ -113,9 +95,9 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
           ))}
         <Flex>
           <ChipsContainer>
-            {work?.genre && (
+            {crdl?.genre && (
               <Chip
-                text={work.genre}
+                text={crdl.genre}
                 variant={'filled'}
                 mainColor={currentTheme.primaryContainer}
                 textColor={currentTheme.onPrimaryContainer}
@@ -123,8 +105,8 @@ export const WorkCredentialCard: FC<Props> = ({ workCredential }) => {
                 solo
               />
             )}
-            {work?.tags &&
-              work?.tags.map((chip) => {
+            {crdl?.tags &&
+              crdl?.tags.map((chip) => {
                 return (
                   <Chip
                     key={chip}

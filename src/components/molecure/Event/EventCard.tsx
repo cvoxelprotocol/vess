@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
+import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useOrganization } from '@/hooks/useOrganization'
@@ -28,7 +29,7 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
     width: 216px;
     min-height: 280px;
     height: 100%;
-    padding: 28px 12px 20px;
+    padding: 16px;
     @media (max-width: 599px) {
       width: 168px;
       min-height: 212px;
@@ -94,6 +95,7 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
   return (
     <CardContainer>
       <Container>
+        <VerifiedMark size='L' />
         <PfpContainer>
           <Avatar url={eventDetail?.icon} size={'100'} />
         </PfpContainer>

@@ -2,14 +2,14 @@ import { OrbitControls, PerspectiveCamera, Plane } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { FC, useRef, useMemo } from 'react'
 import * as THREE from 'three'
-import type { WorkCredentialWithId } from 'vess-sdk'
+import type { WithCeramicId, TaskCredential } from 'vess-sdk'
 import VoxelPresenter from './VoxelPresenter'
 import { CVoxelThreeWithId, useMultipleVoxelStyler } from '@/hooks/useVoxStyler'
 
 // NOTE: useCVoxelDetailBox cannot be called by VisualPresenter, so it is passed by props.
 type VisualizerPresenterProps = {
-  workCredentials: WorkCredentialWithId[]
-  showDetailBox?: (item: WorkCredentialWithId) => void
+  workCredentials: WithCeramicId<TaskCredential>[]
+  showDetailBox?: (item: WithCeramicId<TaskCredential>) => void
   zoom?: number
   disableHover?: boolean
   voxelsForDisplay?: (CVoxelThreeWithId | undefined)[] // For direct insertion e.g. draft data

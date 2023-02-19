@@ -5,6 +5,7 @@ import { isMobileOnly } from 'react-device-detect'
 import { EventTabContent } from './EventTabContent'
 import { WorkTabContent } from './WorkTabContent'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { useStateProfileTab } from '@/jotai/ui'
 type Props = {
   did: string
 }
@@ -12,6 +13,7 @@ type Props = {
 export const ProfleTabs: FC<Props> = ({ did }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const [isClient, setClient] = useState(false)
+  const [selectedTab, selectTab] = useStateProfileTab()
 
   useEffect(() => {
     // Avoid hydration error
@@ -86,25 +88,30 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   if (isClient) {
     return (
       <SPContainer>
-        <SPTabHeader>Attendances</SPTabHeader>
+        <SPTabHeader id={'Attendances'}>Attendances</SPTabHeader>
         <EventTabContent did={did} />
-        <SPTabHeader>Works</SPTabHeader>
+        <SPTabHeader id={'Tasks'}>Works</SPTabHeader>
         <WorkTabContent did={did} />
       </SPContainer>
     )
   }
 
   return (
-    <TabsRoot defaultValue='Attendances' asChild id={'List'}>
+    <TabsRoot
+      defaultValue={selectedTab}
+      id={'List'}
+      activationMode='manual'
+      onValueChange={(v) => selectTab(v === 'Attendances' ? 'Attendances' : 'Tasks')}
+    >
       <TabsContainer>
         <TabsList aria-label='Profiles'>
           <TabsTrigger value='Attendances'>Attendances</TabsTrigger>
-          <TabsTrigger value='Works'>Works</TabsTrigger>
+          <TabsTrigger value='Tasks'>Works</TabsTrigger>
         </TabsList>
-        <TabsContent value='Attendances'>
+        <TabsContent value='Attendances' id={'Attendances'}>
           <EventTabContent did={did} />
         </TabsContent>
-        <TabsContent value='Works'>
+        <TabsContent value='Tasks' id={'Tasks'}>
           <WorkTabContent did={did} />
         </TabsContent>
       </TabsContainer>

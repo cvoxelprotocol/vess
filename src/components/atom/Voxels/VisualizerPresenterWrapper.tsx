@@ -1,10 +1,10 @@
 import { Canvas } from '@react-three/fiber'
-import type { WorkCredentialWithId } from 'vess-sdk'
+import type { TaskCredential, WithCeramicId } from 'vess-sdk'
 import VisualizerPresenter from './VisualizerPresenter'
 
 type Props = {
-  content: WorkCredentialWithId[]
-  showDetailBox?: (item: WorkCredentialWithId) => void
+  content: WithCeramicId<TaskCredential>[]
+  showDetailBox?: (item: WithCeramicId<TaskCredential>) => void
 }
 export default function VisualizerPresenterWrapper(props: Props) {
   return (

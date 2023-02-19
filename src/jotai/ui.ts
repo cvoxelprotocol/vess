@@ -1,6 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { BaseToastProps } from '@/components/atom/Toasts/BaseToast'
-import { NavigationItemType, NAVIGATION_ITEM } from '@/constants/ui'
+import { NavigationItemType, NAVIGATION_ITEM, ProfileTabType } from '@/constants/ui'
 
 export const themeMode = atom<'light' | 'dark'>('light')
 
@@ -61,3 +61,15 @@ export const useStateshowQRModal = () => useAtom(showQRModal)
 export const showDetailModal = atom<boolean>(false)
 
 export const useStateShowDetailModal = () => useAtom(showDetailModal)
+
+export const showTaskDetailModal = atom<boolean>(false)
+
+export const useStateShowTaskDetailModal = () => useAtom(showTaskDetailModal)
+
+export const showTaskFormModal = atom<boolean>(false)
+
+export const useStateShowTaskFormModal = () => useAtom(showTaskFormModal)
+
+export const profileTab = atom<ProfileTabType>('Attendances')
+
+export const useStateProfileTab = () => useAtom(profileTab)
