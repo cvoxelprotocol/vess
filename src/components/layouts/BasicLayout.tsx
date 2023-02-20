@@ -30,7 +30,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     }
     @media (max-width: 599px) {
       grid-template-columns: 1fr;
-      grid-template-rows: 64px 1fr;
+      grid-template-rows: 64px 1fr 64px;
     }
     background: ${currentTheme.background};
   `
@@ -39,17 +39,20 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     @media (max-width: 1079px) {
       grid-column: 1 /2;
     }
-    @media (max-width: 599px) {
-      display: none;
-    }
-    @media (max-width: 352px) {
-      display: none;
-    }
     width: 80px;
     height: 100vh;
     background: ${currentTheme.depth4};
     position: fixed;
     z-index: 999;
+    @media (max-width: 599px) {
+      height: 64px;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      grid-row: 3/4;
+    }
   `
   const MainContainer = styled.div`
     background: ${currentTheme.background};
@@ -70,7 +73,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-row: 2;
       width: 100%;
       margin: 12px auto;
-      padding: 8px 16px;
+      padding: 8px;
     }
   `
   useEffect(() => {

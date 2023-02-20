@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { ButtonHTMLAttributes, FC } from 'react'
 
+import { isMobileOnly } from 'react-device-detect'
 import { Icon, IconSize, IconsType } from '@/components/atom/Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
@@ -8,7 +9,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: IconsType
   title: string
   selected?: boolean
-  size?: IconSize
   metadata?: string
 }
 
@@ -16,7 +16,6 @@ export const NavigationItem: FC<Props> = ({
   icon,
   title,
   metadata,
-  size = 'XL',
   selected = false,
   ...props
 }) => {
@@ -46,6 +45,11 @@ export const NavigationItem: FC<Props> = ({
     display: flex;
     align-items: center;
     justify-content: center;
+    @media (max-width: 599px) {
+      padding: 0;
+      max-width: 56px;
+      height: 56px;
+    }
   `
 
   const NavigationItemTitle = styled.p`
@@ -54,12 +58,19 @@ export const NavigationItem: FC<Props> = ({
     text-align: center;
     ${getBasicFont(currentTypo.label.medium)};
     white-space: nowrap;
+    @media (max-width: 599px) {
+      display: none;
+    }
   `
 
   return (
     <NavigationItemContainer {...props}>
       <NavigationItemLayer>
-        <Icon icon={icon} size={size} mainColor={currentTheme.onSecondaryContainer} />
+        <Icon
+          icon={icon}
+          size={isMobileOnly ? 'L' : 'XL'}
+          mainColor={currentTheme.onSecondaryContainer}
+        />
       </NavigationItemLayer>
       <NavigationItemTitle>{title}</NavigationItemTitle>
     </NavigationItemContainer>

@@ -74,11 +74,11 @@ export const ClaimTabs: FC = () => {
           <TabsTrigger value='Works'>Works</TabsTrigger>
           <TabsTrigger value='Experiences'>Experiences</TabsTrigger>
         </TabsList>
-        <TabsContent value='Experiences'>
-          <SelfClaimMembershipContent />
-        </TabsContent>
         <TabsContent value='Works'>
           <CreateWorkCredentialContent />
+        </TabsContent>
+        <TabsContent value='Experiences'>
+          <SelfClaimMembershipContent />
         </TabsContent>
       </TabsContainer>
     </TabsRoot>

@@ -25,6 +25,17 @@ export const NavigationList: FC = () => {
     justify-content: flex-start;
     width: 80px;
     height: 100vh;
+    @media (max-width: 599px) {
+      height: 64px;
+      width: 100%;
+      flex-direction: row;
+      padding: 12px;
+      justify-content: center;
+      align-items: center;
+      background: ${currentTheme.surface1};
+      border-radius: 32px 32px 0 0;
+      border-top: 1px solid ${currentTheme.outline};
+    }
   `
 
   const LogoImage = styled.div`
@@ -32,6 +43,9 @@ export const NavigationList: FC = () => {
     height: 48px;
     padding-bottom: 16px;
     border-bottom: 1px solid ${currentTheme.secondary};
+    @media (max-width: 599px) {
+      display: none;
+    }
   `
 
   useEffect(() => {

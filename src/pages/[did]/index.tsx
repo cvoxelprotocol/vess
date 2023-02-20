@@ -2,12 +2,10 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import Router from 'next/router'
 import { ReactElement } from 'react'
-import { getPkhDIDFromAddress, getVESS, isDIDstring, isEthereumAddress } from 'vess-sdk'
-import type { MembershipSubjectWithOrg, WorkCredentialWithId } from 'vess-sdk'
+import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-sdk'
 import { NextPageWithLayout } from '../_app'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
-import { CERAMIC_NETWORK } from '@/constants/common'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { CeramicProps, CeramicSupport } from '@/interfaces/ceramic'
 import { getOrbisHelper, OrbisProfileDetail } from '@/lib/OrbisHelper'
@@ -34,24 +32,7 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did: string }> = asy
   if (isDIDstring(did)) {
     support = 'supported'
     try {
-      const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
       const orbisHelper = getOrbisHelper()
-      const heldWorkCredentials = queryClient.prefetchQuery<WorkCredentialWithId[]>(
-        ['heldWorkCredentials', did],
-        () => vess.getHeldWorkCredentials(did),
-        {
-          staleTime: Infinity,
-          cacheTime: 1000000,
-        },
-      )
-      const HeldMembershipSubjects = queryClient.prefetchQuery<MembershipSubjectWithOrg[]>(
-        ['HeldMembershipSubjects', did],
-        () => vess.getHeldMembershipSubjects(did),
-        {
-          staleTime: Infinity,
-          cacheTime: 1000000,
-        },
-      )
       const Profile = queryClient.prefetchQuery<OrbisProfileDetail | null>(
         ['fetchOrbisProfile', did],
         () => orbisHelper.fetchOrbisProfile(did),
@@ -60,7 +41,7 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did: string }> = asy
           cacheTime: 1000000,
         },
       )
-      await Promise.all([HeldMembershipSubjects, Profile, heldWorkCredentials])
+      await Promise.all([Profile])
       return {
         props: { did: did.toLowerCase(), support, dehydratedState: dehydrate(queryClient) },
         revalidate: 60,

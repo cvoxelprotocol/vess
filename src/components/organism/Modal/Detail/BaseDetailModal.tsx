@@ -39,7 +39,7 @@ export const BaseDetailModal = React.forwardRef<HTMLDivElement, DialogPrimitive.
         outline: none;
       }
       @media (max-width: 599px) {
-        max-height: 100vh;
+        height: 70vh;
         top: 50%;
         z-index: 999;
         margin-top: 0;

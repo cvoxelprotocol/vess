@@ -28,7 +28,7 @@ export const BaseHeader: FC = () => {
 
   return (
     <HeaderContainer>
-      <Flex alignItems='center' justifyContent={'flex-end'} height={'100%'}>
+      <Flex alignItems='center' justifyContent={'flex-end'} height={'100%'} width={'100%'}>
         {connection === 'connecting' ? (
           <CommonSpinner />
         ) : (

@@ -33,7 +33,8 @@ export const EventDetailContent: FC<Props> = ({ streamId }) => {
       display: none;
     }
     @media (max-width: 599px) {
-      height: 100vh;
+      height: 70vh;
+      margin: 0 12px;
     }
   `
   const InfoContainer = styled.div`

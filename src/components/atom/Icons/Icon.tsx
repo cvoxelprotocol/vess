@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
+import { AccountIcon } from './AccountIcon'
 import { AddFileIcon } from './AddFileIcon'
 import { AddIcon } from './AddIcon'
 import { BellIcon } from './BellIcon'
@@ -94,6 +95,7 @@ export const ICONS = {
   QR: 'qr',
   EXTERNAL: 'external',
   TX: 'tx',
+  ACCOUNT: 'account',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -141,6 +143,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
   `
   const IconComponent = useMemo(() => {
     switch (icon) {
+      case 'account':
+        return (
+          <IconContainer>
+            <AccountIcon />
+          </IconContainer>
+        )
       case 'tx':
         return (
           <IconContainer>

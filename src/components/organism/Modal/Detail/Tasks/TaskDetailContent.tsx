@@ -43,7 +43,8 @@ export const TaskDetailContent: FC<Props> = ({ streamId }) => {
       display: none;
     }
     @media (max-width: 599px) {
-      height: 100vh;
+      height: 70vh;
+      margin: 0 12px;
     }
   `
   const InfoContainer = styled.div`
@@ -79,6 +80,10 @@ export const TaskDetailContent: FC<Props> = ({ streamId }) => {
   const PfpContainer = styled.div`
     width: 200px;
     height: 200px;
+    @media (max-width: 599px) {
+      width: 120px;
+      height: 120px;
+    }
   `
   const InfoContent = styled.div`
     display: flex;
