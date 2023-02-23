@@ -10,8 +10,6 @@ import { definition } from '../__generated__/definition.js'
  */
 // const ceramic = new CeramicClient('http://localhost:7007')
 
-const abortController = new AbortController()
-
 const compose = new ComposeClient({
   ceramic: process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007',
   // cast our definition as a RuntimeCompositeDefinition

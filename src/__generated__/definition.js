@@ -2,11 +2,11 @@
 export const definition = {
   models: {
     ConnectionInvitation: {
-      id: 'kjzl6hvfrbw6carkzq84qaas2vgkn65trdzkcazu0zqunludos2hponng1pko4k',
+      id: 'kjzl6hvfrbw6c63o5mc8rh4csl2llebj9g3xzjl1bztdzw1purnhuhiggic6eqp',
       accountRelation: { type: 'list' },
     },
     Connection: {
-      id: 'kjzl6hvfrbw6c9ktao2y3stc3s2502iz5gcrxejo67nus6j1evy3yia9ya4uhgg',
+      id: 'kjzl6hvfrbw6cb0yxbqouotx4ch9ix5hj5m4ofux3lbmyynp7b9d0kbrw0as5br',
       accountRelation: { type: 'list' },
     },
   },
@@ -24,7 +24,7 @@ export const definition = {
         viewType: 'relation',
         relation: {
           source: 'queryConnection',
-          model: 'kjzl6hvfrbw6c9ktao2y3stc3s2502iz5gcrxejo67nus6j1evy3yia9ya4uhgg',
+          model: 'kjzl6hvfrbw6cb0yxbqouotx4ch9ix5hj5m4ofux3lbmyynp7b9d0kbrw0as5br',
           property: 'invitationId',
         },
       },
@@ -39,7 +39,7 @@ export const definition = {
         viewType: 'relation',
         relation: {
           source: 'document',
-          model: 'kjzl6hvfrbw6carkzq84qaas2vgkn65trdzkcazu0zqunludos2hponng1pko4k',
+          model: 'kjzl6hvfrbw6c63o5mc8rh4csl2llebj9g3xzjl1bztdzw1purnhuhiggic6eqp',
           property: 'invitationId',
         },
       },

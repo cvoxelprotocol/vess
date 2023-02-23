@@ -269,6 +269,9 @@ scalar DateTime
 A Ceramic Stream ID
 """
 scalar CeramicStreamID
+  @specifiedBy(
+    url: "https://github.com/ceramicnetwork/CIP/blob/main/CIPs/CIP-59/CIP-59.md#streamid"
+  )
 
 type Mutation {
   createConnectionInvitation(
@@ -365,6 +368,9 @@ input UpdateOptionsInput {
 A Ceramic Commit ID
 """
 scalar CeramicCommitID
+  @specifiedBy(
+    url: "https://github.com/ceramicnetwork/CIP/blob/main/CIPs/CIP-59/CIP-59.md#commitid"
+  )
 
 type CreateConnectionPayload {
   """

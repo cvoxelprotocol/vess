@@ -35,7 +35,6 @@ export const ConnectionInvitationContainer: FC = () => {
   const { did } = useDIDAccount()
   const { showToast } = useToast()
   const [unused, setUnused] = useStateUnUsedInvitaion()
-  const [interval, setIntervalId] = useState<NodeJS.Timer | undefined>()
   const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
   const { profile } = useSocialAccount(did)
   const router = useRouter()
@@ -173,11 +172,10 @@ export const ConnectionInvitationContainer: FC = () => {
       const result = await createConnection({ variables: { content } })
       console.log({ result })
       if (result.data?.createConnection?.document.id) {
-        clearInterval(interval)
+        setUnused(undefined)
         router.push(`/connection/issued/${result.data?.createConnection?.document.id}`)
         return
       }
-      clearInterval(interval)
     }
   }, [unused])
 
@@ -198,15 +196,12 @@ export const ConnectionInvitationContainer: FC = () => {
   }, [myInvitations, unused])
 
   useEffect(() => {
-    if (unused && !interval) {
-      const refetchQueryInterval = setInterval(() => {
-        console.log('refetch!')
-        checkIssueConnection()
-      }, 10000)
-      setIntervalId(refetchQueryInterval)
-    }
-    return () => clearInterval(interval)
-  }, [unused, interval])
+    const refetchQueryInterval = setInterval(() => {
+      console.log('refetch!')
+      checkIssueConnection()
+    }, 10000)
+    return () => clearInterval(refetchQueryInterval)
+  }, [unused])
 
   return (
     <Container>
