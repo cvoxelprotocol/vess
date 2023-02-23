@@ -48,12 +48,6 @@ export const ConnectionIssuedContainer: FC = () => {
     background: ${currentTheme.surface3};
     height: 100%;
   `
-  const QRContent = styled.div`
-    display: flex;
-    column-gap: 8px;
-    justify-content: center;
-    align-items: center;
-  `
   const Title = styled.p`
     color: ${currentTheme.onSurfaceVariant};
     ${getBasicFont(currentTypo.headLine.small)};
@@ -69,13 +63,6 @@ export const ConnectionIssuedContainer: FC = () => {
   const EventName = styled.p`
     color: ${currentTheme.onSurface};
     ${getBasicFont(currentTypo.headLine.small)};
-  `
-  const Greeting = styled.div`
-    background: ${currentTheme.background};
-    border-radius: 16px;
-    padding: 12px 16px;
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.body.medium)};
   `
   const PfpContainer = styled.div`
     width: fit-content;

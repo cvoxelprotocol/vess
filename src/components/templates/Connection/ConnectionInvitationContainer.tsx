@@ -240,6 +240,7 @@ export const ConnectionInvitationContainer: FC = () => {
         type='button'
         onClick={() => backToMyProfile()}
       />
+      <At>Please wait until the screen changes.</At>
     </Container>
   )
 }
