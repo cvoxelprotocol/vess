@@ -11,6 +11,16 @@ query getAllConnections {
             id
           }
         }
+        invitaion {
+          ... on ConnectionInvitation {
+            id
+            type
+            status
+            greeting
+            location
+            eventId
+          }
+        }
       }
     }
   }
@@ -26,6 +36,16 @@ query getIssuedConnections($id: ID!) {
             userId
             invitationId
             connectAt
+            invitaion {
+              ... on ConnectionInvitation {
+                id
+                type
+                status
+                greeting
+                location
+                eventId
+              }
+            }
           }
         }
       }
@@ -46,6 +66,16 @@ query getConnectionFromInvitaion($id: ID!) {
                 userId
                 connectAt
                 invitationId
+                invitaion {
+                  ... on ConnectionInvitation {
+                    id
+                    type
+                    status
+                    greeting
+                    location
+                    eventId
+                  }
+                }
               }
             }
           }
@@ -62,6 +92,16 @@ query getConnection($id: ID!) {
       userId
       connectAt
       invitationId
+      invitaion {
+        ... on ConnectionInvitation {
+          id
+          type
+          status
+          greeting
+          location
+          eventId
+        }
+      }
     }
   }
 }

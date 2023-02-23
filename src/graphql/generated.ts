@@ -317,6 +317,15 @@ export type GetAllConnectionsQuery = {
         invitationId: any
         connectAt?: any | null
         did: { __typename?: 'CeramicAccount'; id: string }
+        invitaion?: {
+          __typename?: 'ConnectionInvitation'
+          id: string
+          type?: string | null
+          status?: string | null
+          greeting: string
+          location?: string | null
+          eventId?: string | null
+        } | null
       } | null
     } | null> | null
   } | null
@@ -341,6 +350,15 @@ export type GetIssuedConnectionsQuery = {
               userId: string
               invitationId: any
               connectAt?: any | null
+              invitaion?: {
+                __typename?: 'ConnectionInvitation'
+                id: string
+                type?: string | null
+                status?: string | null
+                greeting: string
+                location?: string | null
+                eventId?: string | null
+              } | null
             } | null
           } | null> | null
         } | null
@@ -372,6 +390,15 @@ export type GetConnectionFromInvitaionQuery = {
               userId: string
               connectAt?: any | null
               invitationId: any
+              invitaion?: {
+                __typename?: 'ConnectionInvitation'
+                id: string
+                type?: string | null
+                status?: string | null
+                greeting: string
+                location?: string | null
+                eventId?: string | null
+              } | null
             } | null
           } | null> | null
         }
@@ -393,6 +420,15 @@ export type GetConnectionQuery = {
         userId: string
         connectAt?: any | null
         invitationId: any
+        invitaion?: {
+          __typename?: 'ConnectionInvitation'
+          id: string
+          type?: string | null
+          status?: string | null
+          greeting: string
+          location?: string | null
+          eventId?: string | null
+        } | null
       }
     | { __typename?: 'ConnectionInvitation' }
     | null
@@ -543,6 +579,16 @@ export const GetAllConnectionsDocument = gql`
               id
             }
           }
+          invitaion {
+            ... on ConnectionInvitation {
+              id
+              type
+              status
+              greeting
+              location
+              eventId
+            }
+          }
         }
       }
     }
@@ -602,6 +648,16 @@ export const GetIssuedConnectionsDocument = gql`
               userId
               invitationId
               connectAt
+              invitaion {
+                ... on ConnectionInvitation {
+                  id
+                  type
+                  status
+                  greeting
+                  location
+                  eventId
+                }
+              }
             }
           }
         }
@@ -672,6 +728,16 @@ export const GetConnectionFromInvitaionDocument = gql`
                   userId
                   connectAt
                   invitationId
+                  invitaion {
+                    ... on ConnectionInvitation {
+                      id
+                      type
+                      status
+                      greeting
+                      location
+                      eventId
+                    }
+                  }
                 }
               }
             }
@@ -740,6 +806,16 @@ export const GetConnectionDocument = gql`
         userId
         connectAt
         invitationId
+        invitaion {
+          ... on ConnectionInvitation {
+            id
+            type
+            status
+            greeting
+            location
+            eventId
+          }
+        }
       }
     }
   }

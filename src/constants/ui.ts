@@ -42,4 +42,4 @@ export const DefaultCardColor = {
   textColor: '#FFFFFF',
 }
 
-export type ProfileTabType = 'Attendances' | 'Tasks'
+export type ProfileTabType = 'Attendances' | 'Tasks' | 'Connections'
