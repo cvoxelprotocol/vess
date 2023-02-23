@@ -3,6 +3,7 @@ import { getVESS } from 'vess-sdk'
 import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
+import { useComposeContext } from '@/context/compose'
 import {
   useSetStateAccount,
   useSetStateChainId,
@@ -25,6 +26,7 @@ export const useConnectDID = () => {
   const queryClient = useQueryClient()
   const { issueHeldMembershipFromBackup } = useHeldMembershipSubject()
   const { issueHeldEventFromBackup } = useHeldEventAttendances()
+  const { composeClient } = useComposeContext()
 
   // clear all state
   const clearState = (): void => {
@@ -45,7 +47,7 @@ export const useConnectDID = () => {
         // connect vess sdk
         const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
         const { session } = await vess.connect(provider.provider, env)
-        console.log({ session })
+        composeClient.setDID(session.did)
         setMyDid(session.did.parent)
         setAccount(account)
         setOriginalAddress(web3ModalService.originalAddress)

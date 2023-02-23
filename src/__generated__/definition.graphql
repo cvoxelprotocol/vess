@@ -1,0 +1,429 @@
+type Query {
+  """
+  Fetches an object given its ID
+  """
+  node(
+    """
+    The ID of an object
+    """
+    id: ID!
+  ): Node
+
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
+  viewer: CeramicAccount
+  connectionInvitationIndex(
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the first n items from the list.
+    """
+    first: Int
+
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the last n items from the list.
+    """
+    last: Int
+  ): ConnectionInvitationConnection
+  connectionIndex(
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the first n items from the list.
+    """
+    first: Int
+
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the last n items from the list.
+    """
+    last: Int
+  ): ConnectionConnection
+}
+
+"""
+An object with an ID
+"""
+interface Node {
+  """
+  The id of the object.
+  """
+  id: ID!
+}
+
+type CeramicAccount implements Node {
+  """
+  Globally unique identifier of the account (DID string)
+  """
+  id: ID!
+
+  """
+  Whether the Ceramic instance is currently authenticated with this account or not
+  """
+  isViewer: Boolean!
+  connectionInvitationList(
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the first n items from the list.
+    """
+    first: Int
+
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the last n items from the list.
+    """
+    last: Int
+  ): ConnectionInvitationConnection
+  connectionList(
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the first n items from the list.
+    """
+    first: Int
+
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the last n items from the list.
+    """
+    last: Int
+  ): ConnectionConnection
+}
+
+"""
+A connection to a list of items.
+"""
+type ConnectionInvitationConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  A list of edges.
+  """
+  edges: [ConnectionInvitationEdge]
+}
+
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+  """
+  When paginating forwards, are there more items?
+  """
+  hasNextPage: Boolean!
+
+  """
+  When paginating backwards, are there more items?
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue.
+  """
+  startCursor: String
+
+  """
+  When paginating forwards, the cursor to continue.
+  """
+  endCursor: String
+}
+
+"""
+An edge in a connection.
+"""
+type ConnectionInvitationEdge {
+  """
+  The item at the end of the edge
+  """
+  node: ConnectionInvitation
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+type ConnectionInvitation implements Node {
+  id: ID!
+  type: String
+  status: String
+  eventId: ID
+  greeting: String!
+  location: String
+  response: String
+
+  """
+  Account controlling the document
+  """
+  did: CeramicAccount!
+  connection(
+    """
+    Returns the items in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the first n items from the list.
+    """
+    first: Int
+
+    """
+    Returns the items in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the last n items from the list.
+    """
+    last: Int
+
+    """
+    Returns only documents created by the provided account
+    """
+    account: ID
+  ): ConnectionConnection!
+}
+
+"""
+A connection to a list of items.
+"""
+type ConnectionConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  A list of edges.
+  """
+  edges: [ConnectionEdge]
+}
+
+"""
+An edge in a connection.
+"""
+type ConnectionEdge {
+  """
+  The item at the end of the edge
+  """
+  node: Connection
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+type Connection implements Node {
+  id: ID!
+  userId: ID!
+  connectAt: DateTime
+  invitationId: CeramicStreamID!
+
+  """
+  Account controlling the document
+  """
+  did: CeramicAccount!
+  invitaion: ConnectionInvitation
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""
+A Ceramic Stream ID
+"""
+scalar CeramicStreamID
+
+type Mutation {
+  createConnectionInvitation(
+    input: CreateConnectionInvitationInput!
+  ): CreateConnectionInvitationPayload
+  updateConnectionInvitation(
+    input: UpdateConnectionInvitationInput!
+  ): UpdateConnectionInvitationPayload
+  createConnection(input: CreateConnectionInput!): CreateConnectionPayload
+  updateConnection(input: UpdateConnectionInput!): UpdateConnectionPayload
+}
+
+type CreateConnectionInvitationPayload {
+  """
+  Fetches an object given its ID
+  """
+  node(
+    """
+    The ID of an object
+    """
+    id: ID!
+  ): Node
+
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
+  viewer: CeramicAccount
+  document: ConnectionInvitation!
+  clientMutationId: String
+}
+
+input CreateConnectionInvitationInput {
+  content: ConnectionInvitationInput!
+  clientMutationId: String
+}
+
+input ConnectionInvitationInput {
+  type: String
+  status: String
+  eventId: ID
+  greeting: String!
+  location: String
+  response: String
+}
+
+type UpdateConnectionInvitationPayload {
+  """
+  Fetches an object given its ID
+  """
+  node(
+    """
+    The ID of an object
+    """
+    id: ID!
+  ): Node
+
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
+  viewer: CeramicAccount
+  document: ConnectionInvitation!
+  clientMutationId: String
+}
+
+input UpdateConnectionInvitationInput {
+  id: ID!
+  content: PartialConnectionInvitationInput!
+  options: UpdateOptionsInput
+  clientMutationId: String
+}
+
+input PartialConnectionInvitationInput {
+  type: String
+  status: String
+  eventId: ID
+  greeting: String
+  location: String
+  response: String
+}
+
+input UpdateOptionsInput {
+  """
+  Fully replace the document contents instead of performing a shallow merge
+  """
+  replace: Boolean = false
+
+  """
+  Only perform mutation if the document matches the provided version
+  """
+  version: CeramicCommitID
+}
+
+"""
+A Ceramic Commit ID
+"""
+scalar CeramicCommitID
+
+type CreateConnectionPayload {
+  """
+  Fetches an object given its ID
+  """
+  node(
+    """
+    The ID of an object
+    """
+    id: ID!
+  ): Node
+
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
+  viewer: CeramicAccount
+  document: Connection!
+  clientMutationId: String
+}
+
+input CreateConnectionInput {
+  content: ConnectionInput!
+  clientMutationId: String
+}
+
+input ConnectionInput {
+  userId: ID!
+  connectAt: DateTime
+  invitationId: CeramicStreamID!
+}
+
+type UpdateConnectionPayload {
+  """
+  Fetches an object given its ID
+  """
+  node(
+    """
+    The ID of an object
+    """
+    id: ID!
+  ): Node
+
+  """
+  Account currently authenticated on the Ceramic instance, if set
+  """
+  viewer: CeramicAccount
+  document: Connection!
+  clientMutationId: String
+}
+
+input UpdateConnectionInput {
+  id: ID!
+  content: PartialConnectionInput!
+  options: UpdateOptionsInput
+  clientMutationId: String
+}
+
+input PartialConnectionInput {
+  userId: ID
+  connectAt: DateTime
+  invitationId: CeramicStreamID
+}

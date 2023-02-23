@@ -1,0 +1,78 @@
+query getAllConnections {
+  connectionIndex(last: 500) {
+    edges {
+      node {
+        id
+        userId
+        invitationId
+        connectAt
+        did {
+          ... on CeramicAccount {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+query getIssuedConnections($id: ID!) {
+  node(id: $id) {
+    ... on CeramicAccount {
+      connectionList(first: 500) {
+        edges {
+          node {
+            id
+            userId
+            invitationId
+            connectAt
+          }
+        }
+      }
+    }
+  }
+}
+
+query getConnectionFromInvitaion($id: ID!) {
+  node(id: $id) {
+    ... on ConnectionInvitation {
+      id
+      connection {
+        ... on ConnectionConnection {
+          edges {
+            node {
+              ... on Connection {
+                id
+                userId
+                connectAt
+                invitationId
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query getConnection($id: ID!) {
+  node(id: $id) {
+    ... on Connection {
+      id
+      userId
+      connectAt
+      invitationId
+    }
+  }
+}
+
+mutation createConnection($content: ConnectionInput!) {
+  createConnection(input: { content: $content }) {
+    document {
+      id
+      userId
+      connectAt
+      invitationId
+    }
+  }
+}
