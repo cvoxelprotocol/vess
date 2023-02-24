@@ -15,7 +15,7 @@ type Props = {
 export const BasicLayout: FC<Props> = ({ children }) => {
   const { isLoading } = useVESSLoading()
   const { currentTheme, initTheme } = useVESSTheme()
-  const { connectDID } = useConnectDID()
+  const { autoConnect } = useConnectDID()
   const { did } = useDIDAccount()
   const LayoutContainer = styled.div`
     display: grid;
@@ -73,15 +73,15 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    async function autoConnect() {
+    async function init() {
       if (!did) {
         const session = await getAuthorizedSession()
         if (session) {
-          await connectDID()
+          await autoConnect()
         }
       }
     }
-    autoConnect()
+    init()
   }, [])
 
   return (

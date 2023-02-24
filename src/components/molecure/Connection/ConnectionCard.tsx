@@ -117,7 +117,7 @@ export const ConnectionCard: FC<Props> = ({ count, userId, invitation, connectAt
     ${getBasicFont(currentTypo.label.medium)};
     position: absolute;
     top: -8px;
-    right: -12px;
+    right: -8px;
     z-index: 10;
   `
 
