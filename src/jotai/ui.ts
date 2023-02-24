@@ -73,3 +73,7 @@ export const useStateShowTaskFormModal = () => useAtom(showTaskFormModal)
 export const profileTab = atom<ProfileTabType>('Connections')
 
 export const useStateProfileTab = () => useAtom(profileTab)
+
+export const showConnectModal = atom<boolean>(false)
+
+export const useStateShowConnectModal = () => useAtom(showConnectModal)

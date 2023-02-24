@@ -7,6 +7,12 @@ import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Router } from 'next/router'
 import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { infuraProvider } from 'wagmi/providers/infura'
+import { publicProvider } from 'wagmi/providers/public'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
@@ -42,6 +48,31 @@ type AppPropsWithLayout = AppProps<{ dehydratedState: DehydratedState }> & {
 }
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const { chains, provider, webSocketProvider } = configureChains(
+    [mainnet],
+    [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY || '' }), publicProvider()],
+  )
+  const client = createClient({
+    autoConnect: true,
+    connectors: [
+      new MetaMaskConnector({ chains }),
+      new WalletConnectConnector({
+        chains,
+        options: {
+          qrcode: true,
+        },
+      }),
+      new InjectedConnector({
+        chains,
+        options: {
+          name: 'Light Wallet',
+          shimDisconnect: true,
+        },
+      }),
+    ],
+    provider,
+    webSocketProvider,
+  })
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -78,14 +109,16 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <JotaiProvider>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={dehydratedState}>
-            <ComposeWrapper>
-              <ThemeProvider theme={theme}>
-                <Meta />
-                {getLayout(<Component {...props} />)}
-                {isLoading && <LoadingModal />}
-                <VESSToast />
-              </ThemeProvider>
-            </ComposeWrapper>
+            <WagmiConfig client={client}>
+              <ComposeWrapper>
+                <ThemeProvider theme={theme}>
+                  <Meta />
+                  {getLayout(<Component {...props} />)}
+                  {isLoading && <LoadingModal />}
+                  <VESSToast />
+                </ThemeProvider>
+              </ComposeWrapper>
+            </WagmiConfig>
           </Hydrate>
         </QueryClientProvider>
       </JotaiProvider>

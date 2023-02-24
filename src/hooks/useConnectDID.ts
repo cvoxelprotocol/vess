@@ -2,9 +2,9 @@ import { useQueryClient } from '@tanstack/react-query'
 import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
+import { useDisconnect, useAccount } from 'wagmi'
 import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
-import { useToast } from './useToast'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
 import {
@@ -15,7 +15,6 @@ import {
   useSetStateMyDid,
   useSetStateOriginalAddress,
 } from '@/jotai/account'
-import { getWeb3ModalService } from '@/lib/Web3ModalService'
 
 export const useConnectDID = () => {
   const setMyDid = useSetStateMyDid()
@@ -24,12 +23,13 @@ export const useConnectDID = () => {
   const setChainId = useSetStateChainId()
   const setConnectionStatus = useSetStateConnectionStatus()
   const setStateLoginType = useSetStateLoginType()
-  const web3ModalService = getWeb3ModalService()
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const queryClient = useQueryClient()
   const { issueHeldMembershipFromBackup } = useHeldMembershipSubject()
   const { issueHeldEventFromBackup } = useHeldEventAttendances()
   const { composeClient } = useComposeContext()
+  const { disconnect } = useDisconnect()
+  const { isConnected } = useAccount()
 
   // clear all state
   const clearState = (): void => {
@@ -42,30 +42,28 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const connectDID = async (): Promise<void> => {
+  const connectDID = async (): Promise<boolean> => {
+    if (!isConnected) return false
     setConnectionStatus('connecting')
     try {
-      const { provider } = await web3ModalService.connectWallet()
-      if (provider) {
-        // connect vess sdk
-        const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-        const { session } = await vess.connect(provider.provider, env)
-        composeClient.setDID(session.did)
-        setMyDid(session.did.parent)
-        const address = getAddress(getAddressFromPkh(session.did.parent))
-        setAccount(address)
-        setOriginalAddress(address)
-        setChainId(1)
-        setConnectionStatus('connected')
-        setStateLoginType('wallet')
+      // connect vess sdk
+      const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
+      const { session } = await vess.connect(window.ethereum, env)
+      console.log({ session })
+      composeClient.setDID(session.did)
+      setMyDid(session.did.parent)
+      const address = getAddress(getAddressFromPkh(session.did.parent))
+      setAccount(address)
+      setOriginalAddress(address)
+      setChainId(1)
+      setConnectionStatus('connected')
+      setStateLoginType('wallet')
 
-        // issue credentials from DB
-        issueHeldEventFromBackup(session.did.parent)
-        issueHeldMembershipFromBackup(session.did.parent)
-      } else {
-        setConnectionStatus('disconnected')
-      }
+      // issue credentials from DB
+      issueHeldEventFromBackup(session.did.parent)
+      issueHeldMembershipFromBackup(session.did.parent)
       queryClient.invalidateQueries(['hasAuthorizedSession'])
+      return true
     } catch (error) {
       console.error(error)
       await disConnectDID()
@@ -73,6 +71,7 @@ export const useConnectDID = () => {
       if (error instanceof Error) {
         console.error(error)
       }
+      return false
     }
   }
 
@@ -94,7 +93,7 @@ export const useConnectDID = () => {
   }
 
   const disConnectDID = async (): Promise<void> => {
-    await web3ModalService.disconnectWallet()
+    disconnect()
     vess.disconnect()
     clearState()
   }
@@ -104,9 +103,9 @@ export const useConnectDID = () => {
   }, [vess])
 
   return {
-    connectDID,
     disConnectDID,
     isAuthorized,
     autoConnect,
+    connectDID,
   }
 }
