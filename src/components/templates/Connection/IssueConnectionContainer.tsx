@@ -108,9 +108,7 @@ export const IssueConnectionContainer: FC = () => {
         invitationId: invitaionId,
         connectAt: new Date().toISOString(),
       }
-      console.log({ content })
       const res = await createConnection({ variables: { content } })
-      console.log({ res })
       if (res.data?.createConnection?.document.id) {
         closeLoading()
         showToast(PROOF_OF_CONNECTION_ISSUED)

@@ -35,6 +35,7 @@ type Props = {
 export const ConnectionTabContent: FC<Props> = ({ did }) => {
   const [getIssuedConnections, { data: connections, loading }] = useGetIssuedConnectionsLazyQuery({
     variables: { id: did },
+    nextFetchPolicy: 'network-only',
   })
   const Wrapper = styled.div`
     width: 100%;
@@ -65,7 +66,9 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
 
   const init = async () => {
     try {
-      await getIssuedConnections()
+      if (did) {
+        await getIssuedConnections()
+      }
     } catch (error) {
       console.error(error)
     }
@@ -77,6 +80,7 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
 
   const formattedConnections = useMemo(() => {
     if (!connections) return []
+    console.log({ connections })
     const tempList: DisplayPros[] | undefined =
       connections.node?.__typename === 'CeramicAccount'
         ? connections.node?.connectionList?.edges?.map((edge) => {
@@ -87,19 +91,22 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
     const userList: string[] = []
     const formattedList = tempList.reduce((acc: DisplayPros[], obj: DisplayPros) => {
       obj.count = 1
-      let key = obj.node?.userId || ''
-      if (userList.includes(key)) {
-        let current_count = acc.slice(-1)[0].count
-        const index = acc.findIndex((v) => v.node?.userId === key && v.count === current_count)
-        if (index && acc[index]) {
-          acc[index].count += 1
-        }
-      } else {
+      let key = obj.node?.userId
+      if (!key) {
         acc.push(obj)
-        userList.push(key)
+      } else {
+        if (userList.includes(key)) {
+          const index = acc.findIndex((v) => v.node?.userId === key)
+          acc[index].count += 1
+        } else {
+          acc.push(obj)
+          userList.push(key)
+        }
       }
+
       return acc
     }, [])
+    console.log({ formattedList })
     return formattedList
   }, [connections])
 

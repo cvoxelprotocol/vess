@@ -48,15 +48,12 @@ export class Web3ModalService {
         },
       }
 
-      this.web3Modal =
-        this.web3Modal && this.web3Modal.cachedProvider
-          ? this.web3Modal
-          : new Web3Modal({
-              network: 'mainnet', // optional
-              cacheProvider: false, // optional
-              providerOptions: providerOptions,
-              theme: 'dark',
-            })
+      this.web3Modal = new Web3Modal({
+        network: 'mainnet', // optional
+        cacheProvider: false, // optional
+        providerOptions: providerOptions,
+        theme: 'dark',
+      })
       const instance = await this.web3Modal.connect()
       this.provider = new ethers.providers.Web3Provider(instance)
       const network = await this.provider.getNetwork()
