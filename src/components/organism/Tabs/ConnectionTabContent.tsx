@@ -81,7 +81,7 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
             return { node: edge?.node, count: 0 } as DisplayPros
           })
         : []
-    if (!tempList) return []
+    if (!tempList || tempList.length === 0) return []
     const userList: string[] = []
     const formattedList = tempList.reduce((acc: DisplayPros[], obj: DisplayPros) => {
       obj.count = 1
@@ -89,7 +89,9 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
       if (userList.includes(key)) {
         let current_count = acc.slice(-1)[0].count
         const index = acc.findIndex((v) => v.node?.userId === key && v.count === current_count)
-        acc[index].count += 1
+        if (index && acc[index]) {
+          acc[index].count += 1
+        }
       } else {
         acc.push(obj)
         userList.push(key)
