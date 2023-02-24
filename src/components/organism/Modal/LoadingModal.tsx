@@ -16,13 +16,13 @@ export default function LoadingModal(props: Props) {
     bottom: 0;
     width: 100%;
     height: 100vh;
-    z-index: 999;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
+    background: ${currentTheme.background};
+    z-index: 99999;
+    opacity: 0.8;
   `
   const Loading = styled.div`
     display: flex;
