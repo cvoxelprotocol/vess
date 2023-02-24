@@ -53,7 +53,7 @@ export class Web3ModalService {
           ? this.web3Modal
           : new Web3Modal({
               network: 'mainnet', // optional
-              cacheProvider: true, // optional
+              cacheProvider: false, // optional
               providerOptions: providerOptions,
               theme: 'dark',
             })
