@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Link from 'next/link'
 import { FC, useEffect, useMemo } from 'react'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
@@ -52,7 +53,7 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
       grid-gap: 8px;
     }
   `
-  const Content = styled.div`
+  const Content = styled(Link)`
     grid-template-columns: repeat(auto-fill, 1fr);
   `
   const LoadingContainer = styled.div`
@@ -117,7 +118,7 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
               {formattedConnections &&
                 formattedConnections.map((connection) => {
                   return (
-                    <Content key={connection?.node?.id}>
+                    <Content key={connection?.node?.id} href={`/did/${connection?.node?.userId}`}>
                       <ConnectionCard
                         userId={connection?.node?.userId}
                         invitation={connection?.node?.invitaion}

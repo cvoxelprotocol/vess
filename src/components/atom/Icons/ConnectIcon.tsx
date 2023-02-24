@@ -19,8 +19,8 @@ export const ConnectIcon = () => (
     <path
       d='M16 6.23047L26.57 18.0505'
       stroke='currentColor'
-      stroke-width='2'
-      stroke-miterlimit='10'
+      strokeWidth='2'
+      strokeMiterlimit='10'
     />
     <path d='M16 7L10 26M8 12L27 18' stroke='currentColor' strokeWidth='2' strokeMiterlimit='10' />
     <path

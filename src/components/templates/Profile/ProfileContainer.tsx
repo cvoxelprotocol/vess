@@ -21,6 +21,7 @@ import { WorkCredentialsWidget } from '@/components/organism/Widgets/Profiles/Wo
 import { WorkStatusWidget } from '@/components/organism/Widgets/Profiles/WorkStatusWidget'
 import { WorkStyleWidget } from '@/components/organism/Widgets/Profiles/WorkStyleWidget'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
+import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -37,6 +38,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const selectedAttendance = useSelectedAttendance()
   const selectedTask = useSelectedTask()
   const router = useRouter()
+  const { did: myDID } = useDIDAccount()
 
   const Container = styled.div`
     width: 100%;
@@ -147,15 +149,17 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       </Profile>
       <ExperiencesContainer did={did} />
       <ProfleTabs did={did} />
-      <ShareContainer>
-        <IconButton
-          icon={ICONS.QR}
-          size={'XL'}
-          mainColor={currentTheme.onPrimary}
-          backgroundColor={currentTheme.primary}
-          onClick={() => gotoInvitaion()}
-        />
-      </ShareContainer>
+      {myDID && did === myDID && (
+        <ShareContainer>
+          <IconButton
+            icon={ICONS.QR}
+            size={'XL'}
+            mainColor={currentTheme.onPrimary}
+            backgroundColor={currentTheme.primary}
+            onClick={() => gotoInvitaion()}
+          />
+        </ShareContainer>
+      )}
       {!isFetchingBusinessProfile && isMe && (
         <BasicProfileWidgetEditModal did={did} businessProfile={businessProfile} />
       )}

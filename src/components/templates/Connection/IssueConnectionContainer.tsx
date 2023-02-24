@@ -35,7 +35,7 @@ export const IssueConnectionContainer: FC = () => {
         id: invitaionId,
       },
     })
-  const [createConnection, { error: connectionError }] = useCreateConnectionMutation()
+  const [createConnection] = useCreateConnectionMutation()
 
   const { profile } = useSocialAccount(
     invitation?.node?.__typename === 'ConnectionInvitation' ? invitation?.node?.did?.did : '',
@@ -129,10 +129,12 @@ export const IssueConnectionContainer: FC = () => {
   }
 
   useEffect(() => {
-    getConnectionInvitaion()
+    try {
+      getConnectionInvitaion()
+    } catch (error) {
+      console.error(error)
+    }
   }, [])
-
-  console.log({ invitation })
 
   if (!invitaionId) {
     return (

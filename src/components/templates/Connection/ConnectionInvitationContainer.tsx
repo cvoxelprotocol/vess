@@ -8,6 +8,7 @@ import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { QRCode } from '@/components/organism/Modal/QR/QRCode'
 import {
   ConnectionInvitationInput,
@@ -152,30 +153,34 @@ export const ConnectionInvitationContainer: FC = () => {
   const checkIssueConnection = useCallback(async () => {
     console.log({ unused })
     if (!unused) return
-    const res = await refetch({ id: unused })
-    console.log({ res })
-    if (
-      res.data.node &&
-      res.data.node.__typename === 'ConnectionInvitation' &&
-      res.data.node?.connection.edges?.length === 1
-    ) {
-      const connection = res.data?.node?.connection?.edges[0]
-      console.log({ connection })
-      const userId = connection?.node?.did.id
-      if (!userId) return
-      const content: ConnectionInput = {
-        userId: userId,
-        invitationId: unused,
-        connectAt: new Date().toISOString(),
+    try {
+      const res = await refetch({ id: unused })
+      console.log({ res })
+      if (
+        res.data.node &&
+        res.data.node.__typename === 'ConnectionInvitation' &&
+        res.data.node?.connection.edges?.length === 1
+      ) {
+        const connection = res.data?.node?.connection?.edges[0]
+        console.log({ connection })
+        const userId = connection?.node?.did.id
+        if (!userId) return
+        const content: ConnectionInput = {
+          userId: userId,
+          invitationId: unused,
+          connectAt: new Date().toISOString(),
+        }
+        console.log({ content })
+        const result = await createConnection({ variables: { content } })
+        console.log({ result })
+        if (result.data?.createConnection?.document.id) {
+          setUnused(undefined)
+          router.push(`/connection/issued/${result.data?.createConnection?.document.id}`)
+          return
+        }
       }
-      console.log({ content })
-      const result = await createConnection({ variables: { content } })
-      console.log({ result })
-      if (result.data?.createConnection?.document.id) {
-        setUnused(undefined)
-        router.push(`/connection/issued/${result.data?.createConnection?.document.id}`)
-        return
-      }
+    } catch (error) {
+      console.log({ error })
     }
   }, [unused])
 
@@ -197,7 +202,6 @@ export const ConnectionInvitationContainer: FC = () => {
 
   useEffect(() => {
     const refetchQueryInterval = setInterval(() => {
-      console.log('refetch!')
       checkIssueConnection()
     }, 10000)
     return () => clearInterval(refetchQueryInterval)
@@ -207,19 +211,25 @@ export const ConnectionInvitationContainer: FC = () => {
     <Container>
       <Flex flexDirection='column' colGap='12px' rowGap='12px'>
         <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
-        <QRContent>
-          <QRCodeContent url={myLink} ref={qrcodeRef} />
-        </QRContent>
-        <CopyToClipboard text={myLink} onCopy={handleOnCopy}>
-          <Chip
-            text={shortenStr(myLink, 30)}
-            solo
-            size='S'
-            mainColor={currentTheme.outline}
-            textColor={currentTheme.outline}
-            tailIcon={ICONS.COPY}
-          />
-        </CopyToClipboard>
+        {!unused ? (
+          <CommonSpinner />
+        ) : (
+          <>
+            <QRContent>
+              <QRCodeContent url={myLink} ref={qrcodeRef} />
+            </QRContent>
+            <CopyToClipboard text={myLink} onCopy={handleOnCopy}>
+              <Chip
+                text={shortenStr(myLink, 30)}
+                solo
+                size='S'
+                mainColor={currentTheme.outline}
+                textColor={currentTheme.outline}
+                tailIcon={ICONS.COPY}
+              />
+            </CopyToClipboard>
+          </>
+        )}
         <Title>{`I'm ${profile.displayName || ''}`}</Title>
         {eventDetail && (
           <Flex flexDirection='column' colGap='4px' rowGap='4px'>

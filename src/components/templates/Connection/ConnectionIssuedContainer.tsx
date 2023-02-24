@@ -20,15 +20,13 @@ export const ConnectionIssuedContainer: FC = () => {
   const connectionId = router.query.connectionId as string
 
   // === Invitation ===
-  const [getConnection, { data: connection, loading, refetch, called }] = useGetConnectionLazyQuery(
-    {
-      ssr: false,
-      variables: {
-        id: connectionId || '',
-      },
-      nextFetchPolicy: 'network-only',
+  const [getConnection, { data: connection }] = useGetConnectionLazyQuery({
+    ssr: false,
+    variables: {
+      id: connectionId || '',
     },
-  )
+    nextFetchPolicy: 'network-only',
+  })
   // === Invitation ===
 
   const { profile } = useSocialAccount(
