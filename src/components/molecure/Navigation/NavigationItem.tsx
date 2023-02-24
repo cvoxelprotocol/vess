@@ -47,8 +47,8 @@ export const NavigationItem: FC<Props> = ({
     justify-content: center;
     @media (max-width: 599px) {
       padding: 0;
-      max-width: 56px;
-      height: 56px;
+      max-width: 32px;
+      height: 32px;
     }
   `
 

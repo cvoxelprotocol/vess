@@ -58,17 +58,6 @@ export const ConnectionListContainer: FC = () => {
             />
           )
         })}
-      {formattedList &&
-        formattedList.map((item) => {
-          return (
-            <ConnectionListItem
-              key={item?.node?.id}
-              userId={item?.node?.did.id}
-              partnerUserId={item?.node?.userId}
-              connectAt={item?.node?.connectAt}
-            />
-          )
-        })}
     </Container>
   )
 }

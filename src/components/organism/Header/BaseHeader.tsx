@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { HeaderMenu } from './HeaderMenu'
-import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
+import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
@@ -26,29 +26,49 @@ export const BaseHeader: FC = () => {
     background: ${currentTheme.depth4};
     z-index: 998;
     display: grid;
-    grid-template-columns: 64px 1fr 64px;
+    grid-template-columns: 100px 1fr 64px;
     @media (max-width: 599px) {
       height: 64px;
+      grid-template-columns: 64px 1fr 64px;
     }
   `
   const HeaderTitle = styled.div`
     grid-column: 2 /3;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.large)};
+    width: 100%;
+    color: ${currentTheme.onBackground};
+    ${getBasicFont(currentTypo.headLine.medium)};
+    @media (max-width: 599px) {
+      justify-content: center;
+      ${getBasicFont(currentTypo.title.large)};
+    }
+  `
+
+  const LogoContainer = styled.div`
+    display: none;
+    @media (max-width: 599px) {
+      display: block;
+    }
   `
 
   const getTitle = useMemo(() => {
     if (router.asPath === '/connection/list') return 'Timeline'
-    if (router.asPath === '/') return 'Home'
     return ''
   }, [router])
 
   return (
     <HeaderContainer>
-      <HeaderTitle>{getTitle}</HeaderTitle>
+      <HeaderTitle>
+        {getTitle ? (
+          <>{getTitle}</>
+        ) : (
+          <LogoContainer>
+            <NextImageContainer src={'/logo_bard.png'} width={'38px'} objectFit={'contain'} />
+          </LogoContainer>
+        )}
+      </HeaderTitle>
       <Flex alignItems='center' justifyContent={'flex-end'} height={'100%'} width={'100%'}>
         {connection === 'connecting' ? (
           <CommonSpinner />

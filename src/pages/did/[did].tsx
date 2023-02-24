@@ -19,13 +19,16 @@ export const getStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps<CeramicProps, { did: string }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = async ({
+  params,
+}) => {
   const did = params?.did
   let support: CeramicSupport = 'invalid'
 
   if (did == null) {
     return {
-      redirect: { destination: '/', permanent: true },
+      props: { did: '', support, dehydratedState: dehydrate(queryClient) },
+      revalidate: 60,
     }
   }
 
@@ -52,7 +55,7 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did: string }> = asy
   } else if (isEthereumAddress(did)) {
     // If an Ethereum address is provided, redirect to CAIP-10 URL
     return {
-      redirect: { destination: `/${getPkhDIDFromAddress(did)}`, permanent: false },
+      redirect: { destination: `/did/${getPkhDIDFromAddress(did)}`, permanent: false },
     }
   }
   return {

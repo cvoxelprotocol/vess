@@ -115,7 +115,7 @@ export const IssueConnectionContainer: FC = () => {
         closeLoading()
         showToast(PROOF_OF_CONNECTION_ISSUED)
         setTimeout(() => {
-          router.push(`/${userId}`)
+          router.push(`/did/${userId}`)
         }, 2000)
       } else {
         closeLoading()

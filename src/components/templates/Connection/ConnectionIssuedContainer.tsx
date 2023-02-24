@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
+import { ETH_DENVER_EVENT_ID } from './ConnectionInvitationContainer'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -10,9 +11,6 @@ import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-
-export const ETH_DENVER_EVENT_ID =
-  'ceramic://kjzl6cwe1jw14ag4w2mn6e3266u5f4k5lgfymdrl2j86zip6a7f0seuujrzuihq'
 
 export const ConnectionIssuedContainer: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -84,11 +82,11 @@ export const ConnectionIssuedContainer: FC = () => {
     const userId =
       connection?.node?.__typename === 'Connection' ? connection.node.userId : undefined
     if (!userId) return
-    router.push(`/${userId}`)
+    router.push(`/did/${userId}`)
   }
 
   const backToMyProfile = () => {
-    router.push(`/${did}`)
+    router.push(`/did/${did}`)
   }
 
   return (

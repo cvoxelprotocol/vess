@@ -74,7 +74,7 @@ export const ConnectionListItem: FC<Props> = ({ userId, partnerUserId, connectAt
   return (
     <CardContainer>
       <InfoItem>{`${formatDate(connectAt)}`}</InfoItem>
-      <LinkContainer href={`/${userId}`}>
+      <LinkContainer href={`/did/${userId}`}>
         <Flex
           flexDirection='row'
           colGap='8px'
@@ -93,7 +93,7 @@ export const ConnectionListItem: FC<Props> = ({ userId, partnerUserId, connectAt
         </Flex>
       </LinkContainer>
       <NextImageContainer src={'/connection/meets.png'} width={'44px'} />
-      <LinkContainer href={`/${partnerUserId}`}>
+      <LinkContainer href={`/did/${partnerUserId}`}>
         <Flex
           flexDirection='row'
           colGap='8px'

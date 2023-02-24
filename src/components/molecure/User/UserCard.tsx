@@ -33,7 +33,9 @@ export const UserCard: FC<Props> = ({ userId }) => {
     position: relative;
     overflow: hidden;
     border-radius: 16px;
-    max-width: 300px;
+    width: 100%;
+    min-width: 280px;
+    max-width: 320px;
     height: 245px;
   `
   const HeaderImage = styled.div`
@@ -83,8 +85,7 @@ export const UserCard: FC<Props> = ({ userId }) => {
 
   const jumpToResume = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    // router.push(`${process.env.NEXT_PUBLIC_VESS_FRONTEND}/${userId}`)
-    window.open(`https://vess.vercel.app/${userId}`, '_blank')
+    window.open(`https://vess.vercel.app/did/${userId}`, '_blank')
   }
 
   return (

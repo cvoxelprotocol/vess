@@ -45,7 +45,7 @@ export const ProfileQRModal: FC = () => {
 
   const myLink = useMemo(() => {
     if (!did) return ''
-    return `${getCurrentDomain()}/${did}`
+    return `${getCurrentDomain()}/did/${did}`
   }, [did])
 
   const qrcodeRef = useRef<HTMLDivElement>(null)

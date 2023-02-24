@@ -28,7 +28,12 @@ export const HeaderMenu: FC = () => {
   `
 
   const goToMyPage = () => {
-    router.push(`/${did}`)
+    router.push(`/did/${did}`)
+    setShowHeaderMenu(false)
+  }
+
+  const goToLaunch = () => {
+    router.push(`/`)
     setShowHeaderMenu(false)
   }
 
@@ -45,6 +50,7 @@ export const HeaderMenu: FC = () => {
       <BasePopover>
         <Content>
           <HeaderItem title={'my page'} onClick={() => goToMyPage()} />
+          <HeaderItem title={'home'} onClick={() => goToLaunch()} />
           <HeaderItem title={'logout'} onClick={() => logout()} />
         </Content>
       </BasePopover>

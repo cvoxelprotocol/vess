@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
 import { NavigationItem } from './NavigationItem'
-import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { getNaviItem, NAVIGATION_ITEM, NAVIGATION_LIST, NAVIGATION_LIST_TYPE } from '@/constants/ui'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
@@ -58,11 +57,9 @@ export const NavigationList: FC = () => {
     if (navi.item === NAVIGATION_ITEM.PROFILE) {
       if (did) {
         setItem(navi.item)
-        router.push(`/${did}`)
-      } else {
-        router.push('/')
+        router.push(`/did/${did}`)
+        return
       }
-      return
     }
     setItem(navi.item)
     router.push(navi.path)

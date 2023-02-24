@@ -27,7 +27,7 @@ import { shortenStr } from '@/utils/objectUtil'
 import { getCurrentDomain } from '@/utils/url'
 
 export const ETH_DENVER_EVENT_ID =
-  'ceramic://kjzl6cwe1jw14ag4w2mn6e3266u5f4k5lgfymdrl2j86zip6a7f0seuujrzuihq'
+  'ceramic://kjzl6cwe1jw14ar8wuy2i31rkjaf1k8vrhae7qzucqjd9z8fmvsgceca7jb5c7b'
 const DEFAULT_GREETING = 'Nice to meet you!'
 
 export const ConnectionInvitationContainer: FC = () => {
@@ -180,7 +180,7 @@ export const ConnectionInvitationContainer: FC = () => {
   }, [unused])
 
   const backToMyProfile = () => {
-    router.push(`/${did}`)
+    router.push(`/did/${did}`)
   }
 
   useEffect(() => {
