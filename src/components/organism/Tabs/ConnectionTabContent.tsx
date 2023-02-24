@@ -55,6 +55,7 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
   `
   const Content = styled(Link)`
     grid-template-columns: repeat(auto-fill, 1fr);
+    text-decoration: none;
   `
   const LoadingContainer = styled.div`
     grid-column: 1/3;

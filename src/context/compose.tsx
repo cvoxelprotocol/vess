@@ -29,7 +29,15 @@ const link = new ApolloLink((operation) => {
     )
   })
 })
-const apolloClient = new ApolloClient({ cache: new InMemoryCache(), link })
+const apolloClient = new ApolloClient({
+  cache: new InMemoryCache(),
+  link,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+    },
+  },
+})
 
 const CeramicContext = createContext({
   composeClient: compose,

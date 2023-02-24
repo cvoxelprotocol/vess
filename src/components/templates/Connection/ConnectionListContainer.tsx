@@ -7,7 +7,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { parseISOStrToDate } from '@/utils/date'
 
 export const ConnectionListContainer: FC = () => {
-  const { currentTheme, getBasicFont } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
   const router = useRouter()
 
   // === Invitation ===
@@ -42,8 +42,6 @@ export const ConnectionListContainer: FC = () => {
         : 1
     })
   }, [allConnections])
-
-  console.log({ formattedList })
 
   return (
     <Container>
