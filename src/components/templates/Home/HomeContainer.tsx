@@ -1,16 +1,16 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { FC, useEffect } from 'react'
-import { NoItem } from '@/components/atom/Common/NoItem'
+import { FC } from 'react'
 import { UserCard } from '@/components/molecure/User/UserCard'
-import { LoginCard } from '@/components/organism/Accounts/LoginCard'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 const FEATURED_USER_LIST = [
   'did:pkh:eip155:1:0xde695cbb6ec0cf3f4c9564070baeb032552c5111',
   'did:pkh:eip155:1:0xb69cb3efbadb1b30f6d88020e1fa1fc84b8804d4',
-  'did:pkh:eip155:1:0x5483aab8a704aee90a8dc2da8a4956425cfb9b49',
+  'did:pkh:eip155:1:0xe43577d0fa22a0c156414677bee9baf99a33cfa9',
+  'did:pkh:eip155:1:0xad44f4c7703ab3fac0c46624fb52e6e668e4cd24',
+  'did:pkh:eip155:1:0x9df610ec3e37e8da858b3d53d6c68178140cf24f',
 ]
 export const HomeContainer: FC = () => {
   const { did } = useDIDAccount()
