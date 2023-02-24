@@ -63,7 +63,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     height: 100%;
     min-height: 100vh;
     @media (max-width: 599px) {
-      grid-column: 1/3;
+      grid-column: 1;
       grid-row: 2;
       width: 100%;
     }

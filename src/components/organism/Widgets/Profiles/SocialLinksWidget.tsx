@@ -64,6 +64,7 @@ export const SocialLinksWidget: FC<Props> = (props) => {
         {...props}
         background={'none'}
         EditButtonPosition={'0px'}
+        overflow={'visible'}
       >
         <LinkContainer>
           <SocialLinkItem linkType={'twitter'} value={twitter} />

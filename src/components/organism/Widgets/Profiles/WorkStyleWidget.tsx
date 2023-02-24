@@ -31,7 +31,7 @@ export const WorkStyleWidget: FC<Props> = (props) => {
           <WorkStyleItem
             icon={ICONS.DOLLAR}
             content={`${businessProfile?.desiredHourlyFee || '-'}/hr`}
-            borderRadius={'40px 0px 0px 0px'}
+            borderRadius={'0px 0px 0px 0px'}
           />
           <WorkStyleItem
             icon={ICONS.LOCATION}
@@ -42,7 +42,7 @@ export const WorkStyleWidget: FC<Props> = (props) => {
           <WorkStyleItem
             icon={ICONS.PC}
             content={`${businessProfile?.desiredWorkStyle || '-'}`}
-            borderRadius={'0 0 0px 40px'}
+            borderRadius={'0 0 0px 0px'}
           />
         </Flex>
       </BaseWidget>

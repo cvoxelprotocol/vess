@@ -17,6 +17,7 @@ type Props = {
   gridColOnSp: string
   editable?: boolean
   onClick?: () => void
+  EditButtonPosition?: string
 }
 
 export const SelfClaimedRoleWidget: FC<Props> = (props) => {
