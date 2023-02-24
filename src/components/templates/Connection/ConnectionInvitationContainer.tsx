@@ -205,7 +205,7 @@ export const ConnectionInvitationContainer: FC = () => {
 
   return (
     <Container>
-      <Flex flexDirection='column' colGap='24px' rowGap='24px'>
+      <Flex flexDirection='column' colGap='12px' rowGap='12px'>
         <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
         <QRContent>
           <QRCodeContent url={myLink} ref={qrcodeRef} />

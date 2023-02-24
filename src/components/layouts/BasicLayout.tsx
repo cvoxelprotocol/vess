@@ -72,8 +72,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-column: 1/3;
       grid-row: 2;
       width: 100%;
-      margin: 12px auto;
-      padding: 8px;
     }
   `
   useEffect(() => {

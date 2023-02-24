@@ -11,6 +11,7 @@ import { Chat } from './Chat'
 import { CheckedCircleIcon } from './CheckedCircleIcon'
 import { CheckedIcon } from './CheckedIcon'
 import { CheckedSquareIcon } from './CheckedSquareIcon'
+import { ConnectIcon } from './ConnectIcon'
 import { CopyIcon } from './CopyIcon'
 import { CrossFilledIcon } from './CrossFilledIcon'
 import { CrossIcon } from './CrossIcon'
@@ -46,6 +47,7 @@ import { TxIcon } from './TxIcon'
 import { VerifiedIcon } from './VerifiedIcon'
 import { VoxelIcon } from './VoxelIcon'
 import { VoxelslIcon } from './VoxelsIcon'
+import { WalletIcon } from './WalletIcon'
 import { WorkspaceIcon } from './WorkspaceIcon'
 
 export const ICONS = {
@@ -96,6 +98,8 @@ export const ICONS = {
   EXTERNAL: 'external',
   TX: 'tx',
   ACCOUNT: 'account',
+  CONNECT: 'connect',
+  WALLET: 'wallet',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -147,6 +151,18 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <AccountIcon />
+          </IconContainer>
+        )
+      case 'wallet':
+        return (
+          <IconContainer>
+            <WalletIcon />
+          </IconContainer>
+        )
+      case 'connect':
+        return (
+          <IconContainer>
+            <ConnectIcon />
           </IconContainer>
         )
       case 'tx':

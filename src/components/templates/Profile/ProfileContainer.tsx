@@ -58,6 +58,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       grid-template-rows: repeat(auto-fill, 56px);
       grid-template-columns: repeat(6, 1fr);
       grid-gap: 6px;
+      padding: 8px;
     }
   `
   const ShareContainer = styled.div`

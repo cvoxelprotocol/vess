@@ -59,6 +59,8 @@ export const NavigationList: FC = () => {
       if (did) {
         setItem(navi.item)
         router.push(`/${did}`)
+      } else {
+        router.push('/')
       }
       return
     }
