@@ -16,6 +16,7 @@ export const ClaimContainer: FC = () => {
     align-items: center;
     justify-content: center;
     background: ${currentTheme.background};
+    padding: 8px;
   `
 
   const Container = styled.div`
@@ -25,6 +26,7 @@ export const ClaimContainer: FC = () => {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 8px;
   `
   if (!did) {
     return (

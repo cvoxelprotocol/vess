@@ -39,3 +39,6 @@ export const SOCIAL_LINKS_SET_FAILED = 'Failed to update social links...'
 
 export const SELF_CLAIMED_TASK_CREATION_SUCCEED = 'Successfully claimed new task!'
 export const SELF_CLAIMED_TASK_CREATION_FAILED = 'Failed to claim your task...'
+
+export const PROOF_OF_CONNECTION_ISSUED = 'Congrats! new connection issued!'
+export const PROOF_OF_CONNECTION_FAILED = 'Failed to issue new connection...'

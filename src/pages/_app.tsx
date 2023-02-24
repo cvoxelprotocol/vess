@@ -10,6 +10,7 @@ import { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
+import { ComposeWrapper } from '@/context/compose'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
 import '@/styles/globals.css'
@@ -77,12 +78,14 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <JotaiProvider>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={dehydratedState}>
-            <ThemeProvider theme={theme}>
-              <Meta />
-              {getLayout(<Component {...props} />)}
-              {isLoading && <LoadingModal />}
-              <VESSToast />
-            </ThemeProvider>
+            <ComposeWrapper>
+              <ThemeProvider theme={theme}>
+                <Meta />
+                {getLayout(<Component {...props} />)}
+                {isLoading && <LoadingModal />}
+                <VESSToast />
+              </ThemeProvider>
+            </ComposeWrapper>
           </Hydrate>
         </QueryClientProvider>
       </JotaiProvider>

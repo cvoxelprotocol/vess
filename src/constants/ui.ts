@@ -4,6 +4,7 @@ export const NAVIGATION_ITEM = {
   HOME: 'Home',
   PROFILE: 'Profile',
   CLAIM: 'Self Claim',
+  CONNECT: 'Connect',
 } as const
 
 export type NavigationItemType = typeof NAVIGATION_ITEM[keyof typeof NAVIGATION_ITEM]
@@ -15,7 +16,8 @@ export type NAVIGATION_LIST_TYPE = {
 }
 
 export const NAVIGATION_LIST: NAVIGATION_LIST_TYPE[] = [
-  { item: NAVIGATION_ITEM.HOME, icon: ICONS.HOME, path: '/' },
+  // { item: NAVIGATION_ITEM.HOME, icon: ICONS.HOME, path: '/' },
+  { item: NAVIGATION_ITEM.CONNECT, icon: ICONS.CONNECT, path: '/connection/list' },
   { item: NAVIGATION_ITEM.PROFILE, icon: ICONS.ACCOUNT, path: '/did' },
   { item: NAVIGATION_ITEM.CLAIM, icon: ICONS.VOXEL, path: '/claim' },
 ]
@@ -42,4 +44,4 @@ export const DefaultCardColor = {
   textColor: '#FFFFFF',
 }
 
-export type ProfileTabType = 'Attendances' | 'Tasks'
+export type ProfileTabType = 'Attendances' | 'Tasks' | 'Connections'

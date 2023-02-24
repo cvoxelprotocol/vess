@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { ICONS } from '@/components/atom/Icons/Icon'
@@ -9,7 +10,6 @@ import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile
 import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
 import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
 import { SocialProfileEditModal } from '@/components/organism/Modal/Profile/SocialProfileEditModal'
-import { ProfileQRModal } from '@/components/organism/Modal/QR/ProfileQRModal'
 import { NewTaskWidgetModal } from '@/components/organism/Modal/Tasks/NewTaskWidgetModal'
 import { ProfleTabs } from '@/components/organism/Tabs/ProfleTabs'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
@@ -36,6 +36,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const { setShowQRModal } = useVESSWidgetModal()
   const selectedAttendance = useSelectedAttendance()
   const selectedTask = useSelectedTask()
+  const router = useRouter()
 
   const Container = styled.div`
     width: 100%;
@@ -57,6 +58,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       grid-template-rows: repeat(auto-fill, 56px);
       grid-template-columns: repeat(6, 1fr);
       grid-gap: 6px;
+      padding: 8px;
     }
   `
   const ShareContainer = styled.div`
@@ -68,6 +70,10 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       right: 24px;
     }
   `
+
+  const gotoInvitaion = () => {
+    router.push('/connection/invitation')
+  }
   if (!did) {
     return <></>
   }
@@ -147,7 +153,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
           size={'XL'}
           mainColor={currentTheme.onPrimary}
           backgroundColor={currentTheme.primary}
-          onClick={() => setShowQRModal(true)}
+          onClick={() => gotoInvitaion()}
         />
       </ShareContainer>
       {!isFetchingBusinessProfile && isMe && (
@@ -158,7 +164,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       )}
       <HeldMembershipsModal did={did} editable={isMe} />
       <SocialProfileEditModal did={did} />
-      <ProfileQRModal />
+      {/* <ProfileQRModal /> */}
       <EventDetailModal streamId={selectedAttendance?.credentialSubject.eventId} />
       <TaskDetailModal streamId={selectedTask} />
       <NewTaskWidgetModal did={did} />

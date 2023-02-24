@@ -5,6 +5,7 @@ import { FC } from 'react'
 type Props = {
   src: string
   width: string
+  height?: string
   objectFit?: string
   alt?: string
   borderRadius?: string
@@ -15,10 +16,11 @@ export const NextImageContainer: FC<Props> = ({
   objectFit = 'contain',
   alt = 'image',
   borderRadius,
+  height = '100%',
 }) => {
   const Container = styled.div`
     width: ${width};
-    height: 100%;
+    height: ${height};
     border-radius: ${borderRadius};
     position: relative;
     overflow: hidden;

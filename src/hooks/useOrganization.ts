@@ -12,6 +12,9 @@ export const useOrganization = (orgId?: string) => {
       enabled: !!orgId,
       staleTime: Infinity,
       cacheTime: 300000,
+      onError: (err) => {
+        console.error(err)
+      },
     },
   )
 

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import * as Tabs from '@radix-ui/react-tabs'
 import { FC, useEffect, useState } from 'react'
 import { isMobileOnly } from 'react-device-detect'
+import { ConnectionTabContent } from './ConnectionTabContent'
 import { EventTabContent } from './EventTabContent'
 import { WorkTabContent } from './WorkTabContent'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -88,6 +89,8 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
   if (isClient) {
     return (
       <SPContainer>
+        <SPTabHeader id={'Connections'}>Connections</SPTabHeader>
+        <ConnectionTabContent did={did} />
         <SPTabHeader id={'Attendances'}>Attendances</SPTabHeader>
         <EventTabContent did={did} />
         <SPTabHeader id={'Tasks'}>Works</SPTabHeader>
@@ -101,13 +104,19 @@ export const ProfleTabs: FC<Props> = ({ did }) => {
       defaultValue={selectedTab}
       id={'List'}
       activationMode='manual'
-      onValueChange={(v) => selectTab(v === 'Attendances' ? 'Attendances' : 'Tasks')}
+      onValueChange={(v) =>
+        selectTab(v === 'Attendances' ? 'Attendances' : v === 'Tasks' ? 'Tasks' : 'Connections')
+      }
     >
       <TabsContainer>
         <TabsList aria-label='Profiles'>
+          <TabsTrigger value='Connections'>Connections</TabsTrigger>
           <TabsTrigger value='Attendances'>Attendances</TabsTrigger>
           <TabsTrigger value='Tasks'>Works</TabsTrigger>
         </TabsList>
+        <TabsContent value='Connections' id={'Connections'}>
+          <ConnectionTabContent did={did} />
+        </TabsContent>
         <TabsContent value='Attendances' id={'Attendances'}>
           <EventTabContent did={did} />
         </TabsContent>

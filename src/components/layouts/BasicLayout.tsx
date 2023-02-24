@@ -60,20 +60,12 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     grid-row: 2;
     width: 936px;
     margin: 0 auto;
-    height: min(100%, 100vh);
-
-    @media (max-width: 1079px) {
-      grid-column: 2;
-      grid-row: 2;
-      width: 936px;
-      margin: 0 auto;
-    }
+    height: 100%;
+    min-height: 100vh;
     @media (max-width: 599px) {
       grid-column: 1/3;
       grid-row: 2;
       width: 100%;
-      margin: 12px auto;
-      padding: 8px;
     }
   `
   useEffect(() => {

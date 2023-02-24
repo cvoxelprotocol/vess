@@ -106,7 +106,7 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
   const SubmitContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${isModal ? 'space-between' : 'end'};
     padding: 12px 32px;
     background: ${currentTheme.surface3};
     z-index: 20;
@@ -114,7 +114,6 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
     bottom: 0;
     right: 0;
     left: 0;
-    border-radius: 32px;
   `
 
   const {
@@ -252,12 +251,15 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
         </FormContent>
       </Form>
       <SubmitContainer>
-        <Button
-          variant='text'
-          text='Cancel'
-          type='button'
-          onClick={() => setShowTaskModal(false)}
-        />
+        {isModal && (
+          <Button
+            variant='text'
+            text='Cancel'
+            type='button'
+            onClick={() => setShowTaskModal(false)}
+          />
+        )}
+
         <Button
           mainColor={currentTheme.secondary}
           variant='filled'
