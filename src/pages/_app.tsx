@@ -62,13 +62,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           qrcode: true,
         },
       }),
-      new InjectedConnector({
-        chains,
-        options: {
-          name: 'Light Wallet',
-          shimDisconnect: true,
-        },
-      }),
     ],
     provider,
     webSocketProvider,

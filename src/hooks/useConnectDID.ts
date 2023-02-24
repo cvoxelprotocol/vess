@@ -1,8 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { Connector, fetchSigner } from '@wagmi/core'
+import { ethers, Signer } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
-import { useDisconnect, useAccount } from 'wagmi'
+import { useDisconnect, useConnect } from 'wagmi'
 import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
@@ -29,7 +31,7 @@ export const useConnectDID = () => {
   const { issueHeldEventFromBackup } = useHeldEventAttendances()
   const { composeClient } = useComposeContext()
   const { disconnect } = useDisconnect()
-  const { isConnected } = useAccount()
+  const { connectAsync } = useConnect()
 
   // clear all state
   const clearState = (): void => {
@@ -42,13 +44,16 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const connectDID = async (): Promise<boolean> => {
-    if (!isConnected) return false
-    setConnectionStatus('connecting')
+  const connectDID = async (connector?: Connector<any, any, any>): Promise<boolean> => {
     try {
       // connect vess sdk
+      const res = await connectAsync({ connector })
+      console.log({ res })
+      const { provider, account } = res
+      // const signer = (await fetchSigner()) as Signer
+      // const ethPro = new ethers.providers.Web3Provider((signer?.provider as any).provider)
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const { session } = await vess.connect(window.ethereum, env)
+      const { session } = await vess.connect(account, provider, env)
       console.log({ session })
       composeClient.setDID(session.did)
       setMyDid(session.did.parent)
@@ -66,8 +71,7 @@ export const useConnectDID = () => {
       return true
     } catch (error) {
       console.error(error)
-      await disConnectDID()
-      clearState()
+      disConnectDID()
       if (error instanceof Error) {
         console.error(error)
       }

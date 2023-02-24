@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
+import { useDisconnect } from 'wagmi'
 import { NavigationList } from '../molecure/Navigation/NavigationList'
 import { BaseHeader } from '../organism/Header/BaseHeader'
 import LoadingModal from '../organism/Modal/LoadingModal'
@@ -17,6 +18,8 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { currentTheme, initTheme } = useVESSTheme()
   const { autoConnect } = useConnectDID()
   const { did } = useDIDAccount()
+  const { disconnect } = useDisconnect()
+
   const LayoutContainer = styled.div`
     display: grid;
     width: 100vw;
@@ -78,6 +81,8 @@ export const BasicLayout: FC<Props> = ({ children }) => {
         const session = await getAuthorizedSession()
         if (session) {
           await autoConnect()
+        } else {
+          disconnect()
         }
       }
     }
