@@ -23,7 +23,7 @@ export const BaseHeader: FC = () => {
     height: 80px;
     position: fixed;
     padding: 4px 12px;
-    background: ${currentTheme.depth4};
+    background: ${currentTheme.background};
     z-index: 998;
     display: grid;
     grid-template-columns: 100px 1fr 64px;
