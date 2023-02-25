@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { Button } from '@/components/atom/Buttons/Button'
 import { NoItem } from '@/components/atom/Common/NoItem'
+import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperienceCard } from '@/components/molecure/Profile/Experiences/ExperienceCard'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
 import { useSelfClaimedMembership } from '@/hooks/useSelfClaimedMembership'
@@ -50,9 +51,11 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
   const Container = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     gap: 24px;
     margin-bottom: 32px;
+    padding: 16px;
     @media (max-width: 599px) {
       gap: 8px;
     }
@@ -82,6 +85,8 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
           mainColor={currentTheme.outline}
           textColor={currentTheme.outline}
           size={'S'}
+          icon={ICONS.EDIT}
+          btnWidth={'80px'}
         />
       </ItemHeader>
       <Container>
