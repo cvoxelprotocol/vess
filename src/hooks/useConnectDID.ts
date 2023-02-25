@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { Connector, fetchSigner } from '@wagmi/core'
-import { ethers, Signer } from 'ethers'
+import { Connector } from '@wagmi/core'
 import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
@@ -48,12 +47,9 @@ export const useConnectDID = () => {
     try {
       // connect vess sdk
       const res = await connectAsync({ connector })
-      console.log({ res })
-      const { provider, account } = res
-      // const signer = (await fetchSigner()) as Signer
-      // const ethPro = new ethers.providers.Web3Provider((signer?.provider as any).provider)
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const { session } = await vess.connect(account, provider, env)
+      const ethProvider = (res.provider as any).provider || window.ethereum
+      const { session } = await vess.connect(res.account, ethProvider, env)
       console.log({ session })
       composeClient.setDID(session.did)
       setMyDid(session.did.parent)
