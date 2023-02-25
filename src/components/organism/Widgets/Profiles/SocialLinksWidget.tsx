@@ -14,6 +14,7 @@ type Props = {
   gridColOnSp: string
   editable?: boolean
   onClick?: () => void
+  EditButtonPosition?: string
 }
 
 export const SocialLinksWidget: FC<Props> = (props) => {
@@ -43,12 +44,7 @@ export const SocialLinksWidget: FC<Props> = (props) => {
 
   return (
     <>
-      <BaseWidget
-        onClickEdit={handleEdit}
-        {...props}
-        background={'none'}
-        EditButtonPosition={'0px'}
-      >
+      <BaseWidget onClickEdit={handleEdit} {...props} background={'none'} overflow={'visible'}>
         <LinkContainer>
           <SocialLinkItem linkType={'twitter'} value={twitter} />
           <SocialLinkItem linkType={'discord'} value={discord} />

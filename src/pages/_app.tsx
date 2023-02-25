@@ -24,7 +24,7 @@ import '@/styles/globals.css'
 
 const notoSans = Noto_Sans({
   style: 'normal',
-  weight: ['400', '500', '700'],
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   display: 'swap',
 })

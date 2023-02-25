@@ -43,22 +43,39 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     height: max(100%, 100vh);
     background: ${currentTheme.background};
   `
+  const ProfileContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    overflow: scroll;
+    padding: 24px;
+
+    @media (max-width: 1079px) {
+      justify-content: start;
+    }
+
+    @media (max-width: 599px) {
+      justify-content: center;
+      overflow: visible;
+      padding: 0px;
+    }
+  `
   const Profile = styled.div`
     display: grid;
     grid-template-rows: repeat(8, 56px);
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(12, 56px);
     grid-gap: 24px;
-    margin-bottom: 48px;
+
     @media (max-width: 1079px) {
       grid-template-rows: repeat(8, 56px);
-      grid-template-columns: repeat(12, 1fr);
+      grid-template-columns: repeat(12, 56px);
       grid-gap: 24px;
     }
     @media (max-width: 599px) {
-      grid-template-rows: repeat(auto-fill, 56px);
-      grid-template-columns: repeat(6, 1fr);
-      grid-gap: 6px;
-      padding: 8px;
+      grid-template-rows: repeat(16, 44px);
+      grid-template-columns: repeat(6, 44px);
+      grid-gap: 16px;
+      padding: 0px;
     }
   `
   const ShareContainer = styled.div`
@@ -78,73 +95,78 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     return <></>
   }
   return (
-    <Container>
-      <Profile>
-        <BasicProfileWidget
-          did={did}
-          gridRow={'1/5'}
-          gridCol={'1/7'}
-          gridRowOnSp={'1/6'}
-          gridColOnSp={'1/7'}
-          editable={isMe}
-        />
-        <SelfClaimedRoleWidget
-          did={did}
-          gridRow={'5/6'}
-          gridCol={'1/7'}
-          gridRowOnSp={'6/7'}
-          gridColOnSp={'1/7'}
-          editable={isMe}
-        />
-        <HighlightedMembershipWidget
-          did={did}
-          gridRow={'6/9'}
-          gridCol={'1/5'}
-          gridRowOnSp={'7/10'}
-          gridColOnSp={'1/5'}
-          editable={isMe}
-        />
-        <SocialLinksWidget
-          did={did}
-          gridRow={'6/9'}
-          gridCol={'5/7'}
-          gridRowOnSp={'7/10'}
-          gridColOnSp={'5/7'}
-          editable={isMe}
-        />
-        <WorkStyleWidget
-          did={did}
-          gridRow={'1/6'}
-          gridCol={'7/9'}
-          gridRowOnSp={'13/17'}
-          gridColOnSp={'1/3'}
-          editable={isMe}
-        />
-        <WorkStatusWidget
-          did={did}
-          gridRow={'6/9'}
-          gridCol={'7/9'}
-          gridRowOnSp={'10/13'}
-          gridColOnSp={'1/3'}
-          editable={isMe}
-        />
-        <EventAttendancesWidget
-          did={did}
-          gridRow={'1/5'}
-          gridCol={'9/13'}
-          gridRowOnSp={'10/13'}
-          gridColOnSp={'3/7'}
-          editable={false}
-        />
-        <WorkCredentialsWidget
-          did={did}
-          gridRow={'5/9'}
-          gridCol={'9/13'}
-          gridRowOnSp={'13/17'}
-          gridColOnSp={'3/7'}
-          editable={isMe}
-        />
-      </Profile>
+    <Container id={'Container'}>
+      <ProfileContainer>
+        <Profile>
+          <BasicProfileWidget
+            did={did}
+            gridRow={'1/5'}
+            gridCol={'1/7'}
+            gridRowOnSp={'1/5'}
+            gridColOnSp={'1/7'}
+            editable={isMe}
+          />
+          <SelfClaimedRoleWidget
+            did={did}
+            gridRow={'5/6'}
+            gridCol={'1/7'}
+            gridRowOnSp={'5/6'}
+            gridColOnSp={'1/7'}
+            editable={isMe}
+            EditButtonPosition={'-10px'}
+          />
+          <HighlightedMembershipWidget
+            did={did}
+            gridRow={'6/9'}
+            gridCol={'1/5'}
+            gridRowOnSp={'6/9'}
+            gridColOnSp={'1/5'}
+            editable={isMe}
+          />
+          <SocialLinksWidget
+            did={did}
+            gridRow={'6/9'}
+            gridCol={'5/7'}
+            gridRowOnSp={'6/9'}
+            gridColOnSp={'5/7'}
+            editable={isMe}
+            EditButtonPosition={'-10px'}
+          />
+          <WorkStyleWidget
+            did={did}
+            gridRow={'1/6'}
+            gridCol={'7/9'}
+            gridRowOnSp={'12/17'}
+            gridColOnSp={'1/3'}
+            editable={isMe}
+            EditButtonPosition={'-10px'}
+          />
+          <WorkStatusWidget
+            did={did}
+            gridRow={'6/9'}
+            gridCol={'7/9'}
+            gridRowOnSp={'9/12'}
+            gridColOnSp={'1/3'}
+            editable={isMe}
+          />
+          <EventAttendancesWidget
+            did={did}
+            gridRow={'1/5'}
+            gridCol={'9/13'}
+            gridRowOnSp={'9/13'}
+            gridColOnSp={'3/7'}
+            editable={false}
+          />
+          <WorkCredentialsWidget
+            did={did}
+            gridRow={'5/9'}
+            gridCol={'9/13'}
+            gridRowOnSp={'13/17'}
+            gridColOnSp={'3/7'}
+            editable={isMe}
+          />
+        </Profile>
+      </ProfileContainer>
       <ExperiencesContainer did={did} />
       <ProfleTabs did={did} />
       {myDID && did === myDID && (

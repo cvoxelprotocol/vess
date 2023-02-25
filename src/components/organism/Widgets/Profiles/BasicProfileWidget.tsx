@@ -60,12 +60,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     <>
       <BaseWidget onClickEdit={handleEdit} {...props}>
         <HeaderImage>
-          <NextImageContainer
-            src={'/base_item_header.png'}
-            width={'100%'}
-            objectFit={'cover'}
-            borderRadius={'40px 40px 0px 0px'}
-          />
+          <NextImageContainer src={'/base_item_header.png'} width={'100%'} objectFit={'cover'} />
         </HeaderImage>
         <Container>
           <Flex rowGap='4px' colGap='12px' justifyContent={'start'}>
