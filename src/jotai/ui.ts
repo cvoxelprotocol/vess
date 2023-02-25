@@ -77,3 +77,7 @@ export const useStateProfileTab = () => useAtom(profileTab)
 export const showConnectModal = atom<boolean>(false)
 
 export const useStateShowConnectModal = () => useAtom(showConnectModal)
+
+export const focusEditable = atom<boolean>(false)
+
+export const useStateFocusEditable = () => useAtom(focusEditable)

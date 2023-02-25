@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
+import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
@@ -25,6 +27,7 @@ import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useSelectedAttendance, useSelectedTask } from '@/jotai/item'
+import { useStateFocusEditable } from '@/jotai/ui'
 
 type Props = {
   did: string
@@ -37,11 +40,19 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const selectedTask = useSelectedTask()
   const router = useRouter()
   const { did: myDID } = useDIDAccount()
+  const [focusEditable, setFocusEditable] = useStateFocusEditable()
 
   const Container = styled.div`
     width: 100%;
     height: max(100%, 100vh);
     background: ${currentTheme.background};
+  `
+  const ActionContainer = styled.div`
+    width: 100%;
+    padding: 12px 16px;
+    @media (max-width: 599px) {
+      padding: 12px 16px 0px;
+    }
   `
   const Profile = styled.div`
     display: grid;
@@ -74,11 +85,41 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const gotoInvitaion = () => {
     router.push('/connection/invitation')
   }
+
   if (!did) {
     return <></>
   }
   return (
     <Container>
+      <ActionContainer>
+        <Flex justifyContent='flex-end' alignItems='center' width='100%'>
+          {myDID && myDID === did && (
+            <>
+              {!focusEditable ? (
+                <Button
+                  variant='outlined'
+                  text='Edit'
+                  onClick={() => setFocusEditable(true)}
+                  mainColor={currentTheme.outline}
+                  textColor={currentTheme.onSurface}
+                  size={'S'}
+                  icon={ICONS.EDIT}
+                />
+              ) : (
+                <Button
+                  variant='outlined'
+                  text='Done'
+                  onClick={() => setFocusEditable(false)}
+                  mainColor={currentTheme.outline}
+                  textColor={currentTheme.onSurface}
+                  size={'S'}
+                  icon={ICONS.CHECKED}
+                />
+              )}
+            </>
+          )}
+        </Flex>
+      </ActionContainer>
       <Profile>
         <BasicProfileWidget
           did={did}
@@ -94,7 +135,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
           gridCol={'1/7'}
           gridRowOnSp={'6/7'}
           gridColOnSp={'1/7'}
-          editable={isMe}
+          editable={false}
         />
         <HighlightedMembershipWidget
           did={did}

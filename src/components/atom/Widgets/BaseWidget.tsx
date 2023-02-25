@@ -3,6 +3,7 @@ import { FC, useState } from 'react'
 import { IconButton } from '../Buttons/IconButton'
 import { ICONS } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { useStateFocusEditable } from '@/jotai/ui'
 
 type Props = {
   gridRow: string
@@ -32,6 +33,8 @@ export const BaseWidget: FC<Props> = ({
 }) => {
   const { currentTheme } = useVESSTheme()
   const [showEdit, setShowEdit] = useState(false)
+  const [focusEditable, _] = useStateFocusEditable()
+
   const Container = styled.div`
     grid-column: ${gridCol};
     grid-row: ${gridRow};
@@ -53,7 +56,10 @@ export const BaseWidget: FC<Props> = ({
     top: ${EditButtonPosition};
     right: ${EditButtonPosition};
     z-index: 10;
-    display: ${showEdit ? 'block' : 'none'};
+    display: ${focusEditable || showEdit ? 'block' : 'none'};
+    @media (max-width: 599px) {
+      display: ${focusEditable ? 'block' : 'none'};
+    }
   `
   const handleEdit = () => {
     setShowEdit(false)
