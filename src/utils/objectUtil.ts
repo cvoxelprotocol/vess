@@ -1,3 +1,4 @@
+import { isDIDstring, ETH_CHAIN_ID } from 'vess-sdk'
 export const removeUndefined = <T extends {}>(object: T): T => {
   return Object.fromEntries(Object.entries(object).filter(([_, v]) => v !== undefined)) as T
 }
@@ -34,4 +35,12 @@ export const renameType = (obj: { id?: string | undefined } & { [x: string]: any
     }
   })
   return Object.assign({}, ...keyValues)
+}
+
+export const getAddressFromPkhForWagmi = (did?: string): `0x${string}` | undefined => {
+  if (!did) return
+  if (!isDIDstring(did)) {
+    return
+  }
+  return `0x${did.replace(`did:pkh:${ETH_CHAIN_ID}0x`, '')}`
 }
