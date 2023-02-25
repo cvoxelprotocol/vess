@@ -23,7 +23,6 @@ import { WorkStyleWidget } from '@/components/organism/Widgets/Profiles/WorkStyl
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useSelectedAttendance, useSelectedTask } from '@/jotai/item'
 
@@ -34,7 +33,6 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const { currentTheme } = useVESSTheme()
   const { businessProfile, isFetchingBusinessProfile, isMe } = useBusinessProfile(did)
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(did)
-  const { setShowQRModal } = useVESSWidgetModal()
   const selectedAttendance = useSelectedAttendance()
   const selectedTask = useSelectedTask()
   const router = useRouter()

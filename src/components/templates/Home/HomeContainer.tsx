@@ -1,12 +1,15 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { UserCard } from '@/components/molecure/User/UserCard'
+import { InvitaionContent } from '@/components/organism/Connection/InvitaionContent'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 const FEATURED_USER_LIST = [
@@ -16,10 +19,13 @@ const FEATURED_USER_LIST = [
   'did:pkh:eip155:1:0xad44f4c7703ab3fac0c46624fb52e6e668e4cd24',
   'did:pkh:eip155:1:0x9df610ec3e37e8da858b3d53d6c68178140cf24f',
 ]
+const EHT_DENVER_ICON =
+  'https://bafybeigs6m2pdmucgylqnn3ztrnbelri53uweco2tdi6vkpb3bpj6h3yfi.ipfs.w3s.link/ethdenver_2_23.png'
 export const HomeContainer: FC = () => {
   const { did } = useDIDAccount()
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const router = useRouter()
+  const { setShowConnectModal } = useVESSWidgetModal()
 
   const Wrapper = styled.main`
     width: 100%;
@@ -32,7 +38,7 @@ export const HomeContainer: FC = () => {
   `
 
   const SectionHeader = styled.div`
-    padding: 32px 0 8px;
+    padding: 18px 0 8px;
     color: ${currentTheme.onBackground};
     ${getBasicFont(currentTypo.title.small)};
     border: 1px solid ${currentTheme.surfaceVariant};
@@ -55,7 +61,6 @@ export const HomeContainer: FC = () => {
   `
 
   const MainContent = styled.div`
-    margin-top: 24px;
     color: ${currentTheme.depth3};
     border: 1px solid ${currentTheme.outline};
     border-radius: 24px;
@@ -81,13 +86,57 @@ export const HomeContainer: FC = () => {
       width: 300px;
     }
   `
+  const Title = styled.p`
+    color: ${currentTheme.onSurfaceVariant};
+    ${getBasicFont(currentTypo.headLine.small)};
+    @media (max-width: 599px) {
+      ${getBasicFont(currentTypo.title.large)};
+    }
+  `
 
   const jumpToLP = () => {
     window.open('https://vess.id/', '_blank')
   }
+  const jumpToProfile = () => {
+    if (!did) return
+    router.push(`/did/${did}`)
+  }
 
   return (
     <Wrapper>
+      <SectionHeader>
+        {did ? 'Proof of ETH Denver Connection' : 'Are you at ETH Denver?'}
+      </SectionHeader>
+      <MainContent>
+        {did ? (
+          <Flex flexDirection='column' rowGap='24px'>
+            <InvitaionContent />
+            <Flex flexDirection='column' rowGap='8px'>
+              {/* <At>Want to edit your profile?</At> */}
+              <Button
+                mainColor={currentTheme.secondary}
+                variant='filled'
+                text='Want to edit your profile?'
+                btnWidth='100%'
+                onClick={() => jumpToProfile()}
+              />
+            </Flex>
+          </Flex>
+        ) : (
+          <Flex flexDirection='column' rowGap='20px'>
+            <Title>{"Let's issue your proof of connection!"}</Title>
+            <Avatar url={EHT_DENVER_ICON} size={'200'} />
+            <Button
+              mainColor={currentTheme.primary}
+              variant='filled'
+              text='Connect DID'
+              btnWidth='100%'
+              onClick={() => setShowConnectModal(true)}
+            />
+          </Flex>
+        )}
+      </MainContent>
+      <SectionHeader>VESS Resume</SectionHeader>
       <MainContent>
         <Flex flexDirection='column' rowGap='6px'>
           <LogoContainer>

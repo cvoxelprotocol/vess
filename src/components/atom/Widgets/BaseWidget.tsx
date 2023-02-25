@@ -30,7 +30,7 @@ export const BaseWidget: FC<Props> = ({
   border = 'none',
   editable = false,
 }) => {
-  const { currentTheme, initTheme } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
   const [showEdit, setShowEdit] = useState(false)
   const Container = styled.div`
     grid-column: ${gridCol};

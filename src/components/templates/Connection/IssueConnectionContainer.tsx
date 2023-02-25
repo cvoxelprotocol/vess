@@ -34,6 +34,12 @@ export const IssueConnectionContainer: FC = () => {
       variables: {
         id: invitaionId,
       },
+      onError(e) {
+        if (e instanceof DOMException) {
+          return
+        }
+        console.log(e)
+      },
     })
   const [createConnection] = useCreateConnectionMutation()
 
