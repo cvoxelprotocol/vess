@@ -40,11 +40,7 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
           ) : (
             <>
               {!businessProfile?.tags || businessProfile?.tags.length === 0 ? (
-                <NoItem
-                  text='set your tags...'
-                  color={currentTheme.outline}
-                  font={currentTypo.title.small}
-                />
+                <NoItem text='' color={currentTheme.outline} font={currentTypo.title.small} />
               ) : (
                 <>
                   {businessProfile?.tags &&

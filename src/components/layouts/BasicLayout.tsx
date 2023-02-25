@@ -70,6 +70,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-column: 1/3;
       grid-row: 2;
       width: 100%;
+      overflow-x: hidden;
     }
   `
   useEffect(() => {
