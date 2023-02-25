@@ -8,7 +8,9 @@ import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Router } from 'next/router'
 import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { publicProvider } from 'wagmi/providers/public'
@@ -51,21 +53,29 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     [mainnet],
     [walletConnectProvider({ projectId: process.env.NEXT_PUBLIC_WC_KEY || '' }), publicProvider()],
   )
+
+  const metamaskConnector = new MetaMaskConnector({ chains })
+  const injectedCOnnector = new InjectedConnector({
+    options: {
+      name: 'Light Wallet',
+    },
+  })
+  const walletConnectConnector = new WalletConnectConnector({
+    chains,
+    options: {
+      infuraId: process.env.NEXT_PUBLIC_INFURA_KEY,
+      chainId: 1,
+      qrcodeModalOptions: {
+        desktopLinks: [],
+      },
+    },
+  })
+  const connectors = isMobile
+    ? [injectedCOnnector, walletConnectConnector]
+    : [metamaskConnector, walletConnectConnector]
   const client = createClient({
     autoConnect: true,
-    connectors: [
-      new MetaMaskConnector({ chains }),
-      new WalletConnectConnector({
-        chains,
-        options: {
-          infuraId: process.env.NEXT_PUBLIC_INFURA_KEY,
-          chainId: 1,
-          qrcodeModalOptions: {
-            desktopLinks: [],
-          },
-        },
-      }),
-    ],
+    connectors,
     provider,
   })
   const [queryClient] = useState(
