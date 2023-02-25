@@ -26,7 +26,7 @@ export const BaseHeader: FC = () => {
     height: 80px;
     position: fixed;
     padding: 4px 12px;
-    background: ${currentTheme.depth4};
+    background: ${currentTheme.background};
     z-index: 998;
     display: grid;
     grid-template-columns: 100px 1fr 64px;
@@ -42,7 +42,7 @@ export const BaseHeader: FC = () => {
     align-items: center;
     width: 100%;
     color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.headLine.medium)};
+    ${getBasicFont(currentTypo.headLine.small)};
     @media (max-width: 599px) {
       justify-content: center;
       ${getBasicFont(currentTypo.title.large)};
@@ -59,6 +59,7 @@ export const BaseHeader: FC = () => {
 
   const getTitle = useMemo(() => {
     if (router.asPath === '/connection/list') return 'Timeline'
+    if (router.asPath.startsWith('/did')) return 'Profile'
     return ''
   }, [router])
 

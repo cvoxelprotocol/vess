@@ -166,7 +166,7 @@ export const theme = {
           fontFamily: 'Noto Sans',
           fontSize: '1.75rem',
           lineHeight: '2.25rem',
-          fontWeight: 600,
+          fontWeight: 500,
         },
         small: {
           fontFamily: 'Noto Sans',

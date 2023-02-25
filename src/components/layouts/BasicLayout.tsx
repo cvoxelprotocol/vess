@@ -60,14 +60,16 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   `
   const MainContainer = styled.div`
     background: ${currentTheme.background};
+    overflow: hidden;
     grid-column: 2;
     grid-row: 2;
-    width: 936px;
+    max-width: 984px;
+    width: 100%;
     margin: 0 auto;
     height: 100%;
     min-height: 100vh;
     @media (max-width: 599px) {
-      grid-column: 1/3;
+      grid-column: 1;
       grid-row: 2;
       width: 100%;
       overflow-x: hidden;
@@ -99,7 +101,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       <NaviContainer>
         <NavigationList />
       </NaviContainer>
-      <MainContainer>{children}</MainContainer>
+      <MainContainer id={'MainContainer'}>{children}</MainContainer>
       {isLoading && <LoadingModal />}
     </LayoutContainer>
   )
