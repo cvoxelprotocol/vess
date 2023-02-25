@@ -3,7 +3,6 @@ import { FC } from 'react'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, IconsType } from '@/components/atom/Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { Scheme } from '@/@types/theme'
 
 type Props = {
   icon: IconsType
