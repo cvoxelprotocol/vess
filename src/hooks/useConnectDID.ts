@@ -48,7 +48,8 @@ export const useConnectDID = () => {
       // connect vess sdk
       const res = await connectAsync({ connector })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const ethProvider = (res.provider as any).provider || window.ethereum
+      const ethProvider =
+        connector?.id === 'walletConnect' ? (res.provider as any).provider : window.ethereum
       const { session } = await vess.connect(res.account, ethProvider, env)
       console.log({ session })
       composeClient.setDID(session.did)
