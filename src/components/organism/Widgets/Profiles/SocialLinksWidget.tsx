@@ -17,24 +17,8 @@ type Props = {
 }
 
 export const SocialLinksWidget: FC<Props> = (props) => {
-  const { socialLinks, isFetchingSocialLinks } = useSocialLinks(props.did)
+  const { socialLinks, twitter, discord, telegram, github } = useSocialLinks(props.did)
   const { openSocialLinkModal } = useVESSWidgetModal()
-
-  const twitter = useMemo(() => {
-    return socialLinks?.links?.find((link) => link.linkType === 'twitter')?.value
-  }, [socialLinks?.links])
-
-  const discord = useMemo(() => {
-    return socialLinks?.links?.find((link) => link.linkType === 'discord')?.value
-  }, [socialLinks?.links])
-
-  const telegram = useMemo(() => {
-    return socialLinks?.links?.find((link) => link.linkType === 'telegram')?.value
-  }, [socialLinks?.links])
-
-  const github = useMemo(() => {
-    return socialLinks?.links?.find((link) => link.linkType === 'github')?.value
-  }, [socialLinks?.links])
 
   const otherLink = useMemo(() => {
     return socialLinks?.links?.find((link) => !isLinkTypeCandidate(link.linkType))

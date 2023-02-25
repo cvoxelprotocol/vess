@@ -37,6 +37,7 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
   `
 
   const handleClick = () => {
+    if (!value) return
     if (linkType === 'twitter' || linkType === 'github' || linkType === 'url') {
       window.open(value, '_blank')
       return

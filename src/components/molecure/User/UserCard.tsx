@@ -1,18 +1,14 @@
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
 import { FC, MouseEvent } from 'react'
 import { SocialLinkItem } from '../Profile/SocialLinkItem'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
-import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
-import { ICONS } from '@/components/atom/Icons/Icon'
-import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { DefaultCardColor } from '@/constants/ui'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
-import { useHighlightedCredentials } from '@/hooks/useHighlightedCredentials'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -24,9 +20,10 @@ type Props = {
 export const UserCard: FC<Props> = ({ userId }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { profile } = useSocialAccount(userId)
-  const { socialLinks } = useSocialLinks(userId)
+  const { twitter, telegram, github } = useSocialLinks(userId)
   const { highlightedMembership, highlightedSelfClaimedMembership } =
     useHeldMembershipSubject(userId)
+  const router = useRouter()
 
   const CardContainer = styled.div`
     background: ${currentTheme.surface2};
@@ -85,7 +82,7 @@ export const UserCard: FC<Props> = ({ userId }) => {
 
   const jumpToResume = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    window.open(`https://vess.vercel.app/did/${userId}`, '_blank')
+    router.push(`/did/${userId}`)
   }
 
   return (
@@ -134,19 +131,11 @@ export const UserCard: FC<Props> = ({ userId }) => {
             </InfoItem>
           )}
         </Flex>
-        {socialLinks?.links && (
-          <Flex justifyContent='center' alignItems='center' width='100%'>
-            {socialLinks.links?.length > 0 &&
-              socialLinks.links
-                .filter((l) => l.linkType !== 'discord')
-                .slice(0, 3)
-                .map((link) => {
-                  return (
-                    <SocialLinkItem key={link.value} linkType={link.linkType} value={link.value} />
-                  )
-                })}
-          </Flex>
-        )}
+        <Flex justifyContent='center' alignItems='center' width='100%'>
+          <SocialLinkItem linkType={'twitter'} value={twitter} />
+          <SocialLinkItem linkType={'telegram'} value={telegram} />
+          <SocialLinkItem linkType={'github'} value={github} />
+        </Flex>
       </UserContainer>
     </CardContainer>
   )
