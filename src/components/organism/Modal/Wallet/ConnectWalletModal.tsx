@@ -12,7 +12,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 export const ConnectWalletModal: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { showConnectModal, setShowConnectModal } = useVESSWidgetModal()
-  const { connectAsync, connectors, error, isLoading, pendingConnector } = useConnect()
+  const { connectors, error, isLoading, pendingConnector } = useConnect()
   const { connectDID } = useConnectDID()
 
   const Container = styled.div`

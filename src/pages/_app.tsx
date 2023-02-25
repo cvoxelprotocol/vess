@@ -55,11 +55,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   )
 
   const metamaskConnector = new MetaMaskConnector({ chains })
-  const injectedCOnnector = new InjectedConnector({
-    options: {
-      name: 'Light Wallet',
-    },
-  })
+  // const injectedCOnnector = new InjectedConnector({
+  //   options: {
+  //     name: 'Light Wallet',
+  //   },
+  // })
   const walletConnectConnector = new WalletConnectConnector({
     chains,
     options: {
@@ -70,9 +70,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       },
     },
   })
-  const connectors = isMobile
-    ? [injectedCOnnector, walletConnectConnector]
-    : [metamaskConnector, walletConnectConnector]
+  const connectors = [metamaskConnector, walletConnectConnector]
   const client = createClient({
     autoConnect: true,
     connectors,
