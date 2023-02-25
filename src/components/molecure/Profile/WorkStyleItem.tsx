@@ -20,10 +20,9 @@ export const WorkStyleItem: FC<Props> = ({
   borderRadius,
   isborder = true,
   iconBackground,
-  contentOpacity,
+  contentOpacity = 0.3,
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  iconBackground = iconBackground == undefined ? currentTheme.surface3 : iconBackground
 
   const Container = styled.div`
     width: 100%;
@@ -39,7 +38,7 @@ export const WorkStyleItem: FC<Props> = ({
     width: 40px;
     height: 100%;
     max-height: 100px;
-    background: ${iconBackground};
+    background: ${iconBackground || currentTheme.surface3};
     border-radius: ${borderRadius};
 
     @media (max-width: 599px) {
@@ -65,12 +64,12 @@ export const WorkStyleItem: FC<Props> = ({
   `
 
   return (
-    <Container id={'WorkStyleItem'}>
+    <Container>
       <Flex height={'100%'} width={'100%'} flexWrap={'auto'}>
-        <IconContainer id={'iconContaner'}>
+        <IconContainer>
           <Icon icon={icon} size={'M'} mainColor={currentTheme.onSurface} />
         </IconContainer>
-        <InfoContainer id={'InfoContainer'}>
+        <InfoContainer>
           {typeof content === 'string' ? (
             <Content>{content}</Content>
           ) : (
