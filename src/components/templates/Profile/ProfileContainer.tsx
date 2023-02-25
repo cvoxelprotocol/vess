@@ -45,10 +45,6 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     height: max(100%, 100vh);
     background: ${currentTheme.background};
   `
-  const TopMargin = styled.div`
-    width: 100%;
-    height: 24px;
-  `
   const ProfileContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -102,9 +98,8 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   }
   return (
     <Container id={'Container'}>
-      {/* <TopMargin /> */}
-      <ProfileContainer id={'ProfileContainer'}>
-        <Profile id={'Profile'}>
+      <ProfileContainer>
+        <Profile>
           <BasicProfileWidget
             did={did}
             gridRow={'1/5'}

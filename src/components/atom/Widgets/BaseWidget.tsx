@@ -40,10 +40,7 @@ export const BaseWidget: FC<Props> = ({
   const Container4Edit = styled.div`
     grid-column: ${gridCol};
     grid-row: ${gridRow};
-    @media (max-width: 1079px) {
-      grid-column: ${gridCol};
-      grid-row: ${gridRow};
-    }
+
     @media (max-width: 599px) {
       grid-column: ${gridColOnSp};
       grid-row: ${gridRowOnSp};
