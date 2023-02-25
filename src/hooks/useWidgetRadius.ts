@@ -8,8 +8,8 @@ type Props = {
 }
 
 export const useWidgetRaduis = ({ gridRow, gridCol, gridColOnSp, gridRowOnSp }: Props) => {
-  let [radius, setRadius] = useState<string>()
-  let [radiusOnSp, setRadiusOnSp] = useState<string>()
+  let [radius, setRadius] = useState<string>('24px')
+  let [radiusOnSp, setRadiusOnSp] = useState<string>('16px')
 
   useEffect(() => {
     const rowSize = gridRow.split('/').map(Number)

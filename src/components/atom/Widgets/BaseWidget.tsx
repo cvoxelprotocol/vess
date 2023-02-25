@@ -41,8 +41,8 @@ export const BaseWidget: FC<Props> = ({
     grid-column: ${gridCol};
     grid-row: ${gridRow};
     @media (max-width: 1079px) {
-      grid-column: ${gridColOnSp};
-      grid-row: ${gridRowOnSp};
+      grid-column: ${gridCol};
+      grid-row: ${gridRow};
     }
     @media (max-width: 599px) {
       grid-column: ${gridColOnSp};
@@ -53,7 +53,7 @@ export const BaseWidget: FC<Props> = ({
   const Container = styled.div`
     overflow: ${overflow};
     @media (max-width: 1079px) {
-      border-radius: ${radiusOnSp};
+      border-radius: ${radius};
     }
     @media (max-width: 599px) {
       border-radius: ${radiusOnSp};
@@ -72,7 +72,10 @@ export const BaseWidget: FC<Props> = ({
     top: ${EditButtonPosition};
     right: ${EditButtonPosition};
     z-index: 10;
-    display: ${showEdit ? 'block' : 'none'};
+    transition: all 0.15s ease-out;
+    opacity: ${showEdit ? 1 : 0};
+    pointer-events: ${showEdit ? 'auto' : 'none'};
+    cursor: pointer;
   `
   const handleEdit = () => {
     setShowEdit(false)

@@ -54,7 +54,7 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
 
   return (
     <IconContainer onClick={() => handleClick()}>
-      <Icon icon={icon} size={'L'} mainColor={currentTheme.onSurface} />
+      <Icon icon={icon} size={'LL'} mainColor={currentTheme.onSurface} />
     </IconContainer>
   )
 }
