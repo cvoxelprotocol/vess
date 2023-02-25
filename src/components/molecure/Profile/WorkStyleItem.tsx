@@ -3,19 +3,34 @@ import { FC } from 'react'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, IconsType } from '@/components/atom/Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { Scheme } from '@/@types/theme'
 
 type Props = {
   icon: IconsType
   content?: string | string[]
   borderRadius?: string
+  isborder?: boolean
+  iconBackground?: string
+  contentOpacity?: string
 }
 
-export const WorkStyleItem: FC<Props> = ({ icon, content, borderRadius }) => {
+export const WorkStyleItem: FC<Props> = ({
+  icon,
+  content,
+  borderRadius,
+  isborder = true,
+  iconBackground,
+  contentOpacity,
+}) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  iconBackground = iconBackground == undefined ? currentTheme.surface3 : iconBackground
 
   const Container = styled.div`
-    height: auto;
     width: 100%;
+    flex-grow: 1;
+    border-style: solid;
+    border-width: ${isborder ? '0px 0px 0.5px 0px' : '0px'};
+    border-color: ${currentTheme.surfaceVariant};
   `
   const IconContainer = styled.div`
     display: flex;
@@ -23,36 +38,39 @@ export const WorkStyleItem: FC<Props> = ({ icon, content, borderRadius }) => {
     justify-content: center;
     width: 40px;
     height: 100%;
-    min-height: 75px;
     max-height: 100px;
-    background: ${currentTheme.surface3};
+    background: ${iconBackground};
     border-radius: ${borderRadius};
+
+    @media (max-width: 599px) {
+      width: 28px;
+    }
   `
   const InfoContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: 90px;
-    height: 100%;
-    min-height: 75px;
+    flex-grow: 1;
     max-height: 100px;
     word-wrap: break-word;
     word-break: break-all;
-    padding: 0px 8px;
+    white-space: pre-wrap;
+    text-align: center;
   `
   const Content = styled.div`
     color: ${currentTheme.onSurface};
+    opacity: ${contentOpacity};
     ${getBasicFont(currentTypo.label.medium)};
   `
 
   return (
-    <Container>
-      <Flex height={'100%'} flexWrap={'auto'}>
-        <IconContainer>
+    <Container id={'WorkStyleItem'}>
+      <Flex height={'100%'} width={'100%'} flexWrap={'auto'}>
+        <IconContainer id={'iconContaner'}>
           <Icon icon={icon} size={'M'} mainColor={currentTheme.onSurface} />
         </IconContainer>
-        <InfoContainer>
+        <InfoContainer id={'InfoContainer'}>
           {typeof content === 'string' ? (
             <Content>{content}</Content>
           ) : (
