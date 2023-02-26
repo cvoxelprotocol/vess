@@ -44,8 +44,8 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
                 <NoItem text='' color={currentTheme.outline} font={currentTypo.title.small} />
               ) : (
                 <>
-                  {businessProfile?.tags &&
-                    businessProfile.tags.map((role) => {
+                  {businessProfile?.skills &&
+                    businessProfile.skills.map((role) => {
                       return (
                         <Chip
                           key={role}
