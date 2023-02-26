@@ -28,7 +28,7 @@ const GET_PROFILE = gql`
 `
 
 export const useCcProfile = (did?: string) => {
-  const { loading, data: ccProfiles } = useQuery(GET_PROFILE, {
+  const { loading: ccLoading, data: ccProfiles } = useQuery(GET_PROFILE, {
     variables: { address: getAddressFromPkhForWagmi(did) },
     context: { clientName: 'cyberconnect' },
   })
@@ -42,6 +42,6 @@ export const useCcProfile = (did?: string) => {
 
   return {
     ccProfile,
-    loading,
+    ccLoading,
   }
 }

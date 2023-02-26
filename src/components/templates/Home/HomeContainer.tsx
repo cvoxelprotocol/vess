@@ -129,7 +129,7 @@ export const HomeContainer: FC = () => {
             <Button
               mainColor={currentTheme.primary}
               variant='filled'
-              text='Connect DID'
+              text='Connect Wallet'
               btnWidth='100%'
               onClick={() => setShowConnectModal(true)}
             />

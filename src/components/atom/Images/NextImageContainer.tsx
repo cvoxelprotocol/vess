@@ -24,9 +24,13 @@ export const NextImageContainer: FC<Props> = ({
     border-radius: ${borderRadius};
     position: relative;
     overflow: hidden;
+    border: none;
+    outline: none;
   `
   const Content = styled(Image)`
     object-fit: ${objectFit};
+    border: none;
+    outline: none;
   `
 
   return (

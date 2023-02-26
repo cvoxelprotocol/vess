@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -78,8 +79,10 @@ export const IssueConnectionContainer: FC = () => {
       ${getBasicFont(currentTypo.headLine.large)};
     }
   `
-  const PfpContainer = styled.div`
+  const PfpContainer = styled(Link)`
     width: fit-content;
+    outline: none;
+    text-decoration: none;
   `
 
   const At = styled.p`
@@ -99,12 +102,15 @@ export const IssueConnectionContainer: FC = () => {
     ${getBasicFont(currentTypo.body.medium)};
   `
 
+  const inviterId = useMemo(() => {
+    return invitation?.node?.__typename === 'ConnectionInvitation' ? invitation.node.did.did : ''
+  }, [invitation])
+
   const issueConnection = async () => {
     if (!did) return
     try {
       showLoading()
-      const userId =
-        invitation?.node?.__typename === 'ConnectionInvitation' ? invitation.node.did.did : ''
+      const userId = inviterId
       const content: ConnectionInput = {
         userId: userId,
         invitationId: invitaionId,
@@ -170,7 +176,7 @@ export const IssueConnectionContainer: FC = () => {
         ) : (
           <Flex flexDirection='column' colGap='24px' rowGap='24px'>
             <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
-            <PfpContainer>
+            <PfpContainer href={`/did/${inviterId}`}>
               <Avatar url={profile.avatarSrc} size={'100'} />
             </PfpContainer>
             <Title>{`I'm ${profile.displayName || ''}`}</Title>
@@ -188,7 +194,7 @@ export const IssueConnectionContainer: FC = () => {
             {!did ? (
               <Button
                 variant='filled'
-                text='Connect DID'
+                text='Connect Wallet'
                 onClick={() => setShowConnectModal(true)}
                 btnWidth={'100%'}
               />

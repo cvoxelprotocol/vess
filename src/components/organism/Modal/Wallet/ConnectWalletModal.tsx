@@ -52,7 +52,7 @@ export const ConnectWalletModal: FC = () => {
     <VESSModalContainer open={showConnectModal} onOpenChange={setShowConnectModal}>
       <VESSModal>
         <Container>
-          <Title>Connect DID</Title>
+          <Title>Connect Wallet</Title>
           <Flex flexDirection='column' rowGap='8px'>
             {connectors.map((connector) => (
               <Button

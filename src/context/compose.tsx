@@ -36,17 +36,24 @@ const link = new ApolloLink((operation) => {
     )
   })
 })
-const secondaryLink = new HttpLink({
+const cyberconnectLink = new HttpLink({
   uri: 'https://api.cyberconnect.dev/',
-  // options
+})
+
+const lensLink = new HttpLink({
+  uri: 'https://api.lens.dev/',
 })
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: ApolloLink.split(
     (operation) => operation.getContext()['clientName'] === 'cyberconnect',
-    secondaryLink,
-    link,
+    cyberconnectLink,
+    ApolloLink.split(
+      (operation) => operation.getContext()['clientName'] === 'lens',
+      lensLink,
+      link,
+    ),
   ),
   defaultOptions: {
     watchQuery: {

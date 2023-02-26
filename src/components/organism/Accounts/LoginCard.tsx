@@ -62,7 +62,7 @@ export const LoginCard: FC = () => {
         </LogoContainer>
         <Button
           variant='filled'
-          text='Connect DID'
+          text='Connect Wallet'
           onClick={() => setShowConnectModal(true)}
           btnWidth={'240px'}
         />
