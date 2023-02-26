@@ -6,6 +6,8 @@ export const LOGIN_TYPE_KEY = 'vess-org-login-type'
 
 export type connectionStatusType = 'connecting' | 'connected' | 'disconnected'
 
+export type profileType = 'lens' | 'cc' | 'ens' | 'default'
+
 export const connectionStatus = atom<connectionStatusType>('disconnected')
 
 export const useStateConnectionStatus = () => useAtom(connectionStatus)
@@ -42,6 +44,6 @@ export const useStateLoginType = () => useAtom(loginType)
 export const useSetStateLoginType = () => useSetAtom(loginType)
 export const useLoginType = () => useAtomValue(loginType)
 
-export const displayProfile = atom<DisplayProfile | null>(null)
+export const displayProfileType = atom<profileType>('default')
 
-export const useStateDisplayProfile = () => useAtom(displayProfile)
+export const useStateDisplayProfileType = () => useAtom(displayProfileType)

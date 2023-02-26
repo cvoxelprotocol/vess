@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -8,6 +8,7 @@ import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { profileType } from '@/jotai/account'
 import { shortenStr } from '@/utils/objectUtil'
 
 type Props = {
@@ -23,16 +24,24 @@ type Props = {
 export const BasicProfileWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const {
-    profile,
-    pickCcProfile,
-    pickLensProfile,
-    pickEnsProfile,
-    pickDefaultProfile,
-    haslens,
-    hasCc,
-    hasEns,
+    profile: defaultProfile,
+    ccProfile,
+    lensProfile,
+    ensProfile,
   } = useSocialAccount(props.did)
   const { setShowSocialProfileModal } = useVESSWidgetModal()
+  const [displayProfileType, setDisplayProfileType] = useState<profileType>('default')
+
+  const profile = useMemo(() => {
+    if (displayProfileType === 'cc') {
+      return ccProfile
+    } else if (displayProfileType === 'lens') {
+      return lensProfile
+    } else if (displayProfileType === 'ens') {
+      return ensProfile
+    }
+    return defaultProfile
+  }, [displayProfileType, defaultProfile])
 
   const HeaderImage = styled.div`
     width: 100%;
@@ -85,13 +94,10 @@ export const BasicProfileWidget: FC<Props> = (props) => {
             </Flex>
           </Flex>
           <Flex>
-            <Button text='default' onClick={() => pickDefaultProfile()} />
-            {haslens && <Button text='lens' onClick={() => pickLensProfile()} />}
-            {hasCc && <Button text='cc' onClick={() => pickCcProfile()} />}
-            {hasEns && <Button text='ens' onClick={() => pickEnsProfile()} />}
-            {/* <Button text='lens' onClick={() => pickLensProfile()} />
-            <Button text='cc' onClick={() => pickCcProfile()} />
-            <Button text='ens' onClick={() => pickEnsProfile()} /> */}
+            <Button text='default' onClick={() => setDisplayProfileType('default')} />
+            {!!lensProfile && <Button text='lens' onClick={() => setDisplayProfileType('lens')} />}
+            {!!ccProfile && <Button text='cc' onClick={() => setDisplayProfileType('cc')} />}
+            {!!ensProfile && <Button text='ens' onClick={() => setDisplayProfileType('ens')} />}
           </Flex>
           <Description>{profile?.bio}</Description>
         </Container>
