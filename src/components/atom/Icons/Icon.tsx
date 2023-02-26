@@ -48,6 +48,7 @@ import { VerifiedIcon } from './VerifiedIcon'
 import { VoxelIcon } from './VoxelIcon'
 import { VoxelslIcon } from './VoxelsIcon'
 import { WalletIcon } from './WalletIcon'
+import { WaveIcon } from './WaveIcon'
 import { WorkspaceIcon } from './WorkspaceIcon'
 
 export const ICONS = {
@@ -100,6 +101,7 @@ export const ICONS = {
   ACCOUNT: 'account',
   CONNECT: 'connect',
   WALLET: 'wallet',
+  WAVE: 'wave',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -151,6 +153,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
         return (
           <IconContainer>
             <AccountIcon />
+          </IconContainer>
+        )
+      case 'wave':
+        return (
+          <IconContainer>
+            <WaveIcon />
           </IconContainer>
         )
       case 'wallet':
