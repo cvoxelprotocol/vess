@@ -1,4 +1,11 @@
-import { ApolloClient, ApolloLink, InMemoryCache, Observable, ApolloProvider } from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  InMemoryCache,
+  Observable,
+  ApolloProvider,
+  HttpLink,
+} from '@apollo/client'
 import { ComposeClient } from '@composedb/client'
 import { RuntimeCompositeDefinition } from '@composedb/types'
 import { createContext, useContext } from 'react'
@@ -29,9 +36,18 @@ const link = new ApolloLink((operation) => {
     )
   })
 })
+const secondaryLink = new HttpLink({
+  uri: 'https://api.cyberconnect.dev/',
+  // options
+})
+
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  link,
+  link: ApolloLink.split(
+    (operation) => operation.getContext()['clientName'] === 'cyberconnect',
+    secondaryLink,
+    link,
+  ),
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'network-only',
