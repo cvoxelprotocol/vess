@@ -135,11 +135,11 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
     const { tx, link, start, end, clientStr, ...rawData } = data
     const txItem: DeliverableItem = {
       format: 'tx',
-      value: tx,
+      value: tx || '',
     }
     const linkItem: DeliverableItem = {
       format: 'url',
-      value: link,
+      value: link || '',
     }
 
     const client: Client = {
