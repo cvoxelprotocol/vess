@@ -8,6 +8,7 @@ import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { DisplayProfile } from '@/@types'
 import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
+import { useStateDisplayProfile } from '@/jotai/account'
 import {
   getOrbisHelper,
   OrbisBaseResponse,
@@ -29,6 +30,7 @@ export const useSocialAccount = (did?: string) => {
   })
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { lensProfile, lensLoading } = useLensProfile(did)
+  const [displayProfile, setDisplayProfile] = useStateDisplayProfile()
 
   const { data: orbisProfile, isInitialLoading: isFetchingSocialAccount } =
     useQuery<OrbisProfileDetail | null>(
@@ -191,14 +193,49 @@ export const useSocialAccount = (did?: string) => {
   //   }
   // }
 
+  const pickCcProfile = () => {
+    if (!ccProfile) return
+    setDisplayProfile({
+      avatarSrc: ccProfile?.avatar || undefined,
+      displayName: ccProfile?.handle || (!!did ? formatDID(did, 12) : ''),
+      bio: ccProfile?.metadataInfo?.bio || '',
+    })
+  }
+
+  const pickLensProfile = () => {
+    if (!lensProfile) return
+    setDisplayProfile({
+      avatarSrc: lensProfile?.avatar || undefined,
+      displayName: lensProfile?.name || (!!did ? formatDID(did, 12) : ''),
+      bio: lensProfile?.bio || '',
+    })
+  }
+
+  const pickEnsProfile = () => {
+    if (!lensProfile) return
+    setDisplayProfile({
+      avatarSrc: ensAvatar || undefined,
+      displayName: ensName || (!!did ? formatDID(did, 12) : ''),
+      bio: displayProfile?.bio || '',
+    })
+  }
+
+  const pickDefaultProfile = () => {
+    setDisplayProfile({
+      avatarSrc:
+        orbisProfile?.pfp || lensProfile?.avatar || ensAvatar || ccProfile?.avatar || undefined,
+      displayName:
+        orbisProfile?.username ||
+        lensProfile?.name ||
+        ensName ||
+        ccProfile?.handle ||
+        (!!did ? formatDID(did, 12) : ''),
+      bio: orbisProfile?.description || lensProfile?.bio || ccProfile?.metadataInfo?.bio || '',
+    })
+  }
+
   const profile = useMemo<DisplayProfile>(() => {
-    if (ensAvatarLoading || ensLoading || ccLoading || lensLoading) {
-      return {
-        avatarSrc: orbisProfile?.pfp || undefined,
-        displayName: orbisProfile?.username || (!!did ? formatDID(did, 12) : ''),
-        bio: orbisProfile?.description || '',
-      }
-    }
+    if (displayProfile) return displayProfile
     return {
       avatarSrc:
         orbisProfile?.pfp || lensProfile?.avatar || ensAvatar || ccProfile?.avatar || undefined,
@@ -210,12 +247,31 @@ export const useSocialAccount = (did?: string) => {
         (!!did ? formatDID(did, 12) : ''),
       bio: orbisProfile?.description || lensProfile?.bio || ccProfile?.metadataInfo?.bio || '',
     }
-  }, [orbisProfile, ensAvatar, ensName, ccProfile, lensProfile])
+  }, [orbisProfile, ensAvatar, ensName, ccProfile, lensProfile, displayProfile])
+
+  const haslens = useMemo<boolean>(() => {
+    return !lensLoading || !!lensProfile?.name
+  }, [lensProfile, lensLoading])
+
+  const hasCc = useMemo<boolean>(() => {
+    return !ccLoading && !!ccProfile?.handle
+  }, [ccProfile, ccLoading])
+
+  const hasEns = useMemo<boolean>(() => {
+    return !ensLoading && !!ensName
+  }, [ensName, ensLoading])
 
   return {
     profile,
     isFetchingSocialAccount,
     updateOrbisProfile,
     orbisProfile,
+    pickCcProfile,
+    pickLensProfile,
+    pickEnsProfile,
+    pickDefaultProfile,
+    haslens,
+    hasCc,
+    hasEns,
   }
 }

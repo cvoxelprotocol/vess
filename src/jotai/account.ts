@@ -1,5 +1,6 @@
 import { atom, useAtom, useSetAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { DisplayProfile } from '@/@types'
 
 export const LOGIN_TYPE_KEY = 'vess-org-login-type'
 
@@ -40,3 +41,7 @@ export const loginType = atomWithStorage<'wallet' | 'cloud' | undefined>(LOGIN_T
 export const useStateLoginType = () => useAtom(loginType)
 export const useSetStateLoginType = () => useSetAtom(loginType)
 export const useLoginType = () => useAtomValue(loginType)
+
+export const displayProfile = atom<DisplayProfile | null>(null)
+
+export const useStateDisplayProfile = () => useAtom(displayProfile)
