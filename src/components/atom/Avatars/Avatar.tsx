@@ -45,7 +45,7 @@ const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
   return (
     <AvatarContainer>
       <AvatarContent src={url} alt={url} />
-      <FallbackContent delayMs={2000}>
+      <FallbackContent delayMs={500}>
         <AvatarPlaceholder size={size} />
       </FallbackContent>
     </AvatarContainer>
