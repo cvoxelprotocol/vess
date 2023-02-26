@@ -23,6 +23,20 @@ export const TAGS: TagOption[] = [
   { value: 'Solana', label: 'Solana' },
 ]
 
+export const SKILLS: TagOption[] = [
+  { value: 'dev', label: 'dev' },
+  { value: 'solidity', label: 'solidity' },
+  { value: 'marketing', label: 'marketing' },
+  { value: 'design', label: 'design' },
+  { value: 'research', label: 'research' },
+  { value: 'BizDev', label: 'BizDev' },
+  { value: 'Ceramic', label: 'Ceramic' },
+  { value: 'Ethereum', label: 'Ethereum' },
+  { value: 'IPFS', label: 'IPFS' },
+  { value: 'Polygon', label: 'Polygon' },
+  { value: 'Solana', label: 'Solana' },
+]
+
 export const EVENT_TAGS: TagOption[] = [
   { value: 'Conference', label: 'Conference' },
   { value: 'Hackathon', label: 'Hackathon' },

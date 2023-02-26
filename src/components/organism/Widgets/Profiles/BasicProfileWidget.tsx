@@ -50,6 +50,8 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     ${getBasicFont(currentTypo.body.medium)};
     height: 100px;
     overflow-y: scroll;
+    word-break: break-word;
+    white-space: pre-wrap;
   `
 
   const handleEdit = () => {

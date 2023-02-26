@@ -24,7 +24,7 @@ export const useSocialAccount = (did?: string) => {
 
   const { data: orbisProfile, isInitialLoading: isFetchingSocialAccount } =
     useQuery<OrbisProfileDetail | null>(
-      ['fetchOrbisProfile', did],
+      ['orbisProfile', did],
       () => orbisHelper.fetchOrbisProfile(did),
       {
         enabled: !!did && did !== '',
@@ -38,10 +38,15 @@ export const useSocialAccount = (did?: string) => {
     unknown,
     UpdateOrbisProfileParam
   >((param) => orbisHelper.updateOrbisProfile(param), {
-    onMutate() {
+    onMutate: async (variables) => {
       showLoading()
+      // ootimistic mutation
+      await queryClient.cancelQueries(['orbisProfile', did])
+      const optimistic = { ...variables.content }
+      queryClient.setQueryData(['orbisProfile', did], () => optimistic)
+      return { optimistic }
     },
-    onSuccess(data) {
+    onSuccess(data, v, _) {
       if (data.status === 200) {
         closeLoading()
         showToast(BUSINESS_PROFILE_SET_SUCCEED)
@@ -50,14 +55,13 @@ export const useSocialAccount = (did?: string) => {
         showToast(BUSINESS_PROFILE_SET_FAILED)
         console.error(data.result)
       }
+      queryClient.setQueryData(['orbisProfile', did], () => v.content)
     },
     onError(error) {
       console.error('error', error)
+      queryClient.invalidateQueries(['orbisProfile', did])
       closeLoading()
       showToast(BUSINESS_PROFILE_SET_FAILED)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(['fetchOrbisProfile', did])
     },
   })
 

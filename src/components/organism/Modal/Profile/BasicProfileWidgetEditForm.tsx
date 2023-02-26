@@ -13,7 +13,7 @@ import {
   WORK_STATUS,
   WORK_STYLES,
 } from '@/constants/businessProfile'
-import { TAGS } from '@/constants/tags'
+import { SKILLS, TAGS } from '@/constants/tags'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -115,11 +115,18 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
           {/* <MultiInput label={'bio'} name={`bio`} control={control} error={errors.bio?.message} /> */}
           <TagSelect
             control={control}
+            name={'skills'}
+            label={'Skills'}
+            error={errors.skills?.message}
+            options={SKILLS}
+          />
+          {/* <TagSelect
+            control={control}
             name={'tags'}
             label={'Tags'}
             error={errors.tags?.message}
             options={TAGS}
-          />
+          /> */}
           <Input
             label={'Base Location'}
             name={`baseLocation`}
@@ -174,12 +181,6 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
             iconSize={'MM'}
             options={PAYMENT_METHODS}
             error={errors.paymentMethods?.message}
-          />
-          <TagSelect
-            control={control}
-            name={'skills'}
-            label={'Skills'}
-            error={errors.skills?.message}
           />
           {/* <TagSelect
             control={control}
