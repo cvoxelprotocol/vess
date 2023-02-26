@@ -7,6 +7,7 @@ import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
+import { SocialLinkItem } from '@/components/molecure/Profile/SocialLinkItem'
 import { PROOF_OF_CONNECTION_FAILED, PROOF_OF_CONNECTION_ISSUED } from '@/constants/toastMessage'
 import {
   ConnectionInput,
@@ -16,6 +17,7 @@ import {
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -44,14 +46,17 @@ export const IssueConnectionContainer: FC = () => {
     })
   const [createConnection] = useCreateConnectionMutation()
 
-  const { profile } = useSocialAccount(
-    invitation?.node?.__typename === 'ConnectionInvitation' ? invitation?.node?.did?.did : '',
-  )
+  const inviterId = useMemo(() => {
+    return invitation?.node?.__typename === 'ConnectionInvitation' ? invitation.node.did.did : ''
+  }, [invitation])
+
+  const { profile } = useSocialAccount(inviterId)
   const { eventDetail } = useEventAttendance(
     invitation?.node?.__typename === 'ConnectionInvitation' && invitation?.node?.eventId
       ? invitation?.node?.eventId
       : '',
   )
+  const { twitter, telegram } = useSocialLinks(inviterId)
 
   const Wrapper = styled.main`
     width: 100%;
@@ -101,10 +106,6 @@ export const IssueConnectionContainer: FC = () => {
     color: ${currentTheme.onBackground};
     ${getBasicFont(currentTypo.body.medium)};
   `
-
-  const inviterId = useMemo(() => {
-    return invitation?.node?.__typename === 'ConnectionInvitation' ? invitation.node.did.did : ''
-  }, [invitation])
 
   const issueConnection = async () => {
     if (!did) return
@@ -189,6 +190,10 @@ export const IssueConnectionContainer: FC = () => {
                 </Flex>
               </Flex>
             )}
+            <Flex colGap='4px' rowGap='4px'>
+              <SocialLinkItem linkType={'telegram'} value={telegram} />
+              <SocialLinkItem linkType={'twitter'} value={twitter} />
+            </Flex>
             {invitation?.node?.__typename === 'ConnectionInvitation' &&
               invitation?.node?.greeting && <Greeting>{invitation?.node?.greeting}</Greeting>}
             {!did ? (
