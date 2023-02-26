@@ -105,7 +105,7 @@ export const HomeContainer: FC = () => {
   return (
     <Wrapper>
       <SectionHeader>
-        {did ? 'Proof of ETH Denver Connection' : 'Are you at ETH Denver?'}
+        {did ? '👋 Proof of ETH Denver Connection' : 'Are you at ETH Denver?'}
       </SectionHeader>
       <MainContent>
         {did ? (

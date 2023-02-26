@@ -58,7 +58,7 @@ export const BaseHeader: FC = () => {
   `
 
   const getTitle = useMemo(() => {
-    if (router.asPath === '/connection/list') return 'Timeline'
+    if (router.asPath === '/connection/list') return '👋 at ETHDenver'
     if (router.asPath.startsWith('/did')) return 'Profile'
     return ''
   }, [router])

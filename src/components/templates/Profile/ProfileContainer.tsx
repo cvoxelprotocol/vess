@@ -51,7 +51,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     width: 100%;
     padding: 12px 16px;
     @media (max-width: 599px) {
-      padding: 12px 16px 0px;
+      padding: 12px 16px;
     }
   `
   const ProfileContainer = styled.div`
@@ -107,37 +107,37 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     return <></>
   }
   return (
-    <Container id={'Container'}>
+    <Container>
+      <ActionContainer>
+        <Flex justifyContent='flex-end' alignItems='center' width='100%'>
+          {myDID && myDID === did && (
+            <>
+              {!focusEditable ? (
+                <Button
+                  variant='outlined'
+                  text='Edit'
+                  onClick={() => setFocusEditable(true)}
+                  mainColor={currentTheme.outline}
+                  textColor={currentTheme.onSurface}
+                  size={'S'}
+                  icon={ICONS.EDIT}
+                />
+              ) : (
+                <Button
+                  variant='outlined'
+                  text='Done'
+                  onClick={() => setFocusEditable(false)}
+                  mainColor={currentTheme.outline}
+                  textColor={currentTheme.onSurface}
+                  size={'S'}
+                  icon={ICONS.CHECKED}
+                />
+              )}
+            </>
+          )}
+        </Flex>
+      </ActionContainer>
       <ProfileContainer>
-        <ActionContainer>
-          <Flex justifyContent='flex-end' alignItems='center' width='100%'>
-            {myDID && myDID === did && (
-              <>
-                {!focusEditable ? (
-                  <Button
-                    variant='outlined'
-                    text='Edit'
-                    onClick={() => setFocusEditable(true)}
-                    mainColor={currentTheme.outline}
-                    textColor={currentTheme.onSurface}
-                    size={'S'}
-                    icon={ICONS.EDIT}
-                  />
-                ) : (
-                  <Button
-                    variant='outlined'
-                    text='Done'
-                    onClick={() => setFocusEditable(false)}
-                    mainColor={currentTheme.outline}
-                    textColor={currentTheme.onSurface}
-                    size={'S'}
-                    icon={ICONS.CHECKED}
-                  />
-                )}
-              </>
-            )}
-          </Flex>
-        </ActionContainer>
         <Profile>
           <BasicProfileWidget
             did={did}
