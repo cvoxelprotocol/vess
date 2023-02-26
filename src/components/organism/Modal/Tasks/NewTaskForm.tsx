@@ -142,20 +142,24 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
       value: link || '',
     }
 
-    const client: Client = {
-      format: clientStr?.startsWith('did:') ? 'did' : 'name',
-      value: clientStr,
-    }
+    const client: Client | null = clientStr
+      ? {
+          format: clientStr?.startsWith('did:') ? 'did' : 'name',
+          value: clientStr,
+        }
+      : null
 
-    const content: TaskCredential = removeUndefined<TaskCredential>({
+    let content: TaskCredential = removeUndefined<TaskCredential>({
       deliverables: [txItem, linkItem],
       startDate: start?.toISOString() || '',
       endDate: end?.toISOString() || '',
-      client: client,
       createdAt: today.toISOString(),
       updatedAt: today.toISOString(),
       ...rawData,
     })
+    if (client) {
+      content.client = client
+    }
     console.log({ content })
     const res = await createTask(content)
     if (isModal) {
