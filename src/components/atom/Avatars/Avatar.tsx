@@ -9,9 +9,10 @@ interface AvatarProps {
   url?: string
   userName?: string
   size?: IconSize
+  fill?: boolean
 }
 
-const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
+const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName, fill = false }) => {
   const { currentTheme } = useVESSTheme()
 
   const AvatarContainer = styled(radixAvatar.Root)`
@@ -21,8 +22,8 @@ const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
     vertical-align: middle;
     overflow: hidden;
     user-select: none;
-    width: ${ICONSIZE[size]};
-    height: ${ICONSIZE[size]};
+    width: ${fill ? '100%' : ICONSIZE[size]};
+    height: ${fill ? '100%' : ICONSIZE[size]};
     border-radius: 100%;
     background-color: var(--blackA3);
   `
@@ -46,7 +47,7 @@ const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName }) => {
     <AvatarContainer>
       <AvatarContent src={url} alt={url} />
       <FallbackContent delayMs={500}>
-        <AvatarPlaceholder size={size} />
+        <AvatarPlaceholder size={size} fill />
       </FallbackContent>
     </AvatarContainer>
   )
