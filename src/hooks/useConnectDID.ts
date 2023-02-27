@@ -47,6 +47,7 @@ export const useConnectDID = () => {
     try {
       // connect vess sdk
       const res = await connectAsync({ connector })
+      // await connectAsync({ connector })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
       const ethProvider =
         connector?.id === 'walletConnect' ? (res.provider as any).provider : window.ethereum
@@ -61,9 +62,9 @@ export const useConnectDID = () => {
       setConnectionStatus('connected')
       setStateLoginType('wallet')
 
-      // issue credentials from DB
-      issueHeldEventFromBackup(session.did.parent)
-      issueHeldMembershipFromBackup(session.did.parent)
+      // issue credentials from DB //temporary closed for ETHDenver
+      // issueHeldEventFromBackup(session.did.parent)
+      // issueHeldMembershipFromBackup(session.did.parent)
       queryClient.invalidateQueries(['hasAuthorizedSession'])
       return true
     } catch (error) {

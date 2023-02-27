@@ -9,7 +9,8 @@
     "lint": "next lint --dir src",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "bundle-analyzer": "ANALYZE=true yarn build"
   },
   "dependencies": {
     "@apollo/client": "^3.7.9",
@@ -36,7 +37,6 @@
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
     "ethers": "^5",
-    "firebase": "^9.16.0",
     "graphql": "^16.6.0",
     "jotai": "^1.12.1",
     "modern-css-reset": "^1.4.0",
@@ -47,7 +47,6 @@
     "react-date-picker": "^9.2.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",
-    "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.42.1",
     "react-lottie-player": "^1.5.4",
     "react-select": "^5.7.0",
@@ -62,8 +61,8 @@
     "@graphql-codegen/typescript": "^3.0.1",
     "@graphql-codegen/typescript-operations": "^3.0.1",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@next/bundle-analyzer": "^13.2.1",
     "@types/color": "^3.0.3",
-    "@types/firebase": "^3.2.1",
     "@types/gtag.js": "^0.0.12",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
