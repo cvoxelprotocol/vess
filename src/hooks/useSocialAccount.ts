@@ -27,8 +27,8 @@ export const useSocialAccount = (did?: string) => {
   const { data: ensName, isFetched: isFetchedEnsName } = useEnsName({
     address: getAddressFromPkhForWagmi(did),
   })
-  const { ccProfile: ccProfileData, ccLoading } = useCcProfile(did)
-  const { lensProfile: lensProfileData, lensLoading } = useLensProfile(did)
+  const { ccProfile, ccLoading } = useCcProfile(did)
+  const { lensProfile, lensLoading } = useLensProfile(did)
 
   const { data: orbisProfile, isInitialLoading: isOrbisLoading } =
     useQuery<OrbisProfileDetail | null>(
@@ -73,24 +73,6 @@ export const useSocialAccount = (did?: string) => {
     },
   })
 
-  const ccProfile = useMemo<DisplayProfile | null>(() => {
-    if (!ccProfileData) return null
-    return {
-      avatarSrc: ccProfileData?.avatar || undefined,
-      displayName: ccProfileData?.handle || (!!did ? formatDID(did, 12) : ''),
-      bio: ccProfileData?.metadataInfo?.bio || '',
-    }
-  }, [ccProfileData])
-
-  const lensProfile = useMemo<DisplayProfile | null>(() => {
-    if (!lensProfileData) return null
-    return {
-      avatarSrc: lensProfileData?.avatar || undefined,
-      displayName: lensProfileData?.name || (!!did ? formatDID(did, 12) : ''),
-      bio: lensProfileData?.bio || '',
-    }
-  }, [lensProfileData])
-
   const ensProfile = useMemo<DisplayProfile | null>(() => {
     if (!ensName) return null
     return {
@@ -112,17 +94,16 @@ export const useSocialAccount = (did?: string) => {
       avatarSrc:
         orbisProfile?.pfp && orbisProfile?.pfp !== ''
           ? orbisProfile?.pfp
-          : ccProfileData?.avatar || lensProfileData?.avatar || ensAvatar || undefined,
+          : ccProfile?.avatarSrc || lensProfile?.avatarSrc || ensAvatar || undefined,
       displayName:
         orbisProfile?.username ||
-        ccProfileData?.handle ||
-        lensProfileData?.name ||
+        ccProfile?.displayName ||
+        lensProfile?.displayName ||
         ensName ||
         (!!did ? formatDID(did, 12) : ''),
-      bio:
-        orbisProfile?.description || ccProfileData?.metadataInfo?.bio || lensProfileData?.bio || '',
+      bio: orbisProfile?.description || ccProfile?.bio || lensProfile?.bio || '',
     }
-  }, [orbisProfile, ensAvatar, ensName, ccProfileData, lensProfileData])
+  }, [orbisProfile, ensAvatar, ensName, ccProfile, lensProfile])
 
   return {
     profile,
