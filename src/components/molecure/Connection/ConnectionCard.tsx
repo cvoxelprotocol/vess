@@ -33,12 +33,12 @@ export const ConnectionCard: FC<Props> = ({ count, userId, invitation, connectAt
     position: relative;
   `
   const CardContainer = styled.div`
-    background: ${currentTheme.surface};
+    background: ${currentTheme.depth1};
     &:hover {
-      background: ${currentTheme.surface1};
+      background: ${currentTheme.surface2};
     }
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 32ypx;
     border: solid ${'hsla(342, 50%, 46%, 1)'};
     border-width: 1px;
     width: 216px;

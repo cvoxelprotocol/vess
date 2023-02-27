@@ -38,6 +38,8 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
     nextFetchPolicy: 'network-only',
   })
   const Wrapper = styled.div`
+    display: flex;
+    justify-content: center;
     width: 100%;
   `
   const MembersContainer = styled.div`
@@ -45,12 +47,13 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 12px;
+    justify-content: start;
     text-align: center;
-    @media (max-width: 1517px) {
-      grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 1079px) {
+      grid-template-columns: repeat(auto-fit, 216px);
     }
     @media (max-width: 599px) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, 1fr);
       grid-gap: 8px;
     }
   `
