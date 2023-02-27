@@ -4,6 +4,7 @@ import { Button } from '@/components/atom/Buttons/Button'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperienceCard } from '@/components/molecure/Profile/Experiences/ExperienceCard'
+import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
 import { useSelfClaimedMembership } from '@/hooks/useSelfClaimedMembership'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -19,6 +20,7 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
   const { displayHeldMembership, isFetchingHeldMembershipSubjects } = useHeldMembershipSubject(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
   const { openMembershipModal } = useVESSWidgetModal()
+  const { did: myDID } = useDIDAccount()
 
   const hasMemberships = useMemo(() => {
     if (isFetchingHeldMembershipSubjects) return false
@@ -78,16 +80,18 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
     <>
       <ItemHeader>
         <HeaderText>Experiences</HeaderText>
-        <Button
-          variant='outlined'
-          text='Edit'
-          onClick={() => handleEdit()}
-          mainColor={currentTheme.outline}
-          textColor={currentTheme.outline}
-          size={'S'}
-          icon={ICONS.EDIT}
-          btnWidth={'80px'}
-        />
+        {myDID === did && (
+          <Button
+            variant='outlined'
+            text='Edit'
+            onClick={() => handleEdit()}
+            mainColor={currentTheme.outline}
+            textColor={currentTheme.outline}
+            size={'S'}
+            icon={ICONS.EDIT}
+            btnWidth={'80px'}
+          />
+        )}
       </ItemHeader>
       <Container>
         {!hasMemberships ? (
