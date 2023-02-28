@@ -39,16 +39,15 @@ export const BaseWidget: FC<Props> = ({
   const [showEdit, setShowEdit] = useState(false)
   const [focusEditable, _] = useStateFocusEditable()
   const { radius, radiusOnSp } = useWidgetRaduis({ gridRow, gridCol, gridRowOnSp, gridColOnSp })
-  const [btnOpacity, setBtnOpacity] = useState(0)
 
-  useEffect(() => {
+  const editBtnOpa = useMemo(() => {
     if (showEdit) {
-      setBtnOpacity(0)
+      return 0
     }
     if (focusEditable) {
-      setBtnOpacity(1)
+      return 1
     } else {
-      setBtnOpacity(0)
+      return 0
     }
   }, [showEdit, focusEditable])
 
@@ -78,7 +77,7 @@ export const BaseWidget: FC<Props> = ({
 
   const fadeIn = keyframes`
     from {
-      opacity: ${btnOpacity};
+      opacity: ${editBtnOpa};
     }
     
     to {
