@@ -38,7 +38,7 @@ export const ConnectionCard: FC<Props> = ({ count, userId, invitation, connectAt
       background: ${currentTheme.surface2};
     }
     overflow: hidden;
-    border-radius: 32ypx;
+    border-radius: 32px;
     border: solid ${'hsla(342, 50%, 46%, 1)'};
     border-width: 1px;
     width: 216px;
