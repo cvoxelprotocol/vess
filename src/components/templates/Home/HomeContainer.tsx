@@ -75,7 +75,7 @@ export const HomeContainer: FC = () => {
   `
 
   const LogoContainer = styled.div`
-    width: 380px;
+    width: 240px;
     @media (max-width: 599px) {
       width: 200px;
     }

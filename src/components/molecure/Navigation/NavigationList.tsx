@@ -49,7 +49,7 @@ export const NavigationList: FC = () => {
   `
 
   useEffect(() => {
-    const naviItem = getNaviItem(router.asPath)
+    const naviItem = getNaviItem(router.asPath, did)
     if (naviItem.item === item) return
     setItem(naviItem.item)
   }, [router])

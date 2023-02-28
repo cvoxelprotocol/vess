@@ -47,8 +47,9 @@ export const LoginCard: FC = () => {
     margin: 0 auto;
   `
   const LogoContainer = styled.div`
-    width: 200px;
+    width: 120px;
     min-height: 64px;
+    margin: 0 auto;
   `
 
   return (
@@ -58,7 +59,7 @@ export const LoginCard: FC = () => {
       </CardHeader>
       <ActionContainer>
         <LogoContainer>
-          <NextImageContainer src={'/logo_bard.png'} width={'200px'} objectFit={'contain'} />
+          <NextImageContainer src={'/logo_bard.png'} width={'120px'} objectFit={'contain'} />
         </LogoContainer>
         <Button
           variant='filled'
