@@ -128,9 +128,10 @@ type IconProps = {
   size?: IconSize
   mainColor?: string
   focusColor?: string
+  fill?: boolean
 }
 
-export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor }) => {
+export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, fill = false }) => {
   const IconContainer = styled.span`
     color: ${mainColor};
     &:active {
@@ -141,8 +142,8 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor })
       transition: all 0.15s ease-out;
       color: ${focusColor || mainColor};
     }
-    width: ${ICONSIZE[size]};
-    height: ${ICONSIZE[size]};
+    width: ${fill ? '100%' : ICONSIZE[size]};
+    height: ${fill ? '100%' : ICONSIZE[size]};
     display: flex;
     align-items: center;
     justify-items: center;

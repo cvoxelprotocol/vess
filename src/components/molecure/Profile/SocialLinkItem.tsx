@@ -23,8 +23,6 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
     background: ${currentTheme.surface2};
     border-radius: 12px;
     width: 56px;
@@ -34,6 +32,16 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
       height: 44px;
     }
     opacity: ${value || linkType === 'more' ? 1 : 0.4};
+  `
+
+  const IconWrapper = styled.div`
+    width: 32px;
+    height: 32px;
+
+    @media (max-width: 599px) {
+      width: 24px;
+      height: 24px;
+    }
   `
 
   const handleClick = () => {
@@ -55,7 +63,9 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
 
   return (
     <IconContainer onClick={() => handleClick()}>
-      <Icon icon={icon} size={'LL'} mainColor={currentTheme.onSurface} />
+      <IconWrapper id={'iconWraper'}>
+        <Icon icon={icon} size={'LL'} mainColor={currentTheme.onSurface} fill />
+      </IconWrapper>
     </IconContainer>
   )
 }
