@@ -5,9 +5,10 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
   size: IconSize
+  fill?: boolean
 }
 
-export const AvatarPlaceholder: FC<Props> = ({ size }) => {
+export const AvatarPlaceholder: FC<Props> = ({ size, fill = false }) => {
   const { currentTheme } = useVESSTheme()
   const AvatarContainer = styled.div`
     display: inline-flex;
@@ -16,14 +17,14 @@ export const AvatarPlaceholder: FC<Props> = ({ size }) => {
     vertical-align: middle;
     overflow: hidden;
     user-select: none;
-    width: ${ICONSIZE[size]};
-    height: ${ICONSIZE[size]};
+    width: ${fill ? '100%' : ICONSIZE[size]};
+    height: ${fill ? '100%' : ICONSIZE[size]};
     border-radius: 100%;
     background-color: var(--blackA3);
   `
   const Avatar = styled.div`
-    width: ${ICONSIZE[size]};
-    height: ${ICONSIZE[size]};
+    width: ${fill ? '100%' : ICONSIZE[size]};
+    height: ${fill ? '100%' : ICONSIZE[size]};
     background-image: linear-gradient(
       to top right,
       ${currentTheme.primary},

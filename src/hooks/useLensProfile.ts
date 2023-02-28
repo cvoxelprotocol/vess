@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { useMemo } from 'react'
+import { DisplayProfile } from '@/@types'
 import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
 
 const GET_PROFILE = gql`
@@ -26,7 +27,7 @@ export const useLensProfile = (did?: string) => {
     context: { clientName: 'lens' },
   })
 
-  const lensProfile = useMemo(() => {
+  const lensProfile = useMemo<DisplayProfile | null>(() => {
     const profile = lensProfileData?.defaultProfile
     if (!profile) return null
     const avatarUrl = profile?.picture?.original?.url as string | undefined
@@ -35,9 +36,9 @@ export const useLensProfile = (did?: string) => {
         ? avatarUrl?.replace('ipfs://', 'https://ipfs.io/ipfs/')
         : null
     return {
-      name: profile?.handle || '',
+      displayName: profile?.handle || '',
       bio: profile?.bio || '',
-      avatar: avatar || null,
+      avatarSrc: avatar || undefined,
     }
   }, [lensProfileData])
 

@@ -21,16 +21,16 @@ export const useSocialAccount = (did?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
   const queryClient = useQueryClient()
-  const { data: ensAvatar, isLoading: ensAvatarLoading } = useEnsAvatar({
+  const { data: ensAvatar } = useEnsAvatar({
     address: getAddressFromPkhForWagmi(did),
   })
-  const { data: ensName, isLoading: ensLoading } = useEnsName({
+  const { data: ensName, isFetched: isFetchedEnsName } = useEnsName({
     address: getAddressFromPkhForWagmi(did),
   })
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { lensProfile, lensLoading } = useLensProfile(did)
 
-  const { data: orbisProfile, isInitialLoading: isFetchingSocialAccount } =
+  const { data: orbisProfile, isInitialLoading: isOrbisLoading } =
     useQuery<OrbisProfileDetail | null>(
       ['orbisProfile', did],
       () => orbisHelper.fetchOrbisProfile(did),
@@ -40,16 +40,6 @@ export const useSocialAccount = (did?: string) => {
         cacheTime: 1000000,
       },
     )
-
-  // const { data: socialProfile } = useQuery<DisplayProfile | null>(
-  //   ['socialProfile', did],
-  //   () => fetchSocialProfile(did),
-  //   {
-  //     enabled: !!did && did !== '',
-  //     staleTime: Infinity,
-  //     cacheTime: 1000000,
-  //   },
-  // )
 
   const { mutateAsync: updateOrbisProfile } = useMutation<
     OrbisBaseResponse,
@@ -83,116 +73,17 @@ export const useSocialAccount = (did?: string) => {
     },
   })
 
-  // const fetchSocialProfile = async (did?: string): Promise<DisplayProfile | null> => {
-  //   if (!did) return null
-  //   const address = getAddressFromPkhForWagmi(did)
-  //   const res = await Promise.all([
-  //     fetchENS(address),
-  //     getLensProfile(address),
-  //     getCCProfile(address),
-  //   ])
-  //   // == ens ==
-  //   const ens = res[0]
-  //   const ensProfile = formatENS(ens)
-  //   // == lens ==
-  //   const lens = res[1]
-  //   const lensProfile = formatLens(lens)
-  //   // == cc ==
-  //   const cc = res[2]
-  //   const ccProfile = formatCc(cc)
-
-  //   console.log({ res })
-
-  //   return {
-  //     avatarSrc: lensProfile?.avatar || ccProfile?.avatar || ensProfile.avatar || undefined,
-  //     displayName:
-  //       lensProfile?.name ||
-  //       ccProfile?.handle ||
-  //       ensProfile.name ||
-  //       (!!did ? formatDID(did, 12) : ''),
-  //     bio: lensProfile?.bio || ccProfile?.metadataInfo?.bio || '',
-  //   }
-  // }
-
-  // const formatLens = (
-  //   lens: QueryResult<
-  //     any,
-  //     {
-  //       ethereumAddress: `0x${string}` | undefined
-  //     }
-  //   >,
-  // ) => {
-  //   const profile = lens?.data?.defaultProfile
-  //   if (!profile) return null
-  //   const avatarUrl = profile?.picture?.original?.url as string | undefined
-  //   const avatar =
-  //     avatarUrl && avatarUrl?.startsWith('ipfs://')
-  //       ? avatarUrl?.replace('ipfs://', 'https://ipfs.io/ipfs/')
-  //       : null
-  //   return {
-  //     name: profile?.handle || '',
-  //     bio: profile?.bio || '',
-  //     avatar: avatar || null,
-  //   }
-  // }
-  // const formatCc = (
-  //   cc: QueryResult<
-  //     any,
-  //     {
-  //       address: `0x${string}` | undefined
-  //     }
-  //   >,
-  // ) => {
-  //   const edges = cc?.data.address?.wallet?.profiles?.edges
-  //   if (!edges) return null
-  //   if (edges?.length == 0) return null
-  //   return edges[0]?.node
-  // }
-
-  // const formatENS = (
-  //   ens: {
-  //     isMigrated: boolean | null
-  //     createdAt: string | null
-  //     address?: string | undefined
-  //     name?: string | null | undefined
-  //     decryptedName?: string | null | undefined
-  //     match?: boolean | undefined
-  //     message?: string | undefined
-  //     records?:
-  //       | {
-  //           contentHash?: string | any | null | undefined
-  //           texts?:
-  //             | {
-  //                 key: string | number
-  //                 type: 'text' | 'addr' | 'contentHash'
-  //                 coin?: string | undefined
-  //                 value: string
-  //               }[]
-  //             | undefined
-  //           coinTypes?:
-  //             | {
-  //                 key: string | number
-  //                 type: 'text' | 'addr' | 'contentHash'
-  //                 coin?: string | undefined
-  //                 value: string
-  //               }[]
-  //             | undefined
-  //         }
-  //       | undefined
-  //     resolverAddress?: string | undefined
-  //     isInvalidResolverAddress?: boolean | undefined
-  //     reverseResolverAddress?: string | undefined
-  //   } | null,
-  // ) => {
-  //   return {
-  //     name: ens?.decryptedName || '',
-  //     bio: ens?.records?.texts?.find((t) => t.key === 'description')?.value || '',
-  //     avatar: ens?.records?.texts?.find((t) => t.key === 'avatar')?.value || null,
-  //   }
-  // }
+  const ensProfile = useMemo<DisplayProfile | null>(() => {
+    if (!ensName) return null
+    return {
+      avatarSrc: ensAvatar || undefined,
+      displayName: ensName || (!!did ? formatDID(did, 12) : ''),
+      bio: '',
+    }
+  }, [ensName, ensAvatar])
 
   const profile = useMemo<DisplayProfile>(() => {
-    if (ensAvatarLoading || ensLoading || ccLoading || lensLoading) {
+    if (!isFetchedEnsName || ccLoading || lensLoading || isOrbisLoading) {
       return {
         avatarSrc: orbisProfile?.pfp || undefined,
         displayName: orbisProfile?.username || (!!did ? formatDID(did, 12) : ''),
@@ -201,21 +92,25 @@ export const useSocialAccount = (did?: string) => {
     }
     return {
       avatarSrc:
-        orbisProfile?.pfp || lensProfile?.avatar || ensAvatar || ccProfile?.avatar || undefined,
+        orbisProfile?.pfp && orbisProfile?.pfp !== ''
+          ? orbisProfile?.pfp
+          : ccProfile?.avatarSrc || lensProfile?.avatarSrc || ensAvatar || undefined,
       displayName:
         orbisProfile?.username ||
-        lensProfile?.name ||
+        ccProfile?.displayName ||
+        lensProfile?.displayName ||
         ensName ||
-        ccProfile?.handle ||
         (!!did ? formatDID(did, 12) : ''),
-      bio: orbisProfile?.description || lensProfile?.bio || ccProfile?.metadataInfo?.bio || '',
+      bio: orbisProfile?.description || ccProfile?.bio || lensProfile?.bio || '',
     }
   }, [orbisProfile, ensAvatar, ensName, ccProfile, lensProfile])
 
   return {
     profile,
-    isFetchingSocialAccount,
     updateOrbisProfile,
     orbisProfile,
+    ccProfile,
+    lensProfile,
+    ensProfile,
   }
 }

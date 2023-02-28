@@ -40,17 +40,21 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
     @media (max-width: 599px) {
       flex-direction: column;
       align-items: center;
-      padding: 8px 24px;
+      padding: 24px 16px;
       gap: 8px;
+      width: 292px;
     }
   `
   const InfoContainer = styled.div`
     flex-grow: 1;
     gap: 8px;
+    padding-top: 8px;
     display: flex;
     flex-direction: column;
     @media (max-width: 599px) {
       width: 100%;
+      padding-top: 0px;
+      gap: 4px;
     }
   `
 
@@ -58,15 +62,16 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
     color: ${currentTheme.primary};
     ${getBasicFont(currentTypo.headLine.medium)};
     @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.large)};
+      ${getBasicFont(currentTypo.title.exLarge || currentTypo.title.large)};
     }
   `
   const Project = styled.div`
     display: flex;
     align-items: center;
+    gap: 6px;
   `
   const ProjectName = styled.p`
-    color: ${currentTheme.onBackground};
+    color: ${currentTheme.onSurface};
     ${getBasicFont(currentTypo.title.large)};
     @media (max-width: 599px) {
       ${getBasicFont(currentTypo.title.small)};
@@ -78,6 +83,7 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
     ${getBasicFont(currentTypo.label.large)};
     @media (max-width: 599px) {
       ${getBasicFont(currentTypo.label.medium)};
+      padding-top: 4px;
     }
   `
   if (item) {

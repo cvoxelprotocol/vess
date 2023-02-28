@@ -1,5 +1,6 @@
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { FC, useState } from 'react'
+import { FC, useState, useMemo, useEffect } from 'react'
 import { IconButton } from '../Buttons/IconButton'
 import { ICONS } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -28,7 +29,7 @@ export const BaseWidget: FC<Props> = ({
   gridColOnSp,
   children,
   background,
-  EditButtonPosition = '12px',
+  EditButtonPosition = '-10px',
   onClickEdit,
   border = 'none',
   editable = false,
@@ -38,16 +39,63 @@ export const BaseWidget: FC<Props> = ({
   const [showEdit, setShowEdit] = useState(false)
   const [focusEditable, _] = useStateFocusEditable()
   const { radius, radiusOnSp } = useWidgetRaduis({ gridRow, gridCol, gridRowOnSp, gridColOnSp })
+  const [btnOpacity, setBtnOpacity] = useState(0)
+
+  useEffect(() => {
+    if (showEdit) {
+      setBtnOpacity(0)
+    }
+    if (focusEditable) {
+      setBtnOpacity(1)
+    } else {
+      setBtnOpacity(0)
+    }
+  }, [showEdit, focusEditable])
+
+  const shake = keyframes`
+    0% {
+      transform: rotate(0deg);
+    }
+    33% {
+      transform: rotate(0.5deg);
+    }
+    66%{
+      transform: rotate(-0.5deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+    `
+
+  const fadeIn = keyframes`
+    from {
+      opacity: ${btnOpacity};
+    }
+    
+    to {
+      opacity: 1;
+    } 
+    `
+  const fadeOut = keyframes`
+    from {
+      opacity: 1;
+    }
+    
+    to {
+      opacity: 0;
+    }
+    `
 
   const Container4Edit = styled.div`
+    position: relative;
     grid-column: ${gridCol};
     grid-row: ${gridRow};
 
     @media (max-width: 599px) {
       grid-column: ${gridColOnSp};
       grid-row: ${gridRowOnSp};
+      animation: ${focusEditable && editable ? shake : undefined} 0.5s linear infinite;
     }
-    position: relative;
   `
   const Container = styled.div`
     overflow: ${overflow};
@@ -66,17 +114,18 @@ export const BaseWidget: FC<Props> = ({
     left: 0;
     bottom: 0;
   `
+
   const EditButton = styled.div`
     position: absolute;
     top: ${EditButtonPosition};
     right: ${EditButtonPosition};
     z-index: 10;
-    transition: all 0.15s ease-out;
-    opacity: ${showEdit ? 1 : 0};
     pointer-events: ${showEdit ? 'auto' : 'none'};
     cursor: pointer;
+    opacity: 0;
+    animation: ${showEdit || focusEditable ? fadeIn : undefined} 0.15s ease-in-out forwards;
+    transition: all 0.15s ease-in-out;
     @media (max-width: 599px) {
-      opacity: ${focusEditable ? 1 : 0};
       pointer-events: ${focusEditable ? 'auto' : 'none'};
     }
   `

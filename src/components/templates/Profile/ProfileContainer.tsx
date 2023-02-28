@@ -153,7 +153,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
             gridCol={'1/7'}
             gridRowOnSp={'5/6'}
             gridColOnSp={'1/7'}
-            editable={false}
+            editable={isMe}
             EditButtonPosition={'-10px'}
           />
           <HighlightedMembershipWidget

@@ -30,6 +30,10 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
   }
   const Container = styled.div`
     padding: 16px;
+    height: 100%;
+    @media (max-width: 599px) {
+      padding: 12px;
+    }
   `
 
   return (
@@ -41,7 +45,11 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
           ) : (
             <>
               {!businessProfile?.tags || businessProfile?.tags.length === 0 ? (
-                <NoItem text='' color={currentTheme.outline} font={currentTypo.title.small} />
+                <NoItem
+                  text={props.editable ? 'Add your skills' : 'No skills are set'}
+                  color={currentTheme.outline}
+                  font={currentTypo.title.small}
+                />
               ) : (
                 <>
                   {businessProfile?.skills &&
