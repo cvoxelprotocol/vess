@@ -1,9 +1,6 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
-import { useState } from 'react'
-
 type Props = {
   children: React.ReactNode
 }

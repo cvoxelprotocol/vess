@@ -1,17 +1,16 @@
 import styled from '@emotion/styled'
 import { FC, useMemo, useState } from 'react'
+import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
-import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
+import { SourceDrawer } from '@/components/molecure/Profile/SourceDrawer'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { profileType } from '@/jotai/account'
 import { shortenStr } from '@/utils/objectUtil'
-import { SourceDrawer } from '@/components/molecure/Profile/SourceDrawer'
-import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 
 type Props = {
   did: string
