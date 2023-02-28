@@ -34,23 +34,27 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = as
 
   if (isDIDstring(did)) {
     support = 'supported'
-    try {
-      const orbisHelper = getOrbisHelper()
-      const Profile = queryClient.prefetchQuery<OrbisProfileDetail | null>(
-        ['fetchOrbisProfile', did],
-        () => orbisHelper.fetchOrbisProfile(did),
-        {
-          staleTime: Infinity,
-          cacheTime: 1000000,
-        },
-      )
-      await Promise.all([Profile])
-      return {
-        props: { did: did.toLowerCase(), support, dehydratedState: dehydrate(queryClient) },
-        revalidate: 60,
-      }
-    } catch (error) {
-      console.error(error)
+    // try {
+    //   const orbisHelper = getOrbisHelper()
+    //   const Profile = queryClient.prefetchQuery<OrbisProfileDetail | null>(
+    //     ['fetchOrbisProfile', did],
+    //     () => orbisHelper.fetchOrbisProfile(did),
+    //     {
+    //       staleTime: Infinity,
+    //       cacheTime: 1000000,
+    //     },
+    //   )
+    //   await Promise.all([Profile])
+    //   return {
+    //     props: { did: did.toLowerCase(), support, dehydratedState: dehydrate(queryClient) },
+    //     revalidate: 60,
+    //   }
+    // } catch (error) {
+    //   console.error(error)
+    // }
+    return {
+      props: { did: did.toLowerCase(), support, dehydratedState: dehydrate(queryClient) },
+      revalidate: 60,
     }
   } else if (isEthereumAddress(did)) {
     // If an Ethereum address is provided, redirect to CAIP-10 URL

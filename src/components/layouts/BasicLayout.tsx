@@ -6,6 +6,7 @@ import { NavigationList } from '../molecure/Navigation/NavigationList'
 import { BaseHeader } from '../organism/Header/BaseHeader'
 import LoadingModal from '../organism/Modal/LoadingModal'
 import { useConnectDID } from '@/hooks/useConnectDID'
+import { useConnection } from '@/hooks/useConnection'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -20,6 +21,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { did } = useDIDAccount()
   const { disconnect } = useDisconnect()
   const { connector, isConnected } = useAccount()
+  const { migrationInvitaion } = useConnection()
 
   const LayoutContainer = styled.div`
     display: grid;
@@ -85,8 +87,10 @@ export const BasicLayout: FC<Props> = ({ children }) => {
         const session = await getAuthorizedSession()
         if (session) {
           await autoConnect()
+          migrationInvitaion()
         } else if (isConnected && connector) {
           await connectDID(connector)
+          migrationInvitaion()
         } else {
           disconnect()
         }

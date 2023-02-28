@@ -23,15 +23,22 @@ export const NAVIGATION_LIST: NAVIGATION_LIST_TYPE[] = [
   // { item: NAVIGATION_ITEM.CLAIM, icon: ICONS.VOXEL, path: '/claim' },
 ]
 
-export const getNaviItem = (path: string): NAVIGATION_LIST_TYPE => {
+export const getNaviItem = (path: string, did?: string): NAVIGATION_LIST_TYPE => {
   if (path === '/')
     return {
       item: NAVIGATION_ITEM.HOME,
       icon: ICONS.HOME,
       path: '/',
     }
+  if (did && path === `/did/${did}`) {
+    return {
+      item: NAVIGATION_ITEM.PROFILE,
+      icon: ICONS.ACCOUNT,
+      path: `/did/${did}`,
+    }
+  }
   return (
-    NAVIGATION_LIST.find((n) => n.path !== '/' && path.startsWith(n.path)) || {
+    NAVIGATION_LIST.find((n) => n.path !== '/' && n.path !== '/did' && path.startsWith(n.path)) || {
       item: NAVIGATION_ITEM.OTHER,
       icon: ICONS.HOME,
       path: '',

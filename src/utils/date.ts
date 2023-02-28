@@ -12,8 +12,13 @@ export const formatDate = (date?: string): string => {
 
 export const convertTimestampToDateStr = (timestamp?: string): string => {
   if (!timestamp) return ''
-  const d = new Date(Number(timestamp) * 1000)
-  return formatDate(d.toISOString())
+  try {
+    const d = new Date(Number(timestamp) * 1000)
+    return formatDate(d.toISOString())
+  } catch (error) {
+    console.error(error)
+    return ''
+  }
 }
 
 export const convertDateStrToTimestamp = (str?: string): number => {
