@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
+import { ConnectWalletModal } from '../Modal/Wallet/ConnectWalletModal'
 import { HeaderMenu } from './HeaderMenu'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -9,13 +10,15 @@ import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const BaseHeader: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { connection } = useDIDAccount()
-  const { connectDID, isAuthorized } = useConnectDID()
+  const { isAuthorized } = useConnectDID()
   const router = useRouter()
+  const { setShowConnectModal } = useVESSWidgetModal()
 
   const HeaderContainer = styled.div`
     grid-row: 1 /2;
@@ -50,11 +53,12 @@ export const BaseHeader: FC = () => {
     display: none;
     @media (max-width: 599px) {
       display: block;
+      height: 38px;
     }
   `
 
   const getTitle = useMemo(() => {
-    if (router.asPath === '/connection/list') return 'Timeline'
+    if (router.asPath === '/connection/list') return '👋 at ETHDenver'
     if (router.asPath.startsWith('/did')) return 'Profile'
     return ''
   }, [router])
@@ -83,12 +87,13 @@ export const BaseHeader: FC = () => {
                 size={'LL'}
                 variant='text'
                 mainColor={currentTheme.onSurface}
-                onClick={() => connectDID()}
+                onClick={() => setShowConnectModal(true)}
               />
             )}
           </>
         )}
       </Flex>
+      <ConnectWalletModal />
     </HeaderContainer>
   )
 }

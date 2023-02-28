@@ -38,8 +38,9 @@ export const NavigationList: FC = () => {
   `
 
   const LogoImage = styled.div`
-    width: 100%;
+    width: 40px;
     height: 48px;
+    margin: 0 auto;
     padding-bottom: 16px;
     border-bottom: 1px solid ${currentTheme.secondary};
     @media (max-width: 599px) {

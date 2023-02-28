@@ -26,7 +26,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
       max-height: 85vh;
       min-height: 20vh;
       gap: 29px;
-      z-index: 90;
+      z-index: 88;
       margin-top: 80px;
       &:focus {
         outline: none;

@@ -83,7 +83,6 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
 
   const formattedConnections = useMemo(() => {
     if (!connections) return []
-    console.log({ connections })
     const tempList: DisplayPros[] | undefined =
       connections.node?.__typename === 'CeramicAccount'
         ? connections.node?.connectionList?.edges?.map((edge) => {
@@ -109,7 +108,6 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
 
       return acc
     }, [])
-    console.log({ formattedList })
     return formattedList
   }, [connections])
 

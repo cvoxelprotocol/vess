@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import Image from 'next/image'
 import { FC } from 'react'
 
 type Props = {
@@ -24,14 +23,18 @@ export const NextImageContainer: FC<Props> = ({
     border-radius: ${borderRadius};
     position: relative;
     overflow: hidden;
+    border: none;
+    outline: none;
   `
-  const Content = styled(Image)`
-    object-fit: ${objectFit};
+  const ImageContent = styled.img`
+    object-fit: fill;
+    width: 100%;
+    height: auto;
   `
 
   return (
     <Container>
-      <Content src={src} fill alt={alt} />
+      <ImageContent src={src} alt={alt} />
     </Container>
   )
 }

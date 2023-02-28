@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import Image from 'next/image'
 import { FC } from 'react'
 
 const LOGOS = {
@@ -28,9 +27,15 @@ export const Logo: FC<IconProps> = ({
     height: ${height};
     position: relative;
   `
+  const ImageContent = styled.img`
+    object-fit: fill;
+    width: 100%;
+    height: auto;
+  `
   return (
     <LogoContainer>
-      <Image src={`/logos/${type}.png`} fill alt={type} />
+      {/* <Image src={`/logos/${type}.png`} fill alt={type} /> */}
+      <ImageContent src={`/logos/${type}.png`} alt={type} />
     </LogoContainer>
   )
 }

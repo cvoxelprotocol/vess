@@ -11,6 +11,8 @@ type Props = {
   justifyContentSP?: string
   rowGap?: string
   colGap?: string
+  rowGapSP?: string
+  colGapSP?: string
   height?: string
   flexWrap?: string
   width?: string
@@ -24,6 +26,8 @@ export const Flex: FC<Props> = ({
   justifyContent = 'center',
   rowGap,
   colGap,
+  rowGapSP,
+  colGapSP,
   height = 'auto',
   flexWrap = 'wrap',
   width = 'fit-content',
@@ -49,6 +53,8 @@ export const Flex: FC<Props> = ({
       align-items: ${alignItemsSP ?? alignItems};
       justify-content: ${justifyContentSP ?? justifyContent};
       padding: ${paddingSP || padding};
+      column-gap: ${colGapSP || colGap};
+      row-gap: ${rowGapSP || rowGap};
     }
   `
   return <Flex>{children}</Flex>

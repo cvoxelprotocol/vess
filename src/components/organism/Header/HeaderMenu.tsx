@@ -32,11 +32,6 @@ export const HeaderMenu: FC = () => {
     setShowHeaderMenu(false)
   }
 
-  const goToLaunch = () => {
-    router.push(`/`)
-    setShowHeaderMenu(false)
-  }
-
   const logout = async () => {
     await disConnectDID()
     setShowHeaderMenu(false)
@@ -50,7 +45,6 @@ export const HeaderMenu: FC = () => {
       <BasePopover>
         <Content>
           <HeaderItem title={'my page'} onClick={() => goToMyPage()} />
-          <HeaderItem title={'home'} onClick={() => goToLaunch()} />
           <HeaderItem title={'logout'} onClick={() => logout()} />
         </Content>
       </BasePopover>

@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
+import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
@@ -23,9 +25,9 @@ import { WorkStyleWidget } from '@/components/organism/Widgets/Profiles/WorkStyl
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useSelectedAttendance, useSelectedTask } from '@/jotai/item'
+import { useStateFocusEditable } from '@/jotai/ui'
 
 type Props = {
   did: string
@@ -34,16 +36,23 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const { currentTheme } = useVESSTheme()
   const { businessProfile, isFetchingBusinessProfile, isMe } = useBusinessProfile(did)
   const { socialLinks, isFetchingSocialLinks } = useSocialLinks(did)
-  const { setShowQRModal } = useVESSWidgetModal()
   const selectedAttendance = useSelectedAttendance()
   const selectedTask = useSelectedTask()
   const router = useRouter()
   const { did: myDID } = useDIDAccount()
+  const [focusEditable, setFocusEditable] = useStateFocusEditable()
 
   const Container = styled.div`
     width: 100%;
     height: max(100%, 100vh);
     background: ${currentTheme.background};
+  `
+  const ActionContainer = styled.div`
+    width: 100%;
+    padding: 12px 16px;
+    @media (max-width: 599px) {
+      padding: 12px 16px;
+    }
   `
   const ProfileContainer = styled.div`
     display: flex;
@@ -93,11 +102,41 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const gotoInvitaion = () => {
     router.push('/connection/invitation')
   }
+
   if (!did) {
     return <></>
   }
   return (
-    <Container id={'Container'}>
+    <Container>
+      <ActionContainer>
+        <Flex justifyContent='flex-end' alignItems='center' width='100%'>
+          {myDID && myDID === did && (
+            <>
+              {!focusEditable ? (
+                <Button
+                  variant='outlined'
+                  text='Edit'
+                  onClick={() => setFocusEditable(true)}
+                  mainColor={currentTheme.outline}
+                  textColor={currentTheme.onSurface}
+                  size={'S'}
+                  icon={ICONS.EDIT}
+                />
+              ) : (
+                <Button
+                  variant='outlined'
+                  text='Done'
+                  onClick={() => setFocusEditable(false)}
+                  mainColor={currentTheme.outline}
+                  textColor={currentTheme.onSurface}
+                  size={'S'}
+                  icon={ICONS.CHECKED}
+                />
+              )}
+            </>
+          )}
+        </Flex>
+      </ActionContainer>
       <ProfileContainer>
         <Profile>
           <BasicProfileWidget

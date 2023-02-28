@@ -30,6 +30,10 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
   }
   const Container = styled.div`
     padding: 16px;
+    height: 100%;
+    @media (max-width: 599px) {
+      padding: 12px;
+    }
   `
 
   return (
@@ -42,14 +46,14 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
             <>
               {!businessProfile?.tags || businessProfile?.tags.length === 0 ? (
                 <NoItem
-                  text='set your tags...'
+                  text={props.editable ? 'Add your skills' : 'No skills are set'}
                   color={currentTheme.outline}
                   font={currentTypo.title.small}
                 />
               ) : (
                 <>
-                  {businessProfile?.tags &&
-                    businessProfile.tags.map((role) => {
+                  {businessProfile?.skills &&
+                    businessProfile.skills.map((role) => {
                       return (
                         <Chip
                           key={role}

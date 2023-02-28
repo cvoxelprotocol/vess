@@ -2,11 +2,18 @@ import { css, Global, ThemeProvider } from '@emotion/react'
 import { Noto_Sans_JP, Noto_Sans } from '@next/font/google'
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
+import { walletConnectProvider } from '@web3modal/ethereum'
 import { Provider as JotaiProvider } from 'jotai'
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Router } from 'next/router'
 import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
+import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { publicProvider } from 'wagmi/providers/public'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
@@ -42,6 +49,33 @@ type AppPropsWithLayout = AppProps<{ dehydratedState: DehydratedState }> & {
 }
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const { chains, provider } = configureChains(
+    [mainnet],
+    [walletConnectProvider({ projectId: process.env.NEXT_PUBLIC_WC_KEY || '' }), publicProvider()],
+  )
+
+  const metamaskConnector = new MetaMaskConnector({ chains })
+  // const injectedCOnnector = new InjectedConnector({
+  //   options: {
+  //     name: 'Light Wallet',
+  //   },
+  // })
+  const walletConnectConnector = new WalletConnectConnector({
+    chains,
+    options: {
+      infuraId: process.env.NEXT_PUBLIC_INFURA_KEY,
+      chainId: 1,
+      qrcodeModalOptions: {
+        desktopLinks: [],
+      },
+    },
+  })
+  const connectors = [metamaskConnector, walletConnectConnector]
+  const client = createClient({
+    autoConnect: true,
+    connectors,
+    provider,
+  })
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -78,14 +112,16 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <JotaiProvider>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={dehydratedState}>
-            <ComposeWrapper>
-              <ThemeProvider theme={theme}>
-                <Meta />
-                {getLayout(<Component {...props} />)}
-                {isLoading && <LoadingModal />}
-                <VESSToast />
-              </ThemeProvider>
-            </ComposeWrapper>
+            <WagmiConfig client={client}>
+              <ComposeWrapper>
+                <ThemeProvider theme={theme}>
+                  <Meta />
+                  {getLayout(<Component {...props} />)}
+                  {isLoading && <LoadingModal />}
+                  <VESSToast />
+                </ThemeProvider>
+              </ComposeWrapper>
+            </WagmiConfig>
           </Hydrate>
         </QueryClientProvider>
       </JotaiProvider>

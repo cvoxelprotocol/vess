@@ -1,30 +1,33 @@
 import styled from '@emotion/styled'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
+import { SocialLinkItem } from '@/components/molecure/Profile/SocialLinkItem'
 import { PROOF_OF_CONNECTION_FAILED, PROOF_OF_CONNECTION_ISSUED } from '@/constants/toastMessage'
 import {
   ConnectionInput,
   useCreateConnectionMutation,
   useGetConnectionInvitaionLazyQuery,
 } from '@/graphql/generated'
-import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const IssueConnectionContainer: FC = () => {
   const router = useRouter()
   const invitaionId = (router.query.id as string) || ''
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { connectDID } = useConnectDID()
+  const { setShowConnectModal } = useVESSWidgetModal()
   const { did } = useDIDAccount()
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
@@ -34,17 +37,26 @@ export const IssueConnectionContainer: FC = () => {
       variables: {
         id: invitaionId,
       },
+      onError(e) {
+        if (e instanceof DOMException) {
+          return
+        }
+        console.log(e)
+      },
     })
   const [createConnection] = useCreateConnectionMutation()
 
-  const { profile } = useSocialAccount(
-    invitation?.node?.__typename === 'ConnectionInvitation' ? invitation?.node?.did?.did : '',
-  )
+  const inviterId = useMemo(() => {
+    return invitation?.node?.__typename === 'ConnectionInvitation' ? invitation.node.did.did : ''
+  }, [invitation])
+
+  const { profile } = useSocialAccount(inviterId)
   const { eventDetail } = useEventAttendance(
     invitation?.node?.__typename === 'ConnectionInvitation' && invitation?.node?.eventId
       ? invitation?.node?.eventId
       : '',
   )
+  const { twitter, telegram } = useSocialLinks(inviterId)
 
   const Wrapper = styled.main`
     width: 100%;
@@ -72,8 +84,10 @@ export const IssueConnectionContainer: FC = () => {
       ${getBasicFont(currentTypo.headLine.large)};
     }
   `
-  const PfpContainer = styled.div`
+  const PfpContainer = styled(Link)`
     width: fit-content;
+    outline: none;
+    text-decoration: none;
   `
 
   const At = styled.p`
@@ -93,16 +107,11 @@ export const IssueConnectionContainer: FC = () => {
     ${getBasicFont(currentTypo.body.medium)};
   `
 
-  const handleLogin = async () => {
-    await connectDID()
-  }
-
   const issueConnection = async () => {
     if (!did) return
     try {
       showLoading()
-      const userId =
-        invitation?.node?.__typename === 'ConnectionInvitation' ? invitation.node.did.did : ''
+      const userId = inviterId
       const content: ConnectionInput = {
         userId: userId,
         invitationId: invitaionId,
@@ -168,7 +177,7 @@ export const IssueConnectionContainer: FC = () => {
         ) : (
           <Flex flexDirection='column' colGap='24px' rowGap='24px'>
             <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
-            <PfpContainer>
+            <PfpContainer href={`/did/${inviterId}`}>
               <Avatar url={profile.avatarSrc} size={'100'} />
             </PfpContainer>
             <Title>{`I'm ${profile.displayName || ''}`}</Title>
@@ -181,13 +190,17 @@ export const IssueConnectionContainer: FC = () => {
                 </Flex>
               </Flex>
             )}
+            <Flex colGap='4px' rowGap='4px'>
+              <SocialLinkItem linkType={'telegram'} value={telegram} />
+              <SocialLinkItem linkType={'twitter'} value={twitter} />
+            </Flex>
             {invitation?.node?.__typename === 'ConnectionInvitation' &&
               invitation?.node?.greeting && <Greeting>{invitation?.node?.greeting}</Greeting>}
             {!did ? (
               <Button
                 variant='filled'
                 text='Connect Wallet'
-                onClick={() => handleLogin()}
+                onClick={() => setShowConnectModal(true)}
                 btnWidth={'100%'}
               />
             ) : (

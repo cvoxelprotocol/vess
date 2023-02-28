@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import Image from 'next/image'
 import { FC } from 'react'
 
 type Props = {

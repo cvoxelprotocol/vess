@@ -2,12 +2,12 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Button } from '@/components/atom/Buttons/Button'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
-import { useConnectDID } from '@/hooks/useConnectDID'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const LoginCard: FC = () => {
-  const { connectDID } = useConnectDID()
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { setShowConnectModal } = useVESSWidgetModal()
 
   const LoginCard = styled.div`
     background: ${currentTheme.surface1};
@@ -51,10 +51,6 @@ export const LoginCard: FC = () => {
     min-height: 64px;
   `
 
-  const handleLogin = async () => {
-    await connectDID()
-  }
-
   return (
     <LoginCard>
       <CardHeader>
@@ -67,7 +63,7 @@ export const LoginCard: FC = () => {
         <Button
           variant='filled'
           text='Connect Wallet'
-          onClick={() => handleLogin()}
+          onClick={() => setShowConnectModal(true)}
           btnWidth={'240px'}
         />
         {/* <Regulation>
