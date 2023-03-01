@@ -9,8 +9,9 @@ import {
 import { ComposeClient } from '@composedb/client'
 import { RuntimeCompositeDefinition } from '@composedb/types'
 import { createContext, useContext } from 'react'
-
-import { definition } from '../__generated__/definition.js'
+import { definition as devDifinition } from '../__generated__/dev/definition.js'
+import { definition as prodDifinition } from '../__generated__/prod/definition.js'
+import { CERAMIC_NETWORK } from '@/constants/common'
 
 /**
  * Configure ceramic Client & create context.
@@ -20,7 +21,9 @@ import { definition } from '../__generated__/definition.js'
 const compose = new ComposeClient({
   ceramic: process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007',
   // cast our definition as a RuntimeCompositeDefinition
-  definition: definition as RuntimeCompositeDefinition,
+  definition: (CERAMIC_NETWORK === 'mainnet'
+    ? prodDifinition
+    : devDifinition) as RuntimeCompositeDefinition,
 })
 
 const link = new ApolloLink((operation) => {
