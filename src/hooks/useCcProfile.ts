@@ -15,7 +15,6 @@ const GET_PROFILE = gql`
               handle
               metadata
               metadataInfo {
-                handle
                 displayName
                 bio
                 avatar
