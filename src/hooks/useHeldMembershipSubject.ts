@@ -46,7 +46,6 @@ export const useHeldMembershipSubject = (did?: string) => {
     try {
       const res = await vess.deleteHeldMembershipSubjectsFromIDX(streamId)
       queryClient.invalidateQueries(['HeldMembershipSubjects', did])
-      console.log({ res })
     } catch (error) {
       console.log(error)
     }

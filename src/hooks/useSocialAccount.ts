@@ -24,7 +24,7 @@ export const useSocialAccount = (did?: string) => {
   const { data: ensAvatar } = useEnsAvatar({
     address: getAddressFromPkhForWagmi(did),
   })
-  const { data: ensName, isFetched: isFetchedEnsName } = useEnsName({
+  const { data: ensName, isLoading: ensLoading } = useEnsName({
     address: getAddressFromPkhForWagmi(did),
   })
   const { ccProfile, ccLoading } = useCcProfile(did)
@@ -82,14 +82,20 @@ export const useSocialAccount = (did?: string) => {
     }
   }, [ensName, ensAvatar])
 
-  const profile = useMemo<DisplayProfile>(() => {
-    if (!isFetchedEnsName || ccLoading || lensLoading || isOrbisLoading) {
-      return {
-        avatarSrc: orbisProfile?.pfp || undefined,
-        displayName: orbisProfile?.username || (!!did ? formatDID(did, 12) : ''),
-        bio: orbisProfile?.description || '',
-      }
+  const placeHolderProfile = useMemo<DisplayProfile>(() => {
+    return {
+      avatarSrc: undefined,
+      displayName: !!did ? formatDID(did, 12) : '',
+      bio: '',
     }
+  }, [did])
+
+  const isloadingProfile = useMemo(() => {
+    return ccLoading || lensLoading || isOrbisLoading || ensLoading
+  }, [ccLoading, lensLoading, isOrbisLoading, ensLoading])
+
+  const profile = useMemo<DisplayProfile>(() => {
+    if (isloadingProfile) return placeHolderProfile
     return {
       avatarSrc:
         orbisProfile?.pfp && orbisProfile?.pfp !== ''
@@ -103,7 +109,16 @@ export const useSocialAccount = (did?: string) => {
         (!!did ? formatDID(did, 12) : ''),
       bio: orbisProfile?.description || ccProfile?.bio || lensProfile?.bio || '',
     }
-  }, [orbisProfile, ensAvatar, ensName, ccProfile, lensProfile])
+  }, [
+    orbisProfile,
+    ensAvatar,
+    ensName,
+    ccProfile,
+    lensProfile,
+    isloadingProfile,
+    placeHolderProfile,
+    did,
+  ])
 
   return {
     profile,

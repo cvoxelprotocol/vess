@@ -14,7 +14,6 @@ export const useConnection = () => {
 
   const migrationInvitaion = async () => {
     const invitations = await getMyConnectionInvitaions()
-    console.log({ invitations })
     await issueCOnnectionOnBackground(invitations)
   }
 
@@ -46,7 +45,6 @@ export const useConnection = () => {
             invitationId: unused,
             connectAt: new Date().toISOString(),
           }
-          console.log({ content })
           const promise = createConnection({ variables: { content } })
           promises.push(promise)
         }

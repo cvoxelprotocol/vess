@@ -129,13 +129,11 @@ export const InvitaionContent: FC = () => {
   }
   const getUnusedInvitation = async () => {
     try {
-      console.log({ myInvitations })
       const target = myInvitations?.viewer?.connectionInvitationList?.edges?.find(
         (edge) => edge?.node?.connection.edges?.length === 0,
       )?.node
 
       if (target) {
-        console.log({ target })
         setUnused(target.id)
       } else {
         const content: ConnectionInvitationInput = {
@@ -153,18 +151,15 @@ export const InvitaionContent: FC = () => {
   }
 
   const checkIssueConnection = useCallback(async () => {
-    console.log({ unused })
     if (!unused) return
     try {
       const res = await refetch({ id: unused })
-      console.log({ res })
       if (
         res.data.node &&
         res.data.node.__typename === 'ConnectionInvitation' &&
         res.data.node?.connection.edges?.length === 1
       ) {
         const connection = res.data?.node?.connection?.edges[0]
-        console.log({ connection })
         const userId = connection?.node?.did.id
         if (!userId) return
         const content: ConnectionInput = {
@@ -172,7 +167,6 @@ export const InvitaionContent: FC = () => {
           invitationId: unused,
           connectAt: new Date().toISOString(),
         }
-        console.log({ content })
         const result = await createConnection({ variables: { content } })
         console.log({ result })
         if (result.data?.createConnection?.document.id) {

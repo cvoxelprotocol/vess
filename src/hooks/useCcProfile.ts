@@ -31,6 +31,7 @@ export const useCcProfile = (did?: string) => {
   const { loading: ccLoading, data: ccProfiles } = useQuery(GET_PROFILE, {
     variables: { address: getAddressFromPkhForWagmi(did) },
     context: { clientName: 'cyberconnect' },
+    pollInterval: 0,
   })
 
   const ccProfile = useMemo<DisplayProfile | null>(() => {

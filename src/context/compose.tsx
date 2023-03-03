@@ -58,11 +58,11 @@ const apolloClient = new ApolloClient({
       link,
     ),
   ),
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'network-only',
-    },
-  },
+  // defaultOptions: {
+  //   watchQuery: {
+  //     fetchPolicy: 'network-only',
+  //   },
+  // },
 })
 
 const CeramicContext = createContext({
