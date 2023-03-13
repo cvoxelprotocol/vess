@@ -57,7 +57,6 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
     flex-direction: column;
     gap: 16px;
     height: 60vh;
-    background: ${currentTheme.surface1};
     overflow-y: scroll;
     ::-webkit-scrollbar {
       display: none;
@@ -78,7 +77,7 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
   const InnerContent = styled.div`
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: start;
     gap: 16px;
     width: 100%;
     @media (max-width: 599px) {
@@ -117,7 +116,7 @@ export const HeldMembershipsModal: FC<Props> = (props) => {
   }
   return (
     <VESSModalContainer open={showMembershipModal} onOpenChange={setShowMembershipModal}>
-      <VESSModal>
+      <VESSModal headerColor={currentTheme.depth1} modalTitle={'Membership'}>
         <Container>
           <SelfClaimMembershipForm did={props.did} />
           <Title>Or... Pick Your Experience</Title>

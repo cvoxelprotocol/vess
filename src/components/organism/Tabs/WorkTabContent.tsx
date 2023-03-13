@@ -25,11 +25,13 @@ export const WorkTabContent: FC<Props> = ({ did }) => {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 12px;
-    @media (max-width: 1517px) {
-      grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    text-align: center;
+    @media (max-width: 1079px) {
+      grid-template-columns: repeat(auto-fit, 300px);
     }
     @media (max-width: 599px) {
-      grid-template-columns: repeat(1, 1fr);
+      grid-template-columns: repeat(auto-fit, 300px);
       grid-gap: 8px;
     }
   `
