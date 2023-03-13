@@ -39,8 +39,7 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     display: flex;
     align-items: center;
     justify-content: end;
-    padding: 12px 32px;
-    background: ${currentTheme.surface1};
+    padding: 12px 0px;
     border-radius: 32px;
     z-index: 999;
   `

@@ -48,39 +48,32 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
   const { storeBusinessProfile } = useBusinessProfile(did)
 
   const Form = styled.form`
-    padding: 32px;
+    padding: 16px 32px 0px 32px;
     border-radius: 32px;
     display: flex;
     flex-direction: column;
     position: relative;
     height: 65vh;
-    gap: 16px;
-    background: ${currentTheme.surface1};
-    margin-bottom: 60px;
-    overflow-y: scroll;
     ::-webkit-scrollbar {
       display: none;
     }
   `
   const FormContent = styled.div`
+    padding: 16px 0px;
     display: flex;
+    height: 100%;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 64px;
+    overflow-y: scroll;
   `
   const ButtonContainer = styled.div`
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 64px;
-    padding: 12px 32px;
-    background: ${currentTheme.surface1};
-    border-radius: 32px;
-    z-index: 999;
+    padding: 16px 0px;
+    gap: 8px;
   `
 
   const {
@@ -190,8 +183,14 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
           /> */}
         </FormContent>
         <ButtonContainer>
-          <Button variant='text' text='Cancel' type='button' onClick={() => closeModal()} />
-          <Button variant='filled' text='Issue' type={'submit'} />
+          <Button
+            variant='outlined'
+            text='Cancel'
+            type='button'
+            onClick={() => closeModal()}
+            fill
+          />
+          <Button variant='filled' text='Save' type={'submit'} fill />
         </ButtonContainer>
       </Form>
     </>

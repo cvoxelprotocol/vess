@@ -32,38 +32,34 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
   const { storeSocialLinks } = useSocialLinks(did)
 
   const Form = styled.form`
-    padding: 32px;
+    padding: 16px 32px 0px 32px;
     border-radius: 32px;
-    position: relative;
-    height: 60vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    height: 65vh;
     gap: 16px;
-    background: ${currentTheme.surface1};
     overflow-y: scroll;
     ::-webkit-scrollbar {
       display: none;
     }
   `
   const FormContent = styled.div`
+    padding: 16px 0px;
     display: flex;
+    height: 100%;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 64px;
+    overflow-y: scroll;
   `
   const ButtonContainer = styled.div`
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 64px;
-    padding: 12px 32px;
-    background: ${currentTheme.surface1};
-    border-radius: 32px;
-    z-index: 999;
+    padding: 16px 0px;
+    gap: 8px;
   `
 
   const existedVal = useMemo(() => {
@@ -218,12 +214,13 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
       {editable && (
         <ButtonContainer>
           <Button
-            variant='text'
+            variant='outlined'
             text='Cancel'
             type='button'
             onClick={() => closeSocialLinkModal()}
+            fill
           />
-          <Button variant='filled' text='Issue' type={'submit'} />
+          <Button variant='filled' text='Save' type={'submit'} fill />
         </ButtonContainer>
       )}
     </Form>
