@@ -104,7 +104,7 @@ export const HomeContainer: FC = () => {
 
   return (
     <Wrapper>
-      <SectionHeader>
+      {/* <SectionHeader>
         {did ? '👋 Proof of ETH Denver Connection' : 'Are you at ETH Denver?'}
       </SectionHeader>
       <MainContent>
@@ -112,7 +112,6 @@ export const HomeContainer: FC = () => {
           <Flex flexDirection='column' rowGap='24px'>
             <InvitaionContent />
             <Flex flexDirection='column' rowGap='8px'>
-              {/* <At>Want to edit your profile?</At> */}
               <Button
                 mainColor={currentTheme.secondary}
                 variant='filled'
@@ -135,7 +134,7 @@ export const HomeContainer: FC = () => {
             />
           </Flex>
         )}
-      </MainContent>
+      </MainContent> */}
       <SectionHeader>VESS Resume</SectionHeader>
       <MainContent>
         <Flex flexDirection='column' rowGap='6px'>

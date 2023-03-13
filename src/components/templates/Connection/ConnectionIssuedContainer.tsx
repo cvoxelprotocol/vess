@@ -5,17 +5,17 @@ import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
-import { ETH_DENVER_EVENT_ID } from '@/components/organism/Connection/InvitaionContent'
+// import { ETH_DENVER_EVENT_ID } from '@/components/organism/Connection/InvitaionContent'
 import { useGetConnectionLazyQuery } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useEventAttendance } from '@/hooks/useEventAttendance'
+// import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const ConnectionIssuedContainer: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { did } = useDIDAccount()
-  const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
+  // const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
   const router = useRouter()
   const connectionId = router.query.connectionId as string
 
@@ -95,7 +95,7 @@ export const ConnectionIssuedContainer: FC = () => {
           <Avatar url={profile.avatarSrc} size={'100'} />
         </PfpContainer>
         <Title>{`${profile.displayName || ''} issued the connection!`}</Title>
-        {eventDetail && (
+        {/* {eventDetail && (
           <Flex flexDirection='column' colGap='4px' rowGap='4px'>
             <At>at</At>
             <Flex colGap='4px' rowGap='4px'>
@@ -103,7 +103,7 @@ export const ConnectionIssuedContainer: FC = () => {
               <EventName>{eventDetail.name}</EventName>
             </Flex>
           </Flex>
-        )}
+        )} */}
         <Button
           variant='filled'
           text='Go To Profile'

@@ -25,6 +25,7 @@ export const useLensProfile = (did?: string) => {
   const { loading: lensLoading, data: lensProfileData } = useQuery(GET_PROFILE, {
     variables: { ethereumAddress: getAddressFromPkhForWagmi(did) },
     context: { clientName: 'lens' },
+    pollInterval: 0,
   })
 
   const lensProfile = useMemo<DisplayProfile | null>(() => {

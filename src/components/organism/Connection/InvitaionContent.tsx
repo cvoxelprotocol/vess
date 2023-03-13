@@ -18,7 +18,7 @@ import {
   ConnectionInput,
 } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useEventAttendance } from '@/hooks/useEventAttendance'
+// import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useToast } from '@/hooks/useToast'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -35,7 +35,7 @@ export const InvitaionContent: FC = () => {
   const { did } = useDIDAccount()
   const { showToast } = useToast()
   const [unused, setUnused] = useStateUnUsedInvitaion()
-  const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
+  // const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
   const { profile } = useSocialAccount(did)
   const router = useRouter()
 
@@ -129,19 +129,16 @@ export const InvitaionContent: FC = () => {
   }
   const getUnusedInvitation = async () => {
     try {
-      console.log({ myInvitations })
       const target = myInvitations?.viewer?.connectionInvitationList?.edges?.find(
         (edge) => edge?.node?.connection.edges?.length === 0,
       )?.node
 
       if (target) {
-        console.log({ target })
         setUnused(target.id)
       } else {
         const content: ConnectionInvitationInput = {
           greeting: DEFAULT_GREETING,
           type: 'IRL',
-          eventId: ETH_DENVER_EVENT_ID,
         }
         const res = await createConnectionInvitation({ variables: { content } })
         setUnused(res.data?.createConnectionInvitation?.document.id || '')
@@ -153,18 +150,15 @@ export const InvitaionContent: FC = () => {
   }
 
   const checkIssueConnection = useCallback(async () => {
-    console.log({ unused })
     if (!unused) return
     try {
       const res = await refetch({ id: unused })
-      console.log({ res })
       if (
         res.data.node &&
         res.data.node.__typename === 'ConnectionInvitation' &&
         res.data.node?.connection.edges?.length === 1
       ) {
         const connection = res.data?.node?.connection?.edges[0]
-        console.log({ connection })
         const userId = connection?.node?.did.id
         if (!userId) return
         const content: ConnectionInput = {
@@ -172,7 +166,6 @@ export const InvitaionContent: FC = () => {
           invitationId: unused,
           connectAt: new Date().toISOString(),
         }
-        console.log({ content })
         const result = await createConnection({ variables: { content } })
         console.log({ result })
         if (result.data?.createConnection?.document.id) {
@@ -228,7 +221,7 @@ export const InvitaionContent: FC = () => {
         </>
       )}
       <Title>{`I'm ${profile.displayName || ''}`}</Title>
-      {eventDetail && (
+      {/* {eventDetail && (
         <Flex flexDirection='column' colGap='4px' rowGap='4px'>
           <At>at</At>
           <Flex colGap='4px' rowGap='4px'>
@@ -236,7 +229,7 @@ export const InvitaionContent: FC = () => {
             <EventName>{eventDetail.name}</EventName>
           </Flex>
         </Flex>
-      )}
+      )} */}
       <Greeting>{DEFAULT_GREETING}</Greeting>
       <At>{"Let's have the QR scanned!"}</At>
       <At>( It might take a while to issue )</At>

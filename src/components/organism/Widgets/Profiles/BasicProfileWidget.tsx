@@ -42,7 +42,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
       return ensProfile
     }
     return defaultProfile
-  }, [displayProfileType, defaultProfile])
+  }, [displayProfileType, defaultProfile, ccProfile, lensProfile, ensProfile])
 
   const HeaderImage = styled.div`
     width: 100%;
