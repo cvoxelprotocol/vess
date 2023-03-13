@@ -33,7 +33,11 @@ export const WorkStyleWidget: FC<Props> = (props) => {
         <Flex height={'100%'} width={'100%'} flexDirection={'column'} flexWrap={'nowrap'}>
           <WorkStyleItem
             icon={ICONS.DOLLAR}
-            content={`${businessProfile?.desiredHourlyFee || 'Wage'}`}
+            content={
+              businessProfile?.desiredHourlyFee
+                ? `\$ ${businessProfile.desiredHourlyFee} /hr`
+                : 'Wage'
+            }
             contentOpacity={`${businessProfile?.desiredHourlyFee ? '1' : '0.3'}`}
             borderRadius={'0px 0px 0px 0px'}
             iconBackground={currentTheme.surface5}
