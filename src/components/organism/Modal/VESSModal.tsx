@@ -1,9 +1,9 @@
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import React from 'react'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { keyframes } from '@emotion/react'
 
 type Props = {
   headerColor?: string

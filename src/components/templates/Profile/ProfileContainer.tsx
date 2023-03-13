@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import { isMobileOnly } from 'react-device-detect'
 import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -28,7 +29,6 @@ import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useSelectedAttendance, useSelectedTask } from '@/jotai/item'
 import { useStateFocusEditable } from '@/jotai/ui'
-import { isMobileOnly } from 'react-device-detect'
 
 type Props = {
   did: string
