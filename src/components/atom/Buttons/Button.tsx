@@ -12,6 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   focusColor?: string
   icon?: IconsType
   size?: IconSize
+  fill?: boolean
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -22,6 +23,7 @@ export const Button: FC<ButtonProps> = ({
   textColor,
   focusColor,
   mainColor,
+  fill = false,
   ...props
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -40,7 +42,7 @@ export const Button: FC<ButtonProps> = ({
       justify-content: center;
       position: relative;
       padding: 0;
-      width: ${btnWidth};
+      width: ${fill ? '100%' : btnWidth};
     `
     const ButtonLayer = styled.div`
       background: none;
@@ -53,7 +55,7 @@ export const Button: FC<ButtonProps> = ({
       justify-content: center;
       flex-shrink: 0;
       position: relative;
-      width: ${btnWidth};
+      width: ${fill ? '100%' : btnWidth};
     `
     const ButtonText = styled.span`
       background: none;
@@ -98,7 +100,7 @@ export const Button: FC<ButtonProps> = ({
     justify-content: center;
     position: relative;
     padding: 0;
-    width: ${btnWidth};
+    width: ${fill ? '100%' : btnWidth};
   `
   const ButtonLayer = styled.div`
     background: none;
@@ -106,6 +108,7 @@ export const Button: FC<ButtonProps> = ({
       background: ${focusColor ||
       (variant === 'filled' ? currentTheme.onPrimaryContainerOpacity40 : currentTheme.surface5)};
       transition: all 0.15s ease-out;
+      cursor: pointer;
     }
     &:active {
       transition: all 0.15s ease-out;
@@ -130,7 +133,7 @@ export const Button: FC<ButtonProps> = ({
     justify-content: center;
     flex-shrink: 0;
     position: flex;
-    width: ${btnWidth};
+    width: ${fill ? '100%' : btnWidth};
   `
 
   const ButtonText = styled.span`

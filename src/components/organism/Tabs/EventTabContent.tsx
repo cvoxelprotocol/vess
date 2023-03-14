@@ -26,11 +26,12 @@ export const EventTabContent: FC<Props> = ({ did }) => {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 12px;
     text-align: center;
-    @media (max-width: 1517px) {
-      grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    @media (max-width: 1079px) {
+      grid-template-columns: repeat(auto-fit, 216px);
     }
     @media (max-width: 599px) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, 180px);
       grid-gap: 8px;
     }
   `

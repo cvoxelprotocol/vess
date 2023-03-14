@@ -127,6 +127,8 @@ export const BaseWidget: FC<Props> = ({
     transition: all 0.15s ease-in-out;
     @media (max-width: 599px) {
       pointer-events: ${focusEditable ? 'auto' : 'none'};
+      animation: none;
+      animation: ${focusEditable ? fadeIn : undefined} 0.15s ease-in-out forwards;
     }
   `
   const handleEdit = () => {

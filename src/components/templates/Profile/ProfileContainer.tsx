@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import { isMobileOnly } from 'react-device-detect'
 import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -93,6 +94,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
     position: fixed;
     bottom: 32px;
     right: 32px;
+    z-index: 100;
     @media (max-width: 599px) {
       bottom: 88px;
       right: 24px;
@@ -109,33 +111,35 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   return (
     <Container>
       <ActionContainer>
-        <Flex justifyContent='flex-end' alignItems='center' width='100%'>
-          {myDID && myDID === did && (
-            <>
-              {!focusEditable ? (
-                <Button
-                  variant='outlined'
-                  text='Edit'
-                  onClick={() => setFocusEditable(true)}
-                  mainColor={currentTheme.outline}
-                  textColor={currentTheme.onSurface}
-                  size={'S'}
-                  icon={ICONS.EDIT}
-                />
-              ) : (
-                <Button
-                  variant='outlined'
-                  text='Done'
-                  onClick={() => setFocusEditable(false)}
-                  mainColor={currentTheme.outline}
-                  textColor={currentTheme.onSurface}
-                  size={'S'}
-                  icon={ICONS.CHECKED}
-                />
-              )}
-            </>
-          )}
-        </Flex>
+        {isMobileOnly && (
+          <Flex justifyContent='flex-end' alignItems='center' width='100%'>
+            {myDID && myDID === did && (
+              <>
+                {!focusEditable ? (
+                  <Button
+                    variant='outlined'
+                    text='Edit'
+                    onClick={() => setFocusEditable(true)}
+                    mainColor={currentTheme.outline}
+                    textColor={currentTheme.onSurface}
+                    size={'S'}
+                    icon={ICONS.EDIT}
+                  />
+                ) : (
+                  <Button
+                    variant='outlined'
+                    text='Done'
+                    onClick={() => setFocusEditable(false)}
+                    mainColor={currentTheme.outline}
+                    textColor={currentTheme.onSurface}
+                    size={'S'}
+                    icon={ICONS.CHECKED}
+                  />
+                )}
+              </>
+            )}
+          </Flex>
+        )}
       </ActionContainer>
       <ProfileContainer>
         <Profile>

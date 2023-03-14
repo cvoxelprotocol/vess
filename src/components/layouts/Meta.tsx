@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { FC } from 'react'
 
-const OGP_IMAGE = 'https://app.vess.id/ogp.png'
+const OGP_IMAGE = 'https://app.vess.id/ogp.jpg'
 
 interface MetaData {
   pageTitle?: string
@@ -20,9 +20,9 @@ export const Meta: FC<MetaData> = ({
   pageImgWidth,
   pageImgHeight,
 }) => {
-  const defaultTitle = 'VESS | Shape Your Work Identity'
+  const defaultTitle = 'VESS Resume'
   const defaultDescription =
-    'VESS is a decentralized self-sovereign work identity protocol that everyone can stack their verifiable credentials and shape their own work identities.'
+    'VESS Resume is the self-sovereign resume app by leveraging VESS Protocol. You can bring your resume to any platfomrs one you fill it out.'
 
   const title = pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle
   const description = pageDescription ? pageDescription : defaultDescription
@@ -45,6 +45,7 @@ export const Meta: FC<MetaData> = ({
       <meta property='og:image:width' content={String(imgWidth)} key='ogimagewidth' />
       <meta property='og:image:height' content={String(imgHeight)} key='ogimageheight' />
       <link rel='canonical' href={url} key='canonical' />
+      <link rel='icon' href='https://app.vess.id/favicon.ico' />
       <meta name='twitter:card' content='summary_large_image' key='twittercard' />
       <meta name='viewport' content='initial-scale=1, viewport-fit=cover' />
       {/* <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} /> */}

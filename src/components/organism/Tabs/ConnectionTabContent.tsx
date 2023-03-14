@@ -47,13 +47,13 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 12px;
-    justify-content: start;
+    justify-content: center;
     text-align: center;
     @media (max-width: 1079px) {
       grid-template-columns: repeat(auto-fit, 216px);
     }
     @media (max-width: 599px) {
-      grid-template-columns: repeat(auto-fit, 1fr);
+      grid-template-columns: repeat(auto-fit, 180px);
       grid-gap: 8px;
     }
   `
@@ -127,7 +127,11 @@ export const ConnectionTabContent: FC<Props> = ({ did }) => {
               {formattedConnections &&
                 formattedConnections.map((connection) => {
                   return (
-                    <Content key={connection?.node?.id} href={`/did/${connection?.node?.userId}`}>
+                    <Content
+                      key={connection?.node?.id}
+                      href={`/did/${connection?.node?.userId}`}
+                      id={'Content'}
+                    >
                       <ConnectionCard
                         userId={connection?.node?.userId}
                         invitation={connection?.node?.invitaion}
