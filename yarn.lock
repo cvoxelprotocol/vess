@@ -4720,9 +4720,9 @@
   integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
 
 "@types/node@>=12.12.47", "@types/node@>=13.7.0":
-  version "18.15.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.1.tgz#41dc2bf78e8085a250d4670d95edb7fba621dd29"
-  integrity sha512-U2TWca8AeHSmbpi314QBESRk7oPjSZjDsR+c+H4ECC1l+kFgpZf8Ydhv3SJpPy51VyZHHqxlb6mTTqYNNRVAIw==
+  version "18.15.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.3.tgz#f0b991c32cfc6a4e7f3399d6cb4b8cf9a0315014"
+  integrity sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==
 
 "@types/node@^12.12.54", "@types/node@^12.12.6":
   version "12.20.55"
@@ -7311,7 +7311,12 @@ cbor@^8.1.0:
   dependencies:
     nofilter "^3.1.0"
 
-cborg@^1.10.0, cborg@^1.6.0:
+cborg@^1.10.0:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/cborg/-/cborg-1.10.1.tgz#24cfe52c69ec0f66f95e23dc57f2086954c8d718"
+  integrity sha512-et6Qm8MOUY2kCWa5GKk2MlBVoPjHv0hQBmlzI/Z7+5V3VJCeIkGehIB3vWknNsm2kOkAIs6wEKJFJo8luWQQ/w==
+
+cborg@^1.6.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/cborg/-/cborg-1.10.0.tgz#0fe157961dd47b537ccb84dc9ba681de8b699013"
   integrity sha512-/eM0JCaL99HDHxjySNQJLaolZFVdl6VA0/hEKIoiQPcQzE5LrG5QHdml0HaBt31brgB9dNe1zMr3f8IVrpotRQ==
@@ -8438,9 +8443,9 @@ did-jwt@^6.0.0:
     uint8arrays "^3.0.0"
 
 did-jwt@^6.11.1:
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/did-jwt/-/did-jwt-6.11.2.tgz#64d5f2cd32370946caef389e1e58408225b0f4c1"
-  integrity sha512-7YZEY2Jh1bnPdFunvVT5EETuGMbCSEw7PMoNqpeKVtVVk02rTjU/xvIfnBdqnhEHSb7OGu6kb7crtM6kpOGb1A==
+  version "6.11.5"
+  resolved "https://registry.yarnpkg.com/did-jwt/-/did-jwt-6.11.5.tgz#db6d4fb07b9229ebeac19a33bac81d6d5deff518"
+  integrity sha512-7Ew4rftHd2RTxLDfAjN6cz0wCMjTzmRBOtFBVuXUPguJF6ct01hJqlM1fr+IuI+bW7gH9QSeh9kDrvlOJnkf9w==
   dependencies:
     "@stablelib/ed25519" "^1.0.2"
     "@stablelib/random" "^1.0.1"
@@ -17178,10 +17183,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vess-sdk@1.0.0-alpha.25:
-  version "1.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/vess-sdk/-/vess-sdk-1.0.0-alpha.25.tgz#7edc679dde7ec324edd473c86782347ad6913cb7"
-  integrity sha512-QkueqYVGAUBmrja6VzqwvtDRQZICQhdv/Lzwj6xo5HBBm/Oz5RSPcNpOiJhhUgDG20KSl0GAY9/BCS40FzWzMQ==
+vess-sdk@1.0.0-alpha.26:
+  version "1.0.0-alpha.26"
+  resolved "https://registry.yarnpkg.com/vess-sdk/-/vess-sdk-1.0.0-alpha.26.tgz#0465db55e66acfb5b903cc2880e541c9e6520d54"
+  integrity sha512-sGFy0j4WTd8jmbSVlC6wMNInzJ16/BK1u2Lh/pxfDGsBTpYvMH7NINFUpnWpkT31wNJboZS+xOSd/zNMfeY+Eg==
   dependencies:
     "@ceramicnetwork/http-client" "^2.17.0"
     "@ceramicnetwork/stream-tile" "^2.16.0"
