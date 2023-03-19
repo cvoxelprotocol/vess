@@ -12,6 +12,7 @@ import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { publicProvider } from 'wagmi/providers/public'
+import { GATracking } from '@/components/atom/Common/GATracking'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
@@ -113,6 +114,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             <WagmiConfig client={client}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
+                  <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
                   <Meta />
                   {getLayout(<Component {...props} />)}
                   {isLoading && <LoadingModal />}
