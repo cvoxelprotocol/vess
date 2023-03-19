@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
@@ -16,18 +16,21 @@ import {
 } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
+import { useNfc } from '@/hooks/useNfc'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
-import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const NfcWriteContainer: FC = () => {
+  const router = useRouter()
+  const docId = (router.query.id as string) || ''
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const [nfcAvailable, setNfcAvailable] = useState<boolean>(false)
-  const [message, setMessage] = useState<string>('')
-  const [nfcContent, setNfcContent] = useState<string>('')
+  const { setShowConnectModal } = useVESSWidgetModal()
+  const { did } = useDIDAccount()
+  const { showLoading, closeLoading } = useVESSLoading()
+  const { data, isLoading, register } = useNfc(docId)
 
   const Wrapper = styled.main`
     width: 100%;
@@ -78,60 +81,30 @@ export const NfcWriteContainer: FC = () => {
     ${getBasicFont(currentTypo.body.medium)};
   `
 
-  useEffect(() => {
-    // Check if the browser supports the Web NFC API
-    if ('NDEFReader' in window) {
-      setNfcAvailable(true)
-      const nfc = new NDEFReader()
-      nfc
-        .scan()
-        .then(() => {
-          nfc.onreadingerror = (error) => {
-            setMessage(`Error: ${error}`)
-          }
-          nfc.onreading = (event) => {
-            setNfcContent(JSON.stringify(event))
-          }
-        })
-        .catch((error) => {
-          setMessage(`Error! Scan failed to start: ${error}.`)
-        })
-    } else {
-      console.log('Web NFC API not available')
-      setMessage('Web NFC API not available')
-    }
-  }, [])
-
-  const handleWriteNfc = async () => {
-    if (!nfcAvailable) {
-      console.log('Web NFC API not available')
-      return
-    }
-
-    try {
-      const url = 'https://www.google.com'
-
-      // Connect to the first available NFC tag
-      const nfc = new NDEFReader()
-      await nfc.scan()
-      const tag = await nfc.write({
-        records: [{ recordType: 'url', data: url }],
-      })
-
-      console.log('Message written to tag:', tag)
-
-      setMessage('Message written successfully')
-    } catch (error) {
-      console.error(error)
-      setMessage('Error writing message to tag')
-    }
+  const handleClick = async () => {
+    if (!docId) return
+    const did = 'did:pkh:eip155:1:0xde695cbb6ec0cf3f4c9564070baeb032552c5111'
+    await register({ id: docId, did: did })
   }
 
   return (
     <Wrapper>
       <CardContainer>
-        <button onClick={handleWriteNfc}>Write NFC</button>
-        <p>{message}</p>
+        {isLoading ? (
+          <CommonSpinner />
+        ) : (
+          <Flex flexDirection='column' colGap='24px' rowGap='24px'>
+            <p>{data?.did || 'no did'}</p>
+            {!data?.did && (
+              <Button
+                variant='filled'
+                text='register'
+                onClick={() => handleClick()}
+                btnWidth={'240px'}
+              />
+            )}
+          </Flex>
+        )}
       </CardContainer>
     </Wrapper>
   )
