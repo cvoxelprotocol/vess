@@ -490,6 +490,50 @@ export type GetMyConnectionInvitaionsQuery = {
   } | null
 }
 
+export type GetUserConnectionInvitaionsQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetUserConnectionInvitaionsQuery = {
+  __typename?: 'Query'
+  node?:
+    | {
+        __typename?: 'CeramicAccount'
+        connectionInvitationList?: {
+          __typename?: 'ConnectionInvitationConnection'
+          edges?: Array<{
+            __typename?: 'ConnectionInvitationEdge'
+            node?: {
+              __typename?: 'ConnectionInvitation'
+              id: string
+              type?: string | null
+              status?: string | null
+              greeting: string
+              location?: string | null
+              eventId?: string | null
+              connection: {
+                __typename?: 'ConnectionConnection'
+                edges?: Array<{
+                  __typename?: 'ConnectionEdge'
+                  node?: {
+                    __typename?: 'Connection'
+                    id: string
+                    userId: string
+                    invitationId: any
+                    connectAt?: any | null
+                    did: { __typename?: 'CeramicAccount'; id: string }
+                  } | null
+                } | null> | null
+              }
+            } | null
+          } | null> | null
+        } | null
+      }
+    | { __typename?: 'Connection' }
+    | { __typename?: 'ConnectionInvitation' }
+    | null
+}
+
 export type GetConnectionInvitaionQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -997,6 +1041,92 @@ export type GetMyConnectionInvitaionsLazyQueryHookResult = ReturnType<
 export type GetMyConnectionInvitaionsQueryResult = Apollo.QueryResult<
   GetMyConnectionInvitaionsQuery,
   GetMyConnectionInvitaionsQueryVariables
+>
+export const GetUserConnectionInvitaionsDocument = gql`
+  query getUserConnectionInvitaions($id: ID!) {
+    node(id: $id) {
+      ... on CeramicAccount {
+        connectionInvitationList(last: 500) {
+          edges {
+            node {
+              id
+              type
+              status
+              greeting
+              location
+              eventId
+              connection(last: 500) {
+                edges {
+                  node {
+                    id
+                    userId
+                    invitationId
+                    connectAt
+                    did {
+                      ... on CeramicAccount {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetUserConnectionInvitaionsQuery__
+ *
+ * To run a query within a React component, call `useGetUserConnectionInvitaionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserConnectionInvitaionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserConnectionInvitaionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserConnectionInvitaionsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserConnectionInvitaionsQuery,
+    GetUserConnectionInvitaionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetUserConnectionInvitaionsQuery,
+    GetUserConnectionInvitaionsQueryVariables
+  >(GetUserConnectionInvitaionsDocument, options)
+}
+export function useGetUserConnectionInvitaionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUserConnectionInvitaionsQuery,
+    GetUserConnectionInvitaionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetUserConnectionInvitaionsQuery,
+    GetUserConnectionInvitaionsQueryVariables
+  >(GetUserConnectionInvitaionsDocument, options)
+}
+export type GetUserConnectionInvitaionsQueryHookResult = ReturnType<
+  typeof useGetUserConnectionInvitaionsQuery
+>
+export type GetUserConnectionInvitaionsLazyQueryHookResult = ReturnType<
+  typeof useGetUserConnectionInvitaionsLazyQuery
+>
+export type GetUserConnectionInvitaionsQueryResult = Apollo.QueryResult<
+  GetUserConnectionInvitaionsQuery,
+  GetUserConnectionInvitaionsQueryVariables
 >
 export const GetConnectionInvitaionDocument = gql`
   query getConnectionInvitaion($id: ID!) {

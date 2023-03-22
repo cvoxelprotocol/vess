@@ -32,6 +32,40 @@ query getMyConnectionInvitaions {
   }
 }
 
+query getUserConnectionInvitaions($id: ID!) {
+  node(id: $id) {
+    ... on CeramicAccount {
+      connectionInvitationList(last: 500) {
+        edges {
+          node {
+            id
+            type
+            status
+            greeting
+            location
+            eventId
+            connection(last: 500) {
+              edges {
+                node {
+                  id
+                  userId
+                  invitationId
+                  connectAt
+                  did {
+                    ... on CeramicAccount {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query getConnectionInvitaion($id: ID!) {
   node(id: $id) {
     ... on ConnectionInvitation {

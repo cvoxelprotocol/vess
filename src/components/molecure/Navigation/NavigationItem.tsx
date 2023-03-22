@@ -66,11 +66,7 @@ export const NavigationItem: FC<Props> = ({
   return (
     <NavigationItemContainer {...props}>
       <NavigationItemLayer>
-        <Icon
-          icon={icon}
-          size={isMobileOnly ? 'L' : 'XL'}
-          mainColor={currentTheme.onSecondaryContainer}
-        />
+        <Icon icon={icon} size={'L'} mainColor={currentTheme.onSecondaryContainer} />
       </NavigationItemLayer>
       <NavigationItemTitle>{title}</NavigationItemTitle>
     </NavigationItemContainer>

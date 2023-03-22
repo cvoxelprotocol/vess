@@ -27,16 +27,16 @@ const notoSans = Noto_Sans({
   subsets: ['latin'],
   display: 'swap',
 })
-const notoSansJP = Noto_Sans_JP({
-  style: 'normal',
-  weight: ['400', '500', '700'],
-  subsets: ['japanese'],
-  display: 'swap',
-})
+// const notoSansJP = Noto_Sans_JP({
+//   style: 'normal',
+//   weight: ['400', '500', '700'],
+//   subsets: ['japanese'],
+//   display: 'swap',
+// })
 
 const global = css`
   html {
-    font-family: ${notoSans.style.fontFamily}, ${notoSansJP.style.fontFamily};
+    font-family: ${notoSans.style.fontFamily};
   }
 `
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
