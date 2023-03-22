@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useQueryClient } from 'wagmi'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
+import { NfcDidRecord } from '@/pages/api/nfc'
 import { getCurrentDomain } from '@/utils/url'
 
 export type RegisterParam = {
@@ -14,20 +14,19 @@ export const useNfc = (id?: string) => {
   const { showToast } = useToast()
   const queryClient = useQueryClient()
 
-  const getDidFromNFC = async (id?: string): Promise<any> => {
+  const getDidFromNFC = async (id?: string): Promise<NfcDidRecord> => {
     try {
       let url = `${getCurrentDomain() || 'http://localhost:3000'}/api/nfc?id=${id}`
       const res = await fetch(url)
-      console.log({ res })
       const resJson = await res.json()
-      return resJson?.data
+      return resJson?.data as NfcDidRecord
     } catch (error) {
       console.error(error)
       throw error
     }
   }
 
-  const registerDid = async (param: RegisterParam): Promise<void> => {
+  const registerDid = async (param: RegisterParam): Promise<string> => {
     try {
       const { id, did } = param
       let url = `${getCurrentDomain() || 'http://localhost:3000'}/api/nfc?id=${id}&did=${did}`
@@ -37,21 +36,26 @@ export const useNfc = (id?: string) => {
           'Content-Type': 'application/json',
         },
       })
-      console.log({ url })
-      console.log({ res })
-      return await res.json()
+      const resJson = await res.json()
+      console.log({ resJson })
+      return resJson?.did
     } catch (error) {
       console.error(error)
       throw error
     }
   }
 
-  const { data, isLoading } = useQuery<any>(['getDidFromNFC', id], () => getDidFromNFC(id), {
-    enabled: !!id && id !== '',
-    staleTime: Infinity,
-    cacheTime: 300000,
-  })
-  const { mutateAsync: register } = useMutation<void, unknown, RegisterParam>(
+  const { data, isInitialLoading } = useQuery<NfcDidRecord>(
+    ['getDidFromNFC', id],
+    () => getDidFromNFC(id),
+    {
+      enabled: !!id && id !== '',
+      staleTime: Infinity,
+      cacheTime: 300000,
+    },
+  )
+
+  const { mutateAsync: register } = useMutation<string, unknown, RegisterParam>(
     (param) => registerDid(param),
     {
       onMutate() {
@@ -59,7 +63,8 @@ export const useNfc = (id?: string) => {
       },
       onSuccess() {
         closeLoading()
-        showToast('Created')
+        showToast('Setup successfully!')
+        queryClient.invalidateQueries(['getDidFromNFC', id])
       },
       onError(error) {
         console.error('error', error)
@@ -73,7 +78,7 @@ export const useNfc = (id?: string) => {
   )
   return {
     data,
-    isLoading,
+    isLoading: isInitialLoading,
     register,
   }
 }
