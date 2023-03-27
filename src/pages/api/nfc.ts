@@ -3,8 +3,11 @@ import { getFirestore } from 'firebase-admin/firestore'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export type NfcDidRecord = {
+  id?: string
   did?: string
   initialized?: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -37,11 +40,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return
       }
       const docData = doc.data()
-      if (docData?.initialized) {
+      if (docData?.initialized || (docData?.did && docData.did !== '')) {
         res.status(500).json({ error: 'Already initialized' })
         return
       }
-      const result = await docRef.set({ did, initialized: true }, { merge: true })
+      const now = new Date()
+      const result = await docRef.set(
+        { did, initialized: true, updatedAt: now.toISOString() },
+        { merge: true },
+      )
       console.log({ result })
       res.status(200).json({ did, initialized: true })
     } catch (error) {
