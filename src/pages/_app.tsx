@@ -12,6 +12,7 @@ import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { publicProvider } from 'wagmi/providers/public'
+import { GATracking } from '@/components/atom/Common/GATracking'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { Meta } from '@/components/layouts/Meta'
 import LoadingModal from '@/components/organism/Modal/LoadingModal'
@@ -26,16 +27,16 @@ const notoSans = Noto_Sans({
   subsets: ['latin'],
   display: 'swap',
 })
-const notoSansJP = Noto_Sans_JP({
-  style: 'normal',
-  weight: ['400', '500', '700'],
-  subsets: ['japanese'],
-  display: 'swap',
-})
+// const notoSansJP = Noto_Sans_JP({
+//   style: 'normal',
+//   weight: ['400', '500', '700'],
+//   subsets: ['japanese'],
+//   display: 'swap',
+// })
 
 const global = css`
   html {
-    font-family: ${notoSans.style.fontFamily}, ${notoSansJP.style.fontFamily};
+    font-family: ${notoSans.style.fontFamily};
   }
 `
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -113,6 +114,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             <WagmiConfig client={client}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
+                  <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
                   <Meta />
                   {getLayout(<Component {...props} />)}
                   {isLoading && <LoadingModal />}

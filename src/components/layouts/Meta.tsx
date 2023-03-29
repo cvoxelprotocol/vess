@@ -47,6 +47,7 @@ export const Meta: FC<MetaData> = ({
       <link rel='canonical' href={url} key='canonical' />
       <link rel='icon' href='https://app.vess.id/favicon.ico' />
       <meta name='twitter:card' content='summary_large_image' key='twittercard' />
+      <meta name='twitter:site' content='@vess_id' />
       <meta name='viewport' content='initial-scale=1, viewport-fit=cover' />
       {/* <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} /> */}
     </Head>
