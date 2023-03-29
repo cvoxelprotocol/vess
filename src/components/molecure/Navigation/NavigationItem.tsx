@@ -7,7 +7,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: IconsType
-  title: string
+  title?: string
   selected?: boolean
   metadata?: string
 }
@@ -31,6 +31,7 @@ export const NavigationItem: FC<Props> = ({
     justify-content: center;
     border: none;
     padding: 0;
+    cursor: pointer;
   `
   const NavigationItemLayer = styled.div`
     background: ${selected ? currentTheme.secondaryContainer : 'none'};
@@ -72,7 +73,7 @@ export const NavigationItem: FC<Props> = ({
           mainColor={currentTheme.onSecondaryContainer}
         />
       </NavigationItemLayer>
-      <NavigationItemTitle>{title}</NavigationItemTitle>
+      {title && <NavigationItemTitle>{title}</NavigationItemTitle>}
     </NavigationItemContainer>
   )
 }
