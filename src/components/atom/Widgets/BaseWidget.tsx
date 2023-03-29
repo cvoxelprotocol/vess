@@ -20,6 +20,7 @@ type Props = {
   border?: string
   EditButtonPosition?: string
   overflow?: string
+  isLoading?: boolean
 }
 
 export const BaseWidget: FC<Props> = ({
@@ -34,6 +35,7 @@ export const BaseWidget: FC<Props> = ({
   border = 'none',
   editable = false,
   overflow = 'hidden',
+  isLoading = false,
 }) => {
   const { currentTheme } = useVESSTheme()
   const [showEdit, setShowEdit] = useState(false)
@@ -97,6 +99,20 @@ export const BaseWidget: FC<Props> = ({
       animation: ${focusEditable && editable ? shake : undefined} 0.5s linear infinite;
     }
   `
+  const LoadingBox = styled.div`
+    position: relative;
+    grid-column: ${gridCol};
+    grid-row: ${gridRow};
+    background: ${currentTheme.surface3};
+    border-radius: ${radius};
+
+    @media (max-width: 599px) {
+      grid-column: ${gridColOnSp};
+      grid-row: ${gridRowOnSp};
+      border-radius: ${radiusOnSp};
+    }
+  `
+
   const Container = styled.div`
     overflow: ${overflow};
     @media (max-width: 1079px) {
@@ -131,9 +147,14 @@ export const BaseWidget: FC<Props> = ({
       animation: ${focusEditable ? fadeIn : undefined} 0.15s ease-in-out forwards;
     }
   `
+
   const handleEdit = () => {
     setShowEdit(false)
     if (onClickEdit) onClickEdit()
+  }
+
+  if (isLoading === true) {
+    return <LoadingBox></LoadingBox>
   }
 
   return (
