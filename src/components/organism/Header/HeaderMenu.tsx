@@ -3,33 +3,73 @@ import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { HeaderItem } from './HeaderItem'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
-import {
-  BasePopover,
-  PopoverContainer,
-  PopoverTrigger,
-} from '@/components/atom/Dialogs/BasePopover'
+import { Flex } from '@/components/atom/Common/Flex'
+import { Icon, ICONS } from '@/components/atom/Icons/Icon'
+import { Divider } from '@/components/atom/Menu/Divider'
+import { Menu, PopoverContainer, PopoverTrigger } from '@/components/atom/Menu/Menu'
+import { MenuItem } from '@/components/atom/Menu/MenuItem'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useStateShowHeaderMenu } from '@/jotai/ui'
+import { shortenStr } from '@/utils/objectUtil'
 
 export const HeaderMenu: FC = () => {
-  const { did } = useDIDAccount()
+  const { did, originalAddress } = useDIDAccount()
   const { disConnectDID } = useConnectDID()
   const router = useRouter()
   const [showHeaderMenu, setShowHeaderMenu] = useStateShowHeaderMenu()
   const { profile } = useSocialAccount(did)
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
-  const Content = styled.div`
+  const WrappedPopoverTrigger = styled(PopoverTrigger)`
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0px 16px;
+    border-radius: 16px;
+
+    &:hover {
+      background: ${currentTheme.surface1};
+    }
+  `
+
+  const AccountContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    width: 120px;
+    align-items: start;
+    justify-content: start;
+    gap: 0px;
+
+    @media (max-width: 599px) {
+      display: none;
+    }
+  `
+
+  const Name = styled.div`
+    color: ${currentTheme.onBackground};
+    ${getBasicFont(currentTypo.title.medium)};
+    white-space: nowrap;
+  `
+  const WalletAddress = styled.div`
+    color: ${currentTheme.outline};
+    ${getBasicFont(currentTypo.label.small)};
+  `
+
+  const AvatarWrapper = styled.div`
+    width: 40px;
+    height: 40px;
   `
 
   const goToMyPage = () => {
     router.push(`/did/${did}`)
     setShowHeaderMenu(false)
+  }
+
+  const jumpToURL = (url: string) => {
+    window.open(url, '_blank')
   }
 
   const logout = async () => {
@@ -39,15 +79,28 @@ export const HeaderMenu: FC = () => {
 
   return (
     <PopoverContainer onOpenChange={setShowHeaderMenu} open={showHeaderMenu}>
-      <PopoverTrigger>
-        <Avatar url={profile.avatarSrc} size={'XL'} />
-      </PopoverTrigger>
-      <BasePopover>
-        <Content>
-          <HeaderItem title={'my page'} onClick={() => goToMyPage()} />
-          <HeaderItem title={'logout'} onClick={() => logout()} />
-        </Content>
-      </BasePopover>
+      <WrappedPopoverTrigger>
+        <AvatarWrapper>
+          <Avatar url={profile.avatarSrc} fill />
+        </AvatarWrapper>
+        <AccountContainer>
+          <Name>{profile.displayName}</Name>
+          <Flex flexDirection='row' rowGap='2px'>
+            <Icon icon={ICONS.ETHEREUM} mainColor={currentTheme.outline} size={'SS'} />
+            <WalletAddress>{shortenStr(originalAddress, 10)}</WalletAddress>
+          </Flex>
+        </AccountContainer>
+      </WrappedPopoverTrigger>
+      <Menu side={'bottom'} align={'center'}>
+        <MenuItem title={'My Profile'} onClick={() => goToMyPage()} icon={ICONS.ACCOUNT} />
+        <MenuItem title={'Sign Out'} onClick={() => logout()} icon={ICONS.LOGOUT} />
+        <Divider title='Organization' />
+        <MenuItem
+          title={'Create New'}
+          onClick={() => jumpToURL('https://lp.vess.id/en/synapss/org/apply')}
+          icon={ICONS.ADD}
+        />
+      </Menu>
     </PopoverContainer>
   )
 }
