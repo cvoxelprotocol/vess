@@ -4,14 +4,17 @@ import { FC, MouseEvent } from 'react'
 import { SocialLinkItem } from '../Profile/SocialLinkItem'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
+import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
+import { ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { DefaultCardColor } from '@/constants/ui'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { shortenStr } from '@/utils/objectUtil'
 
 type Props = {
   userId: string
@@ -26,34 +29,39 @@ export const UserCard: FC<Props> = ({ userId }) => {
   const router = useRouter()
 
   const CardContainer = styled.div`
-    background: ${currentTheme.surface2};
+    background: ${currentTheme.surface1};
     position: relative;
     overflow: hidden;
-    border-radius: 16px;
+    padding: 24px 0px 16px 0px;
+    border-radius: 32px;
     width: 100%;
-    min-width: 280px;
-    max-width: 320px;
-    height: 245px;
-  `
-  const HeaderImage = styled.div`
-    width: 100%;
-    height: 74px;
-  `
-  const UserContainer = styled.div`
-    padding: 26px 12px 12px;
-    width: 100%;
-    text-align: center;
+    min-width: 216px;
+    height: 248px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s ease-in-out;
+  `
+
+  const NameContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  `
+  const Identifier = styled.span`
+    color: ${currentTheme.outline};
+    ${getBasicFont(currentTypo.label.medium)};
+  `
+
+  const UserContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 8px;
     cursor: pointer;
   `
-  const PfpContainer = styled.div`
-    position: absolute;
-    left: calc(50% - 28.5px);
-    top: 40px;
-    width: fit-content;
-  `
+
   const PfpBackground = styled.div`
     width: 64px;
     height: 64px;
@@ -85,58 +93,80 @@ export const UserCard: FC<Props> = ({ userId }) => {
     router.push(`/did/${userId}`)
   }
 
+  const jumpToLink = (url: string | undefined, e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    window.open(url, '_blank')
+  }
+
   return (
     <CardContainer>
-      <HeaderImage>
-        <NextImageContainer src={'/base_item_header.png'} width={'100%'} objectFit={'cover'} />
-      </HeaderImage>
       <UserContainer onClick={jumpToResume}>
-        <PfpContainer>
-          <PfpBackground>
-            {profile.avatarSrc ? (
-              <Avatar url={profile.avatarSrc} size={'XXL'} />
-            ) : (
-              <AvatarPlaceholder size={'XXL'} />
-            )}
-          </PfpBackground>
-        </PfpContainer>
-        <Name>{profile.displayName}</Name>
-        <Flex justifyContent='center' alignItems='center' width='100%'>
-          {highlightedMembership && !highlightedSelfClaimedMembership && (
-            <InfoItem>
-              <Avatar url={highlightedMembership.workspace?.icon} size={'MM'} />
-              <Chip
-                text={highlightedMembership.roles[0]}
-                variant={'filled'}
-                mainColor={
-                  highlightedMembership.workspace?.primaryColor || DefaultCardColor.secondColor
-                }
-                textColor={
-                  highlightedMembership.workspace?.optionColor || DefaultCardColor.textColor
-                }
-                size={'S'}
-              />
-            </InfoItem>
+        <PfpBackground>
+          {profile.avatarSrc ? (
+            <Avatar url={profile.avatarSrc} size={'XXL'} />
+          ) : (
+            <AvatarPlaceholder size={'XXL'} />
           )}
-          {!highlightedMembership && highlightedSelfClaimedMembership && (
-            <InfoItem>
-              <Avatar url={'https://workspace.vess.id/company.png'} size={'MM'} />
-              <Chip
-                text={highlightedSelfClaimedMembership.membershipName}
-                variant={'filled'}
-                mainColor={DefaultCardColor.secondColor}
-                textColor={DefaultCardColor.textColor}
-                size={'S'}
-              />
-            </InfoItem>
-          )}
-        </Flex>
-        <Flex justifyContent='center' alignItems='center' width='100%'>
-          <SocialLinkItem linkType={'twitter'} value={twitter} />
-          <SocialLinkItem linkType={'telegram'} value={telegram} />
-          <SocialLinkItem linkType={'github'} value={github} />
-        </Flex>
+        </PfpBackground>
+        <NameContainer>
+          <Name>{profile.displayName}</Name>
+          <Identifier>{shortenStr(userId, 10)}</Identifier>
+        </NameContainer>
       </UserContainer>
+      <Flex justifyContent='center' alignItems='center' width='100%' colGap='8px'>
+        {highlightedMembership && !highlightedSelfClaimedMembership && (
+          <InfoItem>
+            <Avatar url={highlightedMembership.workspace?.icon} size={'L'} />
+            <Chip
+              text={highlightedMembership.roles[0]}
+              variant={'filled'}
+              mainColor={
+                highlightedMembership.workspace?.secondaryColor || DefaultCardColor.secondColor
+              }
+              textColor={highlightedMembership.workspace?.optionColor || DefaultCardColor.textColor}
+              size={'S'}
+            />
+          </InfoItem>
+        )}
+        {!highlightedMembership && highlightedSelfClaimedMembership && (
+          <InfoItem>
+            <Avatar url={'https://workspace.vess.id/company.png'} size={'L'} />
+            <Chip
+              text={highlightedSelfClaimedMembership.membershipName}
+              variant={'filled'}
+              mainColor={DefaultCardColor.secondColor}
+              textColor={DefaultCardColor.textColor}
+              size={'S'}
+            />
+          </InfoItem>
+        )}
+      </Flex>
+      <Flex justifyContent='center' alignItems='center' width='100%' colGap='8px'>
+        <IconButton
+          icon={ICONS.TWITTER}
+          variant='text'
+          mainColor={currentTheme.onSurface}
+          size='MM'
+          disabled={!twitter}
+          onClick={(e) => jumpToLink(twitter, e)}
+        />
+        <IconButton
+          icon={ICONS.TELEGRAM}
+          mainColor={currentTheme.onSurface}
+          variant='text'
+          size='MM'
+          disabled={!telegram}
+          onClick={(e) => jumpToLink(telegram, e)}
+        />
+        <IconButton
+          icon={ICONS.GITHUB}
+          mainColor={currentTheme.onSurface}
+          variant='text'
+          size='MM'
+          disabled={!github}
+          onClick={(e) => jumpToLink(github, e)}
+        />
+      </Flex>
     </CardContainer>
   )
 }

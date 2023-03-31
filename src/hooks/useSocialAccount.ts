@@ -127,5 +127,6 @@ export const useSocialAccount = (did?: string) => {
     ccProfile,
     lensProfile,
     ensProfile,
+    isloadingProfile,
   }
 }

@@ -4,6 +4,7 @@ import { FC } from 'react'
 import { useConnect } from 'wagmi'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { Button } from '@/components/atom/Buttons/Button'
+import { PanelButton } from '@/components/atom/Buttons/PanelButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -16,7 +17,7 @@ export const ConnectWalletModal: FC = () => {
   const { connectDID } = useConnectDID()
 
   const Container = styled.div`
-    padding: 32px;
+    padding: 8px 24px;
     border-radius: 32px;
     display: flex;
     flex-direction: column;
@@ -50,13 +51,19 @@ export const ConnectWalletModal: FC = () => {
 
   return (
     <VESSModalContainer open={showConnectModal} onOpenChange={setShowConnectModal}>
-      <VESSModal>
+      <VESSModal modalTitle='Connect Wallet'>
         <Container>
-          <Title>Connect Wallet</Title>
-          <Flex flexDirection='column' rowGap='8px'>
+          <Flex
+            flexDirection='row'
+            flexDirectionSP='column'
+            rowGap='16px'
+            colGap='16px'
+            width='100%'
+            height='100%'
+          >
             {connectors.map((connector) => (
-              <Button
-                text={
+              <PanelButton
+                label={
                   isLoading && connector.id === pendingConnector?.id
                     ? ' (connecting)'
                     : connector.name
@@ -64,7 +71,9 @@ export const ConnectWalletModal: FC = () => {
                 disabled={!connector.ready}
                 key={connector.id}
                 onClick={() => handleLogin(connector)}
-                btnWidth={'100%'}
+                width={'100%'}
+                src={`/icons/${connector.id.toLowerCase()}.png`}
+                borderColor={currentTheme.outline}
               />
             ))}
             {error && <ErrorText>{error.message}</ErrorText>}

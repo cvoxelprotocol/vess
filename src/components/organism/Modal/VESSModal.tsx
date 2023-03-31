@@ -73,7 +73,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, Props>(
       }
     `
     const Header = styled.div`
-      background: ${headerColor ? headerColor : 'transparent'};
+      background: ${headerColor || 'transparent'};
       width: 100%;
       height: 56px;
       display: flex;

@@ -58,9 +58,12 @@ export const IconButton: FC<IconButtonStyleProps> = ({
             <Icon
               icon={icon}
               size={size}
-              mainColor={variant === 'filled' ? currentTheme.onPrimary : currentTheme.primary}
+              mainColor={
+                mainColor ?? (variant === 'filled' ? currentTheme.onPrimary : currentTheme.primary)
+              }
               focusColor={
-                variant === 'filled' ? currentTheme.primaryContainer : currentTheme.primary
+                focusColor ??
+                (variant === 'filled' ? currentTheme.primaryContainer : currentTheme.primary)
               }
             />
           )}
@@ -82,6 +85,7 @@ export const IconButton: FC<IconButtonStyleProps> = ({
     position: relative;
     padding: 0;
     width: fit-content;
+    cursor: pointer;
   `
   const ButtonLayer = styled.div`
     background: none;

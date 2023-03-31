@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { ConnectWalletModal } from '../Modal/Wallet/ConnectWalletModal'
 import { HeaderMenu } from './HeaderMenu'
+import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
@@ -15,7 +16,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const BaseHeader: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { connection } = useDIDAccount()
+  const { connection, originalAddress, did } = useDIDAccount()
   const { isAuthorized } = useConnectDID()
   const router = useRouter()
   const { setShowConnectModal } = useVESSWidgetModal()
@@ -29,7 +30,7 @@ export const BaseHeader: FC = () => {
     background: ${currentTheme.background};
     z-index: 998;
     display: grid;
-    grid-template-columns: 100px 1fr 64px;
+    grid-template-columns: 100px 1fr 180px;
     @media (max-width: 599px) {
       height: 64px;
       grid-template-columns: 64px 1fr 64px;
@@ -54,6 +55,20 @@ export const BaseHeader: FC = () => {
     @media (max-width: 599px) {
       display: block;
       height: 38px;
+    }
+  `
+
+  const WrappedButton = styled(Button)`
+    display: block;
+    @media (max-width: 599px) {
+      display: none;
+    }
+  `
+
+  const WrappedIconButton = styled(IconButton)`
+    display: none;
+    @media (max-width: 599px) {
+      display: block;
     }
   `
 
@@ -82,13 +97,20 @@ export const BaseHeader: FC = () => {
             {isAuthorized ? (
               <HeaderMenu />
             ) : (
-              <IconButton
-                icon={ICONS.WALLET}
-                size={'LL'}
-                variant='text'
-                mainColor={currentTheme.onSurface}
-                onClick={() => setShowConnectModal(true)}
-              />
+              <>
+                <WrappedIconButton
+                  icon={ICONS.WALLET}
+                  size={'LL'}
+                  variant='text'
+                  mainColor={currentTheme.onSurface}
+                  onClick={() => setShowConnectModal(true)}
+                />
+                <WrappedButton
+                  text={'Connect Wallet'}
+                  icon={ICONS.WALLET}
+                  onClick={() => setShowConnectModal(true)}
+                />
+              </>
             )}
           </>
         )}

@@ -29,6 +29,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     ccProfile,
     lensProfile,
     ensProfile,
+    isloadingProfile,
   } = useSocialAccount(props.did)
   const { setShowSocialProfileModal } = useVESSWidgetModal()
   const [displayProfileType, setDisplayProfileType] = useState<profileType>('default')

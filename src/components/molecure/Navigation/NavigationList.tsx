@@ -2,7 +2,9 @@ import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
 import { NavigationItem } from './NavigationItem'
+import { ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { SOURCE_LINK } from '@/constants/sourceLink'
 import { getNaviItem, NAVIGATION_ITEM, NAVIGATION_LIST, NAVIGATION_LIST_TYPE } from '@/constants/ui'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -21,19 +23,50 @@ export const NavigationList: FC = () => {
     flex-direction: column;
     gap: 24px;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: 80px;
     height: 100vh;
     @media (max-width: 599px) {
       height: 64px;
       width: 100%;
-      flex-direction: row;
       padding: 12px;
-      justify-content: center;
-      align-items: center;
       background: ${currentTheme.surface1};
       border-radius: 32px 32px 0 0;
       border-top: 1px solid ${currentTheme.outline};
+    }
+  `
+  const NavigationListUpper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+    gap: 24px;
+    @media (max-width: 599px) {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+  `
+
+  const NavigationListLower = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+    gap: 24px;
+
+    @media (max-width: 599px) {
+      display: none;
+    }
+  `
+
+  const SourceLinkWrapper = styled.a`
+    width: 100%;
+    opacity: 0.5;
+    &:hover {
+      opacity: 0.7;
     }
   `
 
@@ -68,20 +101,33 @@ export const NavigationList: FC = () => {
 
   return (
     <NavigationListContainer>
-      <LogoImage>
-        <NextImageContainer src={'/logo_bard.png'} width={'100%'} objectFit={'contain'} />
-      </LogoImage>
-      {NAVIGATION_LIST.map((navi) => {
-        return (
-          <NavigationItem
-            key={navi.item}
-            title={navi.item}
-            icon={navi.icon}
-            onClick={() => handleClick(navi)}
-            selected={item === navi.item}
-          />
-        )
-      })}
+      <NavigationListUpper>
+        <LogoImage>
+          <NextImageContainer src={'/logo_bard.png'} width={'100%'} objectFit={'contain'} />
+        </LogoImage>
+        {NAVIGATION_LIST.map((navi) => {
+          return (
+            <NavigationItem
+              key={navi.item}
+              title={navi.item}
+              icon={navi.icon}
+              onClick={() => handleClick(navi)}
+              selected={item === navi.item}
+            />
+          )
+        })}
+      </NavigationListUpper>
+      <NavigationListLower>
+        <SourceLinkWrapper href={SOURCE_LINK.DISCORD} target={'_blank'} rel='noopener noreferrer'>
+          <NavigationItem icon={ICONS.DISCORD} />
+        </SourceLinkWrapper>
+        <SourceLinkWrapper href={SOURCE_LINK.TWITTER} target={'_blank'} rel='noopener noreferrer'>
+          <NavigationItem icon={ICONS.TWITTER} />
+        </SourceLinkWrapper>
+        <SourceLinkWrapper href={SOURCE_LINK.WEBSITE} target={'_blank'} rel='noopener noreferrer'>
+          <NavigationItem icon={ICONS.QUESTION} />
+        </SourceLinkWrapper>
+      </NavigationListLower>
     </NavigationListContainer>
   )
 }

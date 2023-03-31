@@ -30,6 +30,7 @@ import { HomeIcon } from './HomeIcon'
 import { ImportIcon } from './ImportIcon'
 import { LeftArrowIcon } from './LeftArrowIcon'
 import { Location } from './Location'
+import { LogOut } from './LogOut'
 import { MailIcon } from './MailIcon'
 import { MessageCircleIcon } from './MessageCircleIcon'
 import { MoonIcon } from './MoonIcon'
@@ -88,6 +89,7 @@ export const ICONS = {
   CALENDAR: 'calendar',
   DOLLAR: 'dollar',
   LOCATION: 'location',
+  LOGOUT: 'logOut',
   CHAT: 'chat',
   CARD: 'card',
   PC: 'pc',
@@ -322,6 +324,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
         return (
           <IconContainer>
             <LeftArrowIcon />
+          </IconContainer>
+        )
+      case 'logOut':
+        return (
+          <IconContainer>
+            <LogOut />
           </IconContainer>
         )
       case 'moon':

@@ -22,6 +22,7 @@ export const HeaderItem: FC<Props> = ({ title, ...props }) => {
     padding: 8px;
     width: 100%;
   `
+
   const NavigationItemLayer = styled.div`
     display: flex;
     flex-direction: row;
@@ -36,8 +37,8 @@ export const HeaderItem: FC<Props> = ({ title, ...props }) => {
 
   const NavigationItemTitle = styled.span`
     background: none;
-    color: ${currentTheme.onSecondaryContainer};
-    ${getBasicFont(currentTypo.title.small)}
+    color: ${currentTheme.onSurface};
+    ${getBasicFont(currentTypo.body.large)}
     text-align: left;
     white-space: nowrap;
   `

@@ -3,8 +3,10 @@ import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
 import { useAccount, useDisconnect } from 'wagmi'
 import { NavigationList } from '../molecure/Navigation/NavigationList'
+import { Footer } from '../organism/Footer/Footer'
 import { BaseHeader } from '../organism/Header/BaseHeader'
 import LoadingModal from '../organism/Modal/LoadingModal'
+import { footerLinks } from '@/constants/footerLinks'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useConnection } from '@/hooks/useConnection'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
@@ -60,19 +62,29 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       grid-row: 3/4;
     }
   `
-  const MainContainer = styled.div`
-    background: ${currentTheme.background};
-    overflow: hidden;
+
+  const MainWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
     grid-column: 2;
     grid-row: 2;
+    overflow: hidden;
+    @media (max-width: 599px) {
+      grid-column: 1;
+      grid-row: 2;
+    }
+  `
+
+  const MainContainer = styled.div`
+    background: ${currentTheme.background};
     max-width: 984px;
     width: 100%;
     margin: 0 auto;
     height: 100%;
     min-height: 100vh;
     @media (max-width: 599px) {
-      grid-column: 1;
-      grid-row: 2;
       width: 100%;
       overflow-x: hidden;
     }
@@ -105,8 +117,11 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       <NaviContainer>
         <NavigationList />
       </NaviContainer>
-      <MainContainer id={'MainContainer'}>{children}</MainContainer>
-      {isLoading && <LoadingModal />}
+      <MainWrapper>
+        <MainContainer id={'MainContainer'}>{children}</MainContainer>
+        <Footer src='/vess_logo_full_white.png' links={footerLinks} />
+        {isLoading && <LoadingModal />}
+      </MainWrapper>
     </LayoutContainer>
   )
 }
