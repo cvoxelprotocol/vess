@@ -118,7 +118,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
 
   return (
     <>
-      <BaseWidget onClickEdit={handleEdit} isLoading={false} {...props}>
+      <BaseWidget onClickEdit={handleEdit} {...props}>
         <SrcDrawerContainer>
           <SourceDrawer>
             <AvatarButton

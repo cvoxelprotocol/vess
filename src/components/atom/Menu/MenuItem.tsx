@@ -13,7 +13,7 @@ type Props = {
 export const MenuItem: FC<Props> = ({ title, icon, tailIcon, width, ...props }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const ItemContainer = styled.button`
-    width: ${width ? width : '100%'};
+    width: ${width || '100%'};
     padding: 16px 16px;
     display: flex;
     justify-content: space-between;

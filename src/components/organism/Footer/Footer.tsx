@@ -28,7 +28,7 @@ export const Footer: FC<Props> = ({
     width: 100%;
     display: flex;
     flex-direction: column;
-    background: ${background ? background : 'transparent'};
+    background: ${background || 'transparent'};
   `
 
   const FooterContainer = styled.footer`
@@ -76,13 +76,13 @@ export const Footer: FC<Props> = ({
   `
 
   const LinksTitle = styled.div`
-    color: ${textColor ? textColor : currentTheme.onSurfaceVariant};
+    color: ${textColor || currentTheme.onSurfaceVariant};
     opacity: 0.6;
     ${getBasicFont(currentTypo.title.medium)};
   `
 
   const LinkStyle = styled.a`
-    color: ${textColor ? textColor : currentTheme.onSurfaceVariant};
+    color: ${textColor || currentTheme.onSurfaceVariant};
     ${getBasicFont(currentTypo.title.large)};
     text-decoration: none;
     white-space: nowrap;
@@ -95,9 +95,9 @@ export const Footer: FC<Props> = ({
   const CopyRight = styled.div`
     width: 100%;
     margin: 16px 32px;
-    border-top: solid 1px ${textColor ? textColor : currentTheme.onSurfaceVariant};
+    border-top: solid 1px ${textColor || currentTheme.onSurfaceVariant};
     padding: 32px 16px;
-    color: ${textColor ? textColor : currentTheme.onSurfaceVariant};
+    color: ${textColor || currentTheme.onSurfaceVariant};
     ${getBasicFont(currentTypo.body.medium)}
     opacity: 0.6;
 

@@ -29,15 +29,15 @@ export const PanelButton: FC<Props> = ({
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
   const WrappedButton = styled.button`
-    width: ${width ? width : 'fit-content'};
-    height: ${height ? height : 'fit-content'};
+    width: ${width || 'fit-content'};
+    height: ${height || 'fit-content'};
     padding: 16px 20px;
-    background: ${background ? background : 'transparent'};
+    background: ${background || 'transparent'};
     display: flex;
     flex-direction: column;
     flex: 1;
     align-items: center;
-    border-radius: ${radius ? radius : '16px'};
+    border-radius: ${radius || '16px'};
     border: ${borderColor ? `solid 1px ${borderColor}` : 'none'};
     position: relative;
     cursor: pointer;
@@ -78,7 +78,7 @@ export const PanelButton: FC<Props> = ({
   `
 
   const Label = styled.span`
-    color: ${labelColor ? labelColor : currentTheme.onSurface};
+    color: ${labelColor || currentTheme.onSurface};
     ${getBasicFont(currentTypo.title.medium)}
     z-index: 2;
 
