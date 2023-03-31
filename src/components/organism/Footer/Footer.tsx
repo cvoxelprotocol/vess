@@ -154,24 +154,22 @@ export const Footer: FC<Props> = ({
         <LinksContainer>
           {Object.keys(links).map((title) => {
             return (
-              <>
-                <LinksSection key={title}>
-                  <LinksTitle>{title}</LinksTitle>
+              <LinksSection key={title}>
+                <LinksTitle>{title}</LinksTitle>
 
-                  {links[title].links.map((link) => {
-                    return (
-                      <LinkStyle
-                        href={link.url}
-                        key={link.label}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                      >
-                        {link.label}
-                      </LinkStyle>
-                    )
-                  })}
-                </LinksSection>
-              </>
+                {links[title].links.map((link) => {
+                  return (
+                    <LinkStyle
+                      href={link.url}
+                      key={link.label}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      {link.label}
+                    </LinkStyle>
+                  )
+                })}
+              </LinksSection>
             )
           })}
         </LinksContainer>
