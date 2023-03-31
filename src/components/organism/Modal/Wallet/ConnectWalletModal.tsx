@@ -72,7 +72,7 @@ export const ConnectWalletModal: FC = () => {
                 key={connector.id}
                 onClick={() => handleLogin(connector)}
                 width={'100%'}
-                src={`/icons/${connector.id}.png`}
+                src={`/icons/${connector.id.toLowerCase()}.png`}
                 borderColor={currentTheme.outline}
               />
             ))}
