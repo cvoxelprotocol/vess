@@ -19,7 +19,7 @@ import { CERAMIC_NETWORK } from '@/constants/common'
 // const ceramic = new CeramicClient('http://localhost:7007')
 
 const compose = new ComposeClient({
-  ceramic: process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007',
+  ceramic: 'http://localhost:7007',
   // cast our definition as a RuntimeCompositeDefinition
   definition: (CERAMIC_NETWORK === 'mainnet'
     ? prodDifinition

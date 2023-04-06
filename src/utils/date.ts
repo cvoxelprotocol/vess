@@ -1,4 +1,4 @@
-import { format, isBefore, parseISO } from 'date-fns'
+import { differenceInSeconds, format, isBefore, parseISO } from 'date-fns'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 export const parseISOStrToDate = (iso: string): Date => {
@@ -30,4 +30,9 @@ export const isExpired = (date?: string): boolean => {
   if (!date) return false
   const now = new Date()
   return isBefore(parseISOStrToDate(date), now)
+}
+
+export const isWithinSeconds = (seconds: number, date?: string): boolean => {
+  if (!date) return false
+  return differenceInSeconds(new Date(), new Date(date)) < seconds
 }
