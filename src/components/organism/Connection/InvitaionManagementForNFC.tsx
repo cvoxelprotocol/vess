@@ -29,8 +29,6 @@ import { useStateMyConnectionInvitaions, useStateUnUsedInvitaion } from '@/jotai
 import { shortenStr } from '@/utils/objectUtil'
 import { getCurrentDomain } from '@/utils/url'
 
-export const ETH_DENVER_EVENT_ID =
-  'ceramic://kjzl6cwe1jw14ar8wuy2i31rkjaf1k8vrhae7qzucqjd9z8fmvsgceca7jb5c7b'
 const DEFAULT_GREETING = 'Nice to meet you!'
 
 export const InvitaionManagementForNFC: FC = () => {
@@ -39,7 +37,6 @@ export const InvitaionManagementForNFC: FC = () => {
   const { showToast } = useToast()
   const [unused, setUnused] = useStateUnUsedInvitaion()
   const [unusedInvitations, setMyInvitations] = useStateMyConnectionInvitaions()
-  // const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
   const { profile } = useSocialAccount(did)
   const router = useRouter()
   const { showLoading, closeLoading } = useVESSLoading()
