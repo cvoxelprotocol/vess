@@ -13,6 +13,7 @@ import {
   useCreateConnectionMutation,
   ConnectionInput,
   useGetUserConnectionInvitaionsLazyQuery,
+  useGetIssuedConnectionsLazyQuery,
 } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 // import { useEventAttendance } from '@/hooks/useEventAttendance'
@@ -22,6 +23,7 @@ import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { isWithinSeconds } from '@/utils/date'
 
 export const ETH_DENVER_EVENT_ID =
   'ceramic://kjzl6cwe1jw14ar8wuy2i31rkjaf1k8vrhae7qzucqjd9z8fmvsgceca7jb5c7b'
@@ -45,7 +47,7 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
       variables: {
         id: did || '',
       },
-      nextFetchPolicy: 'network-only',
+      nextFetchPolicy: 'no-cache',
       onError(e) {
         if (e instanceof DOMException) {
           return
@@ -54,24 +56,23 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
       },
     })
   const [createConnection] = useCreateConnectionMutation()
-  // const { eventDetail } = useEventAttendance(
-  //   invitation?.node?.__typename === 'ConnectionInvitation' && invitation?.node?.eventId
-  //     ? invitation?.node?.eventId
-  //     : '',
-  // )
+  const [getIssuedConnections, { data: connections }] = useGetIssuedConnectionsLazyQuery({
+    variables: { id: did || '' },
+    nextFetchPolicy: 'no-cache',
+  })
   const { twitter, telegram } = useSocialLinks(did)
 
   useEffect(() => {
     try {
       if (!did) return
       getUserConnectionInvitaions()
+      getIssuedConnections()
     } catch (error) {
       console.error(error)
     }
   }, [])
 
   const unusedInvitations = useMemo(() => {
-    console.log({ userInvitations })
     if (userInvitations?.node?.__typename !== 'CeramicAccount') return []
     const invitations = userInvitations?.node?.connectionInvitationList?.edges
       ?.filter((edge) => edge?.node?.connection.edges?.length === 0)
@@ -84,6 +85,20 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
     if (!unusedInvitations || unusedInvitations.length === 0) return
     return unusedInvitations[0]
   }, [unusedInvitations])
+
+  const isAlreadyIssued = useMemo(() => {
+    if (!connections || !myDid || !did) return false
+    const tempList =
+      connections.node?.__typename === 'CeramicAccount'
+        ? connections.node?.connectionList?.edges?.map((edge) => {
+            return { node: edge?.node }
+          })
+        : []
+    if (!tempList || tempList.length === 0) return false
+    return tempList.some((c) => {
+      return c.node?.userId === myDid && isWithinSeconds(3600, c.node?.connectAt)
+    }) // issued with in 60 min
+  }, [connections, myDid, did])
 
   const Wrapper = styled.main`
     width: 100%;
@@ -188,15 +203,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
               <Avatar url={profile.avatarSrc} size={'100'} />
             </PfpContainer>
             <Title>{`I'm ${profile.displayName || ''}`}</Title>
-            {/* {eventDetail && (
-              <Flex flexDirection='column' colGap='4px' rowGap='4px'>
-                <At>at</At>
-                <Flex colGap='4px' rowGap='4px'>
-                  <Avatar url={eventDetail.icon} size={'LL'} />
-                  <EventName>{eventDetail.name}</EventName>
-                </Flex>
-              </Flex>
-            )} */}
             <Flex colGap='4px' rowGap='4px'>
               <SocialLinkItem linkType={'telegram'} value={telegram} />
               <SocialLinkItem linkType={'twitter'} value={twitter} />
@@ -212,13 +218,14 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
             ) : (
               <Button
                 variant='filled'
-                text='Nice to meet you too!'
+                text={isAlreadyIssued ? 'You already Issued Connection' : 'Nice to meet you too!'}
                 onClick={() => issueConnection()}
                 btnWidth={'100%'}
                 mainColor={
                   'linear-gradient(91.03deg, #AC334A 0.44%, #B34A88 48.02%, #A95A2F 103.08%)'
                 }
                 textColor={currentTheme.onBackground}
+                disabled={isAlreadyIssued}
               />
             )}
           </Flex>
