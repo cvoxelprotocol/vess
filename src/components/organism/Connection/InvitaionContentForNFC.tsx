@@ -6,7 +6,6 @@ import { BasicProfileWidget } from '../Widgets/Profiles/BasicProfileWidget'
 import { FlatButton } from '@/components/atom/Buttons/FlatButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
-import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { Text } from '@/components/atom/Texts/Text'
 import { SocialLinkItem } from '@/components/molecure/Profile/SocialLinkItem'
@@ -18,7 +17,6 @@ import {
   useGetIssuedConnectionsLazyQuery,
 } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
@@ -33,7 +31,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { did: myDid } = useDIDAccount()
   const { showToast } = useToast()
-  const { profile } = useSocialAccount(did)
   const { showLoading, closeLoading } = useVESSLoading()
   const router = useRouter()
   const { setShowConnectModal } = useVESSWidgetModal()
@@ -113,13 +110,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
     return partnerCheck || myConnectionCheck
   }, [connections, myDid, did])
 
-  const Wrapper = styled.main`
-    width: 100%;
-    height: 100%;
-    background: ${currentTheme.surface3};
-    padding: 32px 0;
-  `
-
   const CardContainer = styled.div`
     max-width: 599px;
     width: 100%;
@@ -179,38 +169,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
     }
   }
 
-  if (!invitation && !loading) {
-    return (
-      <Wrapper>
-        <CardContainer>
-          <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} />
-          <Text
-            type='p'
-            color={currentTheme.onSurface}
-            font={getBasicFont(currentTypo.headLine.large)}
-            text={`No Invitaion`}
-          />
-        </CardContainer>
-      </Wrapper>
-    )
-  }
-
-  if (invitation && invitation?.connection.edges && invitation?.connection.edges?.length > 0) {
-    return (
-      <Wrapper>
-        <CardContainer>
-          <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} />
-          <Text
-            type='p'
-            color={currentTheme.onSurface}
-            font={getBasicFont(currentTypo.headLine.large)}
-            text={`Invalid Invitation`}
-          />
-        </CardContainer>
-      </Wrapper>
-    )
-  }
-
   return (
     <Flex flexDirection='column' colGap='12px' rowGap='12px'>
       <CardContainer>
@@ -252,19 +210,61 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
                 onClick={() => setShowConnectModal(true)}
               />
             ) : (
-              <FlatButton
-                src='/vessCard/gif2_condensed.gif'
-                label={
-                  isAlreadyIssued ? 'You already Issued Connection' : 'Issue Connection Credential'
-                }
-                width='100%'
-                height='96px'
-                background={currentTheme.surface5}
-                labelColor={currentTheme.onBackground}
-                iconSize={'48px'}
-                onClick={() => issueConnection()}
-                disabled={isAlreadyIssued}
-              />
+              <>
+                {!invitation && !loading ? (
+                  <>
+                    <FlatButton
+                      src='/vessCard/gif3_condensed.gif'
+                      label={'No Invitaion Left'}
+                      width='100%'
+                      height='96px'
+                      background={currentTheme.onSurfaceVariant}
+                      labelColor={currentTheme.onError}
+                      iconSize={'48px'}
+                      disabled
+                    />
+                    <Text
+                      type='p'
+                      color={currentTheme.error}
+                      font={getBasicFont(currentTypo.label.medium)}
+                      text={`Inform the cardholder to read the card and issue new invitations.`}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {invitation &&
+                    invitation?.connection.edges &&
+                    invitation?.connection.edges?.length > 0 ? (
+                      <FlatButton
+                        src='/vessCard/gif3_condensed.gif'
+                        label={'Invalid Invitaion'}
+                        width='100%'
+                        height='96px'
+                        background={currentTheme.onErrorContainer}
+                        labelColor={currentTheme.onError}
+                        iconSize={'48px'}
+                        disabled
+                      />
+                    ) : (
+                      <FlatButton
+                        src='/vessCard/gif2_condensed.gif'
+                        label={
+                          isAlreadyIssued
+                            ? 'You already Issued Connection'
+                            : 'Issue Connection Credential'
+                        }
+                        width='100%'
+                        height='96px'
+                        background={currentTheme.surface5}
+                        labelColor={currentTheme.onBackground}
+                        iconSize={'48px'}
+                        onClick={() => issueConnection()}
+                        disabled={isAlreadyIssued}
+                      />
+                    )}
+                  </>
+                )}
+              </>
             )}
           </Flex>
         )}

@@ -1,15 +1,20 @@
 import styled from '@emotion/styled'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useState } from 'react'
-import { Button } from '@/components/atom/Buttons/Button'
+import { FC } from 'react'
 import { CyberButton } from '@/components/atom/Buttons/CyberButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { CyberLoading } from '@/components/atom/Loading/CyberLoading'
 import { InvitaionContentForNFC } from '@/components/organism/Connection/InvitaionContentForNFC'
-import { InvitaionManagementForNFC } from '@/components/organism/Connection/InvitaionManagementForNFC'
+import {
+  DEFAULT_GREETING,
+  InvitaionManagementForNFC,
+} from '@/components/organism/Connection/InvitaionManagementForNFC'
+import {
+  ConnectionInvitationInput,
+  useCreateConnectionInvitaionMutation,
+} from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useNfc } from '@/hooks/useNfc'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
@@ -19,12 +24,12 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 export const NfcWriteContainer: FC = () => {
   const router = useRouter()
   const docId = (router.query.id as string) || ''
-  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
   const { setShowConnectModal } = useVESSWidgetModal()
   const { did } = useDIDAccount()
   const { showLoading, closeLoading } = useVESSLoading()
   const { data, isLoading, register } = useNfc(docId)
-  const [isCreated, setIsCreated] = useState(false)
+  const [createConnectionInvitation] = useCreateConnectionInvitaionMutation()
 
   const Wrapper = styled.main`
     width: 100%;
@@ -55,8 +60,29 @@ export const NfcWriteContainer: FC = () => {
     if (did) {
       const res = await register({ id: docId, did: did })
       if (res) {
+        await issueInitialInvitaions()
         router.push('/connection/success')
       }
+    }
+  }
+
+  const issueInitialInvitaions = async () => {
+    try {
+      showLoading()
+      const content: ConnectionInvitationInput = {
+        greeting: DEFAULT_GREETING,
+        type: 'IRL',
+      }
+      let promises: Promise<any>[] = []
+      Array.from({ length: 15 }).forEach(() => {
+        const res = createConnectionInvitation({ variables: { content } })
+        promises.push(res)
+      })
+      await Promise.all(promises)
+      closeLoading()
+    } catch (error) {
+      console.error(error)
+      closeLoading()
     }
   }
 

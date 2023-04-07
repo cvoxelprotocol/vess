@@ -29,7 +29,7 @@ import { useStateMyConnectionInvitaions, useStateUnUsedInvitaion } from '@/jotai
 import { shortenStr } from '@/utils/objectUtil'
 import { getCurrentDomain } from '@/utils/url'
 
-const DEFAULT_GREETING = 'Nice to meet you!'
+export const DEFAULT_GREETING = 'Nice to meet you!'
 
 export const InvitaionManagementForNFC: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -78,18 +78,8 @@ export const InvitaionManagementForNFC: FC = () => {
   // === Invitation ===
   const [createConnection] = useCreateConnectionMutation()
 
-  const Container = styled.div`
-    padding: 12px;
-    border-radius: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
-    background: ${currentTheme.surface3};
-    height: 100%;
-  `
   const QRContent = styled.div`
+    padding-top: 24px;
     display: flex;
     column-gap: 8px;
     justify-content: center;
@@ -203,7 +193,6 @@ export const InvitaionManagementForNFC: FC = () => {
 
   return (
     <Flex flexDirection='column' colGap='12px' rowGap='12px'>
-      <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
       <QRContent>
         <QRCodeContent url={myLink} ref={qrcodeRef} />
       </QRContent>
@@ -217,12 +206,6 @@ export const InvitaionManagementForNFC: FC = () => {
           tailIcon={ICONS.COPY}
         />
       </CopyToClipboard>
-      <Text
-        type='p'
-        color={currentTheme.onSurface}
-        font={getBasicFont(currentTypo.title.medium)}
-        text={`I'm ${profile.displayName || ''}`}
-      />
       {loading ? (
         <CommonSpinner />
       ) : (
@@ -240,6 +223,7 @@ export const InvitaionManagementForNFC: FC = () => {
         btnWidth={'240px'}
         disabled={(unusedInvitations && unusedInvitations?.length >= 15) || loading}
       />
+      <NextImageContainer src='/vessCard/gif2_condensed.gif' width={'100%'} height={'200px'} />
     </Flex>
   )
 }
