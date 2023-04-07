@@ -151,7 +151,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
         connectAt: new Date().toISOString(),
       }
       const res = await createConnection({ variables: { content } })
-      console.log({ res })
       if (res.data?.createConnection?.document.id) {
         closeLoading()
         showToast(PROOF_OF_CONNECTION_ISSUED)

@@ -124,10 +124,7 @@ export const NfcWriteContainer: FC = () => {
             {data?.did === did ? (
               <InvitaionManagementForNFC />
             ) : (
-              <InvitaionContentForNFC
-                // did={'did:pkh:eip155:1:0xb69cb3efbadb1b30f6d88020e1fa1fc84b8804d4'}
-                did={data.did}
-              />
+              <InvitaionContentForNFC did={data.did} />
             )}
           </Flex>
         )}

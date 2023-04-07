@@ -49,7 +49,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         { did, initialized: true, updatedAt: now.toISOString() },
         { merge: true },
       )
-      console.log({ result })
       res.status(200).json({ did, initialized: true })
     } catch (error) {
       res.status(500).json({ error: error })

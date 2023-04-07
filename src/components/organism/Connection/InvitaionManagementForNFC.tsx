@@ -166,7 +166,6 @@ export const InvitaionManagementForNFC: FC = () => {
           connectAt: new Date().toISOString(),
         }
         const result = await createConnection({ variables: { content } })
-        console.log({ result })
         if (result.data?.createConnection?.document.id) {
           setUnused(undefined)
           router.push(`/connection/issued/${result.data?.createConnection?.document.id}`)
