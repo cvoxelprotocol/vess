@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ButtonHTMLAttributes, FC } from 'react'
-import { Icon, IconSize, IconsType } from '../Icons/Icon'
+import { IconsType } from '../Icons/Icon'
 import { NextImageContainer } from '../Images/NextImageContainer'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 

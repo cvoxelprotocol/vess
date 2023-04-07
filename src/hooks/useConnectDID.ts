@@ -63,8 +63,8 @@ export const useConnectDID = () => {
       setStateLoginType('wallet')
 
       // issue credentials from DB //temporary closed for ETHDenver
-      // issueHeldEventFromBackup(session.did.parent)
-      // issueHeldMembershipFromBackup(session.did.parent)
+      issueHeldEventFromBackup(session.did.parent)
+      issueHeldMembershipFromBackup(session.did.parent)
       queryClient.invalidateQueries(['hasAuthorizedSession'])
       return true
     } catch (error) {

@@ -73,7 +73,7 @@ export const BaseHeader: FC = () => {
   `
 
   const getTitle = useMemo(() => {
-    if (router.asPath === '/connection/list') return '👋 at ETHDenver'
+    if (router.asPath === '/connection/list') return 'Connections👋'
     else if (router.asPath.startsWith('/did')) return 'Profile'
     else if (router.asPath.startsWith('/nfc')) return 'VESS Card'
     return ''
