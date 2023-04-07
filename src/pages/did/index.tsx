@@ -13,12 +13,12 @@ const NoDid: NextPageWithLayout = () => {
 
   const Wrapper = styled.main`
     width: 100%;
-    height: 100%;
+    height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: ${currentTheme.background};
-    padding: 8px;
+    padding: 16px;
   `
 
   useEffect(() => {

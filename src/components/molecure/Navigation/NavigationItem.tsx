@@ -1,8 +1,6 @@
 import styled from '@emotion/styled'
 import { ButtonHTMLAttributes, FC } from 'react'
-
-import { isMobileOnly } from 'react-device-detect'
-import { Icon, IconSize, IconsType } from '@/components/atom/Icons/Icon'
+import { Icon, IconsType } from '@/components/atom/Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -87,7 +87,7 @@ export const HeaderMenu: FC = () => {
           <Name>{profile.displayName}</Name>
           <Flex flexDirection='row' rowGap='2px'>
             <Icon icon={ICONS.ETHEREUM} mainColor={currentTheme.outline} size={'SS'} />
-            <WalletAddress>{shortenStr(originalAddress, 10)}</WalletAddress>
+            <WalletAddress>{shortenStr(originalAddress, 7)}</WalletAddress>
           </Flex>
         </AccountContainer>
       </WrappedPopoverTrigger>

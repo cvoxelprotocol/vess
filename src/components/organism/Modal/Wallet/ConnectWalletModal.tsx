@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Connector } from '@wagmi/core'
 import { FC } from 'react'
+import { isMobileOnly } from 'react-device-detect'
 import { useConnect } from 'wagmi'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { Button } from '@/components/atom/Buttons/Button'
@@ -68,7 +69,7 @@ export const ConnectWalletModal: FC = () => {
                     ? ' (connecting)'
                     : connector.name
                 }
-                hide={!connector.ready}
+                hide={!connector.ready || (isMobileOnly && connector.id === 'metaMask')}
                 key={connector.id}
                 onClick={() => handleLogin(connector)}
                 width={'100%'}

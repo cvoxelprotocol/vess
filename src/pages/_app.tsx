@@ -1,5 +1,5 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
-import { Noto_Sans_JP, Noto_Sans } from '@next/font/google'
+import { Noto_Sans } from '@next/font/google'
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import { walletConnectProvider } from '@web3modal/ethereum'
@@ -54,11 +54,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   )
 
   const metamaskConnector = new MetaMaskConnector({ chains })
-  // const injectedCOnnector = new InjectedConnector({
-  //   options: {
-  //     name: 'Light Wallet',
-  //   },
-  // })
   const walletConnectConnector = new WalletConnectConnector({
     chains,
     options: {

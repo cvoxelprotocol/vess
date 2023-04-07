@@ -201,7 +201,7 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
             {!myDid ? (
               <FlatButton
                 src='/nfc/wallet.png'
-                label={'Connect Wallet'}
+                label={'Connect Wallet to Say Hi 👋'}
                 width='100%'
                 height='96px'
                 background={currentTheme.primary}

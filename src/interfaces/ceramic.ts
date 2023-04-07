@@ -8,6 +8,6 @@ export type CeramicSupport =
 
 export type CeramicProps = {
   did: string
-  support: CeramicSupport
+  support?: CeramicSupport
   DehydratedState?: DehydratedState
 }
