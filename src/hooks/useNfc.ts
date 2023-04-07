@@ -37,7 +37,6 @@ export const useNfc = (id?: string) => {
         },
       })
       const resJson = await res.json()
-      console.log({ resJson })
       return resJson?.did
     } catch (error) {
       console.error(error)

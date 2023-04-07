@@ -13,10 +13,10 @@ type Props = {
   height?: string
   radius?: string
   borderColor?: string
-  hide?: boolean
+  iconSize?: string
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
-export const PanelButton: FC<Props> = ({
+export const FlatButton: FC<Props> = ({
   src,
   label,
   labelColor,
@@ -25,7 +25,7 @@ export const PanelButton: FC<Props> = ({
   height,
   radius,
   borderColor,
-  hide,
+  iconSize = '32px',
   ...props
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -36,9 +36,8 @@ export const PanelButton: FC<Props> = ({
     padding: 16px 20px;
     background: ${background || 'transparent'};
     display: flex;
-    flex-direction: column;
-    flex: 1;
     align-items: center;
+    column-gap: 12px;
     border-radius: ${radius || '16px'};
     border: ${borderColor ? `solid 1px ${borderColor}` : 'none'};
     position: relative;
@@ -46,7 +45,6 @@ export const PanelButton: FC<Props> = ({
     z-index: 0;
     overflow: hidden;
     min-width: 150px;
-    display: ${hide ? 'none' : 'visible'};
 
     @media (max-width: 599px) {
       min-width: 120px;
@@ -71,13 +69,8 @@ export const PanelButton: FC<Props> = ({
 
   const ImageContainer = styled.div`
     z-index: 1;
-    width: 80px;
-    height: 80px;
-
-    @media (max-width: 599px) {
-      width: 64px;
-      height: 64px;
-    }
+    width: ${iconSize};
+    height: ${iconSize};
   `
 
   const Label = styled.span`
@@ -86,7 +79,7 @@ export const PanelButton: FC<Props> = ({
     z-index: 2;
 
     @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.small)}
+      ${getBasicFont(currentTypo.title.small)}
     }
   `
 

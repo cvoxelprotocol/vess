@@ -29,9 +29,7 @@ import { useStateMyConnectionInvitaions, useStateUnUsedInvitaion } from '@/jotai
 import { shortenStr } from '@/utils/objectUtil'
 import { getCurrentDomain } from '@/utils/url'
 
-export const ETH_DENVER_EVENT_ID =
-  'ceramic://kjzl6cwe1jw14ar8wuy2i31rkjaf1k8vrhae7qzucqjd9z8fmvsgceca7jb5c7b'
-const DEFAULT_GREETING = 'Nice to meet you!'
+export const DEFAULT_GREETING = 'Nice to meet you!'
 
 export const InvitaionManagementForNFC: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -39,7 +37,6 @@ export const InvitaionManagementForNFC: FC = () => {
   const { showToast } = useToast()
   const [unused, setUnused] = useStateUnUsedInvitaion()
   const [unusedInvitations, setMyInvitations] = useStateMyConnectionInvitaions()
-  // const { eventDetail } = useEventAttendance(ETH_DENVER_EVENT_ID)
   const { profile } = useSocialAccount(did)
   const router = useRouter()
   const { showLoading, closeLoading } = useVESSLoading()
@@ -81,18 +78,8 @@ export const InvitaionManagementForNFC: FC = () => {
   // === Invitation ===
   const [createConnection] = useCreateConnectionMutation()
 
-  const Container = styled.div`
-    padding: 12px;
-    border-radius: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
-    background: ${currentTheme.surface3};
-    height: 100%;
-  `
   const QRContent = styled.div`
+    padding-top: 24px;
     display: flex;
     column-gap: 8px;
     justify-content: center;
@@ -179,7 +166,6 @@ export const InvitaionManagementForNFC: FC = () => {
           connectAt: new Date().toISOString(),
         }
         const result = await createConnection({ variables: { content } })
-        console.log({ result })
         if (result.data?.createConnection?.document.id) {
           setUnused(undefined)
           router.push(`/connection/issued/${result.data?.createConnection?.document.id}`)
@@ -206,7 +192,6 @@ export const InvitaionManagementForNFC: FC = () => {
 
   return (
     <Flex flexDirection='column' colGap='12px' rowGap='12px'>
-      <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
       <QRContent>
         <QRCodeContent url={myLink} ref={qrcodeRef} />
       </QRContent>
@@ -220,12 +205,6 @@ export const InvitaionManagementForNFC: FC = () => {
           tailIcon={ICONS.COPY}
         />
       </CopyToClipboard>
-      <Text
-        type='p'
-        color={currentTheme.onSurface}
-        font={getBasicFont(currentTypo.title.medium)}
-        text={`I'm ${profile.displayName || ''}`}
-      />
       {loading ? (
         <CommonSpinner />
       ) : (
@@ -243,6 +222,7 @@ export const InvitaionManagementForNFC: FC = () => {
         btnWidth={'240px'}
         disabled={(unusedInvitations && unusedInvitations?.length >= 15) || loading}
       />
+      <NextImageContainer src='/vessCard/gif2_condensed.gif' width={'100%'} height={'200px'} />
     </Flex>
   )
 }

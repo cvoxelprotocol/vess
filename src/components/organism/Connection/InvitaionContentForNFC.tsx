@@ -2,11 +2,12 @@ import styled from '@emotion/styled'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo } from 'react'
-import { Avatar } from '@/components/atom/Avatars/Avatar'
-import { Button } from '@/components/atom/Buttons/Button'
+import { BasicProfileWidget } from '../Widgets/Profiles/BasicProfileWidget'
+import { FlatButton } from '@/components/atom/Buttons/FlatButton'
 import { Flex } from '@/components/atom/Common/Flex'
-import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
+import { Text } from '@/components/atom/Texts/Text'
 import { SocialLinkItem } from '@/components/molecure/Profile/SocialLinkItem'
 import { PROOF_OF_CONNECTION_FAILED, PROOF_OF_CONNECTION_ISSUED } from '@/constants/toastMessage'
 import {
@@ -16,17 +17,12 @@ import {
   useGetIssuedConnectionsLazyQuery,
 } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-// import { useEventAttendance } from '@/hooks/useEventAttendance'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { isWithinSeconds } from '@/utils/date'
-
-export const ETH_DENVER_EVENT_ID =
-  'ceramic://kjzl6cwe1jw14ar8wuy2i31rkjaf1k8vrhae7qzucqjd9z8fmvsgceca7jb5c7b'
 
 type Props = {
   did?: string
@@ -35,7 +31,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { did: myDid } = useDIDAccount()
   const { showToast } = useToast()
-  const { profile } = useSocialAccount(did)
   const { showLoading, closeLoading } = useVESSLoading()
   const router = useRouter()
   const { setShowConnectModal } = useVESSWidgetModal()
@@ -60,6 +55,10 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
     variables: { id: did || '' },
     nextFetchPolicy: 'no-cache',
   })
+  const [getMyIssuedConnections, { data: myConnections }] = useGetIssuedConnectionsLazyQuery({
+    variables: { id: myDid || '' },
+    nextFetchPolicy: 'no-cache',
+  })
   const { twitter, telegram } = useSocialLinks(did)
 
   useEffect(() => {
@@ -67,6 +66,7 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
       if (!did) return
       getUserConnectionInvitaions()
       getIssuedConnections()
+      getMyIssuedConnections()
     } catch (error) {
       console.error(error)
     }
@@ -94,21 +94,24 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
             return { node: edge?.node }
           })
         : []
+    const temp2List =
+      myConnections?.node?.__typename === 'CeramicAccount'
+        ? myConnections?.node?.connectionList?.edges?.map((edge) => {
+            return { node: edge?.node }
+          })
+        : []
     if (!tempList || tempList.length === 0) return false
-    return tempList.some((c) => {
+    const partnerCheck = tempList.some((c) => {
       return c.node?.userId === myDid && isWithinSeconds(3600, c.node?.connectAt)
     }) // issued with in 60 min
+    const myConnectionCheck = temp2List?.some((c) => {
+      return c.node?.userId === did && isWithinSeconds(3600, c.node?.connectAt)
+    })
+    return partnerCheck || myConnectionCheck
   }, [connections, myDid, did])
 
-  const Wrapper = styled.main`
-    width: 100%;
-    height: 100%;
-    background: ${currentTheme.surface3};
-    padding: 32px 0;
-  `
-
   const CardContainer = styled.div`
-    max-width: 352px;
+    max-width: 599px;
     width: 100%;
     min-height: 100vh;
     height: 100%;
@@ -119,25 +122,22 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
     gap: 16px;
     color: ${currentTheme.onSurface};
   `
-  const Title = styled.p`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.headLine.large)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.headLine.large)};
-    }
-  `
-  const PfpContainer = styled(Link)`
-    width: fit-content;
-    outline: none;
-    text-decoration: none;
+  const WidgetContainer = styled.div`
+    display: grid;
+    grid-template-rows: repeat(4, 44px);
+    grid-template-columns: repeat(6, 44px);
+    grid-gap: 16px;
+    padding: 0px;
   `
 
-  const Greeting = styled.div`
-    background: ${currentTheme.background};
-    border-radius: 16px;
+  const ViewProfile = styled(Link)`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 12px 16px;
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.body.medium)};
+    border-radius: 8px;
+    background: ${currentTheme.surface3};
   `
 
   const issueConnection = async () => {
@@ -151,7 +151,6 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
         connectAt: new Date().toISOString(),
       }
       const res = await createConnection({ variables: { content } })
-      console.log({ res })
       if (res.data?.createConnection?.document.id) {
         closeLoading()
         showToast(PROOF_OF_CONNECTION_ISSUED)
@@ -169,64 +168,102 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
     }
   }
 
-  if (!invitation && !loading) {
-    return (
-      <Wrapper>
-        <CardContainer>
-          <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} />
-          <Title>No Invitaion</Title>
-        </CardContainer>
-      </Wrapper>
-    )
-  }
-
-  if (invitation && invitation?.connection.edges && invitation?.connection.edges?.length > 0) {
-    return (
-      <Wrapper>
-        <CardContainer>
-          <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} />
-          <Title>Invalid Invitation</Title>
-        </CardContainer>
-      </Wrapper>
-    )
-  }
-
   return (
     <Flex flexDirection='column' colGap='12px' rowGap='12px'>
       <CardContainer>
         {loading ? (
           <CommonSpinner />
         ) : (
-          <Flex flexDirection='column' colGap='24px' rowGap='24px'>
-            <NextImageContainer src={'/connection/ntmy_1.png'} width={'280px'} height={'52px'} />
-            <PfpContainer href={`/did/${did}`}>
-              <Avatar url={profile.avatarSrc} size={'100'} />
-            </PfpContainer>
-            <Title>{`I'm ${profile.displayName || ''}`}</Title>
-            <Flex colGap='4px' rowGap='4px'>
+          <Flex flexDirection='column' colGap='16px' rowGap='16px'>
+            <WidgetContainer>
+              <BasicProfileWidget
+                did={did || ''}
+                gridRow={'1/5'}
+                gridCol={'1/7'}
+                gridRowOnSp={'1/5'}
+                gridColOnSp={'1/7'}
+                editable={false}
+              />
+            </WidgetContainer>
+            <Flex colGap='12px' rowGap='12px' width='100%' justifyContent='start'>
               <SocialLinkItem linkType={'telegram'} value={telegram} />
               <SocialLinkItem linkType={'twitter'} value={twitter} />
             </Flex>
-            {invitation?.greeting && <Greeting>{invitation?.greeting}</Greeting>}
+            <ViewProfile href={`/did/${did}`}>
+              <Text
+                type='p'
+                color={currentTheme.onBackground}
+                font={getBasicFont(currentTypo.label.medium)}
+                text={`View Profile`}
+              />
+              <Icon icon={ICONS.RIGHT_ARROW} mainColor={currentTheme.onBackground} size={'MM'} />
+            </ViewProfile>
             {!myDid ? (
-              <Button
-                variant='filled'
-                text='Connect Wallet'
+              <FlatButton
+                src='/nfc/wallet.png'
+                label={'Connect Wallet'}
+                width='100%'
+                height='96px'
+                background={currentTheme.primary}
+                labelColor={currentTheme.onPrimary}
                 onClick={() => setShowConnectModal(true)}
-                btnWidth={'100%'}
               />
             ) : (
-              <Button
-                variant='filled'
-                text={isAlreadyIssued ? 'You already Issued Connection' : 'Nice to meet you too!'}
-                onClick={() => issueConnection()}
-                btnWidth={'100%'}
-                mainColor={
-                  'linear-gradient(91.03deg, #AC334A 0.44%, #B34A88 48.02%, #A95A2F 103.08%)'
-                }
-                textColor={currentTheme.onBackground}
-                disabled={isAlreadyIssued}
-              />
+              <>
+                {!invitation && !loading ? (
+                  <>
+                    <FlatButton
+                      src='/vessCard/gif3_condensed.gif'
+                      label={'No Invitaion Left'}
+                      width='100%'
+                      height='96px'
+                      background={currentTheme.onSurfaceVariant}
+                      labelColor={currentTheme.onError}
+                      iconSize={'48px'}
+                      disabled
+                    />
+                    <Text
+                      type='p'
+                      color={currentTheme.error}
+                      font={getBasicFont(currentTypo.label.medium)}
+                      text={`Inform the cardholder to read the card and issue new invitations.`}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {invitation &&
+                    invitation?.connection.edges &&
+                    invitation?.connection.edges?.length > 0 ? (
+                      <FlatButton
+                        src='/vessCard/gif3_condensed.gif'
+                        label={'Invalid Invitaion'}
+                        width='100%'
+                        height='96px'
+                        background={currentTheme.onErrorContainer}
+                        labelColor={currentTheme.onError}
+                        iconSize={'48px'}
+                        disabled
+                      />
+                    ) : (
+                      <FlatButton
+                        src='/vessCard/gif2_condensed.gif'
+                        label={
+                          isAlreadyIssued
+                            ? 'You already Issued Connection'
+                            : 'Issue Connection Credential'
+                        }
+                        width='100%'
+                        height='96px'
+                        background={currentTheme.surface5}
+                        labelColor={currentTheme.onBackground}
+                        iconSize={'48px'}
+                        onClick={() => issueConnection()}
+                        disabled={isAlreadyIssued}
+                      />
+                    )}
+                  </>
+                )}
+              </>
             )}
           </Flex>
         )}

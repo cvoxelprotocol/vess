@@ -39,6 +39,7 @@ import { Person } from './Person'
 import { PointsIcon } from './PointsIcon'
 import { QrIcon } from './QrIcon'
 import { QuestionIcon } from './QuestionIcon'
+import { RightArrowIcon } from './RightArrowIcon'
 import { SettingIcon } from './SettingIcon'
 import { SunIcon } from './SunIcon'
 import { SurinkIcon } from './SurinkIcon'
@@ -77,6 +78,7 @@ export const ICONS = {
   HOME: 'home',
   IMPORT: 'import',
   LEFT_ARROW: 'leftArrow',
+  RIGHT_ARROW: 'rightArrow',
   MESSAGE_CIRCLE: 'messageCircle',
   MOON: 'moon',
   POINTS: 'points',
@@ -152,6 +154,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
   `
   const IconComponent = useMemo(() => {
     switch (icon) {
+      case 'rightArrow':
+        return (
+          <IconContainer>
+            <RightArrowIcon />
+          </IconContainer>
+        )
       case 'account':
         return (
           <IconContainer>
