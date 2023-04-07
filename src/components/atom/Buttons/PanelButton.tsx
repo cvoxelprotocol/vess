@@ -13,6 +13,7 @@ type Props = {
   height?: string
   radius?: string
   borderColor?: string
+  hide?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 export const PanelButton: FC<Props> = ({
@@ -24,6 +25,7 @@ export const PanelButton: FC<Props> = ({
   height,
   radius,
   borderColor,
+  hide,
   ...props
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -44,6 +46,7 @@ export const PanelButton: FC<Props> = ({
     z-index: 0;
     overflow: hidden;
     min-width: 150px;
+    display: ${hide ? 'none' : 'visible'};
 
     @media (max-width: 599px) {
       min-width: 120px;

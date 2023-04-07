@@ -68,7 +68,7 @@ export const ConnectWalletModal: FC = () => {
                     ? ' (connecting)'
                     : connector.name
                 }
-                disabled={!connector.ready}
+                hide={!connector.ready}
                 key={connector.id}
                 onClick={() => handleLogin(connector)}
                 width={'100%'}
