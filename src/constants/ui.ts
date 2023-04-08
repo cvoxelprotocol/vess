@@ -4,7 +4,7 @@ export const NAVIGATION_ITEM = {
   HOME: 'Home',
   PROFILE: 'Profile',
   CLAIM: 'Self Claim',
-  WAVES: 'Waves',
+  WAVES: 'Timeline',
   OTHER: 'Other',
 } as const
 
