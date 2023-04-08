@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
-import { FC, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { SourceDrawer } from '@/components/molecure/Profile/SourceDrawer'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
@@ -161,16 +162,24 @@ export const BasicProfileWidget: FC<Props> = (props) => {
           />
         </HeaderImage>
         <Container>
-          <Flex rowGap='4px' colGap='12px' colGapSP='8px' justifyContent={'start'}>
-            <PfpContainer>
-              <Avatar url={profile?.avatarSrc} fill />
-            </PfpContainer>
-            <Flex flexDirection='column' alignItems={'flex-start'}>
-              <Name>{profile?.displayName}</Name>
-              <Address>{shortenStr(props.did, 16)}</Address>
+          {isloadingProfile ? (
+            <Flex width='100%' height='100%'>
+              <CommonSpinner />
             </Flex>
-          </Flex>
-          <Description>{profile?.bio}</Description>
+          ) : (
+            <>
+              <Flex rowGap='4px' colGap='12px' colGapSP='8px' justifyContent={'start'}>
+                <PfpContainer>
+                  <Avatar url={profile?.avatarSrc} fill />
+                </PfpContainer>
+                <Flex flexDirection='column' alignItems={'flex-start'}>
+                  <Name>{profile?.displayName}</Name>
+                  <Address>{shortenStr(props.did, 16)}</Address>
+                </Flex>
+              </Flex>
+              <Description>{profile?.bio}</Description>
+            </>
+          )}
         </Container>
       </BaseWidget>
     </>
