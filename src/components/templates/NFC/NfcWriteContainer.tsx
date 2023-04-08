@@ -117,17 +117,13 @@ export const NfcWriteContainer: FC = () => {
   return (
     <Wrapper>
       <CardContainer>
-        {isLoading ? (
-          <CommonSpinner />
-        ) : (
-          <Flex flexDirection='column' colGap='24px' rowGap='24px'>
-            {data?.did === did ? (
-              <InvitaionManagementForNFC />
-            ) : (
-              <InvitaionContentForNFC did={data.did} />
-            )}
-          </Flex>
-        )}
+        <Flex flexDirection='column' colGap='24px' rowGap='24px'>
+          {data?.did === did ? (
+            <InvitaionManagementForNFC />
+          ) : (
+            <InvitaionContentForNFC did={data.did} />
+          )}
+        </Flex>
       </CardContainer>
     </Wrapper>
   )

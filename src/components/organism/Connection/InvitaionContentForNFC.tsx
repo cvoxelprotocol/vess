@@ -171,102 +171,104 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
   return (
     <Flex flexDirection='column' colGap='12px' rowGap='12px'>
       <CardContainer>
-        {loading ? (
-          <CommonSpinner />
-        ) : (
-          <Flex flexDirection='column' colGap='16px' rowGap='16px'>
-            <WidgetContainer>
-              <BasicProfileWidget
-                did={did || ''}
-                gridRow={'1/5'}
-                gridCol={'1/7'}
-                gridRowOnSp={'1/5'}
-                gridColOnSp={'1/7'}
-                editable={false}
-              />
-            </WidgetContainer>
-            <Flex colGap='12px' rowGap='12px' width='100%' justifyContent='start'>
-              <SocialLinkItem linkType={'telegram'} value={telegram} />
-              <SocialLinkItem linkType={'twitter'} value={twitter} />
-            </Flex>
-            <ViewProfile href={`/did/${did}`}>
-              <Text
-                type='p'
-                color={currentTheme.onBackground}
-                font={getBasicFont(currentTypo.label.medium)}
-                text={`View Profile`}
-              />
-              <Icon icon={ICONS.RIGHT_ARROW} mainColor={currentTheme.onBackground} size={'MM'} />
-            </ViewProfile>
-            {!myDid ? (
-              <FlatButton
-                src='/nfc/wallet.png'
-                label={'Connect Wallet to Say Hi 👋'}
-                width='100%'
-                height='96px'
-                background={currentTheme.primary}
-                labelColor={currentTheme.onPrimary}
-                onClick={() => setShowConnectModal(true)}
-              />
-            ) : (
-              <>
-                {!invitation && !loading ? (
-                  <>
-                    <FlatButton
-                      src='/vessCard/gif3_condensed.gif'
-                      label={'No Invitaion Left'}
-                      width='100%'
-                      height='96px'
-                      background={currentTheme.onSurfaceVariant}
-                      labelColor={currentTheme.onError}
-                      iconSize={'48px'}
-                      disabled
-                    />
-                    <Text
-                      type='p'
-                      color={currentTheme.error}
-                      font={getBasicFont(currentTypo.label.medium)}
-                      text={`Inform the cardholder to read the card and issue new invitations.`}
-                    />
-                  </>
-                ) : (
-                  <>
-                    {invitation &&
-                    invitation?.connection.edges &&
-                    invitation?.connection.edges?.length > 0 ? (
+        <Flex flexDirection='column' colGap='16px' rowGap='16px'>
+          <WidgetContainer>
+            <BasicProfileWidget
+              did={did || ''}
+              gridRow={'1/5'}
+              gridCol={'1/7'}
+              gridRowOnSp={'1/5'}
+              gridColOnSp={'1/7'}
+              editable={false}
+            />
+          </WidgetContainer>
+          <Flex colGap='12px' rowGap='12px' width='100%' justifyContent='start'>
+            <SocialLinkItem linkType={'telegram'} value={telegram} />
+            <SocialLinkItem linkType={'twitter'} value={twitter} />
+          </Flex>
+          <ViewProfile href={`/did/${did}`}>
+            <Text
+              type='p'
+              color={currentTheme.onBackground}
+              font={getBasicFont(currentTypo.label.medium)}
+              text={`View Profile`}
+            />
+            <Icon icon={ICONS.RIGHT_ARROW} mainColor={currentTheme.onBackground} size={'MM'} />
+          </ViewProfile>
+          {!myDid ? (
+            <FlatButton
+              src='/nfc/wallet.png'
+              label={'Connect Wallet to Say Hi 👋'}
+              width='100%'
+              height='96px'
+              background={currentTheme.primary}
+              labelColor={currentTheme.onPrimary}
+              onClick={() => setShowConnectModal(true)}
+            />
+          ) : (
+            <>
+              {loading ? (
+                <CommonSpinner />
+              ) : (
+                <>
+                  {!invitation ? (
+                    <>
                       <FlatButton
                         src='/vessCard/gif3_condensed.gif'
-                        label={'Invalid Invitaion'}
+                        label={'No Invitaion Left'}
                         width='100%'
                         height='96px'
-                        background={currentTheme.onErrorContainer}
+                        background={currentTheme.onSurfaceVariant}
                         labelColor={currentTheme.onError}
                         iconSize={'48px'}
                         disabled
                       />
-                    ) : (
-                      <FlatButton
-                        src='/vessCard/gif2_condensed.gif'
-                        label={
-                          isAlreadyIssued
-                            ? 'You already Issued Connection'
-                            : 'Issue Connection Credential'
-                        }
-                        width='100%'
-                        height='96px'
-                        background={currentTheme.surface5}
-                        labelColor={currentTheme.onBackground}
-                        iconSize={'48px'}
-                        onClick={() => issueConnection()}
-                        disabled={isAlreadyIssued}
+                      <Text
+                        type='p'
+                        color={currentTheme.error}
+                        font={getBasicFont(currentTypo.label.medium)}
+                        text={`Inform the cardholder to read the card and issue new invitations.`}
                       />
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </Flex>
-        )}
+                    </>
+                  ) : (
+                    <>
+                      {invitation &&
+                      invitation?.connection.edges &&
+                      invitation?.connection.edges?.length > 0 ? (
+                        <FlatButton
+                          src='/vessCard/gif3_condensed.gif'
+                          label={'Invalid Invitaion'}
+                          width='100%'
+                          height='96px'
+                          background={currentTheme.onErrorContainer}
+                          labelColor={currentTheme.onError}
+                          iconSize={'48px'}
+                          disabled
+                        />
+                      ) : (
+                        <FlatButton
+                          src='/vessCard/gif2_condensed.gif'
+                          label={
+                            isAlreadyIssued
+                              ? 'You already Issued Connection'
+                              : 'Issue Connection Credential'
+                          }
+                          width='100%'
+                          height='96px'
+                          background={currentTheme.surface5}
+                          labelColor={currentTheme.onBackground}
+                          iconSize={'48px'}
+                          onClick={() => issueConnection()}
+                          disabled={isAlreadyIssued}
+                        />
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </Flex>
       </CardContainer>
     </Flex>
   )

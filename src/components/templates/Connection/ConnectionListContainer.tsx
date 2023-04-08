@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo } from 'react'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { ConnectionListItem } from '@/components/molecure/Connection/ConnectionListItem'
 import { useGetAllConnectionsLazyQuery } from '@/graphql/generated'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -11,7 +12,7 @@ export const ConnectionListContainer: FC = () => {
   const router = useRouter()
 
   // === Invitation ===
-  const [getAllConnections, { data: allConnections }] = useGetAllConnectionsLazyQuery()
+  const [getAllConnections, { data: allConnections, loading }] = useGetAllConnectionsLazyQuery()
 
   const Container = styled.div`
     display: flex;
@@ -45,17 +46,24 @@ export const ConnectionListContainer: FC = () => {
 
   return (
     <Container>
-      {formattedList &&
-        formattedList.map((item) => {
-          return (
-            <ConnectionListItem
-              key={item?.node?.id}
-              userId={item?.node?.did.id}
-              partnerUserId={item?.node?.userId}
-              connectAt={item?.node?.connectAt}
-            />
-          )
-        })}
+      {loading ? (
+        <CommonSpinner />
+      ) : (
+        <>
+          {' '}
+          {formattedList &&
+            formattedList.map((item) => {
+              return (
+                <ConnectionListItem
+                  key={item?.node?.id}
+                  userId={item?.node?.did.id}
+                  partnerUserId={item?.node?.userId}
+                  connectAt={item?.node?.connectAt}
+                />
+              )
+            })}
+        </>
+      )}
     </Container>
   )
 }
