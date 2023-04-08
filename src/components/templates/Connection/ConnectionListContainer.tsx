@@ -21,6 +21,11 @@ export const ConnectionListContainer: FC = () => {
     height: 100%;
   `
 
+  const LoadingContainer = styled.div`
+    padding: 12px;
+    width: 100%;
+  `
+
   const init = async () => {
     try {
       await getAllConnections()
@@ -47,7 +52,9 @@ export const ConnectionListContainer: FC = () => {
   return (
     <Container>
       {loading ? (
-        <CommonSpinner />
+        <LoadingContainer>
+          <CommonSpinner />
+        </LoadingContainer>
       ) : (
         <>
           {' '}
