@@ -1,6 +1,6 @@
+import { getAddress } from '@ethersproject/address'
 import { useQueryClient } from '@tanstack/react-query'
 import { Connector } from '@wagmi/core'
-import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
 import { useDisconnect, useConnect } from 'wagmi'

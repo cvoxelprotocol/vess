@@ -6,16 +6,14 @@ import { walletConnectProvider } from '@web3modal/ethereum'
 import { Provider as JotaiProvider } from 'jotai'
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
-import { Router } from 'next/router'
-import { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { publicProvider } from 'wagmi/providers/public'
 import { GATracking } from '@/components/atom/Common/GATracking'
 import { VESSToast } from '@/components/atom/Toasts/VESSToast'
-import { Meta } from '@/components/layouts/Meta'
-import LoadingModal from '@/components/organism/Modal/LoadingModal'
+
 import { ComposeWrapper } from '@/context/compose'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
@@ -27,12 +25,6 @@ const notoSans = Noto_Sans({
   subsets: ['latin'],
   display: 'swap',
 })
-// const notoSansJP = Noto_Sans_JP({
-//   style: 'normal',
-//   weight: ['400', '500', '700'],
-//   subsets: ['japanese'],
-//   display: 'swap',
-// })
 
 const global = css`
   html {
@@ -82,24 +74,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       }),
   )
   const { dehydratedState, ...props } = pageProps
-  const [isLoading, setLoading] = useState(false)
   const getLayout = Component.getLayout ?? ((page) => page)
-  useEffect(() => {
-    const start = () => {
-      setLoading(true)
-    }
-    const end = () => {
-      setLoading(false)
-    }
-    Router.events.on('routeChangeStart', start)
-    Router.events.on('routeChangeComplete', end)
-    Router.events.on('routeChangeError', end)
-    return () => {
-      Router.events.off('routeChangeStart', start)
-      Router.events.off('routeChangeComplete', end)
-      Router.events.off('routeChangeError', end)
-    }
-  }, [])
   return (
     <>
       <Global styles={global} />
@@ -110,9 +85,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
                   <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
-                  <Meta />
                   {getLayout(<Component {...props} />)}
-                  {isLoading && <LoadingModal />}
                   <VESSToast />
                 </ThemeProvider>
               </ComposeWrapper>

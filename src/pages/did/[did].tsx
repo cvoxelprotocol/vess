@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = as
   if (did == null) {
     return {
       props: { did: '' },
-      revalidate: 60,
+      revalidate: 5,
     }
   }
   const formatedDid = isDIDstring(did)

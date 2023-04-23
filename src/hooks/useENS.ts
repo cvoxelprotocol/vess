@@ -46,6 +46,11 @@ export const useENS = (address?: string) => {
     return ensProfile.records?.texts.find((t) => t.key === 'com.github')?.value
   }, [ensProfile])
 
+  const ensAvatar = useMemo(() => {
+    if (!ensProfile || !ensProfile.records?.texts) return
+    return ensProfile.records?.texts.find((t) => t.key === 'avatar')?.value
+  }, [ensProfile])
+
   return {
     ensProfile,
     isInitialLoading,
@@ -53,5 +58,6 @@ export const useENS = (address?: string) => {
     ensTwitter,
     ensTelegram,
     ensGithub,
+    ensAvatar,
   }
 }

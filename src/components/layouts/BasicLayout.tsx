@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
 import { useAccount, useDisconnect } from 'wagmi'
@@ -6,18 +7,18 @@ import { NavigationList } from '../molecure/Navigation/NavigationList'
 import { Footer } from '../organism/Footer/Footer'
 import { BaseHeader } from '../organism/Header/BaseHeader'
 import LoadingModal from '../organism/Modal/LoadingModal'
+import { Meta } from '@/components/layouts/Meta'
 import { footerLinks } from '@/constants/footerLinks'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useConnection } from '@/hooks/useConnection'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-
 type Props = {
   children: React.ReactNode
 }
 export const BasicLayout: FC<Props> = ({ children }) => {
-  const { isLoading } = useVESSLoading()
+  const { isLoading, showLoading, closeLoading } = useVESSLoading()
   const { currentTheme, initTheme } = useVESSTheme()
   const { autoConnect, connectDID } = useConnectDID()
   const { did } = useDIDAccount()
@@ -94,6 +95,23 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   }, [])
 
   useEffect(() => {
+    const start = () => {
+      showLoading()
+    }
+    const end = () => {
+      closeLoading()
+    }
+    Router.events.on('routeChangeStart', start)
+    Router.events.on('routeChangeComplete', end)
+    Router.events.on('routeChangeError', end)
+    return () => {
+      Router.events.off('routeChangeStart', start)
+      Router.events.off('routeChangeComplete', end)
+      Router.events.off('routeChangeError', end)
+    }
+  }, [])
+
+  useEffect(() => {
     async function init() {
       if (!did) {
         const session = await getAuthorizedSession()
@@ -112,16 +130,19 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   }, [])
 
   return (
-    <LayoutContainer>
-      <BaseHeader />
-      <NaviContainer>
-        <NavigationList />
-      </NaviContainer>
-      <MainWrapper>
-        <MainContainer id={'MainContainer'}>{children}</MainContainer>
-        <Footer src='/vess_logo_full_white.png' links={footerLinks} />
-        {isLoading && <LoadingModal />}
-      </MainWrapper>
-    </LayoutContainer>
+    <>
+      <Meta />
+      <LayoutContainer>
+        <BaseHeader />
+        <NaviContainer>
+          <NavigationList />
+        </NaviContainer>
+        <MainWrapper>
+          <MainContainer id={'MainContainer'}>{children}</MainContainer>
+          <Footer src='/vess_logo_full_white.png' links={footerLinks} />
+          {isLoading && <LoadingModal />}
+        </MainWrapper>
+      </LayoutContainer>
+    </>
   )
 }

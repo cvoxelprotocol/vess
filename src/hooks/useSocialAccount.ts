@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { formatDID } from 'vess-sdk'
-import { useEnsName, useEnsAvatar } from 'wagmi'
 import { useCcProfile } from './useCcProfile'
+import { useENS } from './useENS'
 import { useLensProfile } from './useLensProfile'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
@@ -21,12 +21,7 @@ export const useSocialAccount = (did?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
   const queryClient = useQueryClient()
-  const { data: ensAvatar } = useEnsAvatar({
-    address: getAddressFromPkhForWagmi(did),
-  })
-  const { data: ensName, isLoading: ensLoading } = useEnsName({
-    address: getAddressFromPkhForWagmi(did),
-  })
+  const ens = useENS(getAddressFromPkhForWagmi(did))
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { lensProfile, lensLoading } = useLensProfile(did)
 
@@ -74,13 +69,13 @@ export const useSocialAccount = (did?: string) => {
   })
 
   const ensProfile = useMemo<DisplayProfile | null>(() => {
-    if (!ensName) return null
+    if (!ens) return null
     return {
-      avatarSrc: ensAvatar || undefined,
-      displayName: ensName || (!!did ? formatDID(did, 12) : ''),
+      avatarSrc: ens.ensAvatar || undefined,
+      displayName: ens.ensProfile?.name || (!!did ? formatDID(did, 12) : ''),
       bio: '',
     }
-  }, [ensName, ensAvatar])
+  }, [ens])
 
   const placeHolderProfile = useMemo<DisplayProfile>(() => {
     return {
@@ -91,8 +86,8 @@ export const useSocialAccount = (did?: string) => {
   }, [did])
 
   const isloadingProfile = useMemo(() => {
-    return ccLoading || lensLoading || isOrbisLoading || ensLoading
-  }, [ccLoading, lensLoading, isOrbisLoading, ensLoading])
+    return ccLoading || lensLoading || isOrbisLoading || ens.isInitialLoading
+  }, [ccLoading, lensLoading, isOrbisLoading, ens.isInitialLoading])
 
   const profile = useMemo<DisplayProfile>(() => {
     if (isloadingProfile) return placeHolderProfile
@@ -100,25 +95,16 @@ export const useSocialAccount = (did?: string) => {
       avatarSrc:
         orbisProfile?.pfp && orbisProfile?.pfp !== ''
           ? orbisProfile?.pfp
-          : ccProfile?.avatarSrc || lensProfile?.avatarSrc || ensAvatar || undefined,
+          : ccProfile?.avatarSrc || lensProfile?.avatarSrc || ens.ensAvatar || undefined,
       displayName:
         orbisProfile?.username ||
         ccProfile?.displayName ||
         lensProfile?.displayName ||
-        ensName ||
+        ens.ensProfile?.name ||
         (!!did ? formatDID(did, 12) : ''),
       bio: orbisProfile?.description || ccProfile?.bio || lensProfile?.bio || '',
     }
-  }, [
-    orbisProfile,
-    ensAvatar,
-    ensName,
-    ccProfile,
-    lensProfile,
-    isloadingProfile,
-    placeHolderProfile,
-    did,
-  ])
+  }, [orbisProfile, ens, ccProfile, lensProfile, isloadingProfile, placeHolderProfile, did])
 
   return {
     profile,
