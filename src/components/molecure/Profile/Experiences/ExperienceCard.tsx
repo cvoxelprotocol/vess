@@ -2,7 +2,9 @@ import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import type { SelfClaimedMembershipSubject, WithCeramicId } from 'vess-sdk'
 import { MembershipCard } from '../MembershipCard'
+import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
+import { Text } from '@/components/atom/Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { DisplayMembership } from '@/interfaces/ui'
 import { formatDate } from '@/utils/date'
@@ -57,35 +59,6 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
       gap: 4px;
     }
   `
-
-  const Title = styled.div`
-    color: ${currentTheme.primary};
-    ${getBasicFont(currentTypo.headLine.medium)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.exLarge || currentTypo.title.large)};
-    }
-  `
-  const Project = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  `
-  const ProjectName = styled.p`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.large)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.small)};
-    }
-  `
-  const Label = styled.p`
-    padding-top: 8px;
-    color: ${currentTheme.onSurfaceVariant};
-    ${getBasicFont(currentTypo.label.large)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.medium)};
-      padding-top: 4px;
-    }
-  `
   if (item) {
     return (
       <MembershipCardWrapper key={item.ceramicId}>
@@ -103,17 +76,33 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
           endDate={item.credentialSubject.endDate}
         />
         <InfoContainer>
-          <Title>{item.roles.join(',')}</Title>
-          <Project>
+          <Text
+            type='p'
+            color={currentTheme.primary}
+            font={getBasicFont(currentTypo.headLine.medium)}
+            fontSp={getBasicFont(currentTypo.title.large)}
+            text={item.roles.join(',')}
+          />
+          <Flex colGap='6px' rowGap='6px'>
             <ImageContainer
               src={item.workspace?.icon || 'https://workspace.vess.id/company.png'}
               width={'26px'}
             />
-            <ProjectName>
-              {item.workspace?.name || item.credentialSubject.organizationName}
-            </ProjectName>
-          </Project>
-          <Label>{period}</Label>
+            <Text
+              type='p'
+              color={currentTheme.onSurface}
+              font={getBasicFont(currentTypo.title.large)}
+              fontSp={getBasicFont(currentTypo.title.small)}
+              text={item.workspace?.name || item.credentialSubject.organizationName}
+            />
+          </Flex>
+          <Text
+            type='p'
+            color={currentTheme.onSurfaceVariant}
+            font={getBasicFont(currentTypo.label.large)}
+            fontSp={getBasicFont(currentTypo.label.medium)}
+            text={period}
+          />
         </InfoContainer>
       </MembershipCardWrapper>
     )
@@ -130,12 +119,30 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
           endDate={selfClaim.endDate}
         />
         <InfoContainer>
-          <Title>{selfClaim.membershipName}</Title>
-          <Project>
+          <Text
+            type='p'
+            color={currentTheme.primary}
+            font={getBasicFont(currentTypo.headLine.medium)}
+            fontSp={getBasicFont(currentTypo.title.large)}
+            text={selfClaim.membershipName}
+          />
+          <Flex colGap='6px' rowGap='6px'>
             <ImageContainer src={'https://workspace.vess.id/company.png'} width={'26px'} />
-            <ProjectName>{selfClaim.organizationName}</ProjectName>
-          </Project>
-          <Label>{period}</Label>
+            <Text
+              type='p'
+              color={currentTheme.onSurface}
+              font={getBasicFont(currentTypo.title.large)}
+              fontSp={getBasicFont(currentTypo.title.small)}
+              text={selfClaim.organizationName}
+            />
+          </Flex>
+          <Text
+            type='p'
+            color={currentTheme.onSurfaceVariant}
+            font={getBasicFont(currentTypo.label.large)}
+            fontSp={getBasicFont(currentTypo.label.medium)}
+            text={period}
+          />
         </InfoContainer>
       </MembershipCardWrapper>
     )

@@ -9,10 +9,10 @@ import { DisplayMembership } from '@/interfaces/ui'
 import { isExpired } from '@/utils/date'
 
 export const useHeldMembershipSubject = (did?: string) => {
-  // const vess = getVESS()
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const queryClient = useQueryClient()
-  const { highlightedCredentials } = useHighlightedCredentials(did)
+  const { highlightedCredentials, isFetchingHighlightedCredentials } =
+    useHighlightedCredentials(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
 
   const { data: HeldMembershipSubjects, isInitialLoading: isFetchingHeldMembershipSubjects } =
@@ -135,5 +135,6 @@ export const useHeldMembershipSubject = (did?: string) => {
     highlightedSelfClaimedMembership,
     displayHeldMembership,
     deleteRole,
+    isLoading: isFetchingHighlightedCredentials,
   }
 }

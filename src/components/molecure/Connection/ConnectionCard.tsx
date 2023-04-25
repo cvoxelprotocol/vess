@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Flex } from '@/components/atom/Common/Flex'
+import { Text } from '@/components/atom/Texts/Text'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -59,52 +60,6 @@ export const ConnectionCard: FC<Props> = ({ count, userId, invitation, connectAt
     position: relative;
   `
 
-  const Container = styled.div`
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  `
-  const PfpContainer = styled.div`
-    width: fit-content;
-    border: solid ${currentTheme.onSurface};
-    border-width: 3px;
-    border-radius: 100%;
-  `
-
-  const Name = styled.div`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.large)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.large)};
-    }
-    word-break: break-all;
-  `
-  const InfoItem = styled.p`
-    color: ${currentTheme.onSurface};
-    text-align: left;
-    ${getBasicFont(currentTypo.label.medium)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.small)};
-    }
-    display: flex;
-    align-items: center;
-    column-gap: 4px;
-  `
-  const EventName = styled.p`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.label.small)};
-  `
-  const Greeting = styled.div`
-    background: ${currentTheme.surface3};
-    border-radius: 8px;
-    padding: 12px;
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.body.small)};
-  `
-
   const CountBadge = styled.div`
     background: linear-gradient(91.03deg, #ac334a 0.44%, #b34a88 48.02%, #a95a2f 103.08%);
     border-radius: 72px;
@@ -125,22 +80,35 @@ export const ConnectionCard: FC<Props> = ({ count, userId, invitation, connectAt
     <Wrapper>
       {count > 1 && <CountBadge>{`${count} times`}</CountBadge>}
       <CardContainer>
-        <Container>
-          <PfpContainer>
-            <Avatar url={profile.avatarSrc} size={'XXL'} />
-          </PfpContainer>
-          <Name>{profile.displayName}</Name>
+        <Flex width='100%' colGap='8px' rowGap='8px' flexDirection='column'>
+          <Avatar url={profile.avatarSrc} size={'XXL'} withBorder />
+          <Text
+            type='p'
+            color={currentTheme.onSurface}
+            font={getBasicFont(currentTypo.title.large)}
+            text={profile.displayName}
+          />
           {eventDetail && (
             <Flex colGap='4px' rowGap='4px'>
               <Avatar url={eventDetail.icon} size={'MM'} />
-              <EventName>{eventDetail.name}</EventName>
+              <Text
+                type='p'
+                color={currentTheme.onSurface}
+                font={getBasicFont(currentTypo.label.small)}
+                text={eventDetail.name}
+              />
             </Flex>
           )}
-          {invitation?.greeting && <Greeting>{invitation?.greeting}</Greeting>}
           <Flex>
-            <InfoItem>{`${formatDate(connectAt)}`}</InfoItem>
+            <Text
+              type='p'
+              color={currentTheme.onSurface}
+              font={getBasicFont(currentTypo.label.medium)}
+              fontSp={getBasicFont(currentTypo.label.small)}
+              text={`${formatDate(connectAt)}`}
+            />
           </Flex>
-        </Container>
+        </Flex>
       </CardContainer>
     </Wrapper>
   )

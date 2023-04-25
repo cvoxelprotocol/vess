@@ -1,10 +1,13 @@
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import { ReactElement } from 'react'
 import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-sdk'
 import { NextPageWithLayout } from '../_app'
+import { DisplayProfile } from '@/@types'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
 import { CeramicProps } from '@/interfaces/ceramic'
+import { fetchProfile } from '@/lib/profile'
 
 export const getStaticPaths = async () => {
   return {
@@ -35,9 +38,15 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = as
     }
   }
 
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery<DisplayProfile>(['onChainprofile', formatedDid], () =>
+    fetchProfile(formatedDid),
+  )
+
   return {
-    props: { did: formatedDid },
-    revalidate: 60,
+    props: { dehydratedState: dehydrate(queryClient), did: formatedDid },
+    revalidate: 300,
   }
 }
 

@@ -1,8 +1,11 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { Button } from '@/components/atom/Buttons/Button'
+import { Flex } from '@/components/atom/Common/Flex'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { ICONS } from '@/components/atom/Icons/Icon'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
+import { Text } from '@/components/atom/Texts/Text'
 import { ExperienceCard } from '@/components/molecure/Profile/Experiences/ExperienceCard'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
@@ -62,24 +65,18 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
       gap: 8px;
     }
   `
-  const ItemHeader = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 16px;
-  `
-  const HeaderText = styled.p`
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.title.large)};
-  `
   const handleEdit = () => {
     openMembershipModal()
   }
   return (
     <>
-      <ItemHeader>
-        <HeaderText>Experiences</HeaderText>
+      <Flex justifyContent='space-between' padding='16px' width='100%'>
+        <Text
+          type='p'
+          color={currentTheme.onBackground}
+          font={getBasicFont(currentTypo.title.large)}
+          text={`Experiences`}
+        />
         {myDID === did && (
           <Button
             variant='outlined'
@@ -92,22 +89,28 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
             btnWidth={'80px'}
           />
         )}
-      </ItemHeader>
+      </Flex>
       <Container>
-        {!hasMemberships ? (
-          <NoItem text={'No Item yet'} />
+        {isFetchingHeldMembershipSubjects ? (
+          <CommonSpinner />
         ) : (
           <>
-            {sortedMemberships &&
-              sortedMemberships.map((item) => {
-                return (
-                  <ExperienceCard
-                    key={item.item?.ceramicId || item.selfClaim?.ceramicId}
-                    item={item.item}
-                    selfClaim={item.selfClaim}
-                  />
-                )
-              })}
+            {!hasMemberships ? (
+              <NoItem text={'No Item yet'} />
+            ) : (
+              <>
+                {sortedMemberships &&
+                  sortedMemberships.map((item) => {
+                    return (
+                      <ExperienceCard
+                        key={item.item?.ceramicId || item.selfClaim?.ceramicId}
+                        item={item.item}
+                        selfClaim={item.selfClaim}
+                      />
+                    )
+                  })}
+              </>
+            )}
           </>
         )}
       </Container>

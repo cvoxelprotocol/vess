@@ -22,7 +22,7 @@ type Props = {
 
 export const SelfClaimedRoleWidget: FC<Props> = (props) => {
   const { businessProfile, isFetchingBusinessProfile } = useBusinessProfile(props.did)
-  const { currentTheme, currentTypo } = useVESSTheme()
+  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { openModal } = useVESSWidgetModal()
 
   const handleEdit = () => {
@@ -48,7 +48,7 @@ export const SelfClaimedRoleWidget: FC<Props> = (props) => {
                 <NoItem
                   text={props.editable ? 'Add your skills' : 'No skills are set'}
                   color={currentTheme.outline}
-                  font={currentTypo.title.small}
+                  font={getBasicFont(currentTypo.title.small)}
                 />
               ) : (
                 <>

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { ButtonHTMLAttributes, FC } from 'react'
 import { Icon, IconsType } from '@/components/atom/Icons/Icon'
+import { Text } from '@/components/atom/Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -50,24 +51,19 @@ export const NavigationItem: FC<Props> = ({
       height: 32px;
     }
   `
-
-  const NavigationItemTitle = styled.p`
-    background: none;
-    color: ${selected ? currentTheme.secondary : currentTheme.onSecondaryContainer};
-    text-align: center;
-    ${getBasicFont(currentTypo.label.medium)};
-    white-space: nowrap;
-    @media (max-width: 599px) {
-      display: none;
-    }
-  `
-
   return (
     <NavigationItemContainer {...props}>
       <NavigationItemLayer>
         <Icon icon={icon} size={'LL'} mainColor={currentTheme.onSecondaryContainer} />
       </NavigationItemLayer>
-      {title && <NavigationItemTitle>{title}</NavigationItemTitle>}
+      {title && (
+        <Text
+          type='p'
+          color={selected ? currentTheme.secondary : currentTheme.onSecondaryContainer}
+          font={getBasicFont(currentTypo.label.medium)}
+          text={title}
+        />
+      )}
     </NavigationItemContainer>
   )
 }

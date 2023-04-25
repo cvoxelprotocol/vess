@@ -21,7 +21,7 @@ export const AvatarButton: FC<Props> = ({
   order = 0,
   onClick,
 }) => {
-  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
 
   const ButtonContainer = styled.button`
     justify-self: start;

@@ -1,14 +1,12 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, MouseEvent } from 'react'
-import { SocialLinkItem } from '../Profile/SocialLinkItem'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
-import { AvatarPlaceholder } from '@/components/atom/Avatars/AvatarPlaceholder'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
-import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { Text } from '@/components/atom/Texts/Text'
 import { DefaultCardColor } from '@/constants/ui'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
@@ -44,50 +42,6 @@ export const UserCard: FC<Props> = ({ userId }) => {
     transition: all 0.15s ease-in-out;
   `
 
-  const NameContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  `
-  const Identifier = styled.span`
-    color: ${currentTheme.outline};
-    ${getBasicFont(currentTypo.label.medium)};
-  `
-
-  const UserContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-  `
-
-  const PfpBackground = styled.div`
-    width: 64px;
-    height: 64px;
-    background: ${currentTheme.outline};
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `
-
-  const Name = styled.div`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.large)};
-  `
-  const InfoItem = styled.p`
-    color: ${currentTheme.onSurface};
-    text-align: left;
-    ${getBasicFont(currentTypo.label.medium)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.small)};
-    }
-    display: flex;
-    align-items: center;
-    column-gap: 4px;
-  `
-
   const jumpToResume = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     router.push(`/did/${userId}`)
@@ -100,22 +54,26 @@ export const UserCard: FC<Props> = ({ userId }) => {
 
   return (
     <CardContainer>
-      <UserContainer onClick={jumpToResume}>
-        <PfpBackground>
-          {profile.avatarSrc ? (
-            <Avatar url={profile.avatarSrc} size={'XXL'} />
-          ) : (
-            <AvatarPlaceholder size={'XXL'} />
-          )}
-        </PfpBackground>
-        <NameContainer>
-          <Name>{profile.displayName}</Name>
-          <Identifier>{shortenStr(userId, 10)}</Identifier>
-        </NameContainer>
-      </UserContainer>
+      <Flex flexDirection='column' width='100%' colGap='8px' rowGap='8px' onClick={jumpToResume}>
+        <Avatar url={profile.avatarSrc} size={'XXL'} withBorder />
+        <Flex flexDirection='column' width='100%'>
+          <Text
+            type='p'
+            color={currentTheme.onSurface}
+            font={getBasicFont(currentTypo.title.large)}
+            text={profile.displayName}
+          />
+          <Text
+            type='span'
+            color={currentTheme.outline}
+            font={getBasicFont(currentTypo.label.medium)}
+            text={shortenStr(userId, 10)}
+          />
+        </Flex>
+      </Flex>
       <Flex justifyContent='center' alignItems='center' width='100%' colGap='8px'>
         {highlightedMembership && !highlightedSelfClaimedMembership && (
-          <InfoItem>
+          <>
             <Avatar url={highlightedMembership.workspace?.icon} size={'L'} />
             <Chip
               text={highlightedMembership.roles[0]}
@@ -126,10 +84,10 @@ export const UserCard: FC<Props> = ({ userId }) => {
               textColor={highlightedMembership.workspace?.optionColor || DefaultCardColor.textColor}
               size={'S'}
             />
-          </InfoItem>
+          </>
         )}
         {!highlightedMembership && highlightedSelfClaimedMembership && (
-          <InfoItem>
+          <>
             <Avatar url={'https://workspace.vess.id/company.png'} size={'L'} />
             <Chip
               text={highlightedSelfClaimedMembership.membershipName}
@@ -138,7 +96,7 @@ export const UserCard: FC<Props> = ({ userId }) => {
               textColor={DefaultCardColor.textColor}
               size={'S'}
             />
-          </InfoItem>
+          </>
         )}
       </Flex>
       <Flex justifyContent='center' alignItems='center' width='100%' colGap='8px'>

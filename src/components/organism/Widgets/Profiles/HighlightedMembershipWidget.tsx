@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { MembershipCard } from '@/components/molecure/Profile/MembershipCard'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
@@ -18,9 +19,8 @@ type Props = {
 
 export const HighlightedMembershipWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { highlightedMembership, highlightedSelfClaimedMembership } = useHeldMembershipSubject(
-    props.did,
-  )
+  const { highlightedMembership, highlightedSelfClaimedMembership, isLoading } =
+    useHeldMembershipSubject(props.did)
   const { openMembershipModal } = useVESSWidgetModal()
 
   const Container = styled.div`
@@ -61,32 +61,38 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
         <Container>
           <Title>Membership</Title>
           <CardContainer>
-            {highlightedMembership ? (
-              <MembershipCard
-                title={
-                  highlightedMembership.workspace?.name ||
-                  highlightedMembership.credentialSubject.organizationName
-                }
-                roles={highlightedMembership.roles}
-                icon={highlightedMembership.workspace?.icon}
-                mainColor={highlightedMembership.workspace?.primaryColor}
-                secondColor={highlightedMembership.workspace?.secondaryColor}
-                textColor={highlightedMembership.workspace?.optionColor}
-                vc
-                startDate={highlightedMembership.credentialSubject.startDate}
-                endDate={highlightedMembership.credentialSubject.endDate}
-              />
+            {isLoading ? (
+              <CommonSpinner />
             ) : (
               <>
-                {highlightedSelfClaimedMembership ? (
+                {highlightedMembership ? (
                   <MembershipCard
-                    title={highlightedSelfClaimedMembership.organizationName}
-                    roles={[highlightedSelfClaimedMembership.membershipName]}
-                    startDate={highlightedSelfClaimedMembership.startDate}
-                    endDate={highlightedSelfClaimedMembership.endDate}
+                    title={
+                      highlightedMembership.workspace?.name ||
+                      highlightedMembership.credentialSubject.organizationName
+                    }
+                    roles={highlightedMembership.roles}
+                    icon={highlightedMembership.workspace?.icon}
+                    mainColor={highlightedMembership.workspace?.primaryColor}
+                    secondColor={highlightedMembership.workspace?.secondaryColor}
+                    textColor={highlightedMembership.workspace?.optionColor}
+                    vc
+                    startDate={highlightedMembership.credentialSubject.startDate}
+                    endDate={highlightedMembership.credentialSubject.endDate}
                   />
                 ) : (
-                  <MembershipCard title={'Your membership'} roles={['Pick one']} />
+                  <>
+                    {highlightedSelfClaimedMembership ? (
+                      <MembershipCard
+                        title={highlightedSelfClaimedMembership.organizationName}
+                        roles={[highlightedSelfClaimedMembership.membershipName]}
+                        startDate={highlightedSelfClaimedMembership.startDate}
+                        endDate={highlightedSelfClaimedMembership.endDate}
+                      />
+                    ) : (
+                      <MembershipCard title={'Your membership'} roles={['Pick one']} />
+                    )}
+                  </>
                 )}
               </>
             )}

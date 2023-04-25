@@ -2,12 +2,12 @@ import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
+import { Text } from '@/components/atom/Texts/Text'
 import { QRCode } from '@/components/organism/Modal/QR/QRCode'
 import {
   ConnectionInvitationInput,
@@ -59,45 +59,11 @@ export const InvitaionContent: FC = () => {
   // === Invitation ===
   const [createConnection] = useCreateConnectionMutation()
 
-  const Container = styled.div`
-    padding: 12px;
-    border-radius: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
-    background: ${currentTheme.surface3};
-    height: 100%;
-  `
   const QRContent = styled.div`
     display: flex;
     column-gap: 8px;
     justify-content: center;
     align-items: center;
-  `
-  const Title = styled.p`
-    color: ${currentTheme.onSurfaceVariant};
-    ${getBasicFont(currentTypo.headLine.small)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.large)};
-    }
-  `
-
-  const At = styled.p`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.medium)};
-  `
-  const EventName = styled.p`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.headLine.small)};
-  `
-  const Greeting = styled.div`
-    background: ${currentTheme.background};
-    border-radius: 16px;
-    padding: 12px 16px;
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.body.medium)};
   `
 
   const myLink = useMemo(() => {
@@ -220,7 +186,13 @@ export const InvitaionContent: FC = () => {
           </CopyToClipboard>
         </>
       )}
-      <Title>{`I'm ${profile.displayName || ''}`}</Title>
+      <Text
+        type='p'
+        color={currentTheme.onSurfaceVariant}
+        font={getBasicFont(currentTypo.headLine.small)}
+        fontSp={getBasicFont(currentTypo.title.large)}
+        text={`I'm ${profile.displayName || ''}`}
+      />
       {/* {eventDetail && (
         <Flex flexDirection='column' colGap='4px' rowGap='4px'>
           <At>at</At>
@@ -230,9 +202,19 @@ export const InvitaionContent: FC = () => {
           </Flex>
         </Flex>
       )} */}
-      <Greeting>{DEFAULT_GREETING}</Greeting>
-      <At>{"Let's have the QR scanned!"}</At>
-      <At>( It might take a while to issue )</At>
+      {/* <Greeting>{DEFAULT_GREETING}</Greeting> */}
+      <Text
+        type='p'
+        color={currentTheme.onSurface}
+        font={getBasicFont(currentTypo.title.medium)}
+        text={"Let's have the QR scanned!"}
+      />
+      <Text
+        type='p'
+        color={currentTheme.onSurface}
+        font={getBasicFont(currentTypo.title.medium)}
+        text={`(It might take a while to issue)`}
+      />
     </Flex>
   )
 }

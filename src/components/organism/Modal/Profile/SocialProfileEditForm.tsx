@@ -5,8 +5,8 @@ import { Button } from '@/components/atom/Buttons/Button'
 import { Input } from '@/components/atom/Forms/Input'
 import { MultiInput } from '@/components/atom/Forms/MultiInput'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 import type { OrbisProfileDetail } from '@/lib/OrbisHelper'
 import { removeUndefined } from '@/utils/objectUtil'
 
@@ -15,9 +15,9 @@ type Props = {
 }
 
 export const SocialProfileEditForm: FC<Props> = ({ did }) => {
-  const { currentTheme } = useVESSTheme()
   const { setShowSocialProfileModal } = useVESSWidgetModal()
-  const { profile, updateOrbisProfile } = useSocialAccount(did)
+  const { profile } = useSocialAccount(did)
+  const { update } = useUpdateSocialAccount(did)
 
   const Form = styled.form`
     padding: 16px 32px 0px 32px;
@@ -67,7 +67,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const onClickSubmit = async (data: OrbisProfileDetail, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
-    const res = await updateOrbisProfile({ did, content: removeUndefined(data) })
+    const res = await update({ did, content: removeUndefined(data) })
     if (res.status === 200) {
       setShowSocialProfileModal(false)
     }

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { Text } from '@/components/atom/Texts/Text'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { formatDate } from '@/utils/date'
@@ -22,9 +22,6 @@ export const ConnectionListItem: FC<Props> = ({ userId, partnerUserId, connectAt
 
   const CardContainer = styled.div`
     background: ${currentTheme.background};
-    &:hover {
-      background: ${currentTheme.surface1};
-    }
     overflow: hidden;
     border: solid ${currentTheme.surfaceVariant};
     border-width: 1px;
@@ -37,21 +34,6 @@ export const ConnectionListItem: FC<Props> = ({ userId, partnerUserId, connectAt
     grid-template-rows: 20px 1fr;
   `
 
-  const PfpContainer = styled.div`
-    width: fit-content;
-    border: solid ${currentTheme.onSurface};
-    border-width: 3px;
-    border-radius: 100%;
-  `
-
-  const Name = styled.div`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.large)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.small)};
-    }
-    word-break: break-all;
-  `
   const InfoItem = styled.p`
     grid-column: 1/4;
     grid-row: 1/2;
@@ -86,10 +68,14 @@ export const ConnectionListItem: FC<Props> = ({ userId, partnerUserId, connectAt
           padding={'8px 24px'}
           paddingSP={'0px'}
         >
-          <PfpContainer>
-            <Avatar url={profile.avatarSrc} size={'XXL'} />
-          </PfpContainer>
-          <Name>{profile.displayName}</Name>
+          <Avatar url={profile.avatarSrc} size={'XXL'} withBorder />
+          <Text
+            type='p'
+            color={currentTheme.onSurface}
+            font={getBasicFont(currentTypo.title.large)}
+            fontSp={getBasicFont(currentTypo.title.small)}
+            text={profile.displayName}
+          />
         </Flex>
       </LinkContainer>
       <NextImageContainer src={'/connection/meets.png'} width={'44px'} />
@@ -105,10 +91,14 @@ export const ConnectionListItem: FC<Props> = ({ userId, partnerUserId, connectAt
           padding={'8px 24px'}
           paddingSP={'0px'}
         >
-          <PfpContainer>
-            <Avatar url={partnerProfile.avatarSrc} size={'XXL'} />
-          </PfpContainer>
-          <Name>{partnerProfile.displayName}</Name>
+          <Avatar url={partnerProfile.avatarSrc} size={'XXL'} withBorder />
+          <Text
+            type='p'
+            color={currentTheme.onSurface}
+            font={getBasicFont(currentTypo.title.large)}
+            fontSp={getBasicFont(currentTypo.title.small)}
+            text={partnerProfile.displayName}
+          />
         </Flex>
       </LinkContainer>
     </CardContainer>

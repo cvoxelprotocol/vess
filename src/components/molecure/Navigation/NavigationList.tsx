@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
 import { NavigationItem } from './NavigationItem'
+import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { SOURCE_LINK } from '@/constants/sourceLink'
@@ -33,32 +34,6 @@ export const NavigationList: FC = () => {
       background: ${currentTheme.surface1};
       border-radius: 32px 32px 0 0;
       border-top: 1px solid ${currentTheme.outline};
-    }
-  `
-  const NavigationListUpper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: fit-content;
-    gap: 24px;
-    @media (max-width: 599px) {
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-    }
-  `
-
-  const NavigationListLower = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: fit-content;
-    gap: 24px;
-
-    @media (max-width: 599px) {
-      display: none;
     }
   `
 
@@ -101,7 +76,17 @@ export const NavigationList: FC = () => {
 
   return (
     <NavigationListContainer>
-      <NavigationListUpper>
+      <Flex
+        colGap='24px'
+        rowGap='24px'
+        width='100%'
+        height='fit-content'
+        flexDirection='column'
+        flexDirectionSP='row'
+        justifyContentSP='center'
+        alignItemsSP='center'
+        flexWrap='nowrap'
+      >
         <LogoImage>
           <NextImageContainer src={'/logo_bard.png'} width={'100%'} objectFit={'contain'} />
         </LogoImage>
@@ -116,8 +101,15 @@ export const NavigationList: FC = () => {
             />
           )
         })}
-      </NavigationListUpper>
-      <NavigationListLower>
+      </Flex>
+      <Flex
+        colGap='24px'
+        rowGap='24px'
+        width='100%'
+        height='fit-content'
+        flexDirection='column'
+        hideSP
+      >
         <SourceLinkWrapper href={SOURCE_LINK.DISCORD} target={'_blank'} rel='noopener noreferrer'>
           <NavigationItem icon={ICONS.DISCORD} />
         </SourceLinkWrapper>
@@ -127,7 +119,7 @@ export const NavigationList: FC = () => {
         <SourceLinkWrapper href={SOURCE_LINK.WEBSITE} target={'_blank'} rel='noopener noreferrer'>
           <NavigationItem icon={ICONS.QUESTION} />
         </SourceLinkWrapper>
-      </NavigationListLower>
+      </Flex>
     </NavigationListContainer>
   )
 }

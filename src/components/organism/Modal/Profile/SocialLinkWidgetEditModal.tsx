@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import type { SocialLinks } from 'vess-sdk'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { SocialLinkWidgetEditForm } from './SocialLinkWidgetEditForm'
@@ -10,8 +9,7 @@ type Props = {
   socialLinks?: SocialLinks | null
   editable?: boolean
 }
-
-export const SocialLinkWidgetEditModal: FC<Props> = (props) => {
+export default function SocialLinkWidgetEditModal(props: Props) {
   const { showSocialLinkModal, setShowSocialLinkModal } = useVESSWidgetModal()
   const { currentTheme } = useVESSTheme()
 

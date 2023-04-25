@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { NewTaskForm } from './NewTaskForm'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -6,8 +5,7 @@ import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 type Props = {
   did: string
 }
-
-export const NewTaskWidgetModal: FC<Props> = ({ did }) => {
+export default function NewTaskWidgetModal({ did }: Props) {
   const { showTaskModal, setShowTaskModal } = useVESSWidgetModal()
 
   return (

@@ -1,30 +1,13 @@
-import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo } from 'react'
+import { Flex } from '@/components/atom/Common/Flex'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { ConnectionListItem } from '@/components/molecure/Connection/ConnectionListItem'
 import { useGetAllConnectionsLazyQuery } from '@/graphql/generated'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { parseISOStrToDate } from '@/utils/date'
 
 export const ConnectionListContainer: FC = () => {
-  const { currentTheme } = useVESSTheme()
-  const router = useRouter()
-
   // === Invitation ===
   const [getAllConnections, { data: allConnections, loading }] = useGetAllConnectionsLazyQuery()
-
-  const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    background: ${currentTheme.surface3};
-    height: 100%;
-  `
-
-  const LoadingContainer = styled.div`
-    padding: 12px;
-    width: 100%;
-  `
 
   const init = async () => {
     try {
@@ -50,11 +33,9 @@ export const ConnectionListContainer: FC = () => {
   }, [allConnections])
 
   return (
-    <Container>
+    <Flex flexDirection='column' height='100%' width='100%'>
       {loading ? (
-        <LoadingContainer>
-          <CommonSpinner />
-        </LoadingContainer>
+        <CommonSpinner />
       ) : (
         <>
           {' '}
@@ -71,6 +52,6 @@ export const ConnectionListContainer: FC = () => {
             })}
         </>
       )}
-    </Container>
+    </Flex>
   )
 }

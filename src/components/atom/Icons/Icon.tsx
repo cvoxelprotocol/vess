@@ -1,91 +1,58 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { AccountIcon } from './AccountIcon'
-import { AddFileIcon } from './AddFileIcon'
 import { AddIcon } from './AddIcon'
 import { BellIcon } from './BellIcon'
 import { Calendar } from './Calendar'
 import { Card } from './Card'
 import { ChainIcon } from './ChainIcon'
 import { Chat } from './Chat'
-import { CheckedCircleIcon } from './CheckedCircleIcon'
 import { CheckedIcon } from './CheckedIcon'
-import { CheckedSquareIcon } from './CheckedSquareIcon'
-import { ConnectIcon } from './ConnectIcon'
 import { CopyIcon } from './CopyIcon'
-import { CrossFilledIcon } from './CrossFilledIcon'
 import { CrossIcon } from './CrossIcon'
 import { DiscordIcon } from './DiscordIcon'
 import { Dollar } from './Dollar'
-import { ENSIcon } from './ENSIcon'
 import { EditIcon } from './EditIcon'
 import { EthereumIcon } from './EthereumIcon'
-import { EventAttendanceIcon } from './EventAttendanceIcon'
-import { ExpandIcon } from './ExpandIcon'
-import { ExportIcon } from './ExportIcon'
 import { ExternalIcon } from './ExternalIcon'
 import { GithubIcon } from './GithubIcon'
-import { GlassIcon } from './GlassIcon'
 import { HomeIcon } from './HomeIcon'
-import { ImportIcon } from './ImportIcon'
 import { LeftArrowIcon } from './LeftArrowIcon'
 import { Location } from './Location'
 import { LogOut } from './LogOut'
 import { MailIcon } from './MailIcon'
-import { MessageCircleIcon } from './MessageCircleIcon'
-import { MoonIcon } from './MoonIcon'
 import { Pc } from './Pc'
 import { Person } from './Person'
 import { PointsIcon } from './PointsIcon'
 import { QrIcon } from './QrIcon'
 import { QuestionIcon } from './QuestionIcon'
 import { RightArrowIcon } from './RightArrowIcon'
-import { SettingIcon } from './SettingIcon'
-import { SunIcon } from './SunIcon'
-import { SurinkIcon } from './SurinkIcon'
 import { TelegramIcon } from './TelegramIcon'
 import { TwitterIcon } from './TwitterIcon'
 import { TxIcon } from './TxIcon'
 import { VerifiedIcon } from './VerifiedIcon'
 import { VoxelIcon } from './VoxelIcon'
-import { VoxelslIcon } from './VoxelsIcon'
 import { WalletIcon } from './WalletIcon'
 import { WaveIcon } from './WaveIcon'
 import { WorkspaceIcon } from './WorkspaceIcon'
 
 export const ICONS = {
   VOXEL: 'voxel',
-  ENS: 'ens',
   CROSS: 'cross',
-  ADD_FILE: 'addFile',
   ADD: 'add',
   BELL: 'bell',
   CHAIN: 'chain',
-  CHECKED_CIRCLE: 'checkedCircle',
   CHECKED: 'checked',
-  CHECKED_SQUARE: 'checkedSquare',
   COPY: 'copy',
-  CROSS_FILLED: 'crossFilled',
   DISCORD: 'discord',
   EDIT: 'edit',
   ETHEREUM: 'ethereum',
-  VOXELS: 'voxels',
-  EVENT_ATTENDANCE: 'eventAttendance',
-  EXPAND: 'expand',
-  EXPORT: 'export',
   GITHUB: 'github',
-  GLASS: 'glass',
   HOME: 'home',
-  IMPORT: 'import',
   LEFT_ARROW: 'leftArrow',
   RIGHT_ARROW: 'rightArrow',
-  MESSAGE_CIRCLE: 'messageCircle',
-  MOON: 'moon',
   POINTS: 'points',
   QUESTION: 'question',
-  SETTING: 'setting',
-  SUN: 'sun',
-  SURINK: 'surink',
   TWITTER: 'twitter',
   PERSON: 'person',
   CALENDAR: 'calendar',
@@ -103,7 +70,6 @@ export const ICONS = {
   EXTERNAL: 'external',
   TX: 'tx',
   ACCOUNT: 'account',
-  CONNECT: 'connect',
   WALLET: 'wallet',
   WAVE: 'wave',
 } as const
@@ -178,12 +144,6 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <WalletIcon />
           </IconContainer>
         )
-      case 'connect':
-        return (
-          <IconContainer>
-            <ConnectIcon />
-          </IconContainer>
-        )
       case 'tx':
         return (
           <IconContainer>
@@ -196,22 +156,10 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <VoxelIcon />
           </IconContainer>
         )
-      case 'ens':
-        return (
-          <IconContainer>
-            <ENSIcon />
-          </IconContainer>
-        )
       case 'cross':
         return (
           <IconContainer>
             <CrossIcon />
-          </IconContainer>
-        )
-      case 'addFile':
-        return (
-          <IconContainer>
-            <AddFileIcon />
           </IconContainer>
         )
       case 'add':
@@ -232,34 +180,16 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <ChainIcon />
           </IconContainer>
         )
-      case 'checkedCircle':
-        return (
-          <IconContainer>
-            <CheckedCircleIcon />
-          </IconContainer>
-        )
       case 'checked':
         return (
           <IconContainer>
             <CheckedIcon />
           </IconContainer>
         )
-      case 'checkedSquare':
-        return (
-          <IconContainer>
-            <CheckedSquareIcon />
-          </IconContainer>
-        )
       case 'copy':
         return (
           <IconContainer>
             <CopyIcon />
-          </IconContainer>
-        )
-      case 'crossFilled':
-        return (
-          <IconContainer>
-            <CrossFilledIcon />
           </IconContainer>
         )
       case 'discord':
@@ -280,52 +210,16 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <EthereumIcon />
           </IconContainer>
         )
-      case 'voxels':
-        return (
-          <IconContainer>
-            <VoxelslIcon />
-          </IconContainer>
-        )
-      case 'eventAttendance':
-        return (
-          <IconContainer>
-            <EventAttendanceIcon />
-          </IconContainer>
-        )
-      case 'expand':
-        return (
-          <IconContainer>
-            <ExpandIcon />
-          </IconContainer>
-        )
-      case 'export':
-        return (
-          <IconContainer>
-            <ExportIcon />
-          </IconContainer>
-        )
       case 'github':
         return (
           <IconContainer>
             <GithubIcon />
           </IconContainer>
         )
-      case 'glass':
-        return (
-          <IconContainer>
-            <GlassIcon />
-          </IconContainer>
-        )
       case 'home':
         return (
           <IconContainer>
             <HomeIcon />
-          </IconContainer>
-        )
-      case 'import':
-        return (
-          <IconContainer>
-            <ImportIcon />
           </IconContainer>
         )
       case 'leftArrow':
@@ -340,18 +234,6 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <LogOut />
           </IconContainer>
         )
-      case 'moon':
-        return (
-          <IconContainer>
-            <MoonIcon />
-          </IconContainer>
-        )
-      case 'messageCircle':
-        return (
-          <IconContainer>
-            <MessageCircleIcon />
-          </IconContainer>
-        )
       case 'points':
         return (
           <IconContainer>
@@ -364,28 +246,10 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <QuestionIcon />
           </IconContainer>
         )
-      case 'setting':
-        return (
-          <IconContainer>
-            <SettingIcon />
-          </IconContainer>
-        )
-      case 'surink':
-        return (
-          <IconContainer>
-            <SurinkIcon />
-          </IconContainer>
-        )
       case 'twitter':
         return (
           <IconContainer>
             <TwitterIcon />
-          </IconContainer>
-        )
-      case 'sun':
-        return (
-          <IconContainer>
-            <SunIcon />
           </IconContainer>
         )
       case 'person':

@@ -1,4 +1,8 @@
-import { Orbis } from '@orbisclub/orbis-sdk'
+import { createClient } from '@supabase/supabase-js'
+
+const url = 'https://ylgfjdlgyjmdikqavpcj.supabase.co'
+const key =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZ2ZqZGxneWptZGlrcWF2cGNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTQ3NTc3NTIsImV4cCI6MTk3MDMzMzc1Mn0.2XdkerM98LhI6q5MBBaXRq75yxOSy-JVbwtTz6Dn9d0'
 
 export type OrbisBaseResponse =
   | {
@@ -38,43 +42,11 @@ export type UpdateOrbisProfileParam = {
   content: OrbisProfileDetail
 }
 
-export class OrbisHelper {
-  orbis = undefined as Orbis | undefined
-
-  constructor() {
-    this.orbis = new Orbis()
-  }
-
-  async fetchOrbisProfile(did?: string): Promise<OrbisProfileDetail | null> {
-    if (!did || !this.orbis) return null
-    const res = await this.orbis.getProfile(did.toLowerCase())
-    const profile: OrbisProfile = res.data as OrbisProfile
-    if (!profile || !profile.details || !profile.details.profile) return null
-    return profile.details.profile
-  }
-
-  async updateOrbisProfile(params: UpdateOrbisProfileParam): Promise<OrbisBaseResponse> {
-    if (!params.did || !this.orbis) {
-      throw new Error('Failed to update Orbis Profile')
-    }
-    try {
-      const orbisConnection = await this.orbis.isConnected()
-      if (!orbisConnection) {
-        await this.orbis.connect(window.ethereum, false)
-      }
-      return await this.orbis.updateProfile({ ...params.content })
-    } catch (error) {
-      throw error
-    }
-  }
-}
-
-let orbisHelper: OrbisHelper
-
-export const getOrbisHelper = (): OrbisHelper => {
-  if (orbisHelper) {
-    return orbisHelper
-  }
-  orbisHelper = new OrbisHelper()
-  return orbisHelper
+export const fetchOrbisProfile = async (did?: string): Promise<OrbisProfileDetail | null> => {
+  if (!did) return null
+  const indexer = createClient(url, key)
+  let { data } = await indexer.from('orbis_v_profiles').select().eq('did', did).single()
+  const profile: OrbisProfile = data as OrbisProfile
+  if (!profile || !profile.details || !profile.details.profile) return null
+  return profile.details.profile
 }

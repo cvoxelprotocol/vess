@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import type { BusinessProfile } from 'vess-sdk'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { BasicProfileWidgetEditForm } from './BasicProfileWidgetEditForm'
@@ -9,8 +8,7 @@ type Props = {
   did: string
   businessProfile?: BusinessProfile | null
 }
-
-export const BasicProfileWidgetEditModal: FC<Props> = ({ did, businessProfile }) => {
+export default function BasicProfileWidgetEditModal({ did, businessProfile }: Props) {
   const { showModal, setShowModal } = useVESSWidgetModal()
   const { currentTheme } = useVESSTheme()
 

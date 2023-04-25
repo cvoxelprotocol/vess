@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useMemo } from 'react'
-import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import { DatePicker } from 'react-date-picker'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { Icon, ICONS } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -77,27 +77,13 @@ export const BaseDatePicker = <T extends FieldValues>({
     display: flex;
     min-width: 160px;
     width: 100%;
+    color: ${currentTheme.onSurfaceVariant} !important;
   `
   const SupportingText = styled.span`
     color: ${currentTheme.error};
     ${getBasicFont(currentTypo.body.small)};
   `
 
-  const DatePickerContent = styled(DatePicker)`
-    width: 100%;
-    border: none;
-    outline: none;
-    height: 56px;
-    color: ${currentTheme.onSurfaceVariant} !important;
-    &:hover {
-      background: ${currentTheme.depth1};
-      outline: none;
-    }
-    &:focus {
-      outline: none;
-      background: ${currentTheme.depth2};
-    }
-  `
   const PickAction = styled.label`
     color: ${currentTheme.onSurfaceVariant};
     ${getBasicFont(currentTypo.label.large)};
@@ -125,7 +111,7 @@ export const BaseDatePicker = <T extends FieldValues>({
             name={name}
             rules={{ required: required || false }}
             render={({ field: { onChange, value } }) => (
-              <DatePickerContent
+              <DatePicker
                 onChange={onChange}
                 value={value as Date}
                 format={format}

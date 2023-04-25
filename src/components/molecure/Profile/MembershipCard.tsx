@@ -3,8 +3,9 @@ import { FC, useMemo } from 'react'
 import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
 import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
-import { Icon, ICONS, IconSize } from '@/components/atom/Icons/Icon'
+import { IconSize } from '@/components/atom/Icons/Icon'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
+import { Text } from '@/components/atom/Texts/Text'
 import { DefaultCardColor } from '@/constants/ui'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { formatDate } from '@/utils/date'
@@ -120,14 +121,6 @@ export const MembershipCard: FC<Props> = ({
       ${getBasicFont(currentTypo.title.medium)};
     }
   `
-  const Label = styled.p`
-    padding-top: 8px;
-    color: ${textColor || DefaultCardColor.textColor};
-    ${getBasicFont(currentTypo.label.small)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.small)};
-    }
-  `
 
   return (
     <CardContainer>
@@ -152,7 +145,12 @@ export const MembershipCard: FC<Props> = ({
               )
             })}
         </Flex>
-        <Label>{period}</Label>
+        <Text
+          type='p'
+          color={textColor || DefaultCardColor.textColor}
+          font={getBasicFont(currentTypo.label.small)}
+          text={period}
+        />
       </Flex>
       <BackLogoContainer>
         <ImageContainer src={icon || 'https://workspace.vess.id/company.png'} width={'100%'} />

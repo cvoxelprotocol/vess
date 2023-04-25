@@ -2,7 +2,9 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
+import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
+import { Text } from '@/components/atom/Texts/Text'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useOrganization } from '@/hooks/useOrganization'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -43,74 +45,39 @@ export const EventCard: FC<Props> = ({ ceramicId }) => {
     margin: 0 auto;
   `
 
-  const Container = styled.div`
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  `
-  const PfpContainer = styled.div`
-    width: fit-content;
-  `
-
-  const Name = styled.div`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.title.medium)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.title.small)};
-    }
-    word-break: break-all;
-  `
-  const Flex = styled.div`
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    align-items: center;
-  `
-  const InfoItem = styled.p`
-    color: ${currentTheme.onSurface};
-    text-align: left;
-    ${getBasicFont(currentTypo.label.medium)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.small)};
-    }
-    display: flex;
-    align-items: center;
-    column-gap: 4px;
-  `
-  const Organizer = styled.div`
-    color: ${currentTheme.onSurfaceVariant};
-    text-align: left;
-    ${getBasicFont(currentTypo.label.medium)};
-    @media (max-width: 599px) {
-      ${getBasicFont(currentTypo.label.small)};
-    }
-    display: flex;
-    align-items: center;
-    column-gap: 4px;
-  `
-
   return (
     <CardContainer>
-      <Container>
+      <Flex colGap='16px' rowGap='16px' width='100%' flexDirection='column'>
         <VerifiedMark size='L' />
-        <PfpContainer>
-          <Avatar url={eventDetail?.icon} size={'100'} />
-        </PfpContainer>
-        <Name>{eventDetail?.name}</Name>
-        <Flex>
-          <InfoItem>
-            <Icon icon={ICONS.CALENDAR} size={'MM'} />
-            {`${formatDate(eventDetail?.startDate)}`}
-          </InfoItem>
+        <Avatar url={eventDetail?.icon} size={'100'} withBorder />
+        <Text
+          type='p'
+          color={currentTheme.onSurface}
+          font={getBasicFont(currentTypo.title.medium)}
+          fontSp={getBasicFont(currentTypo.title.small)}
+          text={eventDetail?.name}
+        />
+        <Flex colGap='4px' rowGap='4px'>
+          <Icon icon={ICONS.CALENDAR} size={'MM'} />
+          <Text
+            type='p'
+            color={currentTheme.onSurface}
+            font={getBasicFont(currentTypo.label.medium)}
+            fontSp={getBasicFont(currentTypo.label.small)}
+            text={`${formatDate(eventDetail?.startDate)}`}
+          />
         </Flex>
-        <Organizer>
+        <Flex colGap='4px' rowGap='4px'>
           <Avatar url={organization?.icon} size={'S'} />
-          {`${organization?.name}`}
-        </Organizer>
-      </Container>
+          <Text
+            type='p'
+            color={currentTheme.onSurfaceVariant}
+            font={getBasicFont(currentTypo.label.medium)}
+            fontSp={getBasicFont(currentTypo.label.small)}
+            text={organization?.name}
+          />
+        </Flex>
+      </Flex>
     </CardContainer>
   )
 }

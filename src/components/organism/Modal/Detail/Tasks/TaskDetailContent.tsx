@@ -5,6 +5,7 @@ import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
+import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { useOrganization } from '@/hooks/useOrganization'
 import { useTaskCredential } from '@/hooks/useTaskCredential'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -23,9 +24,13 @@ type Props = {
 }
 export const TaskDetailContent: FC<Props> = ({ streamId }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { taskDetail } = useTaskCredential(streamId)
+  const { taskDetail, isLoadingTaskDetail } = useTaskCredential(streamId)
   const { organization } = useOrganization(
-    taskDetail?.client?.format === 'did' ? taskDetail?.client.value : undefined,
+    taskDetail?.client?.format !== 'did' &&
+      (taskDetail?.client?.value?.startsWith('kjz') ||
+        taskDetail?.client?.value?.startsWith('ceramic://'))
+      ? taskDetail?.client?.value
+      : undefined,
   )
 
   const Container = styled.div`
@@ -171,99 +176,116 @@ export const TaskDetailContent: FC<Props> = ({ streamId }) => {
 
   return (
     <Container>
-      <InfoContainer>
-        <PfpContainer>{VisualizerPresenterMemo}</PfpContainer>
-        <InfoContent>
-          <Title>{taskDetail?.summary}</Title>
-          <Flex>
-            <ChipsContainer>
-              {taskDetail?.genre && (
-                <Chip
-                  text={taskDetail.genre}
-                  variant={'filled'}
-                  mainColor={currentTheme.primaryContainer}
-                  textColor={currentTheme.onPrimaryContainer}
-                  size={'S'}
-                  solo
-                />
-              )}
-              {taskDetail?.tags &&
-                taskDetail?.tags.map((chip) => {
-                  return (
-                    <Chip
-                      key={chip}
-                      text={chip}
-                      variant={'outlined'}
-                      mainColor={currentTheme.outline}
-                      textColor={currentTheme.onSurface}
-                      size={'S'}
-                    />
-                  )
-                })}
-            </ChipsContainer>
-          </Flex>
-          {taskDetail?.client && (
-            <>
-              <SectionContent>Client</SectionContent>
+      {isLoadingTaskDetail ? (
+        <CommonSpinner />
+      ) : (
+        <>
+          <Flex
+            colGap='32px'
+            colGapSP='8px'
+            rowGap='32px'
+            rowGapSP='8px'
+            width='100%'
+            flexDirectionSP='column'
+          >
+            <PfpContainer>{VisualizerPresenterMemo}</PfpContainer>
+            <InfoContent>
+              <Title>{taskDetail?.summary}</Title>
               <Flex>
-                {organization ? (
-                  <Project>
-                    <ImageContainer
-                      src={organization?.icon || 'https://workspace.vess.id/company.png'}
-                      width={'26px'}
+                <ChipsContainer>
+                  {taskDetail?.genre && (
+                    <Chip
+                      text={taskDetail.genre}
+                      variant={'filled'}
+                      mainColor={currentTheme.primaryContainer}
+                      textColor={currentTheme.onPrimaryContainer}
+                      size={'S'}
+                      solo
                     />
-                    <ProjectName>{organization?.name}</ProjectName>
-                  </Project>
-                ) : (
-                  <Project>
-                    <ImageContainer src={'https://workspace.vess.id/company.png'} width={'20px'} />
-                    <ProjectName>
-                      {taskDetail?.client?.format === 'name' ? taskDetail.client.value : '-'}
-                    </ProjectName>
-                  </Project>
-                )}
+                  )}
+                  {taskDetail?.tags &&
+                    taskDetail?.tags.map((chip) => {
+                      return (
+                        <Chip
+                          key={chip}
+                          text={chip}
+                          variant={'outlined'}
+                          mainColor={currentTheme.outline}
+                          textColor={currentTheme.onSurface}
+                          size={'S'}
+                        />
+                      )
+                    })}
+                </ChipsContainer>
               </Flex>
-            </>
-          )}
-          <InfoItem>
-            <Icon icon={ICONS.CALENDAR} size={'MM'} />
-            {`${formatDate(taskDetail?.startDate)}-${formatDate(taskDetail?.endDate)}`}
-          </InfoItem>
-          <UnVcMarkContainer>
-            <UnVcMark>
-              <UnVcText>UnVerified</UnVcText>
-            </UnVcMark>
-          </UnVcMarkContainer>
-        </InfoContent>
-      </InfoContainer>
-      <Section>
-        <SectionHeader>Description</SectionHeader>
-        <SectionContent>{taskDetail?.detail}</SectionContent>
-      </Section>
-      <Section>
-        <SectionHeader>Proofs</SectionHeader>
-        {taskDetail?.deliverables &&
-          taskDetail?.deliverables?.length > 0 &&
-          taskDetail?.deliverables?.map((proof) => {
-            return (
-              <>
-                {proof.value !== '' && (
-                  <InfoItem key={`${proof.format}-${proof.value}`}>
-                    {proof.format === 'tx' ? (
-                      <Icon icon={ICONS.TX} size={'MM'} />
+              {taskDetail?.client && (
+                <>
+                  <SectionContent>Client</SectionContent>
+                  <Flex>
+                    {organization ? (
+                      <Project>
+                        <ImageContainer
+                          src={organization?.icon || 'https://workspace.vess.id/company.png'}
+                          width={'26px'}
+                        />
+                        <ProjectName>{organization?.name}</ProjectName>
+                      </Project>
                     ) : (
-                      <Icon icon={ICONS.CHAIN} size={'MM'} />
+                      <Project>
+                        <ImageContainer
+                          src={'https://workspace.vess.id/company.png'}
+                          width={'20px'}
+                        />
+                        <ProjectName>
+                          {taskDetail?.client?.format === 'name' ? taskDetail.client.value : '-'}
+                        </ProjectName>
+                      </Project>
                     )}
-                    <LinkText href={proof.value} target='_blank' rel='noreferrer'>{`${shortenStr(
-                      proof.value,
-                      30,
-                    )}`}</LinkText>
-                  </InfoItem>
-                )}
-              </>
-            )
-          })}
-      </Section>
+                  </Flex>
+                </>
+              )}
+              <InfoItem>
+                <Icon icon={ICONS.CALENDAR} size={'MM'} />
+                {`${formatDate(taskDetail?.startDate)}-${formatDate(taskDetail?.endDate)}`}
+              </InfoItem>
+              <UnVcMarkContainer>
+                <UnVcMark>
+                  <UnVcText>UnVerified</UnVcText>
+                </UnVcMark>
+              </UnVcMarkContainer>
+            </InfoContent>
+          </Flex>
+          <Section>
+            <SectionHeader>Description</SectionHeader>
+            <SectionContent>{taskDetail?.detail}</SectionContent>
+          </Section>
+          <Section>
+            <SectionHeader>Proofs</SectionHeader>
+            {taskDetail?.deliverables &&
+              taskDetail?.deliverables?.length > 0 &&
+              taskDetail?.deliverables?.map((proof) => {
+                return (
+                  <>
+                    {proof.value !== '' && (
+                      <InfoItem key={`${proof.format}-${proof.value}`}>
+                        {proof.format === 'tx' ? (
+                          <Icon icon={ICONS.TX} size={'MM'} />
+                        ) : (
+                          <Icon icon={ICONS.CHAIN} size={'MM'} />
+                        )}
+                        <LinkText
+                          href={proof.value}
+                          target='_blank'
+                          rel='noreferrer'
+                        >{`${shortenStr(proof.value, 30)}`}</LinkText>
+                      </InfoItem>
+                    )}
+                  </>
+                )
+              })}
+          </Section>
+        </>
+      )}
     </Container>
   )
 }

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
 import type { EventAttendanceWithId } from 'vess-sdk'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
@@ -11,8 +10,7 @@ import { useSetSelectAttendance } from '@/jotai/item'
 type Props = {
   did: string
 }
-
-export const EventTabContent: FC<Props> = ({ did }) => {
+export default function EventTabContent({ did }: Props) {
   const { displayHeldEventAttendances, isFetchingHeldEventAttendances } =
     useHeldEventAttendances(did)
   const { setShowDetailModal } = useVESSWidgetModal()

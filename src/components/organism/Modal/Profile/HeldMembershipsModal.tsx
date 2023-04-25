@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, useMemo } from 'react'
+import { useMemo } from 'react'
 import { addCeramicPrefix } from 'vess-sdk'
 import type { HighlightedCredentials, SocialLinks } from 'vess-sdk'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
@@ -19,7 +19,7 @@ type Props = {
   editable?: boolean
 }
 
-export const HeldMembershipsModal: FC<Props> = (props) => {
+export default function HeldMembershipsModal(props: Props) {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { showMembershipModal, setShowMembershipModal } = useVESSWidgetModal()
   const { displayHeldMembership, highlightedMembership, highlightedSelfClaimedMembership } =

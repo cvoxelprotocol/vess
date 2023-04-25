@@ -1,11 +1,13 @@
 import styled from '@emotion/styled'
-import Lottie from 'react-lottie-player'
-import loadingJson from './VESS_loading.json'
+import dynamic from 'next/dynamic'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-
 type Props = {
   text?: string
 }
+
+const LottieBaseLoading = dynamic(() => import('@/components/atom/Animations/LottieBaseLoading'), {
+  ssr: false,
+})
 export default function LoadingModal(props: Props) {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const Container = styled.div`
@@ -37,7 +39,7 @@ export default function LoadingModal(props: Props) {
   return (
     <Container>
       <Loading>
-        <Lottie loop animationData={loadingJson} play style={{ width: 200, height: 200 }} />
+        <LottieBaseLoading loop play style={{ width: 200, height: 200 }} />
       </Loading>
       <LoadingText>{props.text || ''}</LoadingText>
     </Container>

@@ -1,12 +1,18 @@
 import styled from '@emotion/styled'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
-import Lottie from 'react-lottie-player'
-import animationData from './purple_particle.json'
 import { CyberButton } from '@/components/atom/Buttons/CyberButton'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+
+const LottieCyberLoading = dynamic(
+  () => import('@/components/atom/Animations/LottieCyberLoading'),
+  {
+    ssr: false,
+  },
+)
 
 export const NfcCreatedContainer: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -67,12 +73,7 @@ export const NfcCreatedContainer: FC = () => {
           <ImageContainer>
             <NextImageContainer src='/vessCard/gif4_condensed.gif' width='296px' height='296px' />
             <AnimContainer>
-              <Lottie
-                animationData={animationData}
-                loop={false}
-                play
-                style={{ width: '100%', height: '100%' }}
-              />
+              <LottieCyberLoading loop={false} play style={{ width: '100%', height: '100%' }} />
             </AnimContainer>
           </ImageContainer>
           <TextContainer>Your VESS Card is here!</TextContainer>

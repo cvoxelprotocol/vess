@@ -1,13 +1,12 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
-import { HeaderItem } from './HeaderItem'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Flex } from '@/components/atom/Common/Flex'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
-import { Divider } from '@/components/atom/Menu/Divider'
 import { Menu, PopoverContainer, PopoverTrigger } from '@/components/atom/Menu/Menu'
 import { MenuItem } from '@/components/atom/Menu/MenuItem'
+import { Text } from '@/components/atom/Texts/Text'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
@@ -48,19 +47,29 @@ export const HeaderMenu: FC = () => {
     }
   `
 
-  const Name = styled.div`
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.title.medium)};
-    white-space: nowrap;
-  `
-  const WalletAddress = styled.div`
-    color: ${currentTheme.outline};
-    ${getBasicFont(currentTypo.label.small)};
-  `
-
   const AvatarWrapper = styled.div`
     width: 40px;
     height: 40px;
+  `
+
+  const DividerContainer = styled.div`
+    width: 100%;
+    padding: 0px 8px;
+    display: flex;
+    flex-direction: column;
+  `
+
+  const DividerLine = styled.div`
+    width: 100%;
+    height: 8px;
+    border-bottom: solid 1px;
+    border-color: ${currentTheme.outline};
+  `
+
+  const Title = styled.span`
+    margin-top: 4px;
+    ${getBasicFont(currentTypo.label.medium)};
+    color: ${currentTheme.outline};
   `
 
   const goToMyPage = () => {
@@ -84,17 +93,31 @@ export const HeaderMenu: FC = () => {
           <Avatar url={profile.avatarSrc} fill />
         </AvatarWrapper>
         <AccountContainer>
-          <Name>{profile.displayName}</Name>
+          <Text
+            type='p'
+            color={currentTheme.onBackground}
+            font={getBasicFont(currentTypo.title.medium)}
+            text={profile.displayName}
+            whiteSpace={'nowrap'}
+          />
           <Flex flexDirection='row' rowGap='2px'>
             <Icon icon={ICONS.ETHEREUM} mainColor={currentTheme.outline} size={'SS'} />
-            <WalletAddress>{shortenStr(originalAddress, 7)}</WalletAddress>
+            <Text
+              type='p'
+              color={currentTheme.outline}
+              font={getBasicFont(currentTypo.label.small)}
+              text={shortenStr(originalAddress, 7)}
+            />
           </Flex>
         </AccountContainer>
       </WrappedPopoverTrigger>
       <Menu side={'bottom'} align={'center'}>
         <MenuItem title={'My Profile'} onClick={() => goToMyPage()} icon={ICONS.ACCOUNT} />
         <MenuItem title={'Sign Out'} onClick={() => logout()} icon={ICONS.LOGOUT} />
-        <Divider title='Organization' />
+        <DividerContainer>
+          <DividerLine />
+          <Title>Organization</Title>
+        </DividerContainer>
         <MenuItem
           title={'Create New'}
           onClick={() => jumpToURL('https://lp.vess.id/en/synapss/org/apply')}

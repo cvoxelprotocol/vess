@@ -20,8 +20,6 @@ import {
   GetUserConnectionInvitaionsQuery,
 } from '@/graphql/generated'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-// import { useEventAttendance } from '@/hooks/useEventAttendance'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -37,7 +35,6 @@ export const InvitaionManagementForNFC: FC = () => {
   const { showToast } = useToast()
   const [unused, setUnused] = useStateUnUsedInvitaion()
   const [unusedInvitations, setMyInvitations] = useStateMyConnectionInvitaions()
-  const { profile } = useSocialAccount(did)
   const router = useRouter()
   const { showLoading, closeLoading } = useVESSLoading()
 

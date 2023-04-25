@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { ButtonHTMLAttributes, FC } from 'react'
+import { Flex } from '../Common/Flex'
 import { Icon, IconsType } from '../Icons/Icon'
+import { Text } from '../Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
@@ -25,28 +27,18 @@ export const MenuItem: FC<Props> = ({ title, icon, tailIcon, width, ...props }) 
       cursor: pointer;
     }
   `
-  const ItemTitleContainer = styled.div`
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  `
-
-  const IconContainer = styled.div`
-    width: 16px;
-    height: 16px;
-  `
-
-  const Title = styled.span`
-    color: ${currentTheme.onSurface};
-    ${getBasicFont(currentTypo.body.large)};
-  `
 
   return (
     <ItemContainer {...props}>
-      <ItemTitleContainer>
+      <Flex rowGap='8px'>
         {icon && <Icon icon={icon} size={'L'} mainColor={currentTheme.onSurface} />}
-        <Title>{title}</Title>
-      </ItemTitleContainer>
+        <Text
+          type='span'
+          color={currentTheme.onSurface}
+          font={getBasicFont(currentTypo.body.large)}
+          text={title}
+        />
+      </Flex>
       {tailIcon && <Icon icon={tailIcon} size={'L'} mainColor={currentTheme.onSurface} />}
     </ItemContainer>
   )

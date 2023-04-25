@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import Link from 'next/link'
-import { FC, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { ConnectionCard } from '@/components/molecure/Connection/ConnectionCard'
@@ -32,7 +32,7 @@ type Props = {
   did: string
 }
 
-export const ConnectionTabContent: FC<Props> = ({ did }) => {
+export default function ConnectionTabContent({ did }: Props) {
   const [getIssuedConnections, { data: connections, loading }] = useGetIssuedConnectionsLazyQuery({
     variables: { id: did },
     nextFetchPolicy: 'network-only',

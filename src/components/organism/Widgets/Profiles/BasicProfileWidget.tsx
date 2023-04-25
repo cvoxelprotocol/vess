@@ -1,12 +1,13 @@
 import styled from '@emotion/styled'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
-import { SourceDrawer } from '@/components/molecure/Profile/SourceDrawer'
+import { useCcProfile } from '@/hooks/useCcProfile'
+import { useLensProfile } from '@/hooks/useLensProfile'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -25,17 +26,13 @@ type Props = {
 
 export const BasicProfileWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const {
-    profile: defaultProfile,
-    ccProfile,
-    lensProfile,
-    ensProfile,
-    isloadingProfile,
-  } = useSocialAccount(props.did)
+  const { profile, ensProfile, isloadingProfile } = useSocialAccount(props.did)
+  const { lensProfile } = useLensProfile(props.did)
+  const { ccProfile } = useCcProfile(props.did)
   const { setShowSocialProfileModal } = useVESSWidgetModal()
   const [displayProfileType, setDisplayProfileType] = useState<profileType>('default')
 
-  const profile = useMemo(() => {
+  const displayProfile = useMemo(() => {
     if (displayProfileType === 'cc') {
       return ccProfile
     } else if (displayProfileType === 'lens') {
@@ -43,8 +40,8 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     } else if (displayProfileType === 'ens') {
       return ensProfile
     }
-    return defaultProfile
-  }, [displayProfileType, defaultProfile, ccProfile, lensProfile, ensProfile])
+    return profile
+  }, [displayProfileType, profile, ccProfile, lensProfile, ensProfile])
 
   const HeaderImage = styled.div`
     width: 100%;
@@ -113,6 +110,29 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     }
   `
 
+  const DrawerContainer = styled.div`
+    background-color: ${currentTheme.surfaceVariant};
+    width: fit-content;
+    height: fit-content;
+    padding: 4px 8px 4px 4px;
+    display: flex;
+    grid-template-columns: repeat(3, 30%);
+    justify-content: start;
+    align-items: center;
+    border: 1px solid ${currentTheme.outline};
+    border-right: none;
+    border-radius: 99px 0 0 99px;
+    overflow: hidden;
+    transform: translateX(144px);
+    transition: all 0.3s;
+
+    &:hover {
+      width: fit-content;
+      justify-content: start;
+      transform: none;
+    }
+  `
+
   const handleEdit = () => {
     setShowSocialProfileModal(true)
   }
@@ -121,7 +141,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     <>
       <BaseWidget onClickEdit={handleEdit} {...props}>
         <SrcDrawerContainer>
-          <SourceDrawer>
+          <DrawerContainer>
             <AvatarButton
               width='40px'
               height='40px'
@@ -152,7 +172,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
               order={displayProfileType == 'ens' ? -1 : 3}
               onClick={() => setDisplayProfileType('ens')}
             />
-          </SourceDrawer>
+          </DrawerContainer>
         </SrcDrawerContainer>
         <HeaderImage>
           <NextImageContainer
@@ -170,14 +190,14 @@ export const BasicProfileWidget: FC<Props> = (props) => {
             <>
               <Flex rowGap='4px' colGap='12px' colGapSP='8px' justifyContent={'start'}>
                 <PfpContainer>
-                  <Avatar url={profile?.avatarSrc} fill />
+                  <Avatar url={displayProfile?.avatarSrc} fill />
                 </PfpContainer>
                 <Flex flexDirection='column' alignItems={'flex-start'}>
-                  <Name>{profile?.displayName}</Name>
+                  <Name>{displayProfile?.displayName}</Name>
                   <Address>{shortenStr(props.did, 16)}</Address>
                 </Flex>
               </Flex>
-              <Description>{profile?.bio}</Description>
+              <Description>{displayProfile?.bio}</Description>
             </>
           )}
         </Container>

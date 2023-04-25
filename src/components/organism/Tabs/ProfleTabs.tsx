@@ -1,17 +1,24 @@
 import styled from '@emotion/styled'
 import * as Tabs from '@radix-ui/react-tabs'
-import { FC, useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import { ConnectionTabContent } from './ConnectionTabContent'
-import { EventTabContent } from './EventTabContent'
-import { WorkTabContent } from './WorkTabContent'
+import ConnectionTabContent from './ConnectionTabContent'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useStateProfileTab } from '@/jotai/ui'
 type Props = {
   did: string
 }
 
-export const ProfleTabs: FC<Props> = ({ did }) => {
+const EventTabContent = dynamic(() => import('@/components/organism/Tabs/EventTabContent'), {
+  ssr: false,
+})
+
+const WorkTabContent = dynamic(() => import('@/components/organism/Tabs/WorkTabContent'), {
+  ssr: false,
+})
+
+export default function ProfleTabs({ did }: Props) {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const [isClient, setClient] = useState(false)
   const [selectedTab, selectTab] = useStateProfileTab()

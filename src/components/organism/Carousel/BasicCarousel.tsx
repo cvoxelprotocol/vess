@@ -1,12 +1,9 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
-import { Carousel, CarouselProps } from 'react-responsive-carousel'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 export const BasicCarousel: FC = () => {
-  const { currentTheme } = useVESSTheme()
-
   const CarouselContainer = styled.div`
     width: 100%;
     padding: 24px 16px;

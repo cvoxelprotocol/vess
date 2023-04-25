@@ -1,11 +1,4 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  InMemoryCache,
-  Observable,
-  ApolloProvider,
-  HttpLink,
-} from '@apollo/client'
+import { ApolloClient, ApolloLink, InMemoryCache, Observable, ApolloProvider } from '@apollo/client'
 import { ComposeClient } from '@composedb/client'
 import { RuntimeCompositeDefinition } from '@composedb/types'
 import { createContext, useContext } from 'react'
@@ -39,30 +32,10 @@ const link = new ApolloLink((operation) => {
     )
   })
 })
-const cyberconnectLink = new HttpLink({
-  uri: 'https://api.cyberconnect.dev/',
-})
-
-const lensLink = new HttpLink({
-  uri: 'https://api.lens.dev/',
-})
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  link: ApolloLink.split(
-    (operation) => operation.getContext()['clientName'] === 'cyberconnect',
-    cyberconnectLink,
-    ApolloLink.split(
-      (operation) => operation.getContext()['clientName'] === 'lens',
-      lensLink,
-      link,
-    ),
-  ),
-  // defaultOptions: {
-  //   watchQuery: {
-  //     fetchPolicy: 'network-only',
-  //   },
-  // },
+  link: link,
 })
 
 const CeramicContext = createContext({

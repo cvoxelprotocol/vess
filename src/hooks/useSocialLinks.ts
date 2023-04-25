@@ -2,19 +2,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import type { SocialLinks, CustomResponse } from 'vess-sdk'
 import { getVESS } from 'vess-sdk'
-import { useENS } from './useENS'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { SOCIAL_LINKS_SET_FAILED, SOCIAL_LINKS_SET_SUCCEED } from '@/constants/toastMessage'
-import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
 
 export const useSocialLinks = (did?: string) => {
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const queryClient = useQueryClient()
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
-  const ensProfile = useENS(getAddressFromPkhForWagmi(did))
 
   const { mutateAsync: storeSocialLinks, isLoading: isStoringSocialLinks } = useMutation<
     CustomResponse<{ streamId: string | undefined }>,
@@ -54,30 +51,29 @@ export const useSocialLinks = (did?: string) => {
 
   const twitter = useMemo(() => {
     const url = socialLinks?.links?.find((link) => link.linkType === 'twitter')
-    return url?.value || ensProfile.ensTwitter
-  }, [socialLinks?.links, ensProfile])
+    return url?.value
+  }, [socialLinks?.links])
 
   const discord = useMemo(() => {
     const url = socialLinks?.links?.find((link) => link.linkType === 'discord')
-    return url?.value || ensProfile.ensDiscord
-  }, [socialLinks?.links, ensProfile])
+    return url?.value
+  }, [socialLinks?.links])
 
   const telegram = useMemo(() => {
     const url = socialLinks?.links?.find((link) => link.linkType === 'telegram')
-    return url?.value || ensProfile.ensTelegram
-  }, [socialLinks?.links, ensProfile])
+    return url?.value
+  }, [socialLinks?.links])
 
   const github = useMemo(() => {
     const url = socialLinks?.links?.find((link) => link.linkType === 'github')
-    return url?.value || ensProfile.ensGithub
-  }, [socialLinks?.links, ensProfile])
+    return url?.value
+  }, [socialLinks?.links])
 
   return {
     socialLinks,
     isFetchingSocialLinks,
     storeSocialLinks,
     isStoringSocialLinks,
-    ensProfile,
     twitter,
     discord,
     telegram,

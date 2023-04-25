@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import * as radixAvatar from '@radix-ui/react-avatar'
 import { FC, memo } from 'react'
 import { ICONSIZE, IconSize } from '../Icons/Icon'
-import { AvatarPlaceholder } from './AvatarPlaceholder'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 interface AvatarProps {
@@ -10,9 +9,16 @@ interface AvatarProps {
   userName?: string
   size?: IconSize
   fill?: boolean
+  withBorder?: boolean
 }
 
-const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName, fill = false }) => {
+const AvatarContent: FC<AvatarProps> = ({
+  url,
+  size = 'L',
+  userName,
+  fill = false,
+  withBorder = false,
+}) => {
   const { currentTheme } = useVESSTheme()
 
   const AvatarContainer = styled(radixAvatar.Root)`
@@ -43,11 +49,41 @@ const AvatarContent: FC<AvatarProps> = ({ url, size = 'L', userName, fill = fals
     color: ${currentTheme.primary};
   `
 
+  const AvatarPlaceholder = styled.div`
+    width: ${fill ? '100%' : ICONSIZE[size]};
+    height: ${fill ? '100%' : ICONSIZE[size]};
+    background-image: linear-gradient(
+      to top right,
+      ${currentTheme.primary},
+      ${currentTheme.secondary}
+    ); ;
+  `
+
+  const WithBorder = styled.div`
+    width: fit-content;
+    border: solid ${currentTheme.onSurface};
+    border-width: 3px;
+    border-radius: 100%;
+  `
+
+  if (withBorder) {
+    return (
+      <WithBorder>
+        <AvatarContainer>
+          <AvatarContent src={url} alt={url} />
+          <FallbackContent delayMs={500}>
+            <AvatarPlaceholder />
+          </FallbackContent>
+        </AvatarContainer>
+      </WithBorder>
+    )
+  }
+
   return (
     <AvatarContainer>
       <AvatarContent src={url} alt={url} />
       <FallbackContent delayMs={500}>
-        <AvatarPlaceholder size={size} fill />
+        <AvatarPlaceholder />
       </FallbackContent>
     </AvatarContainer>
   )

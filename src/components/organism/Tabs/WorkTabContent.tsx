@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
 import type { TaskCredential, WithCeramicId } from 'vess-sdk'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
@@ -12,8 +11,7 @@ import { useSetSelectTask } from '@/jotai/item'
 type Props = {
   did: string
 }
-
-export const WorkTabContent: FC<Props> = ({ did }) => {
+export default function WorkTabContent({ did }: Props) {
   const { heldTaskCredentials, isFetchingHeldTaskCredentials } = useHeldTaskCredentials(did)
   const selectTask = useSetSelectTask()
   const { setShowTaskDetailModal } = useVESSWidgetModal()

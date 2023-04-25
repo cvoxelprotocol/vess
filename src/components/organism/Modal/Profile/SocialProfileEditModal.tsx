@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { SocialProfileEditForm } from './SocialProfileEditForm'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -7,8 +6,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 type Props = {
   did: string
 }
-
-export const SocialProfileEditModal: FC<Props> = ({ did }) => {
+export default function SocialProfileEditModal({ did }: Props) {
   const { showSocialProfileModal, setShowSocialProfileModal } = useVESSWidgetModal()
   const { currentTheme } = useVESSTheme()
 

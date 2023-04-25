@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, HTMLAttributes } from 'react'
 
-type Props = {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   flexDirection?: string
   flexDirectionSP?: string
@@ -18,6 +18,9 @@ type Props = {
   width?: string
   padding?: string
   paddingSP?: string
+  hideSP?: boolean
+  background?: string
+  margin?: string
 }
 export const Flex: FC<Props> = ({
   children,
@@ -36,6 +39,10 @@ export const Flex: FC<Props> = ({
   flexDirectionSP,
   alignItemsSP,
   justifyContentSP,
+  hideSP = false,
+  background = 'inherit',
+  margin = '0px',
+  ...props
 }) => {
   const Flex = styled.div`
     display: flex;
@@ -48,8 +55,11 @@ export const Flex: FC<Props> = ({
     flex-wrap: ${flexWrap};
     width: ${width};
     padding: ${padding};
+    margin: ${margin};
+    background: ${background};
     @media (max-width: 599px) {
-      flex-direction: ${flexDirectionSP ?? flexDirection};
+      display: ${hideSP ? 'none' : 'flex'};
+      flex-direction: ${flexDirectionSP || flexDirection};
       align-items: ${alignItemsSP ?? alignItems};
       justify-content: ${justifyContentSP ?? justifyContent};
       padding: ${paddingSP || padding};
@@ -57,5 +67,5 @@ export const Flex: FC<Props> = ({
       row-gap: ${rowGapSP || rowGap};
     }
   `
-  return <Flex>{children}</Flex>
+  return <Flex {...props}>{children}</Flex>
 }

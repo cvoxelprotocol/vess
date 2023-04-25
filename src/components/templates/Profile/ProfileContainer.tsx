@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { Button } from '@/components/atom/Buttons/Button'
@@ -8,12 +9,6 @@ import { ICONS } from '@/components/atom/Icons/Icon'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
 import { TaskDetailModal } from '@/components/organism/Modal/Detail/Tasks/TaskDetailModal'
-import { BasicProfileWidgetEditModal } from '@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'
-import { HeldMembershipsModal } from '@/components/organism/Modal/Profile/HeldMembershipsModal'
-import { SocialLinkWidgetEditModal } from '@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'
-import { SocialProfileEditModal } from '@/components/organism/Modal/Profile/SocialProfileEditModal'
-import { NewTaskWidgetModal } from '@/components/organism/Modal/Tasks/NewTaskWidgetModal'
-import { ProfleTabs } from '@/components/organism/Tabs/ProfleTabs'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
 import { EventAttendancesWidget } from '@/components/organism/Widgets/Profiles/EventAttendancesWidget'
 import { HighlightedMembershipWidget } from '@/components/organism/Widgets/Profiles/HighlightedMembershipWidget'
@@ -32,6 +27,45 @@ import { useStateFocusEditable } from '@/jotai/ui'
 type Props = {
   did: string
 }
+const ProfleTabs = dynamic(() => import('@/components/organism/Tabs/ProfleTabs'), {
+  ssr: false,
+})
+
+const BasicProfileWidgetEditModal = dynamic(
+  () => import('@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'),
+  {
+    ssr: false,
+  },
+)
+
+const SocialLinkWidgetEditModal = dynamic(
+  () => import('@/components/organism/Modal/Profile/SocialLinkWidgetEditModal'),
+  {
+    ssr: false,
+  },
+)
+
+const HeldMembershipsModal = dynamic(
+  () => import('@/components/organism/Modal/Profile/HeldMembershipsModal'),
+  {
+    ssr: false,
+  },
+)
+
+const SocialProfileEditModal = dynamic(
+  () => import('@/components/organism/Modal/Profile/SocialProfileEditModal'),
+  {
+    ssr: false,
+  },
+)
+
+const NewTaskWidgetModal = dynamic(
+  () => import('@/components/organism/Modal/Tasks/NewTaskWidgetModal'),
+  {
+    ssr: false,
+  },
+)
+
 export const ProfileContainer: FC<Props> = ({ did }) => {
   const { currentTheme } = useVESSTheme()
   const { businessProfile, isFetchingBusinessProfile, isMe } = useBusinessProfile(did)
@@ -232,10 +266,9 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       )}
       <HeldMembershipsModal did={did} editable={isMe} />
       <SocialProfileEditModal did={did} />
-      {/* <ProfileQRModal /> */}
+      <NewTaskWidgetModal did={did} />
       <EventDetailModal streamId={selectedAttendance?.credentialSubject.eventId} />
       <TaskDetailModal streamId={selectedTask} />
-      <NewTaskWidgetModal did={did} />
     </Container>
   )
 }

@@ -1,63 +1,39 @@
-import { ENS } from '@ensdomains/ensjs'
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
-import { useProvider } from 'wagmi'
-export const useENS = (address?: string) => {
-  const provider = useProvider()
+import { fetchEnsName, fetchEnsAvatar } from '@wagmi/core'
+import { DisplayProfile } from '@/@types'
+
+export const useENS = (address?: `0x${string}` | undefined) => {
   const { data: ensProfile, isInitialLoading } = useQuery(
     ['ensProfile', address],
     () => fetchENS(address),
     {
-      enabled: !!address && address !== '',
+      enabled: !!address,
       staleTime: Infinity,
       cacheTime: 300000,
       retry: false,
     },
   )
 
-  const fetchENS = async (address?: string) => {
-    if (!address || !provider) return null
-    const ENSInstance = new ENS()
-    return (
-      (await ENSInstance.withProvider(provider as JsonRpcProvider).getProfile(address, {
-        texts: true,
-      })) || null
-    )
+  const fetchENS = async (address?: `0x${string}` | undefined): Promise<DisplayProfile | null> => {
+    if (!address) return null
+    const ensName = fetchEnsName({
+      address: address,
+    })
+    const avatarUrl = fetchEnsAvatar({
+      address: address,
+    })
+    const res = await Promise.all([ensName, avatarUrl])
+    return res[0]
+      ? {
+          displayName: res[0] || '',
+          avatarSrc: res[1] || undefined,
+          bio: '',
+        }
+      : null
   }
-
-  const ensDiscord = useMemo(() => {
-    if (!ensProfile || !ensProfile.records?.texts) return
-    return ensProfile.records?.texts.find((t) => t.key === 'com.discord')?.value
-  }, [ensProfile])
-
-  const ensTwitter = useMemo(() => {
-    if (!ensProfile || !ensProfile.records?.texts) return
-    return ensProfile.records?.texts.find((t) => t.key === 'com.twitter')?.value
-  }, [ensProfile])
-
-  const ensTelegram = useMemo(() => {
-    if (!ensProfile || !ensProfile.records?.texts) return
-    return ensProfile.records?.texts.find((t) => t.key === 'org.telegram')?.value
-  }, [ensProfile])
-
-  const ensGithub = useMemo(() => {
-    if (!ensProfile || !ensProfile.records?.texts) return
-    return ensProfile.records?.texts.find((t) => t.key === 'com.github')?.value
-  }, [ensProfile])
-
-  const ensAvatar = useMemo(() => {
-    if (!ensProfile || !ensProfile.records?.texts) return
-    return ensProfile.records?.texts.find((t) => t.key === 'avatar')?.value
-  }, [ensProfile])
 
   return {
     ensProfile,
     isInitialLoading,
-    ensDiscord,
-    ensTwitter,
-    ensTelegram,
-    ensGithub,
-    ensAvatar,
   }
 }
