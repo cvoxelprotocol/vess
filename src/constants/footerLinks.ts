@@ -50,7 +50,7 @@ export const footerLinks: footerLinksType = {
       },
       {
         label: 'Terms of Service',
-        url: 'https://vesslabs.notion.site/SYNAPSS-Terms-of-Use-39db3259ab5544b58fceb80c8168888d',
+        url: 'https://vesslabs.notion.site/VESS-Terms-of-Use-1ae74e0b9ae74b86a5e2e7b377b79722',
       },
     ],
   },
