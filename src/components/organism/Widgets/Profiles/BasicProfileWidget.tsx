@@ -4,7 +4,6 @@ import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
-import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useLensProfile } from '@/hooks/useLensProfile'
@@ -26,7 +25,7 @@ type Props = {
 
 export const BasicProfileWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { profile, ensProfile, isloadingProfile } = useSocialAccount(props.did)
+  const { profile, ensProfile } = useSocialAccount(props.did)
   const { lensProfile } = useLensProfile(props.did)
   const { ccProfile } = useCcProfile(props.did)
   const { setShowSocialProfileModal } = useVESSWidgetModal()
@@ -182,24 +181,16 @@ export const BasicProfileWidget: FC<Props> = (props) => {
           />
         </HeaderImage>
         <Container>
-          {isloadingProfile ? (
-            <Flex width='100%' height='100%'>
-              <CommonSpinner />
+          <Flex rowGap='4px' colGap='12px' colGapSP='8px' justifyContent={'start'}>
+            <PfpContainer>
+              <Avatar url={displayProfile?.avatarSrc} fill />
+            </PfpContainer>
+            <Flex flexDirection='column' alignItems={'flex-start'}>
+              <Name>{displayProfile?.displayName}</Name>
+              <Address>{shortenStr(props.did, 16)}</Address>
             </Flex>
-          ) : (
-            <>
-              <Flex rowGap='4px' colGap='12px' colGapSP='8px' justifyContent={'start'}>
-                <PfpContainer>
-                  <Avatar url={displayProfile?.avatarSrc} fill />
-                </PfpContainer>
-                <Flex flexDirection='column' alignItems={'flex-start'}>
-                  <Name>{displayProfile?.displayName}</Name>
-                  <Address>{shortenStr(props.did, 16)}</Address>
-                </Flex>
-              </Flex>
-              <Description>{displayProfile?.bio}</Description>
-            </>
-          )}
+          </Flex>
+          <Description>{displayProfile?.bio}</Description>
         </Container>
       </BaseWidget>
     </>

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { formatDID } from 'vess-sdk'
 import { fetchOrbisProfile } from './OrbisHelper'
-import { getCyberApolloClient, getlensApolloClient } from './apollo'
+import { initializeApollo } from './apollo'
 import { DisplayProfile } from '@/@types'
 import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
 
@@ -75,8 +75,11 @@ const LENS_PROFILE = gql`
 `
 
 export const getCCProfile = async (did: string): Promise<DisplayProfile | null> => {
-  const ccClient = getCyberApolloClient()
+  const ccClient = initializeApollo()
   const { data: ccProfiles } = await ccClient.query({
+    context: {
+      api: 'cc',
+    },
     query: GET_PROFILE,
     variables: { address: getAddressFromPkhForWagmi(did) },
   })
@@ -97,8 +100,11 @@ export const getCCProfile = async (did: string): Promise<DisplayProfile | null> 
 }
 
 export const getLensProfile = async (did: string): Promise<DisplayProfile | null> => {
-  const lensClient = getlensApolloClient()
+  const lensClient = initializeApollo()
   const { data: lensProfileData } = await lensClient.query({
+    context: {
+      api: 'lens',
+    },
     query: LENS_PROFILE,
     variables: { ethereumAddress: getAddressFromPkhForWagmi(did) },
   })

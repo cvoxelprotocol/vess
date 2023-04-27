@@ -1,51 +1,16 @@
-import { ApolloClient, ApolloLink, InMemoryCache, Observable, ApolloProvider } from '@apollo/client'
-import { ComposeClient } from '@composedb/client'
-import { RuntimeCompositeDefinition } from '@composedb/types'
+import { ApolloProvider } from '@apollo/client'
 import { createContext, useContext } from 'react'
-import { definition as devDifinition } from '../__generated__/dev/definition.js'
-import { definition as prodDifinition } from '../__generated__/prod/definition.js'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { initializeApolloForCompose } from '@/lib/apolloForCompose'
 
-/**
- * Configure ceramic Client & create context.
- */
-// const ceramic = new CeramicClient('http://localhost:7007')
-
-const compose = new ComposeClient({
-  ceramic: process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007',
-  // cast our definition as a RuntimeCompositeDefinition
-  definition: (CERAMIC_NETWORK === 'mainnet'
-    ? prodDifinition
-    : devDifinition) as RuntimeCompositeDefinition,
-})
-
-const link = new ApolloLink((operation) => {
-  return new Observable((observer) => {
-    compose.execute(operation.query, operation.variables).then(
-      (result) => {
-        observer.next(result)
-        observer.complete()
-      },
-      (error) => {
-        observer.error(error)
-      },
-    )
-  })
-})
-
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: link,
-})
-
+const { apolloClient, composeClient } = initializeApolloForCompose()
 const CeramicContext = createContext({
-  composeClient: compose,
+  composeClient,
   apolloClient,
 })
 
 export const ComposeWrapper = ({ children }: any) => {
   return (
-    <CeramicContext.Provider value={{ composeClient: compose, apolloClient }}>
+    <CeramicContext.Provider value={{ composeClient, apolloClient }}>
       <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
     </CeramicContext.Provider>
   )

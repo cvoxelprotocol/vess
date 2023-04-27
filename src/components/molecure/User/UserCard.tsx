@@ -47,9 +47,19 @@ export const UserCard: FC<Props> = ({ userId }) => {
     router.push(`/did/${userId}`)
   }
 
-  const jumpToLink = (url: string | undefined, e: MouseEvent<HTMLDivElement>) => {
+  const jumpToLink = (
+    url: string | undefined,
+    e: MouseEvent<HTMLDivElement>,
+    linkType: 'twitter' | 'telegram' | 'github',
+  ) => {
     e.preventDefault()
-    window.open(url, '_blank')
+    if (linkType === 'twitter' || linkType === 'github') {
+      window.open(url, '_blank')
+      return
+    } else {
+      window.open(`https://t.me/${url}`, '_blank')
+      return
+    }
   }
 
   return (
@@ -100,30 +110,36 @@ export const UserCard: FC<Props> = ({ userId }) => {
         )}
       </Flex>
       <Flex justifyContent='center' alignItems='center' width='100%' colGap='8px'>
-        <IconButton
-          icon={ICONS.TWITTER}
-          variant='text'
-          mainColor={currentTheme.onSurface}
-          size='MM'
-          disabled={!twitter}
-          onClick={(e) => jumpToLink(twitter, e)}
-        />
-        <IconButton
-          icon={ICONS.TELEGRAM}
-          mainColor={currentTheme.onSurface}
-          variant='text'
-          size='MM'
-          disabled={!telegram}
-          onClick={(e) => jumpToLink(telegram, e)}
-        />
-        <IconButton
-          icon={ICONS.GITHUB}
-          mainColor={currentTheme.onSurface}
-          variant='text'
-          size='MM'
-          disabled={!github}
-          onClick={(e) => jumpToLink(github, e)}
-        />
+        {twitter && (
+          <IconButton
+            icon={ICONS.TWITTER}
+            variant='text'
+            mainColor={currentTheme.onSurface}
+            size='MM'
+            disabled={!twitter}
+            onClick={(e) => jumpToLink(twitter, e, 'twitter')}
+          />
+        )}
+        {telegram && (
+          <IconButton
+            icon={ICONS.TELEGRAM}
+            mainColor={currentTheme.onSurface}
+            variant='text'
+            size='MM'
+            disabled={!telegram}
+            onClick={(e) => jumpToLink(telegram, e, 'telegram')}
+          />
+        )}
+        {github && (
+          <IconButton
+            icon={ICONS.GITHUB}
+            mainColor={currentTheme.onSurface}
+            variant='text'
+            size='MM'
+            disabled={!github}
+            onClick={(e) => jumpToLink(github, e, 'github')}
+          />
+        )}
       </Flex>
     </CardContainer>
   )

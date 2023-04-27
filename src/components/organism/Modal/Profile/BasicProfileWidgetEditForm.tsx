@@ -13,10 +13,9 @@ import {
   WORK_STATUS,
   WORK_STYLES,
 } from '@/constants/businessProfile'
-import { SKILLS, TAGS } from '@/constants/tags'
+import { SKILLS } from '@/constants/tags'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { removeUndefined } from '@/utils/objectUtil'
 
 type Props = {
@@ -43,7 +42,6 @@ type BusinessProfileInput = {
 }
 
 export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) => {
-  const { currentTheme } = useVESSTheme()
   const { closeModal } = useVESSWidgetModal()
   const { storeBusinessProfile } = useBusinessProfile(did)
 

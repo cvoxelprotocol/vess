@@ -9,6 +9,8 @@ import { ProfileContainer } from '@/components/templates/Profile/ProfileContaine
 import { CeramicProps } from '@/interfaces/ceramic'
 import { fetchProfile } from '@/lib/profile'
 
+const queryClient = new QueryClient()
+
 export const getStaticPaths = async () => {
   return {
     paths: [],
@@ -37,8 +39,6 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = as
       redirect: { destination: `/`, permanent: false },
     }
   }
-
-  const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery<DisplayProfile>(['onChainprofile', formatedDid], () =>
     fetchProfile(formatedDid),
