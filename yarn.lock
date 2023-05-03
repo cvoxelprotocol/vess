@@ -12177,10 +12177,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vess-sdk@^1.0.0-alpha.30:
-  version "1.0.0-alpha.30"
-  resolved "https://registry.yarnpkg.com/vess-sdk/-/vess-sdk-1.0.0-alpha.30.tgz#8676018f2749bda25ae5529f94195f12e377a62f"
-  integrity sha512-Dj7grkuGTR50uURT8S2zJAH4ucipnPr7M51Gvo49Z34AbNw1tkf+VQecKa2NfUg+32WHRJK1h6i1gS6fvanl7Q==
+vess-sdk@^1.0.0-alpha.31:
+  version "1.0.0-alpha.31"
+  resolved "https://registry.yarnpkg.com/vess-sdk/-/vess-sdk-1.0.0-alpha.31.tgz#6bc8abb681fd17c3bd8e0c44dac2c5bb8d11e3d2"
+  integrity sha512-MmLIl8WdXkOwAW61djm3UdOmp9CrHlzIq/AERpQr/w+Fs+67AX7dtxmrhLy2DFgRTGQjV7bRfD4r/Po8odXMug==
   dependencies:
     "@ceramicnetwork/http-client" "^2.17.0"
     "@ceramicnetwork/stream-tile" "^2.16.0"
