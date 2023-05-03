@@ -26,22 +26,44 @@ export const useHeldEventAttendances = (did?: string) => {
     },
   })
 
-  const { data: HeldEventAttendances, isInitialLoading: isFetchingHeldEventAttendances } = useQuery<
-    EventAttendanceWithId[] | null
-  >(['HeldEventAttendances', did], () => vess.getHeldEventAttendanceVerifiableCredentials(did), {
-    enabled: !!did && did !== '',
-    staleTime: Infinity,
-    cacheTime: 300000,
-  })
+  // const { data: HeldEventAttendances, isInitialLoading: isFetchingHeldEventAttendances } = useQuery<
+  //   EventAttendanceWithId[] | null
+  // >(['HeldEventAttendances', did], () => vess.getHeldEventAttendanceVerifiableCredentials(did), {
+  //   enabled: !!did && did !== '',
+  //   staleTime: Infinity,
+  //   cacheTime: 300000,
+  // })
 
-  const displayHeldEventAttendances = useMemo(() => {
-    if (!HeldEventAttendances || HeldEventAttendances.length === 0) return []
-    const onlyValids = HeldEventAttendances.filter((a) => !isExpired(a.expirationDate))
+  // const displayHeldEventAttendances = useMemo(() => {
+  //   if (!HeldEventAttendances || HeldEventAttendances.length === 0) return []
+  //   const onlyValids = HeldEventAttendances.filter((a) => !isExpired(a.expirationDate))
+  //   const uniques = [
+  //     ...new Map<string, typeof onlyValids[number]>(onlyValids.map((a) => [a.id, a])).values(),
+  //   ]
+  //   return uniques
+  // }, [HeldEventAttendances])
+
+  const {
+    data: HeldEventAttendancesFromDB,
+    isInitialLoading: isFetchingHeldEventAttendancesFromDB,
+  } = useQuery<EventAttendanceWithId[] | null>(
+    ['HeldEventAttendances', did],
+    () => vess.getHeldEventAttendanceVerifiableCredentialsFromBackup(did),
+    {
+      enabled: !!did && did !== '',
+      staleTime: Infinity,
+      cacheTime: 300000,
+    },
+  )
+
+  const displayHeldEventAttendancesFromDB = useMemo(() => {
+    if (!HeldEventAttendancesFromDB || HeldEventAttendancesFromDB.length === 0) return []
+    const onlyValids = HeldEventAttendancesFromDB.filter((a) => !isExpired(a.expirationDate))
     const uniques = [
       ...new Map<string, typeof onlyValids[number]>(onlyValids.map((a) => [a.id, a])).values(),
     ]
     return uniques
-  }, [HeldEventAttendances])
+  }, [HeldEventAttendancesFromDB])
 
   const issueHeldEventFromBackup = async (did: string): Promise<void> => {
     console.log('event issuing from DB: check')
@@ -61,8 +83,8 @@ export const useHeldEventAttendances = (did?: string) => {
   }
 
   return {
-    displayHeldEventAttendances,
-    isFetchingHeldEventAttendances,
+    displayHeldEventAttendances: displayHeldEventAttendancesFromDB,
+    isFetchingHeldEventAttendances: isFetchingHeldEventAttendancesFromDB,
     setHeldEventAttendancesSilently,
     issueHeldEventFromBackup,
   }
