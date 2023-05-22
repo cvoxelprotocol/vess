@@ -20,6 +20,7 @@
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@next/font": "^13.3.1",
+    "@orbisclub/components": "^0.2.4",
     "@orbisclub/orbis-sdk": "^0.4.47",
     "@radix-ui/react-avatar": "^1.0.1",
     "@radix-ui/react-dialog": "^1.0.2",
