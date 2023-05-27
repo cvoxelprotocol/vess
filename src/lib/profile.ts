@@ -20,7 +20,7 @@ export const fetchProfile = async (did: string): Promise<DisplayProfile> => {
       avatarSrc:
         orbisProfile?.pfp && orbisProfile?.pfp !== ''
           ? orbisProfile?.pfp
-          : ccProfile?.avatarSrc || lensProfile?.avatarSrc || undefined,
+          : ccProfile?.avatarSrc || lensProfile?.avatarSrc || '',
       displayName:
         orbisProfile?.username ||
         ccProfile?.displayName ||

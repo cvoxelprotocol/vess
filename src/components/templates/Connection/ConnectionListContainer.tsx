@@ -5,7 +5,7 @@ import { GetAllConnectionsQuery, useGetAllConnectionsLazyQuery } from '@/graphql
 import { parseISOStrToDate } from '@/utils/date'
 
 type Props = {
-  allConnections?: GetAllConnectionsQuery
+  allConnections: GetAllConnectionsQuery | null
 }
 
 export const ConnectionListContainer: FC<Props> = ({ allConnections }) => {

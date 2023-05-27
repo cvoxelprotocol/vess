@@ -6,6 +6,7 @@ import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
+import { CertificationsContainer } from '@/components/organism/Certification/CertificationsContainer'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
 import { TaskDetailModal } from '@/components/organism/Modal/Detail/Tasks/TaskDetailModal'
@@ -246,6 +247,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
         </Profile>
       </ProfileContainer>
       <ExperiencesContainer did={did} />
+      <CertificationsContainer did={did} />
       <ProfleTabs did={did} />
       {myDID && did === myDID && (
         <ShareContainer>

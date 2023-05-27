@@ -8,8 +8,9 @@ type Props = {
   withText?: string
   tailIcon?: IconsType
   size?: IconSize
+  handleClick?: () => void
 }
-export const VerifiedMark: FC<Props> = ({ withText, tailIcon, size = 'MM' }) => {
+export const VerifiedMark: FC<Props> = ({ withText, tailIcon, size = 'MM', handleClick }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const VcMarkContainer = styled.div`
     width: 100%;
@@ -28,7 +29,7 @@ export const VerifiedMark: FC<Props> = ({ withText, tailIcon, size = 'MM' }) => 
   `
 
   return (
-    <VcMarkContainer>
+    <VcMarkContainer onClick={handleClick || undefined}>
       <VcMark>
         <Icon icon={ICONS.VERIFIED} size={size} mainColor={currentTheme.tertiary} />
         {withText && (
