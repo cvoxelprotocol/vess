@@ -11,7 +11,7 @@ import { getConnectionForServerUse } from '@/lib/connection'
 const queryClient = new QueryClient()
 
 export type Props = {
-  allConnections?: GetAllConnectionsQuery
+  allConnections: GetAllConnectionsQuery | null
   DehydratedState?: DehydratedState
 }
 
@@ -29,7 +29,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     console.error(error)
     return {
       props: {
-        allConnections: undefined,
+        allConnections: null,
         dehydratedState: dehydrate(queryClient),
       },
       revalidate: 10,
