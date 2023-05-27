@@ -53,6 +53,7 @@ export const useConnectDID = () => {
         connector?.id === 'walletConnect' ? (res.provider as any).provider : window.ethereum
       const { session } = await vess.connect(res.account, ethProvider, env)
       console.log({ session })
+      // @ts-ignore TODO:fixed
       composeClient.setDID(session.did)
       setMyDid(session.did.parent)
       const address = getAddress(getAddressFromPkh(session.did.parent))
@@ -82,6 +83,7 @@ export const useConnectDID = () => {
     const auth = await vess.autoConnect(env)
     if (auth) {
       const { session } = auth
+      // @ts-ignore TODO:fixed
       composeClient.setDID(session.did)
       setMyDid(session.did.parent)
       const address = getAddress(getAddressFromPkh(session.did.parent))
