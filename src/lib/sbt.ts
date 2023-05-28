@@ -26,7 +26,7 @@ export const fetchCertification = async (
     if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
       return null
     }
-    const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'matic'
+    const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'polygon'
     const sdk = new ThirdwebSDK(chain)
     const contract = await sdk.getContract(DOT_JP_CONTRACT)
     const nft = await contract.erc721.get(tokenId)
@@ -46,7 +46,7 @@ export const fetchCertification = async (
 
 const fetchCertSBT = async (did?: string) => {
   if (!did) return null
-  const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'matic'
+  const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'polygon'
   const sdk = new ThirdwebSDK(chain)
   const contract = await sdk.getContract(DOT_JP_CONTRACT)
   const nfts = await contract.erc721.getOwned(getAddressFromPkhForWagmi(did))
