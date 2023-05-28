@@ -22,26 +22,32 @@ export const fetchCertification = async (
   contractAddress: string,
   tokenId: string,
 ): Promise<CertVCWithSBT | null> => {
-  if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
+  try {
+    if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
+      return null
+    }
+    const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'matic'
+    const sdk = new ThirdwebSDK(chain)
+    const contract = await sdk.getContract(DOT_JP_CONTRACT)
+    const nft = await contract.erc721.get(tokenId)
+    const id = getCeramicIdFromSBT(nft)
+    if (!nft || !id) {
+      return null
+    }
+    return {
+      nft,
+      contractAddress: DOT_JP_CONTRACT,
+      ceramicId: id,
+    }
+  } catch (error) {
     return null
-  }
-  const sdk = new ThirdwebSDK('mumbai')
-  const contract = await sdk.getContract(DOT_JP_CONTRACT)
-  const nft = await contract.erc721.get(tokenId)
-  const id = getCeramicIdFromSBT(nft)
-  if (!nft || !id) {
-    return null
-  }
-  return {
-    nft,
-    contractAddress: DOT_JP_CONTRACT,
-    ceramicId: id,
   }
 }
 
 const fetchCertSBT = async (did?: string) => {
   if (!did) return null
-  const sdk = new ThirdwebSDK('mumbai')
+  const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'matic'
+  const sdk = new ThirdwebSDK(chain)
   const contract = await sdk.getContract(DOT_JP_CONTRACT)
   const nfts = await contract.erc721.getOwned(getAddressFromPkhForWagmi(did))
   return nfts
