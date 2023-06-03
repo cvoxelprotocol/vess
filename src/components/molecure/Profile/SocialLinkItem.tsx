@@ -37,9 +37,7 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
   const IconWrapper = styled.div`
     width: 32px;
     height: 32px;
-    pointer: cursor;
-
-
+    cursor:pointer;
     @media (max-width: 599px) {
       width: 24px;
       height: 24px;
