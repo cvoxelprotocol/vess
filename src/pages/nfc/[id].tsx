@@ -1,14 +1,14 @@
-import { ReactElement } from 'react'
-import { NextPageWithLayout } from '../_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { NextPage } from 'next'
+import { Meta } from '@/components/layouts/Meta'
 import { NfcWriteContainer } from '@/components/templates/NFC/NfcWriteContainer'
-import { CeramicProps } from '@/interfaces/ceramic'
 
-const NfcWrite: NextPageWithLayout<CeramicProps> = (props: CeramicProps) => {
-  return <NfcWriteContainer />
-}
-NfcWrite.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
+const NfcWrite: NextPage = () => {
+  return (
+    <>
+      <Meta robots='noindex, follow' />
+      <NfcWriteContainer />
+    </>
+  )
 }
 
 export default NfcWrite

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { ReactElement, useEffect } from 'react'
-import { NextPageWithLayout } from '../_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { useEffect } from 'react'
+import { Meta } from '@/components/layouts/Meta'
 import { LoginCard } from '@/components/organism/Accounts/LoginCard'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-const NoDid: NextPageWithLayout = () => {
+const NoDid: NextPage = () => {
   const { did } = useDIDAccount()
   const { currentTheme } = useVESSTheme()
   const router = useRouter()
@@ -29,13 +29,10 @@ const NoDid: NextPageWithLayout = () => {
 
   return (
     <Wrapper>
+      <Meta robots='noindex, follow' />
       <LoginCard />
     </Wrapper>
   )
-}
-
-NoDid.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
 }
 
 export default NoDid

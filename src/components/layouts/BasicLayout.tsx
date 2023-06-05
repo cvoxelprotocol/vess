@@ -7,7 +7,6 @@ import { NavigationList } from '../molecure/Navigation/NavigationList'
 import { Footer } from '../organism/Footer/Footer'
 import { BaseHeader } from '../organism/Header/BaseHeader'
 import LoadingModal from '../organism/Modal/LoadingModal'
-import { Meta } from '@/components/layouts/Meta'
 import { footerLinks } from '@/constants/footerLinks'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useConnection } from '@/hooks/useConnection'
@@ -131,7 +130,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   return (
     <>
-      <Meta />
       <LayoutContainer>
         <BaseHeader />
         <NaviContainer>

@@ -1,13 +1,18 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
-import { ReactElement } from 'react'
+import { NextPage } from 'next'
 import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-sdk'
-import { NextPageWithLayout } from '../_app'
 import { DisplayProfile } from '@/@types'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { Meta } from '@/components/layouts/Meta'
 import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
-import { CeramicProps } from '@/interfaces/ceramic'
 import { fetchProfile } from '@/lib/profile'
+
+export type Props = {
+  did: string
+  DehydratedState?: DehydratedState
+  profile: DisplayProfile | null
+}
 
 const queryClient = new QueryClient()
 
@@ -18,13 +23,11 @@ export const getStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = async ({
-  params,
-}) => {
+export const getStaticProps: GetStaticProps<Props, { did?: string }> = async ({ params }) => {
   const did = params?.did
   if (did == null) {
     return {
-      props: { did: '' },
+      props: { did: '', profile: null },
       revalidate: 5,
     }
   }
@@ -39,22 +42,32 @@ export const getStaticProps: GetStaticProps<CeramicProps, { did?: string }> = as
       redirect: { destination: `/`, permanent: false },
     }
   }
-
-  await queryClient.prefetchQuery<DisplayProfile>(['onChainprofile', formatedDid], () =>
-    fetchProfile(formatedDid),
+  const profile = await fetchProfile(formatedDid)
+  await queryClient.prefetchQuery<DisplayProfile>(
+    ['onChainprofile', formatedDid],
+    () => fetchProfile(formatedDid),
+    { initialData: profile },
   )
 
   return {
-    props: { dehydratedState: dehydrate(queryClient), did: formatedDid },
+    props: { dehydratedState: dehydrate(queryClient), did: formatedDid, profile },
     revalidate: 300,
   }
 }
 
-const Profile: NextPageWithLayout<CeramicProps> = (props: CeramicProps) => {
-  return <ProfileContainer {...props} />
-}
-Profile.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
+const Profile: NextPage<Props> = (props: Props) => {
+  return (
+    <>
+      <Meta
+        pageTitle={props.profile?.displayName}
+        pageDescription={
+          props.profile?.bio || `This is ${props.profile?.displayName}'s profile page.`
+        }
+        pagePath={`https://app.vess.id/did/${props.did}`}
+      />
+      <ProfileContainer {...props} />
+    </>
+  )
 }
 
 export default Profile

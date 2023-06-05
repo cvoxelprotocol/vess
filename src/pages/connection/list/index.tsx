@@ -1,9 +1,8 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
-import { ReactElement } from 'react'
-import { NextPageWithLayout } from '../../_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { NextPage } from 'next'
+import { Meta } from '@/components/layouts/Meta'
 import { ConnectionListContainer } from '@/components/templates/Connection/ConnectionListContainer'
 import { GetAllConnectionsQuery } from '@/graphql/generated'
 import { getConnectionForServerUse } from '@/lib/connection'
@@ -37,11 +36,17 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   }
 }
 
-const ConnectionList: NextPageWithLayout<Props> = (props: Props) => {
-  return <ConnectionListContainer {...props} />
-}
-ConnectionList.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
+const ConnectionList: NextPage<Props> = (props: Props) => {
+  return (
+    <>
+      <Meta
+        pageTitle={`Timeline on VESS`}
+        pageDescription={`Let's find new connections!`}
+        pagePath={`https://app.vess.id/ceconnection/list/`}
+      />
+      <ConnectionListContainer {...props} />
+    </>
+  )
 }
 
 export default ConnectionList
