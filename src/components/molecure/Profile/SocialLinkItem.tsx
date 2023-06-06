@@ -24,6 +24,9 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
     align-items: center;
     justify-content: center;
     background: ${currentTheme.surface2};
+    &:hover {
+      background: ${currentTheme.surface5};
+    }
     border-radius: 12px;
     width: 56px;
     height: 56px;
@@ -37,7 +40,7 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
   const IconWrapper = styled.div`
     width: 32px;
     height: 32px;
-    cursor:pointer;
+    cursor: pointer;
     @media (max-width: 599px) {
       width: 24px;
       height: 24px;
