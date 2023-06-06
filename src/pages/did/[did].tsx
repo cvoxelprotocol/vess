@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/named
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import { ReactElement } from 'react'

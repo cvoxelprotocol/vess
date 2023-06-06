@@ -1,5 +1,6 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
 import { Noto_Sans } from '@next/font/google'
+// eslint-disable-next-line import/named
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import { Provider as JotaiProvider } from 'jotai'
