@@ -60,7 +60,7 @@ export const NavigationList: FC = () => {
     const naviItem = getNaviItem(router.asPath, did)
     if (naviItem.item === item) return
     setItem(naviItem.item)
-  }, [did, item, router, setItem])
+  }, [router])
 
   const handleClick = (navi: NAVIGATION_LIST_TYPE) => {
     if (navi.item === NAVIGATION_ITEM.PROFILE) {

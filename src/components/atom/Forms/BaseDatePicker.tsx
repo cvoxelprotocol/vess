@@ -5,7 +5,6 @@ import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { Icon, ICONS } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import 'react-date-picker/dist/DatePicker.css'
-// eslint-disable-next-line import/no-unresolved
 import 'react-calendar/dist/Calendar.css'
 
 type Props<T extends FieldValues> = {

@@ -86,7 +86,7 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
             }),
     }
     return input
-  }, [socialLinks])
+  }, [socialLinks?.links])
 
   const {
     handleSubmit,
