@@ -1,14 +1,13 @@
-import { ReactElement } from 'react'
-import { NextPageWithLayout } from './_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { NextPage } from 'next'
+import { Meta } from '@/components/layouts/Meta'
 import { ClaimContainer } from '@/components/templates/Claim/ClaimContainer'
 
-const Home: NextPageWithLayout = () => {
-  return <ClaimContainer />
+const Claim: NextPage = () => {
+  return (
+    <>
+      <Meta robots='noindex, follow' />
+      <ClaimContainer />
+    </>
+  )
 }
-
-Home.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
-}
-
-export default Home
+export default Claim

@@ -1,9 +1,8 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
-import { ReactElement } from 'react'
-import { NextPageWithLayout } from '../../../_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { NextPage } from 'next'
+import { Meta } from '@/components/layouts/Meta'
 import { CertContainer } from '@/components/templates/Certification/CertContainer'
 import { CertVCWithSBT, fetchCertification } from '@/lib/sbt'
 
@@ -12,6 +11,7 @@ const queryClient = new QueryClient()
 export type Props = {
   cert: CertVCWithSBT | null
   DehydratedState?: DehydratedState
+  id?: string
 }
 
 export const getStaticPaths = async () => {
@@ -31,6 +31,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
         cert: null,
       },
       revalidate: 60,
+      id: id,
     }
   }
   const cert = await fetchCertification(contract, id)
@@ -41,11 +42,17 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   }
 }
 
-const Cert: NextPageWithLayout<Props> = (props: Props) => {
-  return <CertContainer {...props} />
-}
-Cert.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
+const Cert: NextPage<Props> = (props: Props) => {
+  return (
+    <>
+      <Meta
+        pageTitle={`${props.cert?.nft.metadata.name || 'Certification page'}`}
+        pageDescription={props.cert?.nft.metadata.description || 'Certification page on VESS'}
+        pagePath={`https://app.vess.id/cert/sbt/${props.cert?.contractAddress}/${props.id}`}
+      />
+      <CertContainer {...props} />
+    </>
+  )
 }
 
 export default Cert

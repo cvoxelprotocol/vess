@@ -1,14 +1,14 @@
-import { ReactElement } from 'react'
-import { NextPageWithLayout } from '../_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { NextPage } from 'next'
+import { Meta } from '@/components/layouts/Meta'
 import { ConnectionInvitationContainer } from '@/components/templates/Connection/ConnectionInvitationContainer'
-import { CeramicProps } from '@/interfaces/ceramic'
 
-const ConnectionInvitation: NextPageWithLayout<CeramicProps> = (props: CeramicProps) => {
-  return <ConnectionInvitationContainer />
-}
-ConnectionInvitation.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
+const ConnectionInvitation: NextPage = () => {
+  return (
+    <>
+      <Meta robots='noindex,follow' />
+      <ConnectionInvitationContainer />
+    </>
+  )
 }
 
 export default ConnectionInvitation

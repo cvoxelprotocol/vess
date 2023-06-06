@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { FC } from 'react'
 
 const OGP_IMAGE = 'https://app.vess.id/ogp.jpg'
+const DEFAULT_PAGEPATH = 'https://app.vess.id/'
 
 interface MetaData {
   pageTitle?: string
@@ -10,6 +11,7 @@ interface MetaData {
   pageImg?: string
   pageImgWidth?: number
   pageImgHeight?: number
+  robots?: string
 }
 
 export const Meta: FC<MetaData> = ({
@@ -19,22 +21,27 @@ export const Meta: FC<MetaData> = ({
   pageImg,
   pageImgWidth,
   pageImgHeight,
+  robots = 'index, follow',
 }) => {
   const defaultTitle = 'VESS Resume'
   const defaultDescription =
-    'VESS Resume is the self-sovereign resume app by leveraging VESS Protocol. You can bring your resume to any platfomrs one you fill it out.'
+    'VESS Resume is a decentralized self-sovereign resume based on VESS Protocol. You can bring your resume to any platfomrs as you want.'
 
   const title = pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle
-  const description = pageDescription ? pageDescription : defaultDescription
-  const url = pagePath
-  const imgUrl = pageImg ? pageImg : OGP_IMAGE
-  const imgWidth = pageImgWidth ? pageImgWidth : 1200
-  const imgHeight = pageImgHeight ? pageImgHeight : 630
+  const description = pageDescription || defaultDescription
+  const url = pagePath || DEFAULT_PAGEPATH
+  const imgUrl = pageImg || OGP_IMAGE
+  const imgWidth = pageImgWidth || 1200
+  const imgHeight = pageImgHeight || 630
 
   return (
     <Head>
       <title key='title'>{title}</title>
-      <meta name='viewport' content='width=device-width,initial-scale=1.0' key='viewport' />
+      <meta
+        name='viewport'
+        content='width=device-width,initial-scale=1.0,viewport-fit=cover'
+        key='viewport'
+      />
       <meta name='description' content={description} key='description' />
       <meta property='og:url' content={url} key='ogurl' />
       <meta property='og:title' content={title} key='ogtitle' />
@@ -44,12 +51,11 @@ export const Meta: FC<MetaData> = ({
       <meta property='og:image' content={imgUrl} key='ogimage' />
       <meta property='og:image:width' content={String(imgWidth)} key='ogimagewidth' />
       <meta property='og:image:height' content={String(imgHeight)} key='ogimageheight' />
-      <link rel='canonical' href={url} key='canonical' />
       <link rel='icon' href='https://app.vess.id/favicon.ico' />
       <meta name='twitter:card' content='summary_large_image' key='twittercard' />
-      <meta name='twitter:site' content='@vess_id' />
-      <meta name='viewport' content='initial-scale=1, viewport-fit=cover' />
-      {/* <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} /> */}
+      <meta name='twitter:title' content={title} />
+      <meta name='twitter:description' content={description} />
+      <meta name='robots' content={robots} />
     </Head>
   )
 }

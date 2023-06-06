@@ -1,13 +1,13 @@
-import { ReactElement } from 'react'
-import { NextPageWithLayout } from './_app'
-import { BasicLayout } from '@/components/layouts/BasicLayout'
+import { NextPage } from 'next'
+import { Meta } from '@/components/layouts/Meta'
 import { HomeContainer } from '@/components/templates/Home/HomeContainer'
-const Home: NextPageWithLayout = () => {
-  return <HomeContainer />
-}
-
-Home.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>
+const Home: NextPage = () => {
+  return (
+    <>
+      <Meta />
+      <HomeContainer />
+    </>
+  )
 }
 
 export default Home

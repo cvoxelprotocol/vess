@@ -40,5 +40,10 @@ next-env.d.ts
 # IDE
 .idea
 
+
 # Lock Files
 pnpm-lock.yaml
+
+sitemap*.xml
+robots.txt
+
