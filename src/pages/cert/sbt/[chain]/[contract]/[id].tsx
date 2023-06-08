@@ -22,6 +22,7 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const chain = params?.chain as string
   const contract = params?.contract as string
   const id = params?.id as string
   if (!contract || !id) {
@@ -34,7 +35,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       id: id,
     }
   }
-  const cert = await fetchCertification(contract, id)
+  const cert = await fetchCertification(chain || 'polygon', contract, id)
 
   return {
     props: { dehydratedState: dehydrate(queryClient), cert },
@@ -48,7 +49,7 @@ const Cert: NextPage<Props> = (props: Props) => {
       <Meta
         pageTitle={`${props.cert?.nft.metadata.name || 'Certification page'}`}
         pageDescription={props.cert?.nft.metadata.description || 'Certification page on VESS'}
-        pagePath={`https://app.vess.id/cert/sbt/${props.cert?.contractAddress}/${props.id}`}
+        pagePath={`https://app.vess.id/cert/sbt/polygon/${props.cert?.contractAddress}/${props.id}`}
       />
       <CertContainer {...props} />
     </>

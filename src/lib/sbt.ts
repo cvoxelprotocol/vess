@@ -20,16 +20,16 @@ export const fetchCertifications = async (did?: string) => {
 }
 
 export const fetchCertification = async (
+  chain: string,
   contractAddress: string,
   tokenId: string,
 ): Promise<CertVCWithSBT | null> => {
   try {
-    if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
-      return null
-    }
-    const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'polygon'
+    // if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
+    //   return null
+    // }
     const sdk = new ThirdwebSDK(chain)
-    const contract = await sdk.getContract(DOT_JP_CONTRACT)
+    const contract = await sdk.getContract(contractAddress)
     const nft = await contract.erc721.get(tokenId)
     const id = getCeramicIdFromSBT(nft)
     if (!nft || !id) {

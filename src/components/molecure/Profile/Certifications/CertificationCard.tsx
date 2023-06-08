@@ -43,7 +43,7 @@ export const CertificationCard: FC<Props> = ({ item }) => {
     }
   `
   const jumpToDetail = () => {
-    router.push(`/cert/sbt/${item.contractAddress}/${item.nft.metadata.id}`)
+    router.push(`/cert/sbt/polygon/${item.contractAddress}/${item.nft.metadata.id}`)
   }
   return (
     <MembershipCardWrapper onClick={() => jumpToDetail()}>
