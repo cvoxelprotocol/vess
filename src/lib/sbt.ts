@@ -2,7 +2,8 @@ import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import type { NFT } from '@thirdweb-dev/sdk'
 import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
 
-const DOT_JP_CONTRACT = '0x98e10e57535553b5d789fcee15154b51b26c6599'
+// set SBT contract address
+const DOT_JP_CONTRACT = '0x868af4106aeFDf7EddC3DbF98B0ff1d21D0f3347'
 
 export type CertVCWithSBT = {
   contractAddress: string
