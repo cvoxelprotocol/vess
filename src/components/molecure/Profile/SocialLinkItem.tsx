@@ -25,7 +25,7 @@ export const SocialLinkItem: FC<Props> = ({ linkType, value }) => {
     justify-content: center;
     background: ${currentTheme.surface2};
     &:hover {
-      background: ${currentTheme.surface5};
+      background: ${value || linkType === 'more' ? currentTheme.surface5 : ''};
     }
     border-radius: 12px;
     width: 56px;
