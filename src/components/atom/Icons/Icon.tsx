@@ -98,10 +98,11 @@ type IconProps = {
   size?: IconSize
   mainColor?: string
   focusColor?: string
+  hoverColor?: string
   fill?: boolean
 }
 
-export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, fill = false }) => {
+export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, hoverColor, fill = false }) => {
   const IconContainer = styled.span`
     color: ${mainColor};
     &:active {
@@ -111,6 +112,10 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
     &:focus {
       transition: all 0.15s ease-out;
       color: ${focusColor || mainColor};
+    }
+    &:hover {
+      transition: all 0.15s ease-out;
+      color: ${hoverColor || mainColor};
     }
     width: ${fill ? '100%' : ICONSIZE[size]};
     height: ${fill ? '100%' : ICONSIZE[size]};
@@ -337,7 +342,7 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
           </IconContainer>
         )
     }
-  }, [icon])
+  }, [IconContainer, icon])
 
   return IconComponent
 }

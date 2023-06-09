@@ -141,7 +141,7 @@ export const IssueConnectionContainer: FC = () => {
     } catch (error) {
       console.error(error)
     }
-  }, [])
+  }, [getConnectionInvitaion])
 
   if (!invitaionId) {
     return (

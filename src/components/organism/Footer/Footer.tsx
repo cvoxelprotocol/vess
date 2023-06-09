@@ -133,21 +133,21 @@ export const Footer: FC<Props> = ({
               target={'_blank'}
               rel='noopener noreferrer'
             >
-              <Icon icon={ICONS.DISCORD} mainColor={currentTheme.onSurface} fill />
+              <Icon icon={ICONS.DISCORD} mainColor={currentTheme.onSurface} hoverColor={currentTheme.primary} fill />
             </SourceLinkWrapper>
             <SourceLinkWrapper
               href={SOURCE_LINK.TWITTER}
               target={'_blank'}
               rel='noopener noreferrer'
             >
-              <Icon icon={ICONS.TWITTER} mainColor={currentTheme.onSurface} fill />
+              <Icon icon={ICONS.TWITTER} mainColor={currentTheme.onSurface} hoverColor={currentTheme.primary} fill />
             </SourceLinkWrapper>
             <SourceLinkWrapper
               href={SOURCE_LINK.GITHUB}
               target={'_blank'}
               rel='noopener noreferrer'
             >
-              <Icon icon={ICONS.GITHUB} mainColor={currentTheme.onSurface} fill />
+              <Icon icon={ICONS.GITHUB} mainColor={currentTheme.onSurface} hoverColor={currentTheme.primary} fill />
             </SourceLinkWrapper>
           </Flex>
         </LogoContainer>
