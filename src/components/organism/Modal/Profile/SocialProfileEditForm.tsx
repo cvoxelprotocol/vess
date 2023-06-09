@@ -94,6 +94,12 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             onClickClear={() => setValue('pfp', '')}
           />
           <MultiInput
+            label={'Upload'}
+            name={`pfp`}
+            control={control}
+            error={errors.description?.message}
+          />
+          <MultiInput
             label={'bio'}
             name={`description`}
             control={control}
