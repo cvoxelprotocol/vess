@@ -138,7 +138,7 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
     <Form id={'SocialLinkWidgetEditForm'} onSubmit={handleSubmit(onClickSubmit)}>
       <FormContent>
         <Input
-          label={'twitter'}
+          label={'Twitter'}
           name={`twitter`}
           control={control}
           error={errors.twitter?.message}
@@ -150,7 +150,7 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
           disabled={!editable}
         />
         <Input
-          label={'discord'}
+          label={'Discord'}
           name={`discord`}
           control={control}
           error={errors.discord?.message}
@@ -161,7 +161,7 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
           disabled={!editable}
         />
         <Input
-          label={'telegram'}
+          label={'Telegram'}
           name={`telegram`}
           control={control}
           error={errors.telegram?.message}
@@ -173,7 +173,7 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
           disabled={!editable}
         />
         <Input
-          label={'github'}
+          label={'Github'}
           name={`github`}
           control={control}
           error={errors.github?.message}
@@ -188,7 +188,7 @@ export const SocialLinkWidgetEditForm: FC<Props> = ({ did, socialLinks, editable
           return (
             <Input
               key={index}
-              label={'link'}
+              label={'Link'}
               name={`otherLinks.${index}.link`}
               control={control}
               error={errors.otherLinks && errors.otherLinks[index]?.link?.message}
