@@ -35,11 +35,13 @@ import { VoxelIcon } from './VoxelIcon'
 import { WalletIcon } from './WalletIcon'
 import { WaveIcon } from './WaveIcon'
 import { WorkspaceIcon } from './WorkspaceIcon'
+import { AddFileIcon } from './AddFileIcon'
 
 export const ICONS = {
   VOXEL: 'voxel',
   CROSS: 'cross',
   ADD: 'add',
+  ADD_FILE: 'addFile',
   BELL: 'bell',
   CHAIN: 'chain',
   CHECKED: 'checked',
@@ -130,6 +132,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
         return (
           <IconContainer>
             <AccountIcon />
+          </IconContainer>
+        )
+      case 'addFile':
+        return (
+          <IconContainer>
+            <AddFileIcon />
           </IconContainer>
         )
       case 'wave':
