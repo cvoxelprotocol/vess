@@ -199,7 +199,6 @@ export const IconInput: FC<Props> = ({
             ) : (
               <>
                 <FilePreviewText>No File yet</FilePreviewText>
-                <FilePreviewText>Upload</FilePreviewText>
 
 
               </>
