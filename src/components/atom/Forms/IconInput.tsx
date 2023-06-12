@@ -3,12 +3,14 @@ import { extractColors } from 'extract-colors'
 import React, { createRef, FC, useCallback, useMemo, useState } from 'react'
 import Dropzone from 'react-dropzone'
 import type { DropzoneRef, FileRejection } from 'react-dropzone'
+import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { IconButton } from '../Buttons/IconButton'
 import { Icon, ICONS, IconSize, IconsType } from '../Icons/Icon'
 import { CommonSpinner } from '../Loading/CommonSpinner'
 import { Plate } from '../Plates/Plate'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+
 
 const MAX_SIZE = 5242880
 
@@ -134,27 +136,30 @@ export const IconInput: FC<Props> = ({
     color: ${currentTheme.onBackground};
     ${getBasicFont(currentTypo.title.small)};
   `
-  const onDrop = useCallback(async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-    if (fileRejections.length > 0) {
-      fileRejections.forEach((file) => {
-        file.errors.forEach((err) => {
-          if (err.code === 'file-too-large') {
-            setErrors(`Error: File size must be less than 5 MB`)
-          }
+  const onDrop = useCallback(
+    async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+      if (fileRejections.length > 0) {
+        fileRejections.forEach((file) => {
+          file.errors.forEach((err) => {
+            if (err.code === 'file-too-large') {
+              setErrors(`Error: File size must be less than 5 MB`)
+            }
 
-          setErrors(`Error: ${err.message}`)
+            setErrors(`Error: ${err.message}`)
+          })
         })
-      })
-    } else {
-      if (acceptedFiles[0]) {
-        await uploadIcon(acceptedFiles[0])
-        const objectURL = URL.createObjectURL(acceptedFiles[0])
-        const colors = await extractColors(objectURL)
-        URL.revokeObjectURL(objectURL)
-        setErrors('')
+      } else {
+        if (acceptedFiles[0]) {
+          await uploadIcon(acceptedFiles[0])
+          const objectURL = URL.createObjectURL(acceptedFiles[0])
+          const colors = await extractColors(objectURL)
+          URL.revokeObjectURL(objectURL)
+          setErrors('')
+        }
       }
-    }
-  }, [])
+    },
+    [uploadIcon],
+  )
 
   const dropzoneRef = createRef<DropzoneRef>()
 
@@ -192,7 +197,12 @@ export const IconInput: FC<Props> = ({
                 />
               </>
             ) : (
-              <FilePreviewText>No File yet</FilePreviewText>
+              <>
+                <FilePreviewText>No File yet</FilePreviewText>
+                <FilePreviewText>Upload</FilePreviewText>
+
+
+              </>
             )}
           </>
         )}

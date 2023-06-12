@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/atom/Buttons/Button'
+import { IconInput } from '@/components/atom/Forms/IconInput'
 import { Input } from '@/components/atom/Forms/Input'
 import { MultiInput } from '@/components/atom/Forms/MultiInput'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
@@ -85,22 +86,25 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             iconSize={'MM'}
             onClickClear={() => setValue('username', '')}
           />
-          <Input
-            label={'pfp url'}
+          {/* <Input
+            label={'Pfp url'}
             name={`pfp`}
             control={control}
             error={errors.pfp?.message}
             iconSize={'MM'}
             onClickClear={() => setValue('pfp', '')}
-          />
-          <MultiInput
-            label={'Upload'}
-            name={`pfp`}
+          /> */}
+          <IconInput
+            required={false}
+            label={'Icon'}
+            recommendText={'Drag and drop or click here to upload'}
             control={control}
-            error={errors.description?.message}
+            error={errors.pfp?.message}
+            onClickClear={() => setValue('pfp', '')}
           />
+          
           <MultiInput
-            label={'bio'}
+            label={'Bio'}
             name={`description`}
             control={control}
             error={errors.description?.message}
