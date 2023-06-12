@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { ButtonHTMLAttributes, FC } from 'react'
 import { Icon, IconSize, IconsType } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-
+// This component is under development
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
   btnWidth?: string

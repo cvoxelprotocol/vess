@@ -98,9 +98,6 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             required={false}
             label={'Icon'}
             recommendText={'Drag and drop or click here to upload'}
-            control={control}
-            error={errors.pfp?.message}
-            onClickClear={() => setValue('pfp', '')}
           />
           
           <MultiInput
