@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { extractColors } from 'extract-colors'
 import React, { createRef, FC, useCallback, useMemo, useState } from 'react'
 import Dropzone from 'react-dropzone'
 import type { DropzoneRef, FileRejection } from 'react-dropzone'
