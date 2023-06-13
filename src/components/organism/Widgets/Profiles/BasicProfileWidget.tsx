@@ -1,13 +1,17 @@
 import styled from '@emotion/styled'
 import { FC, useMemo, useState } from 'react'
+import CopyToClipboard from 'react-copy-to-clipboard'
 import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
+import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
+import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useLensProfile } from '@/hooks/useLensProfile'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useToast } from '@/hooks/useToast'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { profileType } from '@/jotai/account'
@@ -30,6 +34,8 @@ export const BasicProfileWidget: FC<Props> = (props) => {
   const { ccProfile } = useCcProfile(props.did)
   const { setShowSocialProfileModal } = useVESSWidgetModal()
   const [displayProfileType, setDisplayProfileType] = useState<profileType>('default')
+  const { showToast } = useToast()
+  const profileWalletAddress = props.did.slice(-42)
 
   const displayProfile = useMemo(() => {
     if (displayProfileType === 'cc') {
@@ -136,6 +142,10 @@ export const BasicProfileWidget: FC<Props> = (props) => {
     setShowSocialProfileModal(true)
   }
 
+  const handleOnCopy = async () => {
+    showToast('Copied!')
+  }
+
   return (
     <>
       <BaseWidget onClickEdit={handleEdit} {...props}>
@@ -187,7 +197,12 @@ export const BasicProfileWidget: FC<Props> = (props) => {
             </PfpContainer>
             <Flex flexDirection='column' alignItems={'flex-start'}>
               <Name>{displayProfile?.displayName}</Name>
-              <Address>{shortenStr(props.did, 16)}</Address>
+              <Icon icon={ICONS.ETHEREUM} mainColor={currentTheme.outline} size={'SS'} />
+              <Address>{shortenStr(profileWalletAddress, 8)}</Address>
+
+              <CopyToClipboard text={profileWalletAddress} onCopy={handleOnCopy}>
+                <Icon icon={ICONS.COPY} mainColor={currentTheme.outline} size={'SS'} />
+              </CopyToClipboard>
             </Flex>
           </Flex>
           <Description>{displayProfile?.bio}</Description>
