@@ -197,12 +197,13 @@ export const BasicProfileWidget: FC<Props> = (props) => {
             </PfpContainer>
             <Flex flexDirection='column' alignItems={'flex-start'}>
               <Name>{displayProfile?.displayName}</Name>
-              <Icon icon={ICONS.ETHEREUM} mainColor={currentTheme.outline} size={'SS'} />
-              <Address>{shortenStr(profileWalletAddress, 8)}</Address>
-
-              <CopyToClipboard text={profileWalletAddress} onCopy={handleOnCopy}>
-                <Icon icon={ICONS.COPY} mainColor={currentTheme.outline} size={'SS'} />
-              </CopyToClipboard>
+              <Flex flexDirection='row' colGap='4px' alignItems={'flex-start'} style={{cursor:'pointer'}}>
+                <Icon icon={ICONS.ETHEREUM} mainColor={currentTheme.outline} size={'L'} />
+                <CopyToClipboard text={profileWalletAddress} onCopy={handleOnCopy}>
+                  <Address>{shortenStr(profileWalletAddress, 8)}</Address>
+                </CopyToClipboard>
+                <Icon icon={ICONS.COPY} mainColor={currentTheme.outline} size={'M'} />
+              </Flex>
             </Flex>
           </Flex>
           <Description>{displayProfile?.bio}</Description>
