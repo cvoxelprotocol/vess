@@ -25,7 +25,7 @@ const Login: NextPage = () => {
     if (did) {
       router.push(`/did/${did}`)
     }
-  }, [did])
+  }, [did, router])
 
   return (
     <Wrapper>

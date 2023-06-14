@@ -44,7 +44,12 @@ export type UpdateOrbisProfileParam = {
 
 export const fetchOrbisProfile = async (did?: string): Promise<OrbisProfileDetail | null> => {
   if (!did) return null
-  const indexer = createClient(url, key)
+  const indexer = createClient(url, key, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  })
   let { data } = await indexer.from('orbis_v_profiles').select().eq('did', did).single()
   const profile: OrbisProfile = data as OrbisProfile
   if (!profile || !profile.details || !profile.details.profile) return null

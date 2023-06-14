@@ -1,15 +1,9 @@
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
-import type { NFT } from '@thirdweb-dev/sdk'
+import { CertVCWithSBT } from '@/interfaces/sbt'
 import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
 
 // set SBT contract address
 const DOT_JP_CONTRACT = '0x868af4106aeFDf7EddC3DbF98B0ff1d21D0f3347'
-
-export type CertVCWithSBT = {
-  contractAddress: string
-  nft: NFT
-  ceramicId?: string
-}
 
 export const fetchCertifications = async (did?: string) => {
   const nfts = await fetchCertSBT(did)

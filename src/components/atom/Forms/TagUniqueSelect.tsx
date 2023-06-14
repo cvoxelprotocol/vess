@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
-import type { ControlProps, MultiValueGenericProps, SingleValueProps } from 'react-select'
+import type { ControlProps } from 'react-select'
 import Select, { components } from 'react-select'
 import { Icon, IconSize, IconsType } from '../Icons/Icon'
 import { colourStyles, TagOption, getTagOption } from '@/constants/tags'

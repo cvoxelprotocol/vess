@@ -4,7 +4,8 @@ import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
 import { Meta } from '@/components/layouts/Meta'
 import { CertContainer } from '@/components/templates/Certification/CertContainer'
-import { CertVCWithSBT, fetchCertification } from '@/lib/sbt'
+import { CertVCWithSBT } from '@/interfaces/sbt'
+import { fetchCertification } from '@/lib/sbt'
 
 const queryClient = new QueryClient()
 
