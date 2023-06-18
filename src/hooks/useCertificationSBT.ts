@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { CertVCWithSBT, fetchCertifications } from '@/lib/sbt'
+import { CertVCWithSBT } from '@/interfaces/sbt'
+import { fetchCertifications } from '@/lib/sbt'
 
 export const useCertificationSBT = (did?: string) => {
   // fetch from SBT

@@ -192,7 +192,7 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
             placeholder={`${'Client DID or name'}`}
           />
           <MultiInput
-            label={'description(optional)'}
+            label={'Description(optional)'}
             name={`detail`}
             control={control}
             error={errors.detail?.message}
@@ -209,7 +209,7 @@ export const NewTaskForm: FC<Props> = ({ did, isModal = false }) => {
             control={control}
             name={'tags'}
             options={TAGS}
-            label={'tags'}
+            label={'Tags'}
             error={errors.tags?.message}
           />
           <DatePickerContainer>

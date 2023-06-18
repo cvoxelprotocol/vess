@@ -56,7 +56,7 @@ const AvatarContent: FC<AvatarProps> = ({
       to top right,
       ${currentTheme.primary},
       ${currentTheme.secondary}
-    ); ;
+    );
   `
 
   const WithBorder = styled.div`

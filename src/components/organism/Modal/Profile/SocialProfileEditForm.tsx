@@ -79,15 +79,15 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
       <Form id={'SocialProfileEditForm'} onSubmit={handleSubmit(onClickSubmit)}>
         <FormContent>
           <Input
-            label={'name'}
+            label={'Name'}
             name={`username`}
             control={control}
             error={errors.username?.message}
             iconSize={'MM'}
             onClickClear={() => setValue('username', '')}
           />
-          {/* <Input
-            label={'Pfp url'}
+          <Input
+            label={'Profile picture url'}
             name={`pfp`}
             control={control}
             error={errors.pfp?.message}

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchEnsName, fetchEnsAvatar } from '@wagmi/core'
+import { fetchEnsAvatar, fetchEnsName } from 'wagmi/actions'
+
 import { DisplayProfile } from '@/@types'
 
 export const useENS = (address?: `0x${string}` | undefined) => {

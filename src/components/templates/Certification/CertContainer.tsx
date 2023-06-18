@@ -13,7 +13,7 @@ import { UserCard } from '@/components/molecure/User/UserCard'
 import { useCertificationSubject } from '@/hooks/useCertificationSubject'
 import { useOrganization } from '@/hooks/useOrganization'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { CertVCWithSBT } from '@/lib/sbt'
+import { CertVCWithSBT } from '@/interfaces/sbt'
 import { formatDate } from '@/utils/date'
 
 type Props = {
