@@ -77,7 +77,7 @@ export const UserCard: FC<Props> = ({ userId }) => {
             type='span'
             color={currentTheme.outline}
             font={getBasicFont(currentTypo.label.medium)}
-            text={shortenStr(userId, 10)}
+            text={shortenStr(userId.slice(-42), 10)}
           />
         </Flex>
       </Flex>
