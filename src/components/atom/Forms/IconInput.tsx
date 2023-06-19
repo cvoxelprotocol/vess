@@ -33,7 +33,7 @@ export const IconInput: FC<Props> = ({
 
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { uploadIcon, status, icon, setIcon, name, setName } = useFileUpload()
+  const { uploadIcon, status, icon, cid, setIcon, name, setName } = useFileUpload()
   const [errors, setErrors] = useState('')
 
   const ContainerWidth = useMemo(() => {
