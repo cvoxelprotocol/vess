@@ -30,6 +30,7 @@ export const IconInput: FC<Props> = ({
   supportingText,
   width,
   recommendText,
+
 }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { uploadIcon, status, icon, setIcon, name, setName } = useFileUpload()
@@ -151,7 +152,6 @@ export const IconInput: FC<Props> = ({
         if (acceptedFiles[0]) {
           await uploadIcon(acceptedFiles[0])
           const objectURL = URL.createObjectURL(acceptedFiles[0])
-          const colors = await extractColors(objectURL)
           URL.revokeObjectURL(objectURL)
           setErrors('')
         }

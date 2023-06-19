@@ -1,7 +1,5 @@
 import {
   useStateUploadedCID,
-  useStateUploadedCoverImageUrl,
-  useStateUploadedCoverName,
   useStateUploadedIconName,
   useStateUploadedIconUrl,
   useStateUploadStatus,
@@ -14,8 +12,7 @@ export const useFileUpload = () => {
   const [cid, setCID] = useStateUploadedCID()
   const [icon, setIcon] = useStateUploadedIconUrl()
   const [name, setName] = useStateUploadedIconName()
-  const [coverImage, setCoverImage] = useStateUploadedCoverImageUrl()
-  const [coverName, setCoverName] = useStateUploadedCoverName()
+
 
   const upload = async (files: File[]) => {
     setStatus('uploading')
@@ -54,13 +51,6 @@ export const useFileUpload = () => {
     setName(fileName)
     setIcon(`https://${cid}${DWEB_LINK}${fileName}`)
   }
-  const uploadCoverImage = async (image: File) => {
-    if (!image) return
-    setStatus('uploading')
-    const fileName = image.name
-    const cid = await upload([image])
-    setCoverImage(`https://${cid}${DWEB_LINK}${fileName}`)
-  }
 
   const resetUploadStatus = () => {
     setCID(undefined)
@@ -77,10 +67,5 @@ export const useFileUpload = () => {
     icon,
     setName,
     name,
-    uploadCoverImage,
-    coverImage,
-    coverName,
-    setCoverName,
-    setCoverImage,
   }
 }

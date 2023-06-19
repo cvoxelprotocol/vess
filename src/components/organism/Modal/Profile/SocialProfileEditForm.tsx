@@ -93,7 +93,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             error={errors.pfp?.message}
             iconSize={'MM'}
             onClickClear={() => setValue('pfp', '')}
-          /> */}
+          />
           <IconInput
             required={false}
             label={'Icon'}
