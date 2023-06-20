@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { AccountIcon } from './AccountIcon'
+import { AddFileIcon } from './AddFileIcon'
 import { AddIcon } from './AddIcon'
 import { BellIcon } from './BellIcon'
 import { Calendar } from './Calendar'
@@ -35,7 +36,6 @@ import { VoxelIcon } from './VoxelIcon'
 import { WalletIcon } from './WalletIcon'
 import { WaveIcon } from './WaveIcon'
 import { WorkspaceIcon } from './WorkspaceIcon'
-import { AddFileIcon } from './AddFileIcon'
 
 export const ICONS = {
   VOXEL: 'voxel',
@@ -76,7 +76,7 @@ export const ICONS = {
   WAVE: 'wave',
 } as const
 
-export type IconsType = typeof ICONS[keyof typeof ICONS]
+export type IconsType = (typeof ICONS)[keyof typeof ICONS]
 
 export const ICONSIZE = {
   XS: '8px',
@@ -345,7 +345,7 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
           </IconContainer>
         )
     }
-  }, [icon])
+  }, [IconContainer, icon])
 
   return IconComponent
 }
