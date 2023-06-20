@@ -86,14 +86,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             iconSize={'MM'}
             onClickClear={() => setValue('username', '')}
           />
-          <Input
-            label={'Profile picture url'}
-            name={`pfp`}
-            control={control}
-            error={errors.pfp?.message}
-            iconSize={'MM'}
-            onClickClear={() => setValue('pfp', '')}
-          />
+          
           <IconInput
             required={false}
             label={'Icon'}
