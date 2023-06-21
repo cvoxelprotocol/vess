@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useMemo, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
+import { getAddressFromPkh } from 'vess-sdk'
 import { AvatarButton } from '@/components/atom/AvatarButtons/AvatarButton'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { Chip } from '@/components/atom/Chips/Chip'
@@ -9,7 +10,6 @@ import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { useCcProfile } from '@/hooks/useCcProfile'
-
 import { useLensProfile } from '@/hooks/useLensProfile'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useToast } from '@/hooks/useToast'
@@ -36,7 +36,7 @@ export const BasicProfileWidget: FC<Props> = (props) => {
   const { setShowSocialProfileModal } = useVESSWidgetModal()
   const [displayProfileType, setDisplayProfileType] = useState<profileType>('default')
   const { showToast } = useToast()
-  const profileWalletAddress = props.did.slice(-42)
+  const profileWalletAddress = getAddressFromPkh(props.did)
 
   const handleOnCopy = async () => {
     showToast('Copied!')

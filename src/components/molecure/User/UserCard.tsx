@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, MouseEvent } from 'react'
+import { getAddressFromPkh } from 'vess-sdk'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Chip } from '@/components/atom/Chips/Chip'
@@ -14,6 +15,7 @@ import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { shortenStr } from '@/utils/objectUtil'
 
+
 type Props = {
   userId: string
 }
@@ -25,6 +27,7 @@ export const UserCard: FC<Props> = ({ userId }) => {
   const { highlightedMembership, highlightedSelfClaimedMembership } =
     useHeldMembershipSubject(userId)
   const router = useRouter()
+  const profileWalletAddress = getAddressFromPkh(userId)
 
   const CardContainer = styled.div`
     background: ${currentTheme.surface1};
@@ -77,7 +80,7 @@ export const UserCard: FC<Props> = ({ userId }) => {
             type='span'
             color={currentTheme.outline}
             font={getBasicFont(currentTypo.label.medium)}
-            text={shortenStr(userId.slice(-42), 10)}
+            text={shortenStr(profileWalletAddress, 10)}
           />
         </Flex>
       </Flex>
