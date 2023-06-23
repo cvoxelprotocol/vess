@@ -5,6 +5,7 @@ import { Button } from '@/components/atom/Buttons/Button'
 import { IconInput } from '@/components/atom/Forms/IconInput'
 import { Input } from '@/components/atom/Forms/Input'
 import { MultiInput } from '@/components/atom/Forms/MultiInput'
+import { useFileUpload } from '@/hooks/useFileUpload'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -17,6 +18,7 @@ type Props = {
 
 export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const { setShowSocialProfileModal } = useVESSWidgetModal()
+  const { uploadIcon, status, icon, cid, setIcon, name, setName } = useFileUpload()
   const { profile } = useSocialAccount(did)
   const { update } = useUpdateSocialAccount(did)
 
@@ -68,6 +70,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const onClickSubmit = async (data: OrbisProfileDetail, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
+    setValue('pfp', icon? icon : '' ) // ToDo: Add ipfs url of VESS default profile image here
     const res = await update({ did, content: removeUndefined(data) })
     if (res.status === 200) {
       setShowSocialProfileModal(false)
