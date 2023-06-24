@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { ChangeEvent, HTMLInputTypeAttribute, useMemo } from 'react'
+import { FocusEvent, ChangeEvent, HTMLInputTypeAttribute, useMemo } from 'react'
 import { Control, Controller, FieldValues, Path, ValidationRule } from 'react-hook-form'
 import { IconButton } from '../Buttons/IconButton'
 import { Icon, ICONS, IconSize, IconsType } from '../Icons/Icon'
@@ -20,6 +20,7 @@ type Props<T extends FieldValues> = {
   inputType?: HTMLInputTypeAttribute
   onClickClear?: () => void
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void
   disabled?: boolean
 }
 
@@ -37,6 +38,8 @@ export const Input = <T extends FieldValues>({
   width,
   inputType = 'text',
   onClickClear,
+  onChange,
+  onBlur,
   disabled = false,
 }: Props<T>) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -141,7 +144,14 @@ export const Input = <T extends FieldValues>({
           rules={{ required: required || false, pattern: pattern }}
           name={name}
           render={({ field }) => (
-            <Input disabled={disabled} placeholder={placeholder} {...field} type={inputType} />
+            <Input
+              disabled={disabled}
+              placeholder={placeholder}
+              {...field}
+              type={inputType}
+              // onChange={onChange}
+              onBlur={onBlur}
+            />
           )}
         />
         {onClickClear && (

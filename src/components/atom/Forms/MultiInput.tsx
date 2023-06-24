@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useMemo } from 'react'
+import { FocusEvent, useMemo } from 'react'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { IconSize, IconsType } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -15,6 +15,7 @@ type Props<T extends FieldValues> = {
   iconSize?: IconSize
   placeholder?: string
   rows?: number
+  onBlur?: (e: FocusEvent<HTMLTextAreaElement>) => void
 }
 
 export const MultiInput = <T extends FieldValues>({
@@ -26,6 +27,7 @@ export const MultiInput = <T extends FieldValues>({
   width,
   rows = 3,
   placeholder,
+  onBlur,
 }: Props<T>) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
 
@@ -109,7 +111,7 @@ export const MultiInput = <T extends FieldValues>({
           control={control}
           rules={{ required: required || false }}
           name={name}
-          render={({ field }) => <Input rows={5} {...field} />}
+          render={({ field }) => <Input rows={5} {...field} onBlur={onBlur} />}
         />
       </InputLayer>
     </InputContainer>

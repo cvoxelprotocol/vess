@@ -1,6 +1,7 @@
 import {
   useStateShowConnectModal,
   useStateShowDetailModal,
+  useStateShowPFRateModal,
   useStateshowQRModal,
   useStateShowTaskDetailModal,
   useStateShowTaskFormModal,
@@ -20,6 +21,7 @@ export const useVESSWidgetModal = () => {
   const [showTaskDetailModal, setShowTaskDetailModal] = useStateShowTaskDetailModal()
   const [showTaskModal, setShowTaskModal] = useStateShowTaskFormModal()
   const [showConnectModal, setShowConnectModal] = useStateShowConnectModal()
+  const [showPFRateModal, setShowPFRateModal] = useStateShowPFRateModal()
 
   return {
     openModal: () => setShowModal(true),
@@ -46,5 +48,7 @@ export const useVESSWidgetModal = () => {
     setShowTaskDetailModal,
     showConnectModal,
     setShowConnectModal,
+    showPFRateModal,
+    setShowPFRateModal,
   }
 }

@@ -81,3 +81,13 @@ export const useStateShowConnectModal = () => useAtom(showConnectModal)
 export const focusEditable = atom<boolean>(false)
 
 export const useStateFocusEditable = () => useAtom(focusEditable)
+
+export const showPFRateModal = atom<boolean>(false)
+
+export const useStateShowPFRateModal = () => useAtom(showPFRateModal)
+
+export const PFOnbordingPage = atom<number>(0)
+export const useStatePFOnbordingPage = () => useAtom(PFOnbordingPage)
+
+export const PFFilledRate = atom<number>(0)
+export const useStatePFFilledRate = () => useAtom(PFFilledRate)

@@ -2,36 +2,38 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import React from 'react'
+import { ProgressBarModalHeader } from './Headers/ProgressBarModalHeader'
 import { Icon, ICONS } from '@/components/atom/Icons/Icon'
+import { FadeInOut } from '@/components/atom/Motions/FadeInOut'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { PFFilledRate, useStatePFFilledRate } from '@/jotai/ui'
 
 type Props = {
   headerColor?: string
   contentColor?: string
   modalTitle?: string
+  modalTitles?: string[]
+  variant?: 'ProgressBar'
+  rate?: number
 } & DialogPrimitive.DialogContentProps
 
 export const VESSModal = React.forwardRef<HTMLDivElement, Props>(
-  ({ children, headerColor, contentColor, modalTitle, ...props }, forwardedRef) => {
+  (
+    {
+      children,
+      headerColor,
+      contentColor,
+      modalTitle,
+      modalTitles,
+      variant,
+      rate,
+      forceMount,
+      ...props
+    },
+    forwardedRef,
+  ) => {
+    // const [PFFilledRate, setPFFilledRate] = useStatePFFilledRate()
     const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-
-    const OverlayAnimation = keyframes`
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 0.8;
-      }
-    `
-
-    const ContentAnimation = keyframes`
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    `
 
     const DialogOverlay = styled(DialogPrimitive.Overlay)`
       position: fixed;
@@ -39,7 +41,6 @@ export const VESSModal = React.forwardRef<HTMLDivElement, Props>(
       background: ${currentTheme.background};
       opacity: 0.8;
       z-index: 9998;
-      animation: ${OverlayAnimation} 0.15s ease-in-out forwards;
     `
 
     const DialogWrapper = styled.div`
@@ -62,8 +63,7 @@ export const VESSModal = React.forwardRef<HTMLDivElement, Props>(
       height: fit-content;
       max-width: 600px;
       max-height: 85vh;
-      min-height: 20vh;
-      animation: ${ContentAnimation} 0.15s ease-in-out forwards;
+
       overflow: hidden;
       &:focus {
         outline: none;
@@ -89,12 +89,11 @@ export const VESSModal = React.forwardRef<HTMLDivElement, Props>(
 
     const DialogInnerContent = styled.div`
       display: flex;
-      background: ${currentTheme.primaryContainer};
       flex-direction: column;
       background: transparent;
       position: relative;
       width: 100%;
-      height: 100%;
+      height: fit-content;
     `
 
     const Close = styled(DialogPrimitive.Close)`
@@ -112,23 +111,31 @@ export const VESSModal = React.forwardRef<HTMLDivElement, Props>(
     `
 
     return (
-      <DialogPrimitive.Portal>
-        <DialogOverlay />
-        <DialogWrapper>
-          <DialogContent {...props} ref={forwardedRef}>
-            <DialogInnerContent id={'DialogInterContetn'}>
-              <Header>
-                <ModalTitle>{modalTitle}</ModalTitle>
-                <Close aria-label='Close'>
-                  <IconContainer>
-                    <Icon icon={ICONS.CROSS} size={'M'} mainColor={currentTheme.onSurface} />
-                  </IconContainer>
-                </Close>
-              </Header>
-              {children}
-            </DialogInnerContent>
-          </DialogContent>
-        </DialogWrapper>
+      <DialogPrimitive.Portal forceMount={forceMount}>
+        <FadeInOut noAnimatePresence>
+          <DialogOverlay forceMount={forceMount} />
+        </FadeInOut>
+        <FadeInOut duration={0.2} noAnimatePresence>
+          <DialogWrapper>
+            <DialogContent {...props} ref={forwardedRef}>
+              <DialogInnerContent id={'DialogInterContetn'}>
+                {variant == 'ProgressBar' ? (
+                  <ProgressBarModalHeader lastPage={3} titles={modalTitles ? modalTitles : []} />
+                ) : (
+                  <Header>
+                    <ModalTitle>{modalTitle}</ModalTitle>
+                    <Close aria-label='Close'>
+                      <IconContainer>
+                        <Icon icon={ICONS.CROSS} size={'M'} mainColor={currentTheme.onSurface} />
+                      </IconContainer>
+                    </Close>
+                  </Header>
+                )}
+                {children}
+              </DialogInnerContent>
+            </DialogContent>
+          </DialogWrapper>
+        </FadeInOut>
       </DialogPrimitive.Portal>
     )
   },

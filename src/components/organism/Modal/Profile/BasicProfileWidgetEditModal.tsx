@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion'
 import type { BusinessProfile } from 'vess-sdk'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
 import { BasicProfileWidgetEditForm } from './BasicProfileWidgetEditForm'
@@ -14,9 +15,13 @@ export default function BasicProfileWidgetEditModal({ did, businessProfile }: Pr
 
   return (
     <VESSModalContainer open={showModal} onOpenChange={setShowModal}>
-      <VESSModal headerColor={currentTheme.depth1} modalTitle={'Work Styles'}>
-        <BasicProfileWidgetEditForm did={did} businessProfile={businessProfile} />
-      </VESSModal>
+      <AnimatePresence>
+        {showModal ? (
+          <VESSModal forceMount headerColor={currentTheme.depth1} modalTitle={'Work Styles'}>
+            <BasicProfileWidgetEditForm did={did} businessProfile={businessProfile} />
+          </VESSModal>
+        ) : null}
+      </AnimatePresence>
     </VESSModalContainer>
   )
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useMemo } from 'react'
+import { useMemo, FocusEvent } from 'react'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { components } from 'react-select'
 import type { MultiValueGenericProps } from 'react-select'
@@ -21,6 +21,7 @@ type Props<T extends FieldValues> = {
   width?: number
   vals?: string[]
   options?: TagOption[]
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void
 }
 
 export const TagSelect = <T extends FieldValues>({
@@ -36,6 +37,7 @@ export const TagSelect = <T extends FieldValues>({
   icon,
   iconSize = 'S',
   iconColor,
+  onBlur,
   ...props
 }: Props<T>) => {
   const { currentTheme, currentTypo, themeMode, getBasicFont } = useVESSTheme()
@@ -203,6 +205,7 @@ export const TagSelect = <T extends FieldValues>({
               options={options}
               placeholder={placeholder || 'Enter tags as you like..'}
               isClearable
+              onBlur={onBlur}
             />
           )}
         />

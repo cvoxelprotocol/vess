@@ -1,15 +1,18 @@
 import styled from '@emotion/styled'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { DisplayProfile } from '@/@types'
 import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
+import { ProfileFilledRate } from '@/components/organism/Banners/ProfileFilledRate/ProfileFilledRate'
 import { CertificationsContainer } from '@/components/organism/Certification/CertificationsContainer'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
 import { TaskDetailModal } from '@/components/organism/Modal/Detail/Tasks/TaskDetailModal'
+import { PFOnboardingModal } from '@/components/organism/Modal/Onboarding/PFOnboardingModal'
 import { BasicProfileWidget } from '@/components/organism/Widgets/Profiles/BasicProfileWidget'
 import { EventAttendancesWidget } from '@/components/organism/Widgets/Profiles/EventAttendancesWidget'
 import { HighlightedMembershipWidget } from '@/components/organism/Widgets/Profiles/HighlightedMembershipWidget'
@@ -18,12 +21,14 @@ import { SocialLinksWidget } from '@/components/organism/Widgets/Profiles/Social
 import { WorkCredentialsWidget } from '@/components/organism/Widgets/Profiles/WorkCredentialsWidget'
 import { WorkStatusWidget } from '@/components/organism/Widgets/Profiles/WorkStatusWidget'
 import { WorkStyleWidget } from '@/components/organism/Widgets/Profiles/WorkStyleWidget'
+import { ParamList, rateScheme } from '@/constants/profileRate'
 import { useBusinessProfile } from '@/hooks/useBusinessProfile'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useSelectedAttendance, useSelectedTask } from '@/jotai/item'
-import { useStateFocusEditable } from '@/jotai/ui'
+import { useStateFocusEditable, useStatePFFilledRate } from '@/jotai/ui'
 
 type Props = {
   did: string
@@ -76,12 +81,45 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   const router = useRouter()
   const { did: myDID } = useDIDAccount()
   const [focusEditable, setFocusEditable] = useStateFocusEditable()
+  const [PFFilledRate, setPFFilledRate] = useStatePFFilledRate()
+  const { profile } = useSocialAccount(did)
+
+  useEffect(() => {
+    let sumRate = 0
+    if (businessProfile) {
+      Object.keys(businessProfile).forEach((key) => {
+        if (businessProfile[key] && rateScheme[key as ParamList]) {
+          sumRate += rateScheme[key as ParamList]!.rate
+          console.log('key: ', key, ', value: ', businessProfile[key])
+        }
+      })
+    }
+    if (profile) {
+      Object.keys(profile).forEach((key) => {
+        if (profile[key as keyof DisplayProfile] && rateScheme[key as ParamList]) {
+          sumRate += rateScheme[key as ParamList]!.rate
+          console.log('key: ', key, ', value: ', profile[key as keyof DisplayProfile])
+        }
+      })
+    }
+
+    setPFFilledRate(sumRate)
+  }, [businessProfile, profile])
 
   const Container = styled.div`
     width: 100%;
     height: max(100%, 100vh);
     background: ${currentTheme.background};
   `
+  const HeadBannerContainer = styled.div`
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    padding: 0 1.5rem;
+    margin: 1.5rem 0 3rem 0;
+  `
+
   const ActionContainer = styled.div`
     width: 100%;
     padding: 12px 16px;
@@ -146,6 +184,9 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   }
   return (
     <Container>
+      <HeadBannerContainer>
+        <ProfileFilledRate />
+      </HeadBannerContainer>
       <ActionContainer>
         <Flex justifyContent='flex-end' alignItems='center' width='100%'>
           {myDID && myDID === did && (
@@ -271,6 +312,7 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
       <NewTaskWidgetModal did={did} />
       <EventDetailModal streamId={selectedAttendance?.credentialSubject.eventId} />
       <TaskDetailModal streamId={selectedTask} />
+      <PFOnboardingModal did={did} businessProfile={businessProfile} />
     </Container>
   )
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { BaseSyntheticEvent, FC } from 'react'
+import { BaseSyntheticEvent, FC, forwardRef } from 'react'
 import { useForm } from 'react-hook-form'
 import type { BusinessProfile } from 'vess-sdk'
 import { Button } from '@/components/atom/Buttons/Button'
@@ -21,6 +21,7 @@ import { removeUndefined } from '@/utils/objectUtil'
 type Props = {
   did: string
   businessProfile?: BusinessProfile | null
+  updatePage?: (nextPage?: number) => void
 }
 
 type BusinessProfileInput = {
@@ -41,7 +42,7 @@ type BusinessProfileInput = {
   updatedAt?: string
 }
 
-export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) => {
+export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile, updatePage }) => {
   const { closeModal } = useVESSWidgetModal()
   const { storeBusinessProfile } = useBusinessProfile(did)
 
@@ -95,8 +96,13 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
       ...data,
       desiredHourlyFee: Number(data.desiredHourlyFee || 0),
     })
+    if (updatePage) {
+      console.log('passed')
+      updatePage()
+    } else {
+      closeModal()
+    }
     await storeBusinessProfile(content)
-    closeModal()
   }
 
   return (
@@ -188,7 +194,13 @@ export const BasicProfileWidgetEditForm: FC<Props> = ({ did, businessProfile }) 
             onClick={() => closeModal()}
             fill
           />
-          <Button variant='filled' text='Save' type={'submit'} fill />
+          <Button
+            variant='filled'
+            text='Save'
+            type={'submit'}
+            fill
+            //onClick={updatePage ? () => updatePage() : undefined}
+          />
         </ButtonContainer>
       </Form>
     </>
