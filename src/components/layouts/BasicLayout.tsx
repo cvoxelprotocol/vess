@@ -38,7 +38,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     }
     @media (max-width: 599px) {
       grid-template-columns: 1fr;
-      grid-template-rows: 64px 1fr 64px;
+      grid-template-rows: 64px 1fr;
     }
     background: ${currentTheme.background};
   `
@@ -53,13 +53,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     position: fixed;
     z-index: 999;
     @media (max-width: 599px) {
-      height: 64px;
-      width: 100%;
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      grid-row: 3/4;
+      display: none;
     }
   `
 
