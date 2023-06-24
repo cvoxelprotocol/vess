@@ -71,6 +71,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
     e?.preventDefault()
     e?.stopPropagation()
     setValue('pfp', icon? icon : '' ) // ToDo: Add ipfs url of VESS default profile image here
+    console.log(data);
     const res = await update({ did, content: removeUndefined(data) })
     if (res.status === 200) {
       setShowSocialProfileModal(false)
