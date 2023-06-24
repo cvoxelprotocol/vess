@@ -337,7 +337,7 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
           </IconContainer>
         )
     }
-  }, [icon])
+  }, [IconContainer, icon])
 
   return IconComponent
 }
