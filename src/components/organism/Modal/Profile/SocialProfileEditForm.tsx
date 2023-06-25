@@ -11,6 +11,7 @@ import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import type { OrbisProfileDetail } from '@/lib/OrbisHelper'
 import { removeUndefined } from '@/utils/objectUtil'
+import { throws } from 'assert'
 
 type Props = {
   did: string
@@ -18,7 +19,7 @@ type Props = {
 
 export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const { setShowSocialProfileModal } = useVESSWidgetModal()
-  const { uploadIcon, status, icon, cid, setIcon, name, setName } = useFileUpload()
+  const { uploadIcon, status, icon,  } = useFileUpload()
   const { profile } = useSocialAccount(did)
   const { update } = useUpdateSocialAccount(did)
 
@@ -70,8 +71,9 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const onClickSubmit = async (data: OrbisProfileDetail, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
+    if (!icon) console.error("NO pfp")
     setValue('pfp', icon? icon : '' ) // ToDo: Add ipfs url of VESS default profile image here
-    console.log(data);
+    console.log("form data" + data);
     const res = await update({ did, content: removeUndefined(data) })
     if (res.status === 200) {
       setShowSocialProfileModal(true)
