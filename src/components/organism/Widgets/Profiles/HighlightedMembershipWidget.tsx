@@ -90,7 +90,7 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
                         endDate={highlightedSelfClaimedMembership.endDate}
                       />
                     ) : (
-                      <MembershipCard title={'Your membership'} roles={['Pick one']} />
+                      <MembershipCard title={'Your current role'} roles={['Pick one']} />
                     )}
                   </>
                 )}
