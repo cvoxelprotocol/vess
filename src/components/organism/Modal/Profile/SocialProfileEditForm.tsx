@@ -11,7 +11,6 @@ import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import type { OrbisProfileDetail } from '@/lib/OrbisHelper'
 import { removeUndefined } from '@/utils/objectUtil'
-import { throws } from 'assert'
 
 type Props = {
   did: string
