@@ -1,11 +1,14 @@
 import {
   useStateUploadedCID,
+
   useStateUploadedIconName,
   useStateUploadedIconUrl,
+  
   useStateUploadStatus,
 } from '@/jotai/file'
 
 const DWEB_LINK = '.ipfs.w3s.link/'
+const TRIM_REGEXP = /\s+/g
 
 export const useFileUpload = () => {
   const [status, setStatus] = useStateUploadStatus()
@@ -46,11 +49,12 @@ export const useFileUpload = () => {
   const uploadIcon = async (icon: File) => {
     if (!icon) return
     setStatus('uploading')
-    const fileName = icon.name
+    const fileName = icon.name.replace(TRIM_REGEXP, '_')
     const cid = await upload([icon])
     setName(fileName)
     setIcon(`https://${cid}${DWEB_LINK}${fileName}`)
   }
+  
 
   const resetUploadStatus = () => {
     setCID(undefined)
@@ -58,7 +62,6 @@ export const useFileUpload = () => {
   }
 
   return {
-    upload,
     status,
     cid,
     resetUploadStatus,
