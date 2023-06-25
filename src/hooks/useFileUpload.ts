@@ -52,7 +52,7 @@ export const useFileUpload = () => {
     const fileName = icon.name.replace(TRIM_REGEXP, '_')
     const cid = await upload([icon])
     setName(fileName)
-    setIcon(`https://${cid}${DWEB_LINK}${fileName}`)
+    setIcon(`https://ipfs.io/${cid}/${fileName}`)
   }
   
 

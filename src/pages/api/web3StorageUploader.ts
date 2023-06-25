@@ -52,7 +52,7 @@ export default async function web3StorageUpload(req: NextApiRequest, res: NextAp
       ? data?.files.file[0]?.newFilename
       : data?.files.file[0]?.originalFilename.replace(TRIM_REGEXP, '_')
     const files = await getFilesFromPath(data?.files.file[0].filepath)
-    console.log("at web3s fileupload")
+
     const rootCid = await client.put(files, { name: fileName })
     res.statusCode = 200
     res.json({ cid: rootCid })
