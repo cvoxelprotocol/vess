@@ -152,12 +152,15 @@ export const IconInput: FC<Props> = ({
         if (acceptedFiles[0]) {
           await uploadIcon(acceptedFiles[0])
           const objectURL = URL.createObjectURL(acceptedFiles[0])
+          console.log(objectURL)
+          console.log(icon)
+          console.log(cid)
           URL.revokeObjectURL(objectURL)
           setErrors('')
         }
       }
     },
-    [uploadIcon],
+    [cid, icon, uploadIcon],
   )
 
   const dropzoneRef = createRef<DropzoneRef>()
