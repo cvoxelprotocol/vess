@@ -59,7 +59,7 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
     <>
       <BaseWidget onClickEdit={handleEdit} {...props}>
         <Container>
-          <Title>Membership</Title>
+          <Title>Current Role</Title>
           <CardContainer>
             {isLoading ? (
               <CommonSpinner />

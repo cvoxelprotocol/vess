@@ -93,10 +93,15 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     }
   }
 
+  const handleCancel = async () => {
+    reset()
+    closeMembershipModal()
+  }
+
   return (
     <Form id={'SocialLinkWidgetEditForm'} onSubmit={handleSubmit(onClickSubmit)}>
-      <Title>Self Claim</Title>
-      <Desc>Please claim your experience</Desc>
+      <Title>Add Experience</Title>
+      <Desc>Please add all required field for your self-claimed experience</Desc>
       <Input
         label={'Organization'}
         name={`organizationName`}
@@ -134,7 +139,8 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
         />
       </DatePickerContainer>
       <ButtonContainer>
-        <Button variant='filled' text='Claim' type={'submit'} />
+        <Button variant='filled' text='Add Experience' type={'submit'} />
+        <Button variant='filled' text='Cancel' type={'button'} onClick={() => handleCancel()} />
       </ButtonContainer>
     </Form>
   )

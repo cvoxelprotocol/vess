@@ -65,8 +65,11 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
       gap: 8px;
     }
   `
-  const handleEdit = () => {
+  const handleAdd = () => {
     openMembershipModal()
+  }
+  const handleEdit = () => {
+    alert("you can edit your added experiences now");
   }
   return (
     <>
@@ -78,6 +81,17 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
           text={`Experiences`}
         />
         {myDID === did && (
+          <>
+          <Button
+          variant='outlined'
+          text='Add'
+          onClick={() => handleAdd()} // changing to ADD new experience
+          mainColor={currentTheme.outline}
+          textColor={currentTheme.outline}
+          size={'S'}
+          icon={ICONS.ADD}
+          btnWidth={'80px'}
+        />
           <Button
             variant='outlined'
             text='Edit'
@@ -88,6 +102,8 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
             icon={ICONS.EDIT}
             btnWidth={'80px'}
           />
+          
+        </>
         )}
       </Flex>
       <Container>
