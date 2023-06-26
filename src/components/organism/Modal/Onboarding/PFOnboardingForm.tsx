@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { errors } from 'ethers'
 import { motion, AnimatePresence } from 'framer-motion'
 import React, {
   BaseSyntheticEvent,
