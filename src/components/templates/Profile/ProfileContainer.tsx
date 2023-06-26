@@ -8,7 +8,7 @@ import { IconButton } from '@/components/atom/Buttons/IconButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { ProfileFilledRate } from '@/components/organism/Banners/ProfileFilledRate/ProfileFilledRate'
-import { CertificationsContainer } from '@/components/organism/Certification/CertificationsContainer'
+import CertificationsContainer from '@/components/organism/Certification/CertificationsContainer'
 import { ExperiencesContainer } from '@/components/organism/Experiences/ExperiencesContainer'
 import { EventDetailModal } from '@/components/organism/Modal/Detail/Events/EventDetailModal'
 import { TaskDetailModal } from '@/components/organism/Modal/Detail/Tasks/TaskDetailModal'
@@ -36,6 +36,13 @@ type Props = {
 const ProfleTabs = dynamic(() => import('@/components/organism/Tabs/ProfleTabs'), {
   ssr: false,
 })
+
+const CertificationsContainer = dynamic(
+  () => import('@/components/organism/Certification/CertificationsContainer'),
+  {
+    ssr: false,
+  },
+)
 
 const BasicProfileWidgetEditModal = dynamic(
   () => import('@/components/organism/Modal/Profile/BasicProfileWidgetEditModal'),

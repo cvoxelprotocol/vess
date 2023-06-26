@@ -4,7 +4,7 @@ import { FC } from 'react'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { CertVCWithSBT } from '@/lib/sbt'
+import { CertVCWithSBT } from '@/interfaces/sbt'
 
 type Props = {
   item: CertVCWithSBT

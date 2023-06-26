@@ -20,7 +20,7 @@ export const GATracking: FC<{
       events.off('routeChangeComplete', handleRouteChange)
       events.off('hashChangeComplete', handleRouteChange)
     }
-  }, [events])
+  }, [events, trackingId])
   return (
     <>
       <Script

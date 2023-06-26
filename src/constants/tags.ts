@@ -10,7 +10,7 @@ export const CLIENTS: TagOption[] = [
 ]
 
 export const TAGS: TagOption[] = [
-  { value: 'web3', label: 'web3' },
+  { value: 'web3', label: 'Web3' },
   { value: 'NFT', label: 'NFT' },
   { value: 'Decentralized Identity', label: 'Decentralized Identity' },
   { value: 'DeFi', label: 'DeFi' },
@@ -24,11 +24,11 @@ export const TAGS: TagOption[] = [
 ]
 
 export const SKILLS: TagOption[] = [
-  { value: 'dev', label: 'dev' },
-  { value: 'solidity', label: 'solidity' },
-  { value: 'marketing', label: 'marketing' },
-  { value: 'design', label: 'design' },
-  { value: 'research', label: 'research' },
+  { value: 'dev', label: 'Dev' },
+  { value: 'solidity', label: 'Solidity' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'design', label: 'Design' },
+  { value: 'research', label: 'Research' },
   { value: 'BizDev', label: 'BizDev' },
   { value: 'Ceramic', label: 'Ceramic' },
   { value: 'Ethereum', label: 'Ethereum' },
