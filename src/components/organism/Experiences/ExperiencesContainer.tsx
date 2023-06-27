@@ -81,29 +81,29 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
           text={`Experiences`}
         />
         {myDID === did && (
-          <>
-          <Button
+      <Flex justifyContent='flex-end' padding='16px' width='100%'>
+      <Button
           variant='outlined'
           text='Add'
           onClick={() => handleAdd()} // changing to ADD new experience
           mainColor={currentTheme.outline}
-          textColor={currentTheme.outline}
+          textColor={currentTheme.onSurface}
           size={'S'}
           icon={ICONS.ADD}
           btnWidth={'80px'}
+          style={{marginRight:'5px'}}
         />
           <Button
-            variant='outlined'
+            variant='filled'
             text='Edit'
             onClick={() => handleEdit()}
-            mainColor={currentTheme.outline}
-            textColor={currentTheme.outline}
+            mainColor={currentTheme.onPrimary}
+            textColor={currentTheme.onSurface}
             size={'S'}
             icon={ICONS.EDIT}
             btnWidth={'80px'}
           />
-          
-        </>
+          </Flex>
         )}
       </Flex>
       <Container>

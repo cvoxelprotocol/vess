@@ -35,13 +35,15 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     flex-direction: column;
     gap: 16px;
   `
+
   const ButtonContainer = styled.div`
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: end;
-    padding: 12px 0px;
-    border-radius: 32px;
-    z-index: 999;
+    justify-content: space-between;
+    height: 64px;
+    padding: 16px 0px;
+    gap: 8px;
   `
 
   const Title = styled.p`
@@ -139,8 +141,20 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
         />
       </DatePickerContainer>
       <ButtonContainer>
-        <Button variant='filled' text='Add Experience' type={'submit'} />
-        <Button variant='filled' text='Cancel' type={'button'} onClick={() => handleCancel()} />
+        <Button
+          variant='outlined'
+          text='Cancel'
+          type={'button'}
+          onClick={() => handleCancel()}
+          fill
+        />
+        <Button
+          variant='filled'
+          text='Add Experience'
+          type={'submit'}
+          style={{ marginRight: '5px' }}
+          fill
+        />
       </ButtonContainer>
     </Form>
   )
