@@ -51,7 +51,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     height: 100vh;
     background: ${currentTheme.depth4};
     position: fixed;
-    z-index: 999;
+    z-index: 30;
     @media (max-width: 599px) {
       height: 64px;
       width: 100%;
