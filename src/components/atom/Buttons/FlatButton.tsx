@@ -5,7 +5,7 @@ import { NextImageContainer } from '../Images/NextImageContainer'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
-  src: string | IconsType
+  src?: string
   label?: string
   labelColor?: string
   background?: string
@@ -86,7 +86,9 @@ export const FlatButton: FC<Props> = ({
   return (
     <WrappedButton {...props}>
       <ImageContainer>
-        <NextImageContainer src={src} width={'100%'} height={'100%'} objectFit={'contain'} />
+        {src && (
+          <NextImageContainer src={src} width={'100%'} height={'100%'} objectFit={'contain'} />
+        )}
       </ImageContainer>
       <Label>{label}</Label>
     </WrappedButton>

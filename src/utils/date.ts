@@ -36,3 +36,11 @@ export const isWithinSeconds = (seconds: number, date?: string): boolean => {
   if (!date) return false
   return differenceInSeconds(new Date(), new Date(date)) < seconds
 }
+
+export const convertDateStringToDate = (potentialDateStr: any): Date | null => {
+  if (!potentialDateStr || potentialDateStr === undefined) return null
+  if (typeof potentialDateStr === 'string') {
+    return new Date(potentialDateStr)
+  }
+  return potentialDateStr as Date
+}
