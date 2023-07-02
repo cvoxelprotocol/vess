@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NoItem } from '@/components/atom/Common/NoItem'
@@ -23,6 +23,8 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
   const { displayHeldMembership, isFetchingHeldMembershipSubjects } = useHeldMembershipSubject(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
   const { openMembershipModal } = useVESSWidgetModal()
+  const [editExperience, setEditExperience] = useState(false)
+  const [ editButtonText, setEditButtonText] = useState('Edit')
   const { did: myDID } = useDIDAccount()
 
   const hasMemberships = useMemo(() => {
@@ -69,7 +71,14 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
     openMembershipModal()
   }
   const handleEdit = () => {
-    alert("you can edit your added experiences now");
+    if (!editExperience) {
+      setEditExperience(true)
+      setEditButtonText('Done')
+    }else {
+      setEditExperience(false)
+      setEditButtonText('Edit')
+    }
+   
   }
   return (
     <>
@@ -95,18 +104,20 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
         />
           <Button
             variant='filled'
-            text='Edit'
+            text={editButtonText}
             onClick={() => handleEdit()}
             mainColor={currentTheme.onPrimary}
             textColor={currentTheme.onSurface}
             size={'S'}
-            icon={ICONS.EDIT}
+            icon={editExperience ? ICONS.CHECKED : ICONS.EDIT}
             btnWidth={'80px'}
           />
           </Flex>
         )}
       </Flex>
       <Container>
+     
+
         {isFetchingHeldMembershipSubjects ? (
           <CommonSpinner />
         ) : (
@@ -122,6 +133,7 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
                         key={item.item?.ceramicId || item.selfClaim?.ceramicId}
                         item={item.item}
                         selfClaim={item.selfClaim}
+                        editExperience={editExperience}
                       />
                     )
                   })}
@@ -129,6 +141,7 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
             )}
           </>
         )}
+
       </Container>
     </>
   )
