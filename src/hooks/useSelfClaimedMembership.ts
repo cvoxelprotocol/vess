@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getVESS } from 'vess-sdk'
-import type { CustomResponse, WithCeramicId, SelfClaimedMembershipSubject } from 'vess-sdk'
+import type { CustomResponse, WithCeramicId, SelfClaimedMembershipSubject,  BaseResponse,  } from 'vess-sdk'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
+
+interface UpdateSelfClaimedMembershipParams {
+  id: string;
+  param: SelfClaimedMembershipSubject;
+}
 
 export const useSelfClaimedMembership = (did?: string) => {
   // const vess = getVESS()
@@ -24,7 +29,35 @@ export const useSelfClaimedMembership = (did?: string) => {
       },
     )
 
-  const { mutateAsync: storeSelfClaimedMembership } = useMutation<
+  const { mutateAsync: updateSelfClaimedMembership } = useMutation<
+    BaseResponse,
+    unknown,
+    UpdateSelfClaimedMembershipParams
+  >(({id, param}) => vess.updateSelfClaimedMembershipSubject(id, param), {
+    onMutate() {
+      showLoading()
+    },
+    onSuccess(data) {
+      if (data.status === 200) {
+        closeLoading()
+        showToast(BUSINESS_PROFILE_SET_SUCCEED)
+      } else {
+        closeLoading()
+        showToast(BUSINESS_PROFILE_SET_FAILED)
+        console.error(data.result)
+      }
+    },
+    onError(error) {
+      console.error('error', error)
+      closeLoading()
+      showToast(BUSINESS_PROFILE_SET_FAILED)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['selfClaimedMembershipSubject', did])
+    },
+  })
+
+  const { mutateAsync: storeSelfClaimedMembership  } = useMutation<
     CustomResponse<{ streamId: string | undefined }>,
     unknown,
     SelfClaimedMembershipSubject
@@ -54,6 +87,7 @@ export const useSelfClaimedMembership = (did?: string) => {
 
   return {
     storeSelfClaimedMembership,
+    updateSelfClaimedMembership,
     selfClaimedMemberships,
     isFetchingSelfClaimedMembership,
   }
