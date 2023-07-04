@@ -22,7 +22,7 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { displayHeldMembership, isFetchingHeldMembershipSubjects } = useHeldMembershipSubject(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
-  const { openMembershipModal } = useVESSWidgetModal()
+  const { openMembershipModal, openEditSelfClaimMembershipModal } = useVESSWidgetModal()
   const [editExperience, setEditExperience] = useState(false)
   const [ editButtonText, setEditButtonText] = useState('Edit')
   const { did: myDID } = useDIDAccount()

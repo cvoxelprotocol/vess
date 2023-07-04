@@ -1,19 +1,18 @@
 import styled from '@emotion/styled'
 import { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
-import type { SelfClaimedMembershipSubject, HighlightedCredentials } from 'vess-sdk'
+import type { SelfClaimedMembershipSubject, WithCeramicId } from 'vess-sdk'
 import { Button } from '@/components/atom/Buttons/Button'
 import { BaseDatePicker } from '@/components/atom/Forms/BaseDatePicker'
 import { Input } from '@/components/atom/Forms/Input'
 import { ICONS } from '@/components/atom/Icons/Icon'
-import { useHighlightedCredentials } from '@/hooks/useHighlightedCredentials'
-import { useSelfClaimedMembership } from '@/hooks/useSelfClaimedMembership'
+import { useSelfClaimedMembership , UpdateSelfClaimedMembershipParams } from '@/hooks/useSelfClaimedMembership'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { removeUndefined } from '@/utils/objectUtil'
 
 type Props = {
-  did: string
+  selfClaim?: WithCeramicId<SelfClaimedMembershipSubject>
 }
 
 type Input = {
@@ -24,11 +23,10 @@ type Input = {
   endDate?: Date
 }
 
-export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
+export const EditSelfClaimMembershipForm: FC<Props> = ({ selfClaim }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { closeMembershipModal } = useVESSWidgetModal()
-  const { storeSelfClaimedMembership } = useSelfClaimedMembership(did)
-  const { highlightedCredentials, storeHighlightedCredentials } = useHighlightedCredentials(did)
+  const { updateSelfClaimedMembership } = useSelfClaimedMembership()
 
   const Form = styled.form`
     display: flex;
@@ -75,7 +73,7 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     reset,
   } = useForm<Input>({
     defaultValues: {
-      id: did,
+      id: selfClaim?.ceramicId,
       organizationName: '',
       membershipName: '',
     },
@@ -86,10 +84,13 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
     e?.stopPropagation()
     const start = data.startDate?.toISOString() || ''
     const end = data.endDate?.toISOString() || ''
-    const res = await storeSelfClaimedMembership(
-      removeUndefined<SelfClaimedMembershipSubject>({ ...data, startDate: start, endDate: end }),
-    )
-    if (res.streamId) {
+
+    const params: UpdateSelfClaimedMembershipParams = {
+      id: selfClaim?.ceramicId || '',
+      param: removeUndefined<SelfClaimedMembershipSubject>({ ...data, startDate: start, endDate: end })
+    }
+    const res = await updateSelfClaimedMembership(params) // This function will cause errors until we update and release VESS-Sdk
+    if (res.status) {
       reset()
       closeMembershipModal()
     }
@@ -101,7 +102,7 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
   }
 
   return (
-    <Form id={'SocialLinkWidgetEditFormModal'} onSubmit={handleSubmit(onClickSubmit)}>
+    <Form id={'EditSelfClaimMembershipForm'} onSubmit={handleSubmit(onClickSubmit)}>
       <Title>Edit Experience</Title>
       <Desc>Edit your self-claimed experience</Desc>
       <Input
@@ -113,7 +114,7 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
         icon={ICONS.WORKSPACE}
         iconSize={'MM'}
         onClickClear={() => setValue('organizationName', '')}
-        placeholder={'VESS Labs Inc'}
+        placeholder={selfClaim?.organizationName}
       />
       <Input
         label={'Role'}
@@ -124,7 +125,7 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
         icon={ICONS.PERSON}
         iconSize={'MM'}
         onClickClear={() => setValue('membershipName', '')}
-        placeholder={'Developer'}
+        placeholder={selfClaim?.membershipName}
       />
       <DatePickerContainer>
         <BaseDatePicker
@@ -148,13 +149,7 @@ export const SelfClaimMembershipForm: FC<Props> = ({ did }) => {
           onClick={() => handleCancel()}
           fill
         />
-        <Button
-          variant='filled'
-          text='Save'
-          type={'submit'}
-          style={{ marginRight: '5px' }}
-          fill
-        />
+        <Button variant='filled' text='Save' type={'submit'} style={{ marginRight: '5px' }} fill />
       </ButtonContainer>
     </Form>
   )

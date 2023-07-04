@@ -9,6 +9,7 @@ import { EditWidget } from '@/components/atom/Widgets/EditWidget'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { DisplayMembership } from '@/interfaces/ui'
 import { formatDate } from '@/utils/date'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 type Props = {
   item?: DisplayMembership
   selfClaim?: WithCeramicId<SelfClaimedMembershipSubject>
@@ -16,6 +17,8 @@ type Props = {
 }
 export const ExperienceCard: FC<Props> = ({ item, selfClaim, editExperience }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { openEditSelfClaimMembershipModal } = useVESSWidgetModal()
+
 
   const period = useMemo(() => {
     if (item) {
@@ -33,9 +36,14 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim, editExperience }) =
     return ''
   }, [item, selfClaim])
 
-  function handleEdit(): void {
-    alert('in edit button')
-  }
+  const handleEdit = (SelfClaim: WithCeramicId<SelfClaimedMembershipSubject>): (() => void) | undefined => {
+    console.log("Editing experience id " + SelfClaim.ceramicId);
+    alert('in edit button');
+    openEditSelfClaimMembershipModal()
+    // Call edit form modal and pass self claim object
+    return undefined;
+  };
+  
 
   const MembershipCardWrapper = styled.div`
     background: ${currentTheme.depth2};
@@ -150,7 +158,7 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim, editExperience }) =
             text={period}
           />
         </InfoContainer>
-        <EditWidget onClickEdit={handleEdit} editable={editExperience} />
+        <EditWidget onClickEdit={handleEdit(selfClaim)} editable={editExperience} />
       </MembershipCardWrapper>
     )
   }

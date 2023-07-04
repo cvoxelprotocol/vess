@@ -66,6 +66,13 @@ const SocialProfileEditModal = dynamic(
   },
 )
 
+const EditSelfClaimMembershipsModal = dynamic(
+  ()=> import('@/components/organism/Modal/Profile/EditSelfClaimMembershipModal'),
+  {
+    ssr: false,
+  },
+)
+
 const NewTaskWidgetModal = dynamic(
   () => import('@/components/organism/Modal/Tasks/NewTaskWidgetModal'),
   {

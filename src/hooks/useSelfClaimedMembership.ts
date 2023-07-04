@@ -6,8 +6,8 @@ import { useVESSLoading } from './useVESSLoading'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
 
-interface UpdateSelfClaimedMembershipParams {
-  id: string;
+ export interface UpdateSelfClaimedMembershipParams {
+  id: string; // selfClaim.ceramicId
   param: SelfClaimedMembershipSubject;
 }
 
