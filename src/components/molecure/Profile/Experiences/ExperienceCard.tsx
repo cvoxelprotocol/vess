@@ -6,10 +6,10 @@ import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
 import { EditWidget } from '@/components/atom/Widgets/EditWidget'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { DisplayMembership } from '@/interfaces/ui'
 import { formatDate } from '@/utils/date'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 type Props = {
   item?: DisplayMembership
   selfClaim?: WithCeramicId<SelfClaimedMembershipSubject>
