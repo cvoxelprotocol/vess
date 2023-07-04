@@ -190,9 +190,9 @@ export const ProfileContainer: FC<Props> = ({ did }) => {
   }
   return (
     <Container>
-      <HeadBannerContainer>
+      {/* <HeadBannerContainer>
         <ProfileFilledRate />
-      </HeadBannerContainer>
+      </HeadBannerContainer> */}
       <ActionContainer>
         <Flex justifyContent='flex-end' alignItems='center' width='100%'>
           {myDID && myDID === did && (

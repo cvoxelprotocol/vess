@@ -179,12 +179,10 @@ export const PFOnboardingForm: FC<Props> = ({ did, businessProfile }) => {
       } else {
         // In a case the data is not stored and cleared from input
         if (rateScheme[param]?.done) {
-          console.log('🍅🍅🍅🍅🍅')
           ProgressBarHandlerRef.current.setRate(-rateScheme[param]!.rate || 0)
           rateScheme[param]!.done = false
           // In a case the data is stored and cleared from input
         } else if (ref[param]) {
-          console.log('🐏🐏🐏🐏🐏')
           ProgressBarHandlerRef.current.setRate(-rateScheme[param]!.rate || 0)
         }
       }
@@ -353,12 +351,6 @@ export const PFOnboardingForm: FC<Props> = ({ did, businessProfile }) => {
                   error={errors.paymentMethods?.message}
                   onBlur={(e) => handleUpdateTempRate(businessProfile, 'paymentMethods', e)}
                 />
-                {/* <TagSelect
-                    control={control}
-                    name={'roles'}
-                    label={'Roles'}
-                    error={errors.roles?.message}
-                  /> */}
               </FormContent>
             </motion.div>
           ) : null}
