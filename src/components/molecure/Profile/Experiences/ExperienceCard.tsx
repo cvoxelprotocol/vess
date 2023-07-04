@@ -36,12 +36,11 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim, editExperience }) =
     return ''
   }, [item, selfClaim])
 
-  const handleEdit = (SelfClaim: WithCeramicId<SelfClaimedMembershipSubject>): (() => void) | undefined => {
-    console.log("Editing experience id " + SelfClaim.ceramicId);
-    alert('in edit button');
-    openEditSelfClaimMembershipModal()
+  const handleEdit = () => {
+    alert("in edit button");
+    //openEditSelfClaimMembershipModal()
     // Call edit form modal and pass self claim object
-    return undefined;
+    //return undefined;
   };
   
 
@@ -158,7 +157,7 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim, editExperience }) =
             text={period}
           />
         </InfoContainer>
-        <EditWidget onClickEdit={handleEdit(selfClaim)} editable={editExperience} />
+        <EditWidget onClickEdit={handleEdit} editable={editExperience} />
       </MembershipCardWrapper>
     )
   }
