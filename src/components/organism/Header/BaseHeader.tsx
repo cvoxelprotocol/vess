@@ -29,7 +29,7 @@ export const BaseHeader: FC = () => {
     position: fixed;
     padding: 4px 12px;
     background: ${currentTheme.background};
-    z-index: 998;
+    z-index: 29;
     display: grid;
     grid-template-columns: 100px 1fr 180px;
     @media (max-width: 599px) {
