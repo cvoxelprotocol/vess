@@ -9,6 +9,7 @@ import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
+import { NavigationDrawer } from '@/components/molecure/Navigation/NavigationDrawer'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -28,7 +29,7 @@ export const BaseHeader: FC = () => {
     position: fixed;
     padding: 4px 12px;
     background: ${currentTheme.background};
-    z-index: 998;
+    z-index: 29;
     display: grid;
     grid-template-columns: 100px 1fr 180px;
     @media (max-width: 599px) {
@@ -36,6 +37,7 @@ export const BaseHeader: FC = () => {
       grid-template-columns: 64px 1fr 64px;
     }
   `
+
   const HeaderTitle = styled.div`
     grid-column: 2 /3;
     display: flex;
@@ -81,6 +83,10 @@ export const BaseHeader: FC = () => {
 
   return (
     <HeaderContainer>
+      <Flex alignItems='center' justifyContent={'flex-start'} height={'100%'} width={'100%'}>
+        <NavigationDrawer />
+      </Flex>
+
       <HeaderTitle>
         {getTitle ? (
           <>{getTitle}</>
