@@ -5,6 +5,7 @@ export const NAVIGATION_ITEM = {
   PROFILE: 'Profile',
   CLAIM: 'Self Claim',
   WAVES: 'Timeline',
+  JOBS: 'Web3 Jobs',
   OTHER: 'Other',
 } as const
 
@@ -14,12 +15,14 @@ export type NAVIGATION_LIST_TYPE = {
   item: NavigationItemType
   icon: IconsType
   path: string
+  external?: boolean
 }
 
 export const NAVIGATION_LIST: NAVIGATION_LIST_TYPE[] = [
   { item: NAVIGATION_ITEM.HOME, icon: ICONS.HOME, path: '/' },
   { item: NAVIGATION_ITEM.PROFILE, icon: ICONS.ACCOUNT, path: '/did' },
   { item: NAVIGATION_ITEM.WAVES, icon: ICONS.WAVE, path: '/connection/list' },
+  { item: NAVIGATION_ITEM.JOBS, icon: ICONS.JOB, path: 'https://synapss.vess.id', external: true },
   // { item: NAVIGATION_ITEM.CLAIM, icon: ICONS.VOXEL, path: '/claim' },
 ]
 
