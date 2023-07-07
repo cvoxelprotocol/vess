@@ -78,7 +78,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
       <Form id={'SocialProfileEditForm'} onSubmit={handleSubmit(onClickSubmit)}>
         <FormContent>
           <Input
-            label={'name'}
+            label={'Name'}
             name={`username`}
             control={control}
             error={errors.username?.message}
@@ -86,7 +86,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             onClickClear={() => setValue('username', '')}
           />
           <Input
-            label={'pfp url'}
+            label={'Profile picture url'}
             name={`pfp`}
             control={control}
             error={errors.pfp?.message}
@@ -94,7 +94,7 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             onClickClear={() => setValue('pfp', '')}
           />
           <MultiInput
-            label={'bio'}
+            label={'Bio'}
             name={`description`}
             control={control}
             error={errors.description?.message}

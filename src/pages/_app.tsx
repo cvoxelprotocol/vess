@@ -5,7 +5,7 @@ import type { DehydratedState } from '@tanstack/react-query'
 import { Provider as JotaiProvider } from 'jotai'
 import type { AppProps } from 'next/app'
 import { useState } from 'react'
-import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+import { configureChains, createClient, mainnet, WagmiConfig } from 'wagmi'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { infuraProvider } from 'wagmi/providers/infura'
@@ -45,17 +45,12 @@ export default function App({
     chains,
     options: {
       projectId: process.env.NEXT_PUBLIC_WC_KEY || '',
-      chainId: 1,
-      infuraId: process.env.NEXT_PUBLIC_INFURA_KEY,
-      qrcodeModalOptions: {
-        desktopLinks: [],
-      },
+      showQrModal: true,
     },
   })
-  const connectors = [metamaskConnector, walletConnectConnector]
   const client = createClient({
     autoConnect: true,
-    connectors,
+    connectors: [metamaskConnector, walletConnectConnector],
     provider,
   })
   const [queryClient] = useState(

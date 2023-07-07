@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
 import { CertificationCard } from '@/components/molecure/Profile/Certifications/CertificationCard'
 import { useCertificationSBT } from '@/hooks/useCertificationSBT'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -7,7 +6,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 type Props = {
   did?: string
 }
-export const CertificationsContainer: FC<Props> = ({ did }) => {
+export default function CertificationsContainer({ did }: Props) {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { heldCertificationSubjects, isInitialLoading } = useCertificationSBT(did)
 

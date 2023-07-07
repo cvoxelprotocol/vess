@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
-import { Connector } from '@wagmi/core'
 import { FC } from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import { useConnect } from 'wagmi'
+import { Connector, useConnect } from 'wagmi'
 import { VESSModal, VESSModalContainer } from '../VESSModal'
-import { Button } from '@/components/atom/Buttons/Button'
 import { PanelButton } from '@/components/atom/Buttons/PanelButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { useConnectDID } from '@/hooks/useConnectDID'
@@ -41,10 +39,8 @@ export const ConnectWalletModal: FC = () => {
 
   const handleLogin = async (connector?: Connector<any, any, any>) => {
     try {
+      setShowConnectModal(false)
       const isSuccess = await connectDID(connector)
-      if (isSuccess) {
-        setShowConnectModal(false)
-      }
     } catch (error) {
       console.error(error)
     }
