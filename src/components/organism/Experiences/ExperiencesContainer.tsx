@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC, useMemo, useState } from 'react'
+import { SkeletonExperienceCard } from '@/components/Skeletons/ExperienceCard'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NoItem } from '@/components/atom/Common/NoItem'
@@ -24,7 +25,7 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
   const { openMembershipModal, openEditSelfClaimMembershipModal } = useVESSWidgetModal()
   const [editExperience, setEditExperience] = useState(false)
-  const [ editButtonText, setEditButtonText] = useState('Edit')
+  const [editButtonText, setEditButtonText] = useState('Edit')
   const { did: myDID } = useDIDAccount()
 
   const hasMemberships = useMemo(() => {
@@ -74,11 +75,10 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
     if (!editExperience) {
       setEditExperience(true)
       setEditButtonText('Done')
-    }else {
+    } else {
       setEditExperience(false)
       setEditButtonText('Edit')
     }
-   
   }
   return (
     <>
@@ -90,36 +90,34 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
           text={`Experiences`}
         />
         {myDID === did && (
-      <Flex justifyContent='flex-end' padding='16px' width='100%'>
-      <Button
-          variant='outlined'
-          text='Add'
-          onClick={() => handleAdd()} // changing to ADD new experience
-          mainColor={currentTheme.outline}
-          textColor={currentTheme.onSurface}
-          size={'S'}
-          icon={ICONS.ADD}
-          btnWidth={'80px'}
-          style={{marginRight:'5px'}}
-        />
-          <Button
-            variant='filled'
-            text={editButtonText}
-            onClick={() => handleEdit()}
-            mainColor={currentTheme.onPrimary}
-            textColor={currentTheme.onSurface}
-            size={'S'}
-            icon={editExperience ? ICONS.CHECKED : ICONS.EDIT}
-            btnWidth={'80px'}
-          />
+          <Flex justifyContent='flex-end' padding='16px' width='100%'>
+            <Button
+              variant='outlined'
+              text='Add'
+              onClick={() => handleAdd()} // changing to ADD new experience
+              mainColor={currentTheme.outline}
+              textColor={currentTheme.onSurface}
+              size={'S'}
+              icon={ICONS.ADD}
+              btnWidth={'80px'}
+              style={{ marginRight: '5px' }}
+            />
+            <Button
+              variant='filled'
+              text={editButtonText}
+              onClick={() => handleEdit()}
+              mainColor={currentTheme.onPrimary}
+              textColor={currentTheme.onSurface}
+              size={'S'}
+              icon={editExperience ? ICONS.CHECKED : ICONS.EDIT}
+              btnWidth={'80px'}
+            />
           </Flex>
         )}
       </Flex>
       <Container>
-     
-
         {isFetchingHeldMembershipSubjects ? (
-          <CommonSpinner />
+          <SkeletonExperienceCard />
         ) : (
           <>
             {!hasMemberships ? (
@@ -141,7 +139,6 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
             )}
           </>
         )}
-
       </Container>
     </>
   )

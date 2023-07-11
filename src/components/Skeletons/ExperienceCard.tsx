@@ -12,6 +12,8 @@ export const SkeletonExperienceCard = () => {
     gap: 24px;
     position: relative;
     border-radius: 24px;
+    justify-content: start;
+
     @media (max-width: 599px) {
       flex-direction: column;
       align-items: center;
@@ -22,10 +24,13 @@ export const SkeletonExperienceCard = () => {
   `
   const InfoContainer = styled.div`
     flex-grow: 1;
-    gap: 8px;
-    padding-top: 8px;
+    gap: 10px;
+
+    padding-top: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    background-color: ${currentTheme.background}
+
     @media (max-width: 599px) {
       width: 100%;
       padding-top: 0px;
@@ -33,9 +38,48 @@ export const SkeletonExperienceCard = () => {
     }
   `
 
+  const InfoContainer2 = styled.div`
+ 
+  display: flex;
+  flex-direction: column;
+
+`
+  const LoadingBox = styled.div`
+    width: 300px;
+    height: 200px;
+    margin: 10px;
+    background-color: ${currentTheme.primaryContainerOpacity10};
+    border-radius:10px;
+    display: flex;
+  `
+
+  const LoadingBox2 = styled.div`
+    width: 400px;
+    height: 30px;
+    margin: 10px;
+    background-color: ${currentTheme.primaryContainerOpacity10};
+    border-radius:5px;
+    display: flex;
+  `
+
+  const LoadingBox3 = styled.div`
+    width: 300px;
+    height: 20px;
+    margin: 10px;
+    background-color: ${currentTheme.primaryContainerOpacity10};
+    border-radius:5px;
+    display: flex;
+  `
+
   return (
     <MembershipCardWrapper>
-      <InfoContainer></InfoContainer>
+      <LoadingBox/>
+      <InfoContainer2>
+      <LoadingBox2/>
+      <LoadingBox3/>
+      <LoadingBox2/>
+      <LoadingBox3/>
+      </InfoContainer2>
     </MembershipCardWrapper>
   )
 }
