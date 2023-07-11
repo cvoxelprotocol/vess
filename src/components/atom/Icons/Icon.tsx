@@ -75,7 +75,7 @@ export const ICONS = {
   WALLET: 'wallet',
   WAVE: 'wave',
   JOB: 'job',
-  BARTHREE: 'bar-3',
+  BARTHREE: 'barThree',
 } as const
 
 export type IconsType = typeof ICONS[keyof typeof ICONS]
@@ -340,7 +340,7 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
             <JobIcon />
           </IconContainer>
         )
-      case 'bar-3':
+      case 'barThree':
         return (
           <IconContainer>
             <BarThree />
