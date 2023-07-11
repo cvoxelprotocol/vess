@@ -34,6 +34,11 @@ export const vessHighlightedMembershipModal = atom<boolean>(false)
 
 export const useStateVESSHighlightedMembershipModal = () => useAtom(vessHighlightedMembershipModal)
 
+export const vessEditSelfClaimMembershipModal = atom<boolean>(false)
+
+export const useStateVESSEditSelfClaimMembershipModal = () =>
+  useAtom(vessEditSelfClaimMembershipModal)
+
 export const vessLoadingModal = atom<boolean>(false)
 
 export const useStateVESSLoadingModal = () => useAtom(vessLoadingModal)

@@ -1,20 +1,25 @@
 import styled from '@emotion/styled'
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState } from 'react'
 import type { SelfClaimedMembershipSubject, WithCeramicId } from 'vess-sdk'
 import { MembershipCard } from '../MembershipCard'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
+import { EditWidget } from '@/components/atom/Widgets/EditWidget'
+import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { DisplayMembership } from '@/interfaces/ui'
 import { formatDate } from '@/utils/date'
-
 type Props = {
   item?: DisplayMembership
   selfClaim?: WithCeramicId<SelfClaimedMembershipSubject>
+  editExperience?: boolean
 }
-export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
+export const ExperienceCard: FC<Props> = ({ item, selfClaim, editExperience }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { openEditSelfClaimMembershipModal } = useVESSWidgetModal()
+
+
   const period = useMemo(() => {
     if (item) {
       return `${
@@ -30,6 +35,15 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
     }
     return ''
   }, [item, selfClaim])
+
+  const handleEdit = (SelfClaim: WithCeramicId<SelfClaimedMembershipSubject>): (() => void) | undefined => {
+    console.log("Editing experience id " + SelfClaim.ceramicId);
+    alert('in edit button');
+    openEditSelfClaimMembershipModal()
+    // Call edit form modal and pass self claim object
+    return undefined;
+  };
+  
 
   const MembershipCardWrapper = styled.div`
     background: ${currentTheme.depth2};
@@ -144,6 +158,7 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
             text={period}
           />
         </InfoContainer>
+        <EditWidget onClickEdit={handleEdit(selfClaim)} editable={editExperience} />
       </MembershipCardWrapper>
     )
   }

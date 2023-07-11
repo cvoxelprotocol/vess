@@ -116,11 +116,10 @@ export default function HeldMembershipsModal(props: Props) {
   }
   return (
     <VESSModalContainer open={showMembershipModal} onOpenChange={setShowMembershipModal}>
-      <VESSModal headerColor={currentTheme.depth1} modalTitle={'Membership'}>
+      <VESSModal headerColor={currentTheme.depth1} modalTitle={'Add New Experience'}>
         <Container>
           <SelfClaimMembershipForm did={props.did} />
-          <Title>Or... Pick Your Experience</Title>
-          <Desc>Please Pick your highlighted experience VC</Desc>
+    
           <InnerContent>
             {sortedMemberships &&
               sortedMemberships.map((item) => {

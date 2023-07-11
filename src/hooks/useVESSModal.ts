@@ -8,6 +8,7 @@ import {
   useStateVESSHighlightedMembershipModal,
   useStateVESSSocialLinkWidgetModal,
   useStateVESSWidgetModal,
+  useStateVESSEditSelfClaimMembershipModal
 } from '@/jotai/ui'
 
 export const useVESSWidgetModal = () => {
@@ -20,6 +21,7 @@ export const useVESSWidgetModal = () => {
   const [showTaskDetailModal, setShowTaskDetailModal] = useStateShowTaskDetailModal()
   const [showTaskModal, setShowTaskModal] = useStateShowTaskFormModal()
   const [showConnectModal, setShowConnectModal] = useStateShowConnectModal()
+  const [showEditSelfClaimedMembershipModal, setShowEditSelfClaimedMembershipModal] = useStateVESSEditSelfClaimMembershipModal()
 
   return {
     openModal: () => setShowModal(true),
@@ -34,6 +36,10 @@ export const useVESSWidgetModal = () => {
     closeMembershipModal: () => setShowMembershipModal(false),
     showMembershipModal,
     setShowMembershipModal,
+    openEditSelfClaimMembershipModal: () => setShowEditSelfClaimedMembershipModal(true),
+    closeEditSelfClaimMembershipModal: () => setShowEditSelfClaimedMembershipModal(false),
+    showEditSelfClaimedMembershipModal,
+    setShowEditSelfClaimedMembershipModal,
     showSocialProfileModal,
     setShowSocialProfileModal,
     showQRModal,
