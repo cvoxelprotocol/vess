@@ -43,6 +43,11 @@ export interface Scheme {
   scrim: string
   inverseSurface: string
   inverseOnSurface: string
+  surfaceContainerHighest: string
+  surfaceContainerHigh: string
+  surfaceContainer: string
+  surfaceContainerLow: string
+  surfaceContainerLowest: string
   inversePrimary: string
   primaryContainerOpacity10: string
   primaryContainerOpacity20: string
