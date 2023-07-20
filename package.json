@@ -60,7 +60,7 @@
     "react-select": "^5.7.0",
     "three": "^0.149.0",
     "typescript": "4.9.4",
-    "vess-sdk": "1.0.0-alpha.33",
+    "vess-sdk": "1.0.0-alpha.40",
     "wagmi": "^0.11.7"
   },
   "devDependencies": {
