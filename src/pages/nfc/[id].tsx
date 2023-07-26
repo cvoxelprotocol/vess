@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, NextPage } from 
 import { NfcDidRecord } from '../api/nfc'
 import { Meta } from '@/components/layouts/Meta'
 import { NfcWriteContainer } from '@/components/templates/NFC/NfcWriteContainer'
-import { getAllNFCs, getDidFromNFCForServer } from '@/lib/nfc'
+import { getAllNFC, getDidFromNFCForOnlyServer } from '@/lib/firestore'
 
 export type NfcProps = {
   nfc?: NfcDidRecord | null
@@ -10,7 +10,7 @@ export type NfcProps = {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const nfcs = await getAllNFCs()
+  const nfcs = await getAllNFC()
   if (!nfcs) {
     return {
       paths: [],
@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps<NfcProps> = async ({
 }: GetStaticPropsContext) => {
   const id = params?.id as string
   try {
-    const nfc = await getDidFromNFCForServer(id)
+    const nfc = await getDidFromNFCForOnlyServer(id)
     return {
       props: {
         id: id,

@@ -4,7 +4,6 @@ import { FC } from 'react'
 import { CyberButton } from '@/components/atom/Buttons/CyberButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
-import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { CyberLoading } from '@/components/atom/Loading/CyberLoading'
 import { InvitaionContentForNFC } from '@/components/organism/Connection/InvitaionContentForNFC'
 import {
@@ -58,10 +57,12 @@ export const NfcWriteContainer: FC<NfcProps> = ({ id, nfc }) => {
       return
     }
     if (did) {
-      const res = await register({ id: id, did: did })
-      if (res) {
+      try {
+        await register({ id: id, did: did })
         await issueInitialInvitaions()
         router.push('/connection/success')
+      } catch (error) {
+        console.error(error)
       }
     }
   }
