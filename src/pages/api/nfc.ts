@@ -56,9 +56,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else {
     try {
       const id = req.query.id as string
-      const doc = await db.collection(COLLECTION_NAME).doc(id).get()
-      const data = doc.data() as NfcDidRecord
-      res.status(200).json({ data })
+      if (!id) {
+        const doc = await db.collection(COLLECTION_NAME).get()
+        const data = doc.docs.map((d) => {
+          const data = d.data()
+          return {
+            id: d.id,
+            ...data,
+          } as NfcDidRecord
+        })
+        res.status(200).json({ data })
+      } else {
+        const doc = await db.collection(COLLECTION_NAME).doc(id).get()
+        const data = doc.data() as NfcDidRecord
+        res.status(200).json({ data })
+      }
     } catch (error) {
       res.status(500).json({ error: error })
     }

@@ -20,15 +20,15 @@ import { useNfc } from '@/hooks/useNfc'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { NfcProps } from '@/pages/nfc/[id]'
 
-export const NfcWriteContainer: FC = () => {
+export const NfcWriteContainer: FC<NfcProps> = ({ id, nfc }) => {
   const router = useRouter()
-  const docId = (router.query.id as string) || ''
   const { currentTheme } = useVESSTheme()
   const { setShowConnectModal } = useVESSWidgetModal()
   const { did } = useDIDAccount()
   const { showLoading, closeLoading } = useVESSLoading()
-  const { data, isLoading, register } = useNfc(docId)
+  const { data, isLoading, register } = useNfc(id)
   const [createConnectionInvitation] = useCreateConnectionInvitaionMutation()
 
   const Wrapper = styled.main`
@@ -52,13 +52,13 @@ export const NfcWriteContainer: FC = () => {
   `
 
   const handleClick = async () => {
-    if (!docId) return
+    if (!id) return
     if (!did) {
       setShowConnectModal(true)
       return
     }
     if (did) {
-      const res = await register({ id: docId, did: did })
+      const res = await register({ id: id, did: did })
       if (res) {
         await issueInitialInvitaions()
         router.push('/connection/success')
