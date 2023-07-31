@@ -73,6 +73,7 @@ export const ExperiencesContainer: FC<Props> = ({ did }) => {
   const handleEdit = () => {
     if (!editExperience) {
       setEditExperience(true)
+      //openEditSelfClaimMembershipModal()
       setEditButtonText('Done')
     }else {
       setEditExperience(false)
