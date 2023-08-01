@@ -8,10 +8,7 @@ import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector'
 import { Provider as JotaiProvider } from 'jotai'
 import type { AppProps } from 'next/app'
 import { useState } from 'react'
-import { configureChains, mainnet, WagmiConfig, createConfig } from 'wagmi'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { configureChains, mainnet, WagmiConfig, createConfig, useAccount, useConnect, useDisconnect } from 'wagmi'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { GATracking } from '@/components/atom/Common/GATracking'
@@ -55,8 +52,8 @@ const web3AuthInstance = new Web3Auth({
   uiConfig: {
     appName: 'Vess Resume',
     theme: 'dark',
-    defaultLanguage: 'en',
-    appLogo: 'https://web3auth.io/images/w3a-L-Favicon-1.svg', // Your App Logo Here
+    defaultLanguage: 'jp',
+    appLogo: 'public/logo_bard.png', // Your App Logo Here
     modalZIndex: '2147483647',
   },
   web3AuthNetwork: 'cyan',
@@ -72,13 +69,6 @@ const wagmiConfig = createConfig({
         web3AuthInstance,
       },
     }),
-    new InjectedConnector({
-      chains,
-      options: {
-        name: 'Injected',
-        shimDisconnect: true,
-      },
-    }),
   ],
   publicClient,
   webSocketPublicClient,
@@ -88,20 +78,7 @@ export default function App({
   Component,
   pageProps,
 }: AppProps<{ dehydratedState: DehydratedState }>) {
-  const metamaskConnector = new MetaMaskConnector({ chains })
-  const walletConnectConnector = new WalletConnectConnector({
-    chains,
-    options: {
-      projectId: process.env.NEXT_PUBLIC_WC_KEY || '',
-      showQrModal: true,
-    },
-  })
 
-  // //const client = createClient({
-  //   autoConnect: true,
-  //   connectors: [metamaskConnector, walletConnectConnector],
-  //   provider,
-  // })
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -120,7 +97,7 @@ export default function App({
       <JotaiProvider>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={dehydratedState}>
-            <WagmiConfig client={wagmiConfig}>
+            <WagmiConfig config={wagmiConfig}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
                   <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
