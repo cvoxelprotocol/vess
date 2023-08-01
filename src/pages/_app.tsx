@@ -35,7 +35,7 @@ const global = css`
     font-family: ${notoSans.style.fontFamily};
   }
 `
-const { chains, publicClient, webSocketPublicClient , provider } = configureChains(
+const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet],
   [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY || '' }), publicProvider()],
 )
@@ -53,7 +53,15 @@ const { chains, publicClient, webSocketPublicClient , provider } = configureChai
       ticker: chains[0].nativeCurrency?.symbol,
       blockExplorer: chains[0]?.blockExplorers.default?.url,
     },
+    uiConfig: {
+      appName: 'Vess Resume',
+      theme: "dark",
+      defaultLanguage: "en",
+      appLogo: "https://web3auth.io/images/w3a-L-Favicon-1.svg", // Your App Logo Here
+      modalZIndex: "2147483647",
+    },
     web3AuthNetwork: "cyan",
+    enableLogging: true,
   });
 
 
