@@ -1,5 +1,7 @@
 import { getAddress } from '@ethersproject/address'
+import { randomBytes } from "@stablelib/random";
 import { useQueryClient } from '@tanstack/react-query'
+import { Ed25519Provider } from "key-did-provider-ed25519";
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
 import { Connector, useConnect, useDisconnect } from 'wagmi'
@@ -7,6 +9,7 @@ import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
+
 import {
   useSetStateAccount,
   useSetStateChainId,
@@ -48,8 +51,12 @@ export const useConnectDID = () => {
       const res = await connectAsync({ connector })
       // await connectAsync({ connector })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
+      const seed = randomBytes(32);
+      const provider = new Ed25519Provider(seed);
+
       const ethProvider =
-        connector?.id === 'walletConnect' ? (res.provider as any).provider : window.ethereum
+        (connector?.id === 'walletConnect' )? (res.provider as any).provider : provider
+        console.log(ethProvider);
       const { session } = await vess.connect(res.account, ethProvider, env)
       console.log({ session })
       // @ts-ignore TODO:fixed
