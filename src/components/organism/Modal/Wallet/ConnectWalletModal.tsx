@@ -37,7 +37,7 @@ export const ConnectWalletModal: FC = () => {
     ${getBasicFont(currentTypo.body.small)};
   `
 
-  const handleLogin = async (connector?: Connector<any, any, any>) => {
+  const handleLogin = async (connector?: Connector< any, any>) => {
     try {
       setShowConnectModal(false)
       const isSuccess = await connectDID(connector)

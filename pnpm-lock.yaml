@@ -55,9 +55,6 @@ dependencies:
   '@react-three/fiber':
     specifier: ^8.10.1
     version: 8.10.1(react-dom@18.2.0)(react@18.2.0)(three@0.149.0)
-  '@stablelib/random':
-    specifier: ^1.0.2
-    version: 1.0.2
   '@supabase/supabase-js':
     specifier: ^2.21.0
     version: 2.21.0
@@ -109,9 +106,6 @@ dependencies:
   jotai:
     specifier: ^1.12.1
     version: 1.12.1(@babel/core@7.22.8)(react@18.2.0)
-  key-did-provider-ed25519:
-    specifier: ^3.0.1
-    version: 3.0.1
   modern-css-reset:
     specifier: ^1.4.0
     version: 1.4.0
@@ -11150,18 +11144,6 @@ packages:
       fast-json-stable-stringify: 2.1.0
       rpc-utils: 0.6.2
       uint8arrays: 3.1.1
-    dev: false
-
-  /key-did-provider-ed25519@3.0.1:
-    resolution: {integrity: sha512-4sn1OT6mG1GFhRR4G4UO+GEZhIeimqKp2CY903INE29N+/ZQ1Q/Y1jH+J8Yi1Kll21IA6opNMJ2TIhvRNEfNjQ==}
-    engines: {node: '>=14.14'}
-    dependencies:
-      '@stablelib/ed25519': 1.0.3
-      did-jwt: 7.2.4
-      dids: 4.0.3
-      fast-json-stable-stringify: 2.1.0
-      rpc-utils: 0.6.2
-      uint8arrays: 4.0.4
     dev: false
 
   /key-did-resolver@2.3.0:

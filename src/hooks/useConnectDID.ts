@@ -1,7 +1,5 @@
 import { getAddress } from '@ethersproject/address'
-import { randomBytes } from "@stablelib/random";
 import { useQueryClient } from '@tanstack/react-query'
-import { Ed25519Provider } from "key-did-provider-ed25519";
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
 import { Connector, useConnect, useDisconnect } from 'wagmi'
@@ -11,6 +9,7 @@ import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
 
 import {
+  chainId,
   useSetStateAccount,
   useSetStateChainId,
   useSetStateConnectionStatus,
@@ -45,19 +44,13 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const connectDID = async (connector?: Connector<any, any, any>): Promise<boolean> => {
+  const connectDID = async (connector?: Connector< any, any>): Promise<boolean> => {
     try {
       // connect vess sdk
       const res = await connectAsync({ connector })
-      // await connectAsync({ connector })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const seed = randomBytes(32);
-      const provider = new Ed25519Provider(seed);
-
-      const ethProvider =
-        (connector?.id === 'walletConnect' )? (res.provider as any).provider : provider
-        console.log(ethProvider);
-      const { session } = await vess.connect(res.account, ethProvider, env)
+      const provider =  await connector?.getProvider();
+      const { session } = await vess.connect(res.account, provider, env)
       console.log({ session })
       // @ts-ignore TODO:fixed
       composeClient.setDID(session.did)
