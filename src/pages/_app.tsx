@@ -43,7 +43,7 @@ const web3AuthInstance = new Web3Auth({
   chainConfig: {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: '0x' + chains[0].id.toString(16),
-    rpcTarget: 'https://mainnet.infura.io/v3/'+ { apiKey: process.env.NEXT_PUBLIC_INFURA_KEY || '' },
+    rpcTarget: 'https://mainnet.infura.io/v3/'+ process.env.NEXT_PUBLIC_INFURA_KEY,
     displayName: chains[0].name,
     tickerName: chains[0].nativeCurrency?.name,
     ticker: chains[0].nativeCurrency?.symbol,
