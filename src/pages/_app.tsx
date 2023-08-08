@@ -43,7 +43,7 @@ const web3AuthInstance = new Web3Auth({
   chainConfig: {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: '0x' + chains[0].id.toString(16),
-    rpcTarget: chains[0].rpcUrls.default.http[0], // This is the public RPC we have added, please pass on your own endpoint while creating an app
+    rpcTarget: 'https://mainnet.infura.io/v3/'+ { apiKey: process.env.NEXT_PUBLIC_INFURA_KEY || '' },
     displayName: chains[0].name,
     tickerName: chains[0].nativeCurrency?.name,
     ticker: chains[0].nativeCurrency?.symbol,
@@ -52,7 +52,7 @@ const web3AuthInstance = new Web3Auth({
   uiConfig: {
     appName: 'Vess Resume',
     theme: 'dark',
-    defaultLanguage: 'jp',
+    defaultLanguage: 'en',
     appLogo: 'public/logo_bard.png', // Your App Logo Here
     modalZIndex: '2147483647',
   },
