@@ -39,10 +39,8 @@ export const ConnectWalletModal: FC = () => {
 
   const handleLogin = async (connector?: Connector<any, any, any>) => {
     try {
+      setShowConnectModal(false)
       const isSuccess = await connectDID(connector)
-      if (isSuccess) {
-        setShowConnectModal(false)
-      }
     } catch (error) {
       console.error(error)
     }

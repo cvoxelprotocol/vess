@@ -14,8 +14,9 @@ export const useNfc = (id?: string) => {
   const { showToast } = useToast()
   const queryClient = useQueryClient()
 
-  const getDidFromNFC = async (id?: string): Promise<NfcDidRecord> => {
+  const getDidFromNFC = async (id?: string): Promise<NfcDidRecord | undefined> => {
     try {
+      if (!id) return undefined
       let url = `${getCurrentDomain() || 'http://localhost:3000'}/api/nfc?id=${id}`
       const res = await fetch(url)
       const resJson = await res.json()
@@ -44,13 +45,15 @@ export const useNfc = (id?: string) => {
     }
   }
 
-  const { data, isInitialLoading } = useQuery<NfcDidRecord>(
+  const { data, isInitialLoading } = useQuery<NfcDidRecord | undefined>(
     ['getDidFromNFC', id],
     () => getDidFromNFC(id),
     {
       enabled: !!id && id !== '',
       staleTime: Infinity,
       cacheTime: 300000,
+      retry: 2,
+      retryDelay: 3000,
     },
   )
 

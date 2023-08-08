@@ -70,8 +70,12 @@ export const NavigationList: FC = () => {
         return
       }
     }
-    setItem(navi.item)
-    router.push(navi.path)
+    if (navi.external) {
+      window.open(navi.path, '_blank')
+    } else {
+      setItem(navi.item)
+      router.push(navi.path)
+    }
   }
 
   return (
@@ -97,7 +101,7 @@ export const NavigationList: FC = () => {
               title={navi.item}
               icon={navi.icon}
               onClick={() => handleClick(navi)}
-              selected={item === navi.item}
+              selected={!navi.external && item === navi.item}
             />
           )
         })}

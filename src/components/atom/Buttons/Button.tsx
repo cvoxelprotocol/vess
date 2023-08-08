@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes, FC } from 'react'
 import { Icon, IconSize, IconsType } from '../Icons/Icon'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
   btnWidth?: string
   variant?: 'filled' | 'outlined' | 'text'
