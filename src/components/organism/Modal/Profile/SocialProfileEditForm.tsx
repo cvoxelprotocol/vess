@@ -71,9 +71,12 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
     e?.preventDefault()
     e?.stopPropagation()
     if (!icon) console.error("NO pfp")
-    setValue('pfp', icon? icon : '' ) // ToDo: Add ipfs url of VESS default profile image here
-    console.log("form data" + data);
-    const res = await update({ did, content: removeUndefined(data) })
+    // ToDo: Add ipfs url of VESS default profile image here
+    const content: OrbisProfileDetail = removeUndefined<OrbisProfileDetail>({
+      ...data,
+      pfp: icon? icon : data.pfp,
+    })
+    const res = await update({ did, content })
     if (res.status === 200) {
       setShowSocialProfileModal(true)
     }
