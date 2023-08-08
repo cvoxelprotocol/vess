@@ -4,7 +4,6 @@ import { FC } from 'react'
 import { CyberButton } from '@/components/atom/Buttons/CyberButton'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
-import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { CyberLoading } from '@/components/atom/Loading/CyberLoading'
 import { InvitaionContentForNFC } from '@/components/organism/Connection/InvitaionContentForNFC'
 import {
@@ -20,15 +19,15 @@ import { useNfc } from '@/hooks/useNfc'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { NfcProps } from '@/pages/nfc/[id]'
 
-export const NfcWriteContainer: FC = () => {
+export const NfcWriteContainer: FC<NfcProps> = ({ id, nfc }) => {
   const router = useRouter()
-  const docId = (router.query.id as string) || ''
   const { currentTheme } = useVESSTheme()
   const { setShowConnectModal } = useVESSWidgetModal()
   const { did } = useDIDAccount()
   const { showLoading, closeLoading } = useVESSLoading()
-  const { data, isLoading, register } = useNfc(docId)
+  const { data, isLoading, register } = useNfc(id)
   const [createConnectionInvitation] = useCreateConnectionInvitaionMutation()
 
   const Wrapper = styled.main`
@@ -52,16 +51,18 @@ export const NfcWriteContainer: FC = () => {
   `
 
   const handleClick = async () => {
-    if (!docId) return
+    if (!id) return
     if (!did) {
       setShowConnectModal(true)
       return
     }
     if (did) {
-      const res = await register({ id: docId, did: did })
-      if (res) {
+      try {
+        await register({ id: id, did: did })
         await issueInitialInvitaions()
         router.push('/connection/success')
+      } catch (error) {
+        console.error(error)
       }
     }
   }
