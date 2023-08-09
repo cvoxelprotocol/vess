@@ -1,21 +1,21 @@
 import {
   useStateUploadedCID,
-  useStateUploadedCoverImageUrl,
-  useStateUploadedCoverName,
+
   useStateUploadedIconName,
   useStateUploadedIconUrl,
+  
   useStateUploadStatus,
 } from '@/jotai/file'
 
 const DWEB_LINK = '.ipfs.w3s.link/'
+const TRIM_REGEXP = /\s+/g
 
 export const useFileUpload = () => {
   const [status, setStatus] = useStateUploadStatus()
   const [cid, setCID] = useStateUploadedCID()
   const [icon, setIcon] = useStateUploadedIconUrl()
   const [name, setName] = useStateUploadedIconName()
-  const [coverImage, setCoverImage] = useStateUploadedCoverImageUrl()
-  const [coverName, setCoverName] = useStateUploadedCoverName()
+
 
   const upload = async (files: File[]) => {
     setStatus('uploading')
@@ -49,18 +49,12 @@ export const useFileUpload = () => {
   const uploadIcon = async (icon: File) => {
     if (!icon) return
     setStatus('uploading')
-    const fileName = icon.name
+    const fileName = icon.name.replace(TRIM_REGEXP, '_')
     const cid = await upload([icon])
     setName(fileName)
-    setIcon(`https://${cid}${DWEB_LINK}${fileName}`)
+    setIcon(`https://ipfs.io/ipfs/${cid}/${fileName}`)
   }
-  const uploadCoverImage = async (image: File) => {
-    if (!image) return
-    setStatus('uploading')
-    const fileName = image.name
-    const cid = await upload([image])
-    setCoverImage(`https://${cid}${DWEB_LINK}${fileName}`)
-  }
+  
 
   const resetUploadStatus = () => {
     setCID(undefined)
@@ -68,7 +62,6 @@ export const useFileUpload = () => {
   }
 
   return {
-    upload,
     status,
     cid,
     resetUploadStatus,
@@ -77,10 +70,5 @@ export const useFileUpload = () => {
     icon,
     setName,
     name,
-    uploadCoverImage,
-    coverImage,
-    coverName,
-    setCoverName,
-    setCoverImage,
   }
 }
