@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { AccountIcon } from './AccountIcon'
+import { AddFileIcon } from './AddFileIcon'
 import { AddIcon } from './AddIcon'
 import { BarThree } from './BarThree'
 import { BellIcon } from './BellIcon'
@@ -42,6 +43,7 @@ export const ICONS = {
   VOXEL: 'voxel',
   CROSS: 'cross',
   ADD: 'add',
+  ADD_FILE: 'addFile',
   BELL: 'bell',
   CHAIN: 'chain',
   CHECKED: 'checked',
@@ -78,7 +80,7 @@ export const ICONS = {
   BARTHREE: 'barThree',
 } as const
 
-export type IconsType = typeof ICONS[keyof typeof ICONS]
+export type IconsType = (typeof ICONS)[keyof typeof ICONS]
 
 export const ICONSIZE = {
   XS: '8px',
@@ -134,6 +136,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
         return (
           <IconContainer>
             <AccountIcon />
+          </IconContainer>
+        )
+      case 'addFile':
+        return (
+          <IconContainer>
+            <AddFileIcon />
           </IconContainer>
         )
       case 'wave':

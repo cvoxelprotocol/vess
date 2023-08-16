@@ -44,3 +44,5 @@ next-env.d.ts
 sitemap*.xml
 robots.txt
 
+#lock files
+pnpm-lock.yaml
