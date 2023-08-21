@@ -98,7 +98,7 @@ export const HomeContainer: FC = () => {
           label='Create Organization'
           width='1fr'
           labelColor={currentTheme.primary}
-          onClick={() => jumpToURL('https://lp.vess.id/en/synapss/org/apply')}
+          onClick={() => jumpToURL('https://forms.gle/ZPi59UHN5nKBMoYf8')}
         />
         <PanelButton
           src='/icons/macintosh.png'

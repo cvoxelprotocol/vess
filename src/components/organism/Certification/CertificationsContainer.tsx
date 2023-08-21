@@ -45,12 +45,7 @@ export default function CertificationsContainer({ did }: Props) {
       <Container>
         {heldCertificationSubjects &&
           heldCertificationSubjects.map((item) => {
-            return (
-              <CertificationCard
-                key={`${item.contractAddress}-${item.nft.metadata.id}`}
-                item={item}
-              />
-            )
+            return <CertificationCard key={`${item.id}`} item={item} />
           })}
       </Container>
     </>
