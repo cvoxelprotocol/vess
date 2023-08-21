@@ -3,10 +3,10 @@ import { useRouter } from 'next/router'
 import { FC } from 'react'
 import type { WithCeramicId, CertificationVerifiableCredential } from 'vess-sdk'
 import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
+import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { Flex } from '@/components/atom/Common/Flex'
 
 type Props = {
   item: WithCeramicId<CertificationVerifiableCredential>
