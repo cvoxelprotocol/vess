@@ -14,7 +14,7 @@ import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useStateSelectedNavigationItem } from '@/jotai/ui'
 
 export const NavigationDrawer: FC = () => {
-  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { currentTheme } = useVESSTheme()
   const [item, setItem] = useStateSelectedNavigationItem()
   const [openMenu, setOpenMenu] = useState(false)
   const router = useRouter()
