@@ -92,6 +92,7 @@ export const useConnectDID = () => {
       setConnectionStatus('connected')
       setStateLoginType('wallet')
       console.log('Connection restored!')
+      issueHeldMembershipFromBackup(session.did.parent)
     }
   }
 

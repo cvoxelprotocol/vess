@@ -1,13 +1,15 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import type { WithCeramicId, CertificationVerifiableCredential } from 'vess-sdk'
+import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
+import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { CertVCWithSBT } from '@/interfaces/sbt'
 
 type Props = {
-  item: CertVCWithSBT
+  item: WithCeramicId<CertificationVerifiableCredential>
 }
 export const CertificationCard: FC<Props> = ({ item }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
@@ -17,11 +19,11 @@ export const CertificationCard: FC<Props> = ({ item }) => {
     background: ${currentTheme.depth2};
     width: 100%;
     display: flex;
+    align-items: center;
     padding: 12px 16px;
     gap: 24px;
     position: relative;
     border-radius: 24px;
-    cursor: pointer;
     @media (max-width: 599px) {
       flex-direction: column;
       align-items: center;
@@ -42,22 +44,25 @@ export const CertificationCard: FC<Props> = ({ item }) => {
       gap: 4px;
     }
   `
-  const jumpToDetail = () => {
-    router.push(`/cert/sbt/polygon/${item.contractAddress}/${item.nft.metadata.id}`)
-  }
+  // const jumpToDetail = () => {
+  //   router.push(`/cert/sbt/polygon/${item.contractAddress}/${item.nft.metadata.id}`)
+  // }
   return (
-    <MembershipCardWrapper onClick={() => jumpToDetail()}>
-      <ImageContainer
-        src={item.nft.metadata.image || 'https://workspace.vess.id/company.png'}
-        width={'280px'}
-      />
+    <MembershipCardWrapper>
+      <Flex flexDirection='row' flexDirectionSP='column'>
+        <VerifiedMark size='L' />
+        <ImageContainer
+          src={item.credentialSubject.image || 'https://workspace.vess.id/company.png'}
+          width={'240px'}
+        />
+      </Flex>
       <InfoContainer>
         <Text
           type='p'
           color={currentTheme.primary}
           font={getBasicFont(currentTypo.headLine.medium)}
           fontSp={getBasicFont(currentTypo.title.large)}
-          text={(item.nft.metadata.name as string) || ''}
+          text={item.credentialSubject.certificationName || ''}
         />
       </InfoContainer>
     </MembershipCardWrapper>
