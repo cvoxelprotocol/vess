@@ -4,8 +4,8 @@ import { FC } from 'react'
 import { PanelButton } from '@/components/atom/Buttons/PanelButton'
 import { UserCard } from '@/components/molecure/User/UserCard'
 import { BasicCarousel } from '@/components/organism/Carousel/BasicCarousel'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 const FEATURED_USER_LIST = [
@@ -19,7 +19,14 @@ export const HomeContainer: FC = () => {
   const { did } = useDIDAccount()
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const router = useRouter()
-  const { setShowConnectModal } = useVESSWidgetModal()
+  const { connectDID } = useConnectDID()
+  const handleLogin = async () => {
+    try {
+      await connectDID()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const Wrapper = styled.main`
     width: 100%;
@@ -67,9 +74,9 @@ export const HomeContainer: FC = () => {
   const jumpToURL = (url: string) => {
     window.open(url, '_blank')
   }
-  const jumpToProfile = () => {
+  const jumpToProfile = async () => {
     if (!did) {
-      setShowConnectModal(true)
+      await handleLogin()
       return
     }
     router.push(`/did/${did}`)

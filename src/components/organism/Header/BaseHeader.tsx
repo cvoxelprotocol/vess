@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
-import { ConnectWalletModal } from '../Modal/Wallet/ConnectWalletModal'
 import { HeaderMenu } from './HeaderMenu'
 import { Button } from '@/components/atom/Buttons/Button'
 import { IconButton } from '@/components/atom/Buttons/IconButton'
@@ -12,7 +11,6 @@ import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { NavigationDrawer } from '@/components/molecure/Navigation/NavigationDrawer'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const BaseHeader: FC = () => {
@@ -20,7 +18,14 @@ export const BaseHeader: FC = () => {
   const { connection, originalAddress, did } = useDIDAccount()
   const { isAuthorized } = useConnectDID()
   const router = useRouter()
-  const { setShowConnectModal } = useVESSWidgetModal()
+  const { connectDID } = useConnectDID()
+  const handleLogin = async () => {
+    try {
+      await connectDID()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const HeaderContainer = styled.div`
     grid-row: 1 /2;
@@ -110,19 +115,14 @@ export const BaseHeader: FC = () => {
                   size={'LL'}
                   variant='text'
                   mainColor={currentTheme.onSurface}
-                  onClick={() => setShowConnectModal(true)}
+                  onClick={() => handleLogin()}
                 />
-                <WrappedButton
-                  text={'Connect Wallet'}
-                  icon={ICONS.WALLET}
-                  onClick={() => setShowConnectModal(true)}
-                />
+                <WrappedButton text={'Login'} icon={ICONS.WALLET} onClick={() => handleLogin()} />
               </>
             )}
           </>
         )}
       </Flex>
-      <ConnectWalletModal />
     </HeaderContainer>
   )
 }

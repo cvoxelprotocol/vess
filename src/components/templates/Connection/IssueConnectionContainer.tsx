@@ -14,23 +14,30 @@ import {
   useCreateConnectionMutation,
   useGetConnectionInvitaionLazyQuery,
 } from '@/graphql/generated'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useEventAttendance } from '@/hooks/useEventAttendance'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const IssueConnectionContainer: FC = () => {
   const router = useRouter()
   const invitaionId = (router.query.id as string) || ''
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { setShowConnectModal } = useVESSWidgetModal()
   const { did } = useDIDAccount()
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
+  const { connectDID } = useConnectDID()
+  const handleLogin = async () => {
+    try {
+      await connectDID()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const [getConnectionInvitaion, { data: invitation, loading }] =
     useGetConnectionInvitaionLazyQuery({
@@ -199,8 +206,8 @@ export const IssueConnectionContainer: FC = () => {
             {!did ? (
               <Button
                 variant='filled'
-                text='Connect Wallet'
-                onClick={() => setShowConnectModal(true)}
+                text='Login'
+                onClick={() => handleLogin()}
                 btnWidth={'100%'}
               />
             ) : (

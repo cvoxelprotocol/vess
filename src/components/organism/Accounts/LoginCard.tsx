@@ -1,15 +1,23 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { useConnect } from 'wagmi'
 import { Button } from '@/components/atom/Buttons/Button'
 import { Flex } from '@/components/atom/Common/Flex'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 export const LoginCard: FC = () => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { setShowConnectModal } = useVESSWidgetModal()
+  const { connectDID } = useConnectDID()
+  const handleLogin = async () => {
+    try {
+      await connectDID()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const LoginCard = styled.div`
     background: ${currentTheme.surface1};
@@ -59,7 +67,7 @@ export const LoginCard: FC = () => {
         <Button
           variant='filled'
           text='Connect Wallet'
-          onClick={() => setShowConnectModal(true)}
+          onClick={() => handleLogin()}
           btnWidth={'240px'}
         />
         <Flex width='100%' colGap='8px' rowGap='8px'>

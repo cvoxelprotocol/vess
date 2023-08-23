@@ -16,11 +16,11 @@ import {
   useGetUserConnectionInvitaionsLazyQuery,
   useGetIssuedConnectionsLazyQuery,
 } from '@/graphql/generated'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useToast } from '@/hooks/useToast'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { isWithinSeconds } from '@/utils/date'
 
@@ -33,7 +33,14 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
   const { showToast } = useToast()
   const { showLoading, closeLoading } = useVESSLoading()
   const router = useRouter()
-  const { setShowConnectModal } = useVESSWidgetModal()
+  const { connectDID } = useConnectDID()
+  const handleLogin = async () => {
+    try {
+      await connectDID()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   // === Invitation ===
   const [getUserConnectionInvitaions, { data: userInvitations, loading }] =
@@ -198,12 +205,12 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
           {!myDid ? (
             <FlatButton
               src='/nfc/wallet.png'
-              label={'Connect Wallet to Say Hi 👋'}
+              label={'Login to Say Hi 👋'}
               width='100%'
               height='96px'
               background={currentTheme.primary}
               labelColor={currentTheme.onPrimary}
-              onClick={() => setShowConnectModal(true)}
+              onClick={() => handleLogin()}
             />
           ) : (
             <>

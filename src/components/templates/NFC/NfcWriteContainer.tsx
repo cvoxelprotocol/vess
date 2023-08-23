@@ -14,21 +14,28 @@ import {
   ConnectionInvitationInput,
   useCreateConnectionInvitaionMutation,
 } from '@/graphql/generated'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useNfc } from '@/hooks/useNfc'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
-import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { NfcProps } from '@/pages/nfc/[id]'
 
 export const NfcWriteContainer: FC<NfcProps> = ({ id, nfc }) => {
   const router = useRouter()
   const { currentTheme } = useVESSTheme()
-  const { setShowConnectModal } = useVESSWidgetModal()
   const { did } = useDIDAccount()
   const { showLoading, closeLoading } = useVESSLoading()
   const { data, isLoading, register } = useNfc(id)
   const [createConnectionInvitation] = useCreateConnectionInvitaionMutation()
+  const { connectDID } = useConnectDID()
+  const handleLogin = async () => {
+    try {
+      await connectDID()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const Wrapper = styled.main`
     width: 100%;
@@ -53,7 +60,7 @@ export const NfcWriteContainer: FC<NfcProps> = ({ id, nfc }) => {
   const handleClick = async () => {
     if (!id) return
     if (!did) {
-      setShowConnectModal(true)
+      await handleLogin()
       return
     }
     if (did) {

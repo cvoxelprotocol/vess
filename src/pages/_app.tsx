@@ -57,7 +57,6 @@ const web3AuthInstance = new Web3Auth({
     theme: 'dark',
     defaultLanguage: 'en',
     appLogo: 'public/logo_bard.png', // Your App Logo Here
-    // modalZIndex: '2147483647',
   },
   web3AuthNetwork: 'cyan',
   enableLogging: false,
@@ -153,8 +152,8 @@ const wagmiConfig = createConfig({
         },
       },
     }),
-    walletConnectConnector,
-    metamaskConnector,
+    // walletConnectConnector,
+    // metamaskConnector,
   ],
   publicClient,
   webSocketPublicClient,

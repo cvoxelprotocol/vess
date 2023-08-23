@@ -2,14 +2,13 @@ import { getAddress } from '@ethersproject/address'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
-import { Connector, useConnect, useDisconnect } from 'wagmi'
+import { useConnect, useDisconnect } from 'wagmi'
 import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
 
 import {
-  chainId,
   useSetStateAccount,
   useSetStateChainId,
   useSetStateConnectionStatus,
@@ -31,7 +30,7 @@ export const useConnectDID = () => {
   const { issueHeldEventFromBackup } = useHeldEventAttendances()
   const { composeClient } = useComposeContext()
   const { disconnect } = useDisconnect()
-  const { connectAsync } = useConnect()
+  const { connectAsync, connectors } = useConnect()
 
   // clear all state
   const clearState = (): void => {
@@ -44,12 +43,15 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const connectDID = async (connector?: Connector< any, any>): Promise<boolean> => {
+  const connectDID = async (): Promise<boolean> => {
     try {
+      if (connectors.length === 0) {
+        throw new Error('No connectors found')
+      }
       // connect vess sdk
-      const res = await connectAsync({ connector })
+      const res = await connectAsync({ connector: connectors[0] })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const provider =  await connector?.getProvider();
+      const provider = await connectors[0]?.getProvider()
       const { session } = await vess.connect(res.account, provider, env)
       console.log({ session })
       // @ts-ignore TODO:fixed
