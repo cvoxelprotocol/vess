@@ -37,7 +37,7 @@ export const ConnectWalletModal: FC = () => {
     ${getBasicFont(currentTypo.body.small)};
   `
 
-  const handleLogin = async (connector?: Connector<any, any, any>) => {
+  const handleLogin = async (connector?: Connector<any, any>) => {
     try {
       setShowConnectModal(false)
       const isSuccess = await connectDID(connector)
@@ -51,7 +51,7 @@ export const ConnectWalletModal: FC = () => {
       <VESSModal modalTitle='Connect Wallet'>
         <Container>
           <Flex
-            flexDirection='row'
+            flexDirection='column'
             flexDirectionSP='column'
             rowGap='16px'
             colGap='16px'
