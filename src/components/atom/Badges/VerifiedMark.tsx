@@ -16,6 +16,7 @@ export const VerifiedMark: FC<Props> = ({ withText, tailIcon, size = 'MM', handl
     width: 100%;
     flex-grow: 1;
     position: relative;
+    height: 24px;
   `
   const VcMark = styled.div`
     position: absolute;

@@ -50,7 +50,6 @@ export const CertificationCard: FC<Props> = ({ item }) => {
   return (
     <MembershipCardWrapper>
       <Flex flexDirection='row' flexDirectionSP='column'>
-        <VerifiedMark size='L' />
         <ImageContainer
           src={item.credentialSubject.image || 'https://workspace.vess.id/company.png'}
           width={'240px'}
@@ -64,6 +63,7 @@ export const CertificationCard: FC<Props> = ({ item }) => {
           fontSp={getBasicFont(currentTypo.title.large)}
           text={item.credentialSubject.certificationName || ''}
         />
+        <VerifiedMark size='L' />
       </InfoContainer>
     </MembershipCardWrapper>
   )
