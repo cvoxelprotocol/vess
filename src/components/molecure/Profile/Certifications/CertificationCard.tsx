@@ -63,7 +63,7 @@ export const CertificationCard: FC<Props> = ({ item }) => {
           fontSp={getBasicFont(currentTypo.title.large)}
           text={item.credentialSubject.certificationName || ''}
         />
-        <VerifiedMark size='L' />
+        <VerifiedMark size='L' handleClick={() => console.log({ item })} />
       </InfoContainer>
     </MembershipCardWrapper>
   )

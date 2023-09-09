@@ -53,6 +53,7 @@ export const useHeldMembershipSubject = (did?: string) => {
 
   const displayHeldMembership: DisplayMembership[] = useMemo(() => {
     if (!HeldMembershipSubjects || HeldMembershipSubjects.length === 0) return []
+    console.log({ HeldMembershipSubjects })
     let temp: { [key: string]: DisplayMembership } = {}
     HeldMembershipSubjects.forEach((m) => {
       if (isExpired(m.expirationDate)) return
