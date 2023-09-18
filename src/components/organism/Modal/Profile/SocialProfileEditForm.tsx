@@ -2,8 +2,10 @@ import styled from '@emotion/styled'
 import { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/atom/Buttons/Button'
+import { IconInput } from '@/components/atom/Forms/IconInput'
 import { Input } from '@/components/atom/Forms/Input'
 import { MultiInput } from '@/components/atom/Forms/MultiInput'
+import { useFileUpload } from '@/hooks/useFileUpload'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
@@ -16,6 +18,7 @@ type Props = {
 
 export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const { setShowSocialProfileModal } = useVESSWidgetModal()
+  const { uploadIcon, status, icon,  } = useFileUpload()
   const { profile } = useSocialAccount(did)
   const { update } = useUpdateSocialAccount(did)
 
@@ -67,9 +70,15 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const onClickSubmit = async (data: OrbisProfileDetail, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
-    const res = await update({ did, content: removeUndefined(data) })
+    if (!icon) console.error("NO pfp")
+    // ToDo: Add ipfs url of VESS default profile image here
+    const content: OrbisProfileDetail = removeUndefined<OrbisProfileDetail>({
+      ...data,
+      pfp: icon? icon : data.pfp,
+    })
+    const res = await update({ did, content })
     if (res.status === 200) {
-      setShowSocialProfileModal(false)
+      setShowSocialProfileModal(true)
     }
   }
 
@@ -85,14 +94,13 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             iconSize={'MM'}
             onClickClear={() => setValue('username', '')}
           />
-          <Input
-            label={'Profile picture url'}
-            name={`pfp`}
-            control={control}
-            error={errors.pfp?.message}
-            iconSize={'MM'}
-            onClickClear={() => setValue('pfp', '')}
+          
+          <IconInput
+            required={false}
+            label={'Icon'}
+            recommendText={'Drag and drop or click here to upload'}
           />
+          
           <MultiInput
             label={'Bio'}
             name={`description`}

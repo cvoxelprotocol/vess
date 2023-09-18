@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { AccountIcon } from './AccountIcon'
+import { AddFileIcon } from './AddFileIcon'
 import { AddIcon } from './AddIcon'
+import { BarThree } from './BarThree'
 import { BellIcon } from './BellIcon'
 import { Calendar } from './Calendar'
 import { Card } from './Card'
@@ -17,6 +19,7 @@ import { EthereumIcon } from './EthereumIcon'
 import { ExternalIcon } from './ExternalIcon'
 import { GithubIcon } from './GithubIcon'
 import { HomeIcon } from './HomeIcon'
+import { JobIcon } from './JobIcon'
 import { LeftArrowIcon } from './LeftArrowIcon'
 import { Location } from './Location'
 import { LogOut } from './LogOut'
@@ -40,6 +43,7 @@ export const ICONS = {
   VOXEL: 'voxel',
   CROSS: 'cross',
   ADD: 'add',
+  ADD_FILE: 'addFile',
   BELL: 'bell',
   CHAIN: 'chain',
   CHECKED: 'checked',
@@ -72,9 +76,11 @@ export const ICONS = {
   ACCOUNT: 'account',
   WALLET: 'wallet',
   WAVE: 'wave',
+  JOB: 'job',
+  BARTHREE: 'barThree',
 } as const
 
-export type IconsType = typeof ICONS[keyof typeof ICONS]
+export type IconsType = (typeof ICONS)[keyof typeof ICONS]
 
 export const ICONSIZE = {
   XS: '8px',
@@ -130,6 +136,12 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
         return (
           <IconContainer>
             <AccountIcon />
+          </IconContainer>
+        )
+      case 'addFile':
+        return (
+          <IconContainer>
+            <AddFileIcon />
           </IconContainer>
         )
       case 'wave':
@@ -328,6 +340,18 @@ export const Icon: FC<IconProps> = ({ icon, size = 'S', mainColor, focusColor, f
         return (
           <IconContainer>
             <ExternalIcon />
+          </IconContainer>
+        )
+      case 'job':
+        return (
+          <IconContainer>
+            <JobIcon />
+          </IconContainer>
+        )
+      case 'barThree':
+        return (
+          <IconContainer>
+            <BarThree />
           </IconContainer>
         )
       default:

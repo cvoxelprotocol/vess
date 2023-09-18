@@ -120,7 +120,7 @@ export const HeaderMenu: FC = () => {
         </DividerContainer>
         <MenuItem
           title={'Create New'}
-          onClick={() => jumpToURL('https://lp.vess.id/en/synapss/org/apply')}
+          onClick={() => jumpToURL('https://forms.gle/ZPi59UHN5nKBMoYf8')}
           icon={ICONS.ADD}
         />
       </Menu>

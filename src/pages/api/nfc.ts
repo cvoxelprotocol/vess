@@ -1,6 +1,7 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getAllNFC, getDidFromNFC, registNFC } from '@/lib/firestore'
 
 export type NfcDidRecord = {
   id?: string
@@ -33,22 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return
     }
     try {
-      const docRef = db.collection(COLLECTION_NAME).doc(id)
-      const doc = await docRef.get()
-      if (!doc.exists) {
-        res.status(500).json({ error: 'No data found' })
-        return
-      }
-      const docData = doc.data()
-      if (docData?.initialized || (docData?.did && docData.did !== '')) {
-        res.status(500).json({ error: 'Already initialized' })
-        return
-      }
-      const now = new Date()
-      const result = await docRef.set(
-        { did, initialized: true, updatedAt: now.toISOString() },
-        { merge: true },
-      )
+      await registNFC({ id, did })
       res.status(200).json({ did, initialized: true })
     } catch (error) {
       res.status(500).json({ error: error })
@@ -56,9 +42,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else {
     try {
       const id = req.query.id as string
-      const doc = await db.collection(COLLECTION_NAME).doc(id).get()
-      const data = doc.data() as NfcDidRecord
-      res.status(200).json({ data })
+      if (!id) {
+        const data = await getAllNFC()
+        res.status(200).json({ data })
+      } else {
+        const data = await getDidFromNFC(id)
+        res.status(200).json({ data })
+      }
     } catch (error) {
       res.status(500).json({ error: error })
     }

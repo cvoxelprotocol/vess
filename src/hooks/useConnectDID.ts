@@ -7,7 +7,9 @@ import { useHeldEventAttendances } from './useHeldEventAttendances'
 import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
+
 import {
+  chainId,
   useSetStateAccount,
   useSetStateChainId,
   useSetStateConnectionStatus,
@@ -42,15 +44,13 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const connectDID = async (connector?: Connector<any, any, any>): Promise<boolean> => {
+  const connectDID = async (connector?: Connector< any, any>): Promise<boolean> => {
     try {
       // connect vess sdk
       const res = await connectAsync({ connector })
-      // await connectAsync({ connector })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const ethProvider =
-        connector?.id === 'walletConnect' ? (res.provider as any).provider : window.ethereum
-      const { session } = await vess.connect(res.account, ethProvider, env)
+      const provider =  await connector?.getProvider();
+      const { session } = await vess.connect(res.account, provider, env)
       console.log({ session })
       // @ts-ignore TODO:fixed
       composeClient.setDID(session.did)
@@ -92,6 +92,7 @@ export const useConnectDID = () => {
       setConnectionStatus('connected')
       setStateLoginType('wallet')
       console.log('Connection restored!')
+      issueHeldMembershipFromBackup(session.did.parent)
     }
   }
 

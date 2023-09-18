@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { IconsType, ICONS, Icon } from '@/components/atom/Icons/Icon'
+import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
   type: 'p' | 'h1' | 'h2' | 'h3' | 'span'
@@ -9,7 +11,11 @@ type Props = {
   whiteSpace?: 'pre-wrap' | 'nowrap'
   wordWrap?: 'break-word' | 'normal'
   fontSp?: string
+  afterIcon?: IconsType
+  afterIconSize?: string
+  afterIconColor?: string
 }
+
 export const Text: FC<Props> = ({
   font,
   color,
@@ -18,7 +24,18 @@ export const Text: FC<Props> = ({
   whiteSpace = 'pre-wrap',
   wordWrap = 'break-word',
   fontSp,
+  afterIcon,
+  afterIconSize = '24px',
+  afterIconColor,
 }) => {
+  const { currentTheme } = useVESSTheme()
+
+  const TextContainer = styled.div`
+    display: flex;
+    column-gap: 0.125rem;
+    align-items: center;
+  `
+
   const P = styled.p`
     white-space: ${whiteSpace};
     word-wrap: ${wordWrap};
@@ -28,6 +45,7 @@ export const Text: FC<Props> = ({
       ${fontSp || font};
     }
   `
+
   const H1 = styled.h1`
     white-space: ${whiteSpace};
     word-wrap: ${wordWrap};
@@ -66,17 +84,84 @@ export const Text: FC<Props> = ({
   `
   switch (type) {
     case 'p':
-      return <P>{text}</P>
+      return (
+        <TextContainer>
+          <P>{text}</P>
+          {afterIcon && (
+            <Icon
+              icon={afterIcon}
+              size={'L'}
+              mainColor={afterIconColor || currentTheme.onSurface}
+            />
+          )}
+        </TextContainer>
+      )
     case 'h1':
-      return <H1>{text}</H1>
+      return (
+        <TextContainer>
+          <H1>{text}</H1>
+          {afterIcon && (
+            <Icon
+              icon={afterIcon}
+              size={'L'}
+              mainColor={afterIconColor || currentTheme.onSurface}
+            />
+          )}
+        </TextContainer>
+      )
+
     case 'h2':
-      return <H2>{text}</H2>
+      return (
+        <TextContainer>
+          <H2>{text}</H2>
+          {afterIcon && (
+            <Icon
+              icon={afterIcon}
+              size={'L'}
+              mainColor={afterIconColor || currentTheme.onSurface}
+            />
+          )}
+        </TextContainer>
+      )
     case 'h3':
-      return <H3>{text}</H3>
+      return (
+        <TextContainer>
+          <H3>{text}</H3>
+          {afterIcon && (
+            <Icon
+              icon={afterIcon}
+              size={'L'}
+              mainColor={afterIconColor || currentTheme.onSurface}
+            />
+          )}
+        </TextContainer>
+      )
     case 'span':
-      return <Span>{text}</Span>
+      return (
+        <TextContainer>
+          <Span>{text}</Span>
+          {afterIcon && (
+            <Icon
+              icon={afterIcon}
+              size={'L'}
+              mainColor={afterIconColor || currentTheme.onSurface}
+            />
+          )}
+        </TextContainer>
+      )
 
     default:
-      return <P>{text}</P>
+      return (
+        <TextContainer>
+          <P>{text}</P>
+          {afterIcon && (
+            <Icon
+              icon={afterIcon}
+              size={'L'}
+              mainColor={afterIconColor || currentTheme.onSurface}
+            />
+          )}
+        </TextContainer>
+      )
   }
 }
