@@ -2,6 +2,6 @@
   "@context": {
     "@version": 1.1,
     "@protected": true,
-    "EventAttendanceCredential": "https://app.vess.id/contexts/EventAttendanceV2"
+    "EventAttendanceCredential": "https://app.vess.id/contexts/EventAttendanceV2.html"
   }
 }
