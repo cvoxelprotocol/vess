@@ -1,6 +1,5 @@
 import { atom, useAtom, useSetAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { DisplayProfile } from '@/@types'
 
 export const LOGIN_TYPE_KEY = 'vess-org-login-type'
 

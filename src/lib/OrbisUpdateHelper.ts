@@ -2,7 +2,6 @@ import { Orbis } from '@orbisclub/orbis-sdk'
 import { getPublicClient } from '@wagmi/core'
 import { OrbisBaseResponse, OrbisProfileDetail } from './OrbisHelper'
 
-
 export type UpdateOrbisProfileParam = {
   did: string
   content: OrbisProfileDetail
