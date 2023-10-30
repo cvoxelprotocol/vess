@@ -1,7 +1,8 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
-import type { EventAttendanceWithId, VerifiableMembershipSubjectCredential } from 'vess-sdk'
+import type { VerifiableMembershipSubjectCredential, WithCeramicId } from 'vess-sdk'
+import { BaseCredential } from '@/@types/credential'
 
-export const selectAttendance = atom<EventAttendanceWithId | undefined>(undefined)
+export const selectAttendance = atom<WithCeramicId<BaseCredential> | undefined>(undefined)
 
 export const useStateSelectAttendance = () => useAtom(selectAttendance)
 

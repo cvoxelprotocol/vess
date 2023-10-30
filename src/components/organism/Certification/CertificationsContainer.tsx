@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { CertificationCard } from '@/components/molecure/Profile/Certifications/CertificationCard'
-import { useCertificationSBT } from '@/hooks/useCertificationSBT'
+import { useCertifications } from '@/hooks/useCertifications'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 }
 export default function CertificationsContainer({ did }: Props) {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
-  const { heldCertificationSubjects, isInitialLoading } = useCertificationSBT(did)
+  const { heldCertificationSubjects, isInitialLoading } = useCertifications(did)
 
   const Container = styled.div`
     display: flex;
