@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
-import type { EventAttendanceWithId } from 'vess-sdk'
+import { BaseCredential, WithCeramicId } from '@/@types/credential'
 import { Avatar } from '@/components/atom/Avatars/Avatar'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
@@ -90,7 +90,7 @@ export const EventAttendancesWidget: FC<Props> = (props) => {
     openModal()
   }
 
-  const showDetail = (item: EventAttendanceWithId) => {
+  const showDetail = (item: WithCeramicId<BaseCredential>) => {
     selectAttendance(item)
     setShowDetailModal(true)
   }

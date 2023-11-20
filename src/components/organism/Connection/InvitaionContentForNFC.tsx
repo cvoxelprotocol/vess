@@ -154,9 +154,9 @@ export const InvitaionContentForNFC: FC<Props> = ({ did }) => {
       if (res.data?.createConnection?.document.id) {
         closeLoading()
         showToast(PROOF_OF_CONNECTION_ISSUED)
-        setTimeout(() => {
-          router.push(`/did/${userId}`)
-        }, 2000)
+        // setTimeout(() => {
+        //   router.push(`/did/${userId}`)
+        // }, 2000)
       } else {
         closeLoading()
         showToast(PROOF_OF_CONNECTION_FAILED)

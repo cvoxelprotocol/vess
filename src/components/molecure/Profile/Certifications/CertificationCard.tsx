@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
-import type { WithCeramicId, CertificationVerifiableCredential } from 'vess-sdk'
+import { WithCeramicId, BaseCredential } from '@/@types/credential'
 import { VerifiedMark } from '@/components/atom/Badges/VerifiedMark'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
@@ -9,7 +9,7 @@ import { Text } from '@/components/atom/Texts/Text'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 type Props = {
-  item: WithCeramicId<CertificationVerifiableCredential>
+  item: WithCeramicId<BaseCredential>
 }
 export const CertificationCard: FC<Props> = ({ item }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()

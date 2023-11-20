@@ -1,0 +1,6 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "VESSCertificate": "https://app.vess.id/contexts/CertificateV1.html"
+  }
+}

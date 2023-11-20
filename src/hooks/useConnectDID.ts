@@ -3,13 +3,10 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { getAddressFromPkh, getVESS } from 'vess-sdk'
 import { Connector, useConnect, useDisconnect } from 'wagmi'
-import { useHeldEventAttendances } from './useHeldEventAttendances'
-import { useHeldMembershipSubject } from './useHeldMembershipSubject'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
 
 import {
-  chainId,
   useSetStateAccount,
   useSetStateChainId,
   useSetStateConnectionStatus,
@@ -27,8 +24,6 @@ export const useConnectDID = () => {
   const setStateLoginType = useSetStateLoginType()
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const queryClient = useQueryClient()
-  const { issueHeldMembershipFromBackup } = useHeldMembershipSubject()
-  const { issueHeldEventFromBackup } = useHeldEventAttendances()
   const { composeClient } = useComposeContext()
   const { disconnect } = useDisconnect()
   const { connectAsync } = useConnect()
@@ -44,12 +39,12 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const connectDID = async (connector?: Connector< any, any>): Promise<boolean> => {
+  const connectDID = async (connector?: Connector<any, any>): Promise<boolean> => {
     try {
       // connect vess sdk
       const res = await connectAsync({ connector })
       const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
-      const provider =  await connector?.getProvider();
+      const provider = await connector?.getProvider()
       const { session } = await vess.connect(res.account, provider, env)
       console.log({ session })
       // @ts-ignore TODO:fixed
@@ -61,10 +56,6 @@ export const useConnectDID = () => {
       setChainId(1)
       setConnectionStatus('connected')
       setStateLoginType('wallet')
-
-      // issue credentials from DB //temporary closed for ETHDenver
-      issueHeldEventFromBackup(session.did.parent)
-      issueHeldMembershipFromBackup(session.did.parent)
       queryClient.invalidateQueries(['hasAuthorizedSession'])
       return true
     } catch (error) {
@@ -92,7 +83,6 @@ export const useConnectDID = () => {
       setConnectionStatus('connected')
       setStateLoginType('wallet')
       console.log('Connection restored!')
-      issueHeldMembershipFromBackup(session.did.parent)
     }
   }
 

@@ -2,19 +2,21 @@ import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import type { SelfClaimedMembershipSubject, WithCeramicId } from 'vess-sdk'
 import { MembershipCard } from '../MembershipCard'
+import { BaseCredential } from '@/@types/credential'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
+import { useOrganization } from '@/hooks/useOrganization'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-import { DisplayMembership } from '@/interfaces/ui'
 import { formatDate } from '@/utils/date'
 
 type Props = {
-  item?: DisplayMembership
+  item?: WithCeramicId<BaseCredential>
   selfClaim?: WithCeramicId<SelfClaimedMembershipSubject>
 }
 export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { organization } = useOrganization(item?.credentialSubject.organizationId || undefined)
   const period = useMemo(() => {
     if (item) {
       return `${
@@ -66,9 +68,9 @@ export const ExperienceCard: FC<Props> = ({ item, selfClaim }) => {
           title={item.workspace?.name || item.credentialSubject.organizationName}
           roles={item.roles}
           icon={item.workspace?.icon}
-          mainColor={item.workspace?.primaryColor}
-          secondColor={item.workspace?.secondaryColor}
-          textColor={item.workspace?.optionColor}
+          mainColor={organization?.primaryColor}
+          secondColor={organization?.secondaryColor}
+          textColor={organization?.optionColor}
           spMaxWidth={'280px'}
           spPadding={'24px'}
           vc

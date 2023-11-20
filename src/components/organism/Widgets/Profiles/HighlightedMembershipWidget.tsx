@@ -4,6 +4,7 @@ import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { BaseWidget } from '@/components/atom/Widgets/BaseWidget'
 import { MembershipCard } from '@/components/molecure/Profile/MembershipCard'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
+import { useOrganization } from '@/hooks/useOrganization'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
@@ -21,6 +22,9 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
   const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
   const { highlightedMembership, highlightedSelfClaimedMembership, isLoading } =
     useHeldMembershipSubject(props.did)
+  const { organization } = useOrganization(
+    highlightedMembership?.credentialSubject.organizationId || undefined,
+  )
   const { openMembershipModal } = useVESSWidgetModal()
 
   const Container = styled.div`
@@ -73,9 +77,9 @@ export const HighlightedMembershipWidget: FC<Props> = (props) => {
                     }
                     roles={highlightedMembership.roles}
                     icon={highlightedMembership.workspace?.icon}
-                    mainColor={highlightedMembership.workspace?.primaryColor}
-                    secondColor={highlightedMembership.workspace?.secondaryColor}
-                    textColor={highlightedMembership.workspace?.optionColor}
+                    mainColor={organization?.primaryColor}
+                    secondColor={organization?.secondaryColor}
+                    textColor={organization?.optionColor}
                     vc
                     startDate={highlightedMembership.credentialSubject.startDate}
                     endDate={highlightedMembership.credentialSubject.endDate}

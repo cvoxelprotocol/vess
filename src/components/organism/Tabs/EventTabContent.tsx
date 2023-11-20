@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import type { EventAttendanceWithId } from 'vess-sdk'
+import { BaseCredential, WithCeramicId } from '@/@types/credential'
 import { NoItem } from '@/components/atom/Common/NoItem'
 import { CommonSpinner } from '@/components/atom/Loading/CommonSpinner'
 import { EventCard } from '@/components/molecure/Event/EventCard'
@@ -42,7 +42,7 @@ export default function EventTabContent({ did }: Props) {
     height: 100%;
   `
 
-  const goToEventPage = (event: EventAttendanceWithId) => {
+  const goToEventPage = (event: WithCeramicId<BaseCredential>) => {
     selectAttendance(event)
     setShowDetailModal(true)
   }
