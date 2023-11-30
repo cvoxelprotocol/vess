@@ -3,9 +3,11 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
+import { LoginPage } from '@/components/login/LoginPage'
 import { LoginCard } from '@/components/organism/Accounts/LoginCard'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+
 const Login: NextPage = () => {
   const { did } = useDIDAccount()
   const { currentTheme } = useVESSTheme()
@@ -21,16 +23,16 @@ const Login: NextPage = () => {
     padding: 8px;
   `
 
-  useEffect(() => {
-    if (did) {
-      router.push(`/did/${did}`)
-    }
-  }, [did, router])
+  // useEffect(() => {
+  //   if (did) {
+  //     router.push(`/did/${did}`)
+  //   }
+  // }, [did, router])
 
   return (
     <Wrapper>
       <Meta pagePath={`https://app.vess.id/login`} />
-      <LoginCard />
+      <LoginPage />
     </Wrapper>
   )
 }

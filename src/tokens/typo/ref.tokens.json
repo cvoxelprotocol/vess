@@ -1,0 +1,116 @@
+{
+  "typo": {
+    "ref": {
+      "fontFamily": {
+        "base": {
+          "value": "'Noto Sans'"
+        },
+        "brand": {
+          "value": "'Noto Sans'"
+        }
+      },
+      "fontWeight": {
+        "thin": {
+          "value": 100
+        },
+        "extraLight": {
+          "value": 200
+        },
+        "light": {
+          "value": 300
+        },
+        "regular": {
+          "value": 400
+        },
+        "medium": {
+          "value": 500
+        },
+        "semibold": {
+          "value": 600
+        },
+        "bold": {
+          "value": 700
+        },
+        "extraBold": {
+          "value": 800
+        },
+        "black": {
+          "value": 900
+        }
+      },
+      "fontSize": {
+        "3xs": {
+          "value": 10
+        },
+        "2xs": {
+          "value": 11
+        },
+        "xs": {
+          "value": 12
+        },
+        "sm": {
+          "value": 14
+        },
+        "md": {
+          "value": 16
+        },
+        "lg": {
+          "value": 18
+        },
+        "xl": {
+          "value": 20
+        },
+        "2xl": {
+          "value": 22
+        },
+        "3xl": {
+          "value": 24
+        },
+        "4xl": {
+          "value": 28
+        },
+        "5xl": {
+          "value": 32
+        },
+        "6xl": {
+          "value": 36
+        },
+        "7xl": {
+          "value": 40
+        },
+        "8xl": {
+          "value": 44
+        },
+        "9xl": {
+          "value": 48
+        },
+        "10xl": {
+          "value": 56
+        }
+      },
+      "letterSpacing": {
+        "tightest": {
+          "value": "-0.05em"
+        },
+        "tighter": {
+          "value": "-0.025em"
+        },
+        "tight": {
+          "value": "-0.01em"
+        },
+        "normal": {
+          "value": 0
+        },
+        "wide": {
+          "value": "0.01em"
+        },
+        "wider": {
+          "value": "0.025em"
+        },
+        "widest": {
+          "value": "0.05em"
+        }
+      }  
+    }
+  }
+}

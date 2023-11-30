@@ -8,7 +8,12 @@ import { Icon, ICONS } from '@/components/atom/Icons/Icon'
 import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
 import { FadeInOut } from '@/components/atom/Motions/FadeInOut'
 import { SlideInOut } from '@/components/atom/Motions/SlideInOut'
-import { getNaviItem, NAVIGATION_ITEM, NAVIGATION_LIST, NAVIGATION_LIST_TYPE } from '@/constants/ui'
+import {
+  getNaviItem,
+  NAVIGATION_ITEM,
+  NAVIGATION_LIST,
+  NAVIGATION_LIST_TYPE,
+} from '@/constants/uiV1'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { useStateSelectedNavigationItem } from '@/jotai/ui'

@@ -8,13 +8,12 @@ import { Chip } from '@/components/atom/Chips/Chip'
 import { Flex } from '@/components/atom/Common/Flex'
 import { ICONS } from '@/components/atom/Icons/Icon'
 import { Text } from '@/components/atom/Texts/Text'
-import { DefaultCardColor } from '@/constants/ui'
+import { DefaultCardColor } from '@/constants/uiV1'
 import { useHeldMembershipSubject } from '@/hooks/useHeldMembershipSubject'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { shortenStr } from '@/utils/objectUtil'
-
 
 type Props = {
   userId: string

@@ -6,7 +6,7 @@ import { Flex } from '@/components/atom/Common/Flex'
 import { IconSize } from '@/components/atom/Icons/Icon'
 import { ImageContainer } from '@/components/atom/Images/ImageContainer'
 import { Text } from '@/components/atom/Texts/Text'
-import { DefaultCardColor } from '@/constants/ui'
+import { DefaultCardColor } from '@/constants/uiV1'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 import { formatDate } from '@/utils/date'
 

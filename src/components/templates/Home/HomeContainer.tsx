@@ -1,12 +1,34 @@
 import styled from '@emotion/styled'
+import { disconnect } from '@wagmi/core'
 import { useRouter } from 'next/router'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import {
+  Tabs as RACTabs,
+  Tab as RACTab,
+  TabList as RACTabList,
+  TabPanel as RACTabPanel,
+} from 'react-aria-components'
+import { useDisconnect } from 'wagmi'
 import { PanelButton } from '@/components/atom/Buttons/PanelButton'
+import { FlexVertical } from '@/components/atom/Common/FlexVertical'
+import { HCLayout } from '@/components/atom/HCLayout'
+import { DefaultHeader } from '@/components/atom/Header'
+import { ImageContainer } from '@/components/atom/Images/ImageContainer'
+import { NextImageContainer } from '@/components/atom/Images/NextImageContainer'
+import { Tab, TabList, TabPanel, Tabs } from '@/components/atom/tab'
 import { UserCard } from '@/components/molecure/User/UserCard'
 import { BasicCarousel } from '@/components/organism/Carousel/BasicCarousel'
+import { EventItem } from '@/components/profile/EventItem'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
+import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSWidgetModal } from '@/hooks/useVESSModal'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
+import { Button } from '@/kai/button/Button'
+import { useKai } from '@/kai/hooks/useKai'
+import { Skelton } from '@/kai/skelton'
+import { Text } from '@/kai/text/Text'
 
 const FEATURED_USER_LIST = [
   'did:pkh:eip155:1:0xde695cbb6ec0cf3f4c9564070baeb032552c5111',
@@ -17,52 +39,12 @@ const FEATURED_USER_LIST = [
 ]
 export const HomeContainer: FC = () => {
   const { did } = useDIDAccount()
-  const { currentTheme, currentTypo, getBasicFont } = useVESSTheme()
+  const { profile, isloadingProfile } = useSocialAccount(did)
   const router = useRouter()
   const { setShowConnectModal } = useVESSWidgetModal()
-
-  const Wrapper = styled.main`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: ${currentTheme.background};
-    padding: 8px;
-    gap: 16px;
-  `
-
-  const OnBoardList = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-
-    @media (max-width: 599px) {
-      gap: 8px;
-    }
-  `
-
-  const SectionHeader = styled.div`
-    padding: 32px 0px 8px 8px;
-    color: ${currentTheme.onBackground};
-    ${getBasicFont(currentTypo.headLine.medium)};
-  `
-
-  const Container = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(216px, 1fr));
-    grid-gap: 24px;
-    text-align: center;
-    @media (max-width: 599px) {
-      grid-template-columns: repeat(1, 1fr);
-      grid-gap: 8px;
-    }
-  `
-
-  const BottomBlank = styled.div`
-    width: 100%;
-    height: 300px;
-  `
+  const { kai } = useKai()
+  const { disConnectDID } = useConnectDID()
+  const { displayHeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances()
 
   const jumpToURL = (url: string) => {
     window.open(url, '_blank')
@@ -75,46 +57,98 @@ export const HomeContainer: FC = () => {
     router.push(`/did/${did}`)
   }
 
+  const logout = async () => {
+    await disConnectDID()
+  }
+
+  // useEffect(() => {
+  //   if (!did) {
+  //     router.push('/login')
+  //   }
+  // }, [did])
+
   return (
-    <Wrapper>
-      <BasicCarousel />
-      <OnBoardList>
-        <PanelButton
-          src='/icons/resume.png'
-          label='Edit Your Resume'
-          width='1fr'
-          labelColor={currentTheme.primary}
-          onClick={() => jumpToProfile()}
-        />
-        <PanelButton
-          src='/icons/jobposts.png'
-          label='Apply for Jobs'
-          width='1fr'
-          labelColor={currentTheme.primary}
-          onClick={() => jumpToURL('https://synapss.vess.id')}
-        />
-        <PanelButton
-          src='/icons/organization.png'
-          label='Create Organization'
-          width='1fr'
-          labelColor={currentTheme.primary}
-          onClick={() => jumpToURL('https://forms.gle/ZPi59UHN5nKBMoYf8')}
-        />
-        <PanelButton
-          src='/icons/macintosh.png'
-          label='Buidl with VESS'
-          width='1fr'
-          labelColor={currentTheme.primary}
-          onClick={() => jumpToURL('https://doc.vess.id/vess-sdk/overview')}
-        />
-      </OnBoardList>
-      <SectionHeader>Featured Talents</SectionHeader>
-      <Container>
-        {FEATURED_USER_LIST.map((userId) => {
-          return <UserCard key={userId} userId={userId} />
-        })}
-      </Container>
-      <BottomBlank></BottomBlank>
-    </Wrapper>
+    <HCLayout header={<DefaultHeader />}>
+      <MainFrame>
+        <Skelton
+          width={kai.size.ref[144]}
+          height={kai.size.ref[144]}
+          radius={kai.size.sys.round.xl}
+          isLoading={isloadingProfile || !profile.avatarSrc}
+        >
+          <NextImageContainer
+            src={profile.avatarSrc || '/base_item_header.png'}
+            width={kai.size.ref[144]}
+            height={kai.size.ref[144]}
+            objectFit='cover'
+            borderRadius={kai.size.sys.round.xl}
+          />
+        </Skelton>
+        <FlexVertical gap={kai.size.ref[12]} alignItems='center'>
+          <Text
+            as='h2'
+            typo='headline-sm'
+            color={kai.color.sys.onBackground}
+            isLoading={isloadingProfile}
+          >
+            {profile.displayName || '名前なし'}
+          </Text>
+          <Text
+            as='p'
+            typo='body-lg'
+            color={kai.color.sys.onBackground}
+            isLoading={isloadingProfile}
+            height='fit-content'
+            align='center'
+          >
+            {profile.bio || '自己紹介文はありません。'}
+          </Text>
+        </FlexVertical>
+        <Tabs>
+          <TabList>
+            <Tab id='membership'>会員証</Tab>
+            <Tab id='attendance'>イベント参加証</Tab>
+          </TabList>
+          <TabPanel id='membership'>
+            <div>会員証はありませaん。</div>
+          </TabPanel>
+          <TabPanel id='attendance'>
+            <EventListFrame>
+              <EventItem id={'aaa'} />
+              <EventItem id={'aaa'} />
+              <EventItem id={'aaa'} />
+              <EventItem id={'aaa'} />
+              <EventItem id={'aaa'} />
+            </EventListFrame>
+            {/* {displayHeldEventAttendances.length == 0 ? (
+              displayHeldEventAttendances.map((event) => (
+                <EventItem key={event.id} id={event.credentialSubject.id} />
+              ))
+            ) : (
+              <div>イベント参加証はありません。</div>
+            )} */}
+          </TabPanel>
+        </Tabs>
+        <Button onPress={() => logout()}>接続解除</Button>
+      </MainFrame>
+    </HCLayout>
   )
 }
+
+const MainFrame = styled.main`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kai-size-ref-24);
+  padding: var(--kai-size-ref-32) var(--kai-size-ref-16);
+`
+const EventListFrame = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--kai-size-ref-112), 1fr));
+  grid-column-gap: var(--kai-size-ref-16);
+  grid-row-gap: var(--kai-size-ref-16);
+  justify-content: center;
+`

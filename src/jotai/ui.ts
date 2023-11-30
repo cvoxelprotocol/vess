@@ -1,6 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { BaseToastProps } from '@/components/atom/Toasts/BaseToast'
-import { NavigationItemType, NAVIGATION_ITEM, ProfileTabType } from '@/constants/ui'
+import { NavigationItemType, NAVIGATION_ITEM, ProfileTabType } from '@/constants/uiV1'
 
 export const themeMode = atom<'light' | 'dark'>('light')
 
