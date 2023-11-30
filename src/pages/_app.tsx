@@ -19,9 +19,11 @@ import { VESSToast } from '@/components/atom/Toasts/VESSToast'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { ComposeWrapper } from '@/context/compose'
 
+import { KaiProvider } from '@/kai/kai-provider/KaiProvider'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
 import '@/styles/globals.css'
+import '@/tokens/build/css/kai-tokens.css'
 
 const notoSans = Noto_Sans({
   style: 'normal',
@@ -185,11 +187,13 @@ export default function App({
             <WagmiConfig config={wagmiConfig}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
-                  <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
-                  <BasicLayout>
-                    <Component {...props} />
-                  </BasicLayout>
-                  <VESSToast />
+                  <KaiProvider>
+                    <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
+                    <BasicLayout>
+                      <Component {...props} />
+                    </BasicLayout>
+                    <VESSToast />
+                  </KaiProvider>
                 </ThemeProvider>
               </ComposeWrapper>
             </WagmiConfig>

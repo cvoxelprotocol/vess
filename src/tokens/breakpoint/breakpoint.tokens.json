@@ -1,0 +1,33 @@
+{
+  "size": {
+    "breakpoint": {
+      "sm": {
+        "maxWidth":{
+          "value": "599px"
+        }
+      },
+      "md": {
+        "maxWidth":{
+          "value": "1023px"
+        },
+        "minWidth":{
+          "value": "600px"
+        }
+      },
+      "lg": {
+        "maxWidth":{
+          "value": "1517px"
+        },
+        "minWidth":{
+          "value": "1024px"
+        }
+      },
+      "xl": {
+        "minWidth":{
+          "value": "1518px"
+        }
+      }
+    }
+  }
+}
+
