@@ -1,65 +1,57 @@
 import styled from '@emotion/styled'
-import { FC, HTMLAttributes } from 'react'
+import { FC } from 'react'
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+type Props = {
   children: React.ReactNode
-  flexDirection?: string
-  flexDirectionSP?: string
   alignItems?: string
   justifyContent?: string
   alignItemsSP?: string
   justifyContentSP?: string
-  rowGap?: string
-  colGap?: string
-  rowGapSP?: string
-  colGapSP?: string
+  gap?: string
+  gapSP?: string
   height?: string
-  flexWrap?: string
   width?: string
   padding?: string
   paddingSP?: string
   background?: string
+  grow?: number | string
 }
-export const Flex: FC<Props> = ({
+export const FlexVertical: FC<Props> = ({
   children,
-  flexDirection = 'row',
-  alignItems = 'center',
-  justifyContent = 'center',
-  rowGap,
-  colGap,
-  rowGapSP,
-  colGapSP,
+  alignItems = 'start',
+  justifyContent = 'start',
+  gap,
+  gapSP,
   height = 'auto',
-  flexWrap = 'wrap',
   width = 'fit-content',
   padding = '0px',
   paddingSP,
-  flexDirectionSP,
   alignItemsSP,
   justifyContentSP,
   background = 'transparent',
-  ...props
+  grow = 'inherit',
 }) => {
   const Flex = styled.div`
     display: flex;
-    flex-direction: ${flexDirection};
+    flex-direction: column;
     align-items: ${alignItems};
     justify-content: ${justifyContent};
-    row-gap: ${rowGap};
-    column-gap: ${colGap || rowGap};
+    row-gap: ${gap};
+    column-gap: ${gap};
     height: ${height};
-    flex-wrap: ${flexWrap};
+    flex-wrap: none;
     width: ${width};
     padding: ${padding};
     background: ${background};
+    flex-grow: ${grow};
     @media (max-width: 599px) {
-      flex-direction: ${flexDirectionSP ?? flexDirection};
+      flex-direction: column;
       align-items: ${alignItemsSP ?? alignItems};
       justify-content: ${justifyContentSP ?? justifyContent};
       padding: ${paddingSP || padding};
-      column-gap: ${colGapSP || colGap};
-      row-gap: ${rowGapSP || rowGap};
+      column-gap: ${gapSP || gap};
+      row-gap: ${gapSP || gap};
     }
   `
-  return <Flex {...props}>{children}</Flex>
+  return <Flex>{children}</Flex>
 }
