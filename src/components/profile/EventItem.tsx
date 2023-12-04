@@ -17,7 +17,7 @@ export const EventItem: FC<EventItemProps> = ({ id, size = '100%' }) => {
   return (
     <>
       <Skelton
-        variant='outlined'
+        variant='filled'
         isLoading={true}
         width='100%'
         height='auto'

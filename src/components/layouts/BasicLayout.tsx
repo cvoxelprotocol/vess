@@ -62,8 +62,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     init()
   }, [])
 
-  useEffect(() => {}, [router.asPath])
-
   return (
     <NavigationContextProvider>
       <CenterLayout>

@@ -45,14 +45,7 @@ export const LoginCard: FC = () => {
           text={'Welcome to VESS'}
         />
       </Flex>
-      <Flex
-        width='100%'
-        colGap='16px'
-        rowGap='16px'
-        flexDirection='column'
-        padding='16px'
-        margin='0 auto'
-      >
+      <Flex width='100%' colGap='16px' rowGap='16px' flexDirection='column' padding='16px'>
         <LogoContainer>
           <NextImageContainer src={'/logo_bard.png'} width={'120px'} objectFit={'contain'} />
         </LogoContainer>

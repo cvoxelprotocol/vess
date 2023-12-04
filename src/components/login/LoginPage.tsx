@@ -11,6 +11,7 @@ import { FlexVertical } from '../atom/Common/FlexVertical'
 import { HCLayout } from '../atom/HCLayout'
 import { NextImageContainer } from '../atom/Images/NextImageContainer'
 import { useConnectDID } from '@/hooks/useConnectDID'
+import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { Button } from '@/kai/button/Button'
 import { useKai } from '@/kai/hooks/useKai'
 import { Text } from '@/kai/text/Text'
@@ -21,14 +22,20 @@ export const LoginPage: FC = () => {
   const { connectDID } = useConnectDID()
   const router = useRouter()
   const [isLogingIn, setIsLogingIn] = React.useState(false)
+  const { did } = useDIDAccount()
+
+  React.useEffect(() => {
+    if (did) {
+      setIsLogingIn(false)
+      router.push(`/did/${did}`)
+    }
+  }, [did, router])
 
   const handleLogin = async (connector?: Connector<any, any>) => {
     setIsLogingIn(true)
     try {
       const isSuccess = await connectDID(connector)
       if (isSuccess) {
-        setIsLogingIn(false)
-        router.push('/')
       }
     } catch (error) {
       setIsLogingIn(false)

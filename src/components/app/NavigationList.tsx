@@ -36,16 +36,23 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
 
   useEffect(() => {
     NAVIGATION_LIST.forEach((item, index) => {
-      console.log('router.pathname', router.pathname)
-      console.log('startWidth', router.pathname.startsWith(item.path))
       if (router.pathname.startsWith(item.path)) {
+        console.log('router.pathname', router.pathname)
         setSelectedNavi && setSelectedNavi(item.id)
       }
     })
   }, [router.pathname])
 
   useEffect(() => {
-    jumpToURL(selectedNaviMeta?.path)
+    console.log('selectedNavi', selectedNavi)
+    NAVIGATION_LIST.forEach((item, index) => {
+      console.log('item.path', item.path)
+      console.log('router.pathname', router.pathname)
+      if (router.pathname.startsWith(item.path)) {
+        console.log('selectedNaviMeta.path', selectedNaviMeta.path)
+        jumpToURL(selectedNaviMeta?.path)
+      }
+    })
   }, [selectedNavi])
 
   const jumpToURL = (url: string) => {
@@ -86,7 +93,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
         style={{
           width: '100%',
           height: '0px',
-          border: `0.5px solid ${kai.color.sys.outlineVariant}`,
+          border: `0.5px solid var(--kai-color-sys-outline-variant)`,
         }}
       />
       <Button
