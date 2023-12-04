@@ -3,7 +3,6 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
-import { LoginCard } from '@/components/organism/Accounts/LoginCard'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 const NoDid: NextPage = () => {
@@ -30,7 +29,6 @@ const NoDid: NextPage = () => {
   return (
     <Wrapper>
       <Meta robots='noindex, follow' />
-      <LoginCard />
     </Wrapper>
   )
 }

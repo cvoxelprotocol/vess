@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
-import { FlexVertical } from '../atom/Common/FlexVertical'
+import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { Button } from '@/kai/button/Button'
 import { Skelton } from '@/kai/skelton'

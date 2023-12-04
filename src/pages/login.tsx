@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { LoginPage } from '@/components/login/LoginPage'
-import { LoginCard } from '@/components/organism/Accounts/LoginCard'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 
@@ -23,11 +22,11 @@ const Login: NextPage = () => {
     padding: 8px;
   `
 
-  // useEffect(() => {
-  //   if (did) {
-  //     router.push(`/did/${did}`)
-  //   }
-  // }, [did, router])
+  useEffect(() => {
+    if (did) {
+      router.push(`/did/${did}`)
+    }
+  }, [did, router])
 
   return (
     <Wrapper>

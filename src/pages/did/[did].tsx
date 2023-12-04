@@ -4,9 +4,8 @@ import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
 import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-sdk'
 import { DisplayProfile } from '@/@types'
+import { HomeContainer } from '@/components/home/HomeContainer'
 import { Meta } from '@/components/layouts/Meta'
-import { HomeContainer } from '@/components/templates/Home/HomeContainer'
-import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
 import { fetchProfile } from '@/lib/profile'
 
 export type Props = {
