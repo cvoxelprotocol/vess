@@ -18,7 +18,7 @@ type Props = {
 
 export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const { setShowSocialProfileModal } = useVESSWidgetModal()
-  const { uploadIcon, status, icon,  } = useFileUpload()
+  const { uploadIcon, status, icon } = useFileUpload()
   const { profile } = useSocialAccount(did)
   const { update } = useUpdateSocialAccount(did)
 
@@ -70,11 +70,11 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
   const onClickSubmit = async (data: OrbisProfileDetail, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
-    if (!icon) console.error("NO pfp")
+    if (!icon) console.error('NO pfp')
     // ToDo: Add ipfs url of VESS default profile image here
     const content: OrbisProfileDetail = removeUndefined<OrbisProfileDetail>({
       ...data,
-      pfp: icon? icon : data.pfp,
+      pfp: icon ? icon : data.pfp,
     })
     const res = await update({ did, content })
     if (res.status === 200) {
@@ -94,13 +94,13 @@ export const SocialProfileEditForm: FC<Props> = ({ did }) => {
             iconSize={'MM'}
             onClickClear={() => setValue('username', '')}
           />
-          
+
           <IconInput
             required={false}
             label={'Icon'}
             recommendText={'Drag and drop or click here to upload'}
           />
-          
+
           <MultiInput
             label={'Bio'}
             name={`description`}
