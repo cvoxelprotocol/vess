@@ -5,6 +5,7 @@ import { NextPage } from 'next'
 import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-sdk'
 import { DisplayProfile } from '@/@types'
 import { Meta } from '@/components/layouts/Meta'
+import { HomeContainer } from '@/components/templates/Home/HomeContainer'
 import { ProfileContainer } from '@/components/templates/Profile/ProfileContainer'
 import { fetchProfile } from '@/lib/profile'
 
@@ -65,7 +66,7 @@ const Profile: NextPage<Props> = (props: Props) => {
         }
         pagePath={`https://app.vess.id/did/${props.did}`}
       />
-      <ProfileContainer {...props} />
+      <HomeContainer />
     </>
   )
 }

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { FC } from 'react'
-import { Navigation } from 'react-calendar'
+import { useModal, useModalContext } from '@/kai/modal'
 
 type Props = {
   navigation?: React.ReactNode
@@ -48,14 +48,23 @@ export const NCLayout: FC<Props> = ({
   backgroundColor = 'transparent',
 }) => {
   const [isNavigationOpen, setIsNavigationOpen] = React.useState(false)
+  const { isOpenSomeModal } = useModalContext()
+  const { attachToRef } = useModal()
 
   return (
     <NCLayoutContext.Provider
       value={{ isNavigationOpen: isNavigationOpen, setIsNavigationOpen: setIsNavigationOpen }}
     >
       <LayoutFrame>
-        <NavigationFrame data-nav-opened={isNavigationOpen}>{navigation}</NavigationFrame>
-        <ContentFrame data-nav-opened={isNavigationOpen} onClick={() => setIsNavigationOpen(false)}>
+        <NavigationFrame data-nav-opened={isNavigationOpen && !isOpenSomeModal}>
+          {navigation}
+        </NavigationFrame>
+        <ContentFrame
+          data-nav-opened={isNavigationOpen && !isOpenSomeModal}
+          data-modal-open={isOpenSomeModal}
+          onClick={() => setIsNavigationOpen(false)}
+          ref={attachToRef}
+        >
           {children}
         </ContentFrame>
       </LayoutFrame>
@@ -63,7 +72,7 @@ export const NCLayout: FC<Props> = ({
   )
 }
 
-const LayoutFrame = styled.div`
+const LayoutFrame = styled.div<{ contentWidth?: number }>`
   display: grid;
   height: 100vh;
   grid-template-columns: min-content min-content;
@@ -108,5 +117,9 @@ const ContentFrame = styled.div`
     &[data-nav-opened='true'] {
       cursor: pointer;
     }
+  }
+  &[data-modal-open='true'] {
+    opacity: 0.3;
+    transform: scale(0.9);
   }
 `

@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'next-themes'
-import React, { FC, use, useEffect } from 'react'
-import { useKai } from '../hooks/useKai'
+import React, { FC } from 'react'
+import { ModalProvider } from '../modal/ModalContext'
 
 export type KaiProviderProps = {
   children?: React.ReactNode
@@ -8,9 +8,8 @@ export type KaiProviderProps = {
 
 export const KaiProvider: FC<KaiProviderProps> = ({ children }) => {
   return (
-    // <>{children}</>
     <ThemeProvider attribute='class' defaultTheme='light'>
-      {children}
+      <ModalProvider>{children}</ModalProvider>
     </ThemeProvider>
   )
 }

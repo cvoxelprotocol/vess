@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 import { LuAlignJustify, LuScanLine } from 'react-icons/lu'
 import { useNCLayoutContext } from '../NCLayout'
@@ -6,6 +7,7 @@ import { IconDic } from '@/components/app/IconDic'
 import { MenuButton } from '@/components/app/MenuButton'
 import { useNavigationContext } from '@/components/app/NavigationList'
 import { useKai } from '@/kai/hooks/useKai'
+import { IconButton } from '@/kai/icon-button'
 
 type DefaultHeaderProps = {
   children?: React.ReactNode
@@ -14,6 +16,8 @@ type DefaultHeaderProps = {
 export const DefaultHeader: FC<DefaultHeaderProps> = ({ children }) => {
   const { toggleNavigation } = useNCLayoutContext()
   const { selectedNaviMeta } = useNavigationContext()
+  const router = useRouter()
+
   return (
     <HeaderFrame>
       <MenuButton
@@ -22,7 +26,13 @@ export const DefaultHeader: FC<DefaultHeaderProps> = ({ children }) => {
       >
         {selectedNaviMeta.label}
       </MenuButton>
-      <LuScanLine size={'24px'} color={'var(--kai-color-sys-primary)'} />
+      <IconButton
+        icon={<LuScanLine size={'100%'} />}
+        variant='text'
+        color='primary'
+        onPress={() => router.push('/receive')}
+        size='lg'
+      />
     </HeaderFrame>
   )
 }
