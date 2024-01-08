@@ -10,6 +10,13 @@ export const getCredentials = async (did?: string): Promise<Response> => {
     throw error
   }
 }
+export const issueAttendancesV2 = async (body: any): Promise<Response> => {
+  try {
+    return await baseVessApi(`/v2/credential/attendances`, 'POST', undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
 
 const baseVessApi = async (
   endpoint: string,
