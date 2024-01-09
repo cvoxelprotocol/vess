@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { getAddressFromPkh, getVESS } from 'vess-sdk'
+import { getAddressFromPkh } from 'vess-kit-web'
 import { Connector, useConnect, useDisconnect } from 'wagmi'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
@@ -14,6 +14,7 @@ import {
   useSetStateMyDid,
   useSetStateOriginalAddress,
 } from '@/jotai/account'
+import { getVESS } from '@/lib/vess'
 
 export const useConnectDID = () => {
   const setMyDid = useSetStateMyDid()
@@ -22,7 +23,7 @@ export const useConnectDID = () => {
   const setChainId = useSetStateChainId()
   const setConnectionStatus = useSetStateConnectionStatus()
   const setStateLoginType = useSetStateLoginType()
-  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const vess = getVESS()
   const queryClient = useQueryClient()
   const { composeClient } = useComposeContext()
   const { disconnect } = useDisconnect()

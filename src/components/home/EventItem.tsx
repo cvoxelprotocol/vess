@@ -1,24 +1,21 @@
 import styled from '@emotion/styled'
-import Image from 'next/image'
 import React, { FC } from 'react'
 import { Button } from 'react-aria-components'
-import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
-import { useEventAttendance } from '@/hooks/useEventAttendance'
+import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { WithCeramicId, BaseCredential } from '@/@types/credential'
 import { Skelton } from '@/kai/skelton'
 
 export type EventItemProps = {
-  id: string
+  item?: WithCeramicId<BaseCredential>
   size?: string
 }
 
-export const EventItem: FC<EventItemProps> = ({ id, size = '100%' }) => {
-  const { eventDetail, isLoadingEventDetail } = useEventAttendance(id)
-
+export const EventItem: FC<EventItemProps> = ({ item, size = '100%' }) => {
   return (
     <>
       <Skelton
         variant='filled'
-        isLoading={true}
+        isLoading={!item}
         width='100%'
         height='auto'
         aspectRatio='1'
@@ -26,14 +23,12 @@ export const EventItem: FC<EventItemProps> = ({ id, size = '100%' }) => {
         radius='var(--kai-size-sys-round-full)'
         borderWidth='var(--kai-size-ref-2)'
       >
-        <EventItemFrame size={size}>
-          <Image
-            src={'/sample/event_sample.jpg'}
-            // src={eventDetail?.icon || ''}
-            alt={eventDetail?.name || 'イベント参加証明画像'}
-            fill
-          />
-        </EventItemFrame>
+        <ImageContainer
+          src={item?.credentialSubject.eventIcon || '/sample/event_sample.jpg'}
+          alt={item?.credentialSubject.eventName || 'イベント参加証明画像'}
+          objectFit='cover'
+          width={size}
+        />
       </Skelton>
     </>
   )

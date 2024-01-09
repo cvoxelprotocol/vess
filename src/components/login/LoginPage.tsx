@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import React, { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { GrGoogle } from 'react-icons/gr'
 import { LuExternalLink } from 'react-icons/lu'
 import { SiWalletconnect } from 'react-icons/si'
@@ -21,24 +21,20 @@ export const LoginPage: FC = () => {
   const { connectors, error, isLoading, pendingConnector } = useConnect()
   const { connectDID } = useConnectDID()
   const router = useRouter()
-  const [isLogingIn, setIsLogingIn] = React.useState(false)
   const { did } = useDIDAccount()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (did) {
-      setIsLogingIn(false)
       router.push(`/did/${did}`)
     }
   }, [did, router])
 
   const handleLogin = async (connector?: Connector<any, any>) => {
-    setIsLogingIn(true)
     try {
       const isSuccess = await connectDID(connector)
       if (isSuccess) {
       }
     } catch (error) {
-      setIsLogingIn(false)
       console.error(error)
     }
   }
@@ -55,7 +51,7 @@ export const LoginPage: FC = () => {
             size='lg'
             startContent={<GrGoogle />}
             onPress={() => handleLogin(connectors[0])}
-            isDisabled={isLoading || pendingConnector === connectors[0] || isLogingIn}
+            isDisabled={isLoading || pendingConnector === connectors[0]}
           >
             Googleアカウントで続ける
           </Button>
@@ -66,7 +62,7 @@ export const LoginPage: FC = () => {
             size='lg'
             startContent={<SiWalletconnect />}
             onPress={() => handleLogin(connectors[1])}
-            isDisabled={isLoading || pendingConnector === connectors[1] || isLogingIn}
+            isDisabled={isLoading}
           >
             ウォレットを接続する
           </Button>

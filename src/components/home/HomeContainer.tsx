@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { PiPencilBold } from 'react-icons/pi'
+import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { HCLayout } from '@/components/app/HCLayout'
 import { DefaultHeader } from '@/components/app/Header'
 import { EventItem } from '@/components/home/EventItem'
@@ -11,8 +12,8 @@ import { FlexHorizontal } from '@/components/ui-v1/Common/FlexHorizontal'
 import { FlexVertical } from '@/components/ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '@/components/ui-v1/Images/NextImageContainer'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useHeldEventAttendances } from '@/hooks/useHeldEventAttendances'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { useKai } from '@/kai/hooks/useKai'
 import { IconButton } from '@/kai/icon-button'
 import { useModal } from '@/kai/modal'
@@ -22,16 +23,10 @@ import { Text } from '@/kai/text/Text'
 export const HomeContainer: FC = () => {
   const { did } = useDIDAccount()
   const { profile, isloadingProfile } = useSocialAccount(did)
-  const router = useRouter()
   const { kai } = useKai()
-  const { displayHeldEventAttendances, isFetchingHeldEventAttendances } = useHeldEventAttendances()
+  const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
+    useVerifiableCredentials(did)
   const { openModal, closeModal, toggleModal } = useModal()
-
-  useEffect(() => {
-    if (!did) {
-      router.push('/login')
-    }
-  }, [did])
 
   return (
     <>
@@ -49,14 +44,27 @@ export const HomeContainer: FC = () => {
                 borderRadius: 'var(--kai-size-sys-round-xl)',
               }}
             >
-              <NextImageContainer
-                src={profile.avatarSrc || '/default_profile.jpg'}
-                width={kai.size.ref[144]}
-                height={kai.size.ref[144]}
-                objectFit='cover'
-                alt='Profile Icon'
-                borderRadius={kai.size.sys.round.xl}
-              />
+              <>
+                {profile.avatarSrc ? (
+                  <ImageContainer
+                    src={profile.avatarSrc}
+                    width={kai.size.ref[144]}
+                    height={kai.size.ref[144]}
+                    objectFit='cover'
+                    alt='Profile Icon'
+                    borderRadius={kai.size.sys.round.xl}
+                  />
+                ) : (
+                  <NextImageContainer
+                    src={'/default_profile.jpg'}
+                    width={kai.size.ref[144]}
+                    height={kai.size.ref[144]}
+                    objectFit='cover'
+                    alt='Profile Icon'
+                    borderRadius={kai.size.sys.round.xl}
+                  />
+                )}
+              </>
             </div>
           </Skelton>
           <FlexVertical gap={kai.size.ref[12]} alignItems='center' width='100%'>
@@ -109,17 +117,16 @@ export const HomeContainer: FC = () => {
             </TabPanel>
             <TabPanel id='attendance'>
               <EventListFrame>
+                {/* <EventItem id={'aaa'} />
                 <EventItem id={'aaa'} />
-                <EventItem id={'aaa'} />
-                <EventItem id={'aaa'} />
+                <EventItem id={'aaa'} /> */}
+
+                {attendances.length > 0 ? (
+                  attendances.map((event) => <EventItem key={event.id} item={event} />)
+                ) : (
+                  <div>イベント参加証はありません。</div>
+                )}
               </EventListFrame>
-              {/* {displayHeldEventAttendances.length == 0 ? (
-              displayHeldEventAttendances.map((event) => (
-                <EventItem key={event.id} id={event.credentialSubject.id} />
-              ))
-            ) : (
-              <div>イベント参加証はありません。</div>
-            )} */}
             </TabPanel>
           </Tabs>
         </MainFrame>

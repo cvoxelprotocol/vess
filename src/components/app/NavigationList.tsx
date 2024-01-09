@@ -43,17 +43,17 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
     })
   }, [router.pathname])
 
-  useEffect(() => {
-    console.log('selectedNavi', selectedNavi)
-    NAVIGATION_LIST.forEach((item, index) => {
-      console.log('item.path', item.path)
-      console.log('router.pathname', router.pathname)
-      if (router.pathname.startsWith(item.path)) {
-        console.log('selectedNaviMeta.path', selectedNaviMeta.path)
-        jumpToURL(selectedNaviMeta?.path)
-      }
-    })
-  }, [selectedNavi])
+  // useEffect(() => {
+  //   console.log('selectedNavi', selectedNavi)
+  //   NAVIGATION_LIST.forEach((item, index) => {
+  //     console.log('item.path', item.path)
+  //     console.log('router.pathname', router.pathname)
+  //     if (router.pathname.startsWith(item.path)) {
+  //       console.log('selectedNaviMeta.path', selectedNaviMeta.path)
+  //       jumpToURL(selectedNaviMeta?.path)
+  //     }
+  //   })
+  // }, [selectedNavi])
 
   const jumpToURL = (url: string) => {
     router.push(url)

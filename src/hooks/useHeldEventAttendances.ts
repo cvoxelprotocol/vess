@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { getVESS } from 'vess-sdk'
-import { useCredentials } from './useCredentials'
+import { useVerifiableCredentials } from './useVerifiableCredentials'
 import { CERAMIC_NETWORK } from '@/constants/common'
 import { isExpired } from '@/utils/date'
 
@@ -9,7 +9,7 @@ export const useHeldEventAttendances = (did?: string) => {
   // const vess = getVESS()
   const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
   const queryClient = useQueryClient()
-  const { attendances, isInitialLoading } = useCredentials(did)
+  const { attendances, isInitialLoading } = useVerifiableCredentials(did)
 
   const { mutateAsync: setHeldEventAttendancesSilently, isLoading } = useMutation<
     void,

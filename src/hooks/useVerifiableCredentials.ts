@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { BaseCredential, CredentialsResponse, WithCeramicId } from '@/@types/credential'
-import { getCredentials } from '@/lib/backup'
+import { getCredentials } from '@/lib/vessApi'
 import { isExpired } from '@/utils/date'
 
-export const useCredentials = (did?: string) => {
+export const useVerifiableCredentials = (did?: string) => {
   const { data: CredentialsByHolder, isInitialLoading } = useQuery<CredentialsResponse | null>(
     ['CredentialsByHolder', did],
     () => fetchCredential(did),
