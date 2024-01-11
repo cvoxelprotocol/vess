@@ -1,9 +1,7 @@
 import {
   useStateUploadedCID,
-
   useStateUploadedIconName,
   useStateUploadedIconUrl,
-  
   useStateUploadStatus,
 } from '@/jotai/file'
 
@@ -15,7 +13,6 @@ export const useFileUpload = () => {
   const [cid, setCID] = useStateUploadedCID()
   const [icon, setIcon] = useStateUploadedIconUrl()
   const [name, setName] = useStateUploadedIconName()
-
 
   const upload = async (files: File[]) => {
     setStatus('uploading')
@@ -52,9 +49,8 @@ export const useFileUpload = () => {
     const fileName = icon.name.replace(TRIM_REGEXP, '_')
     const cid = await upload([icon])
     setName(fileName)
-    setIcon(`https://ipfs.io/ipfs/${cid}/${fileName}`)
+    setIcon(`https://${cid}${DWEB_LINK}`)
   }
-  
 
   const resetUploadStatus = () => {
     setCID(undefined)
