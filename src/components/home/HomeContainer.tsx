@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { PiPencilBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -14,6 +13,7 @@ import { NextImageContainer } from '@/components/ui-v1/Images/NextImageContainer
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
+import { useVESSUser } from '@/hooks/userVESSUser'
 import { useKai } from '@/kai/hooks/useKai'
 import { IconButton } from '@/kai/icon-button'
 import { useModal } from '@/kai/modal'
@@ -27,6 +27,7 @@ export const HomeContainer: FC = () => {
   const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
     useVerifiableCredentials(did)
   const { openModal, closeModal, toggleModal } = useModal()
+  const { VsUser } = useVESSUser(did)
 
   return (
     <>

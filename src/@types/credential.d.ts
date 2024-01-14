@@ -83,6 +83,33 @@ export type OrganizationType = {
   name: string
 }
 
+export type VSUser = {
+  id: string
+  name: string | null
+  avatar: string | null
+  description: string | null
+  did: string | null
+  email: string | null
+  createdAt: Date
+  updatedAt: Date
+  profiles?: Profile[]
+}
+
+export type Profile = {
+  id: string
+  providerUserId: string
+  did: string | null
+  email: string | null
+  userId: string
+  providerId: string
+  provider?: Provider
+}
+
+export type Provider = {
+  id: string
+  name: string
+}
+
 export type GetCollectionResponse = {
   id: string
   organizationId: string
@@ -99,20 +126,26 @@ export type GetCollectionResponse = {
 export type VSCredential = {
   id: string
   organizationId: string
-  credentialTypeId: string
+  credentialTypeId: string | null
   issuerDid: string
   holderDid: string
   ceramicId: string | null
   plainCredential: string
   createdAt: Date
   updatedAt: Date
+  credentialItemId: string
+  holder: VSUser
 }
 
-export type VSCredentialRelation = {
-  credentialId: string
-  itemId: string
-  credential: VSCredential
+type Tag = {
+  id: string
+  name: string
 }
+
+type Tagged = {
+  tag: Tag
+}
+
 export type VSCredentialItemFromBuckup = {
   id: string
   ceramicId: string | undefined
@@ -129,8 +162,9 @@ export type VSCredentialItemFromBuckup = {
   endDate: string | null
   createdAt: string
   updatedAt: string
-  VSCredentialRelation: VSCredentialRelation[]
   organization?: OrganizationType
+  Tagged: Tagged[]
+  credentials?: VSCredential[]
 }
 
 export type GetCollectionItemResponse = GetCollectionResponse & {
