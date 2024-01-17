@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
 import { GrGoogle } from 'react-icons/gr'
@@ -66,22 +67,32 @@ export const LoginPage: FC = () => {
             ウォレットを接続する
           </Button>
           <FlexHorizontal width='100%' gap='var(--kai-size-ref-8)' justifyContent='center'>
-            <Text
-              as='span'
-              typo='label-lg'
-              color={kai.color.sys.onPrimaryContainer}
-              endContent={<LuExternalLink />}
+            <Link
+              href='https://vesslabs.notion.site/VESS-Terms-of-Use-1ae74e0b9ae74b86a5e2e7b377b79722'
+              target='_blank'
             >
-              利用規約
-            </Text>
-            <Text
-              as='span'
-              typo='label-lg'
-              color={kai.color.sys.onPrimaryContainer}
-              endContent={<LuExternalLink />}
+              <Text
+                as='span'
+                typo='label-lg'
+                color={kai.color.sys.onPrimaryContainer}
+                endContent={<LuExternalLink />}
+              >
+                利用規約
+              </Text>
+            </Link>
+            <Link
+              href='https://vesslabs.notion.site/VESS-Privacy-Policy-b22d5bcda02e43189c202ec952467a0d'
+              target='_blank'
             >
-              プライバシーポリシー
-            </Text>
+              <Text
+                as='span'
+                typo='label-lg'
+                color={kai.color.sys.onPrimaryContainer}
+                endContent={<LuExternalLink />}
+              >
+                プライバシーポリシー
+              </Text>
+            </Link>
           </FlexHorizontal>
         </FlexVertical>
         <NextImageContainer

@@ -55,7 +55,6 @@ const TabsFrame = styled(RACTabs)<{ width: string }>`
     width: 100%;
     height: 100%;
     padding: var(--kai-size-ref-4);
-    height: var(--kai-size-ref-40);
     background: var(--kai-color-sys-surface-container-high);
     border-radius: var(--kai-size-sys-round-sm);
 

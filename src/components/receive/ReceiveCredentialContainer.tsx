@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
@@ -20,14 +20,22 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   console.log({ credItem })
 
   const handleIssue = async () => {
+    if (did) {
+      router.push(`/login?rPath=${router.asPath}`)
+      return
+    }
     try {
       if (credItem) {
-        await issue(credItem)
+        const isSuccess = await issue(credItem)
+        if (isSuccess) {
+          router.push(`/did/${did}`)
+        }
       }
     } catch (error) {
       console.log(error)
     }
   }
+
   return (
     <>
       <ReceiveCredentialFrame className='dark'>
@@ -52,21 +60,31 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
           </Text>
         </FlexVertical>
         <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-8)'>
-          <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
-            受け取る
-          </Button>
-          <Button
-            variant='text'
-            size='sm'
-            round='md'
-            onPress={() => {
-              if (did) {
-                router.push(`/did/${did}`)
-              }
-            }}
-          >
-            受け取らずにホームへ
-          </Button>
+          {!did ? (
+            <>
+              <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+                受け取る
+              </Button>
+              <Button
+                variant='text'
+                size='sm'
+                round='md'
+                onPress={() => {
+                  if (did) {
+                    router.push(`/did/${did}`)
+                  }
+                }}
+              >
+                受け取らずにホームへ
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+                ログインして受け取る
+              </Button>
+            </>
+          )}
         </FlexVertical>
       </ReceiveCredentialFrame>
     </>
