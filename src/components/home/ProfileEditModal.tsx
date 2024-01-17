@@ -57,9 +57,6 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       if (files !== null && files[0]) {
         await uploadIcon(files[0])
         const objectURL = URL.createObjectURL(files[0])
-        console.log(objectURL)
-        console.log(icon)
-        console.log(cid)
         URL.revokeObjectURL(objectURL)
         // setErrors('')
       }

@@ -5,6 +5,7 @@ import { VSUser } from '@/@types/credential'
 import { CreateUserInfo, CreateUserWithGoogleInfo } from '@/@types/user'
 import {
   createUserOnlyWithDid,
+  createUserWithDiscord,
   createUserWithEmail,
   createUserWithGoogle,
   getVESSUserByDid,
@@ -76,6 +77,31 @@ export const useVESSUser = (did?: string) => {
     }
   }
 
+  const addUserWithDiscord = async (
+    item: CreateUserWithGoogleInfo,
+    displayToast: boolean = false,
+  ): Promise<boolean> => {
+    showLoading()
+    try {
+      const res = await createUserWithDiscord(item)
+      if (isGoodResponse(res.status)) {
+        if (displayToast) {
+          showToast('User creation succeeded')
+        }
+        queryClient.invalidateQueries(['VsUser'])
+        return true
+      }
+      if (displayToast) {
+        showToast('User creation failed')
+      }
+      return false
+    } catch (error) {
+      console.error('error', error)
+      closeLoading()
+      throw error
+    }
+  }
+
   const addUserOnlyWithDid = async (
     item: CreateUserInfo,
     displayToast: boolean = false,
@@ -103,6 +129,7 @@ export const useVESSUser = (did?: string) => {
   return {
     addUserWithEmail,
     addUserWithGoogle,
+    addUserWithDiscord,
     addUserOnlyWithDid,
     VsUser,
     isInitialLoading,

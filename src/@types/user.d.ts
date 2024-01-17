@@ -5,7 +5,7 @@ export interface CreateUserInfo {
 
 export interface CreateUserWithGoogleInfo extends CreateUserInfo {
   idToken: string
-  googleUserId?: string
+  providerUserId?: string
   accessToken?: string
   refreshToken?: string
 }

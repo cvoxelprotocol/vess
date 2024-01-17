@@ -1,12 +1,10 @@
 import styled from '@emotion/styled'
-import { Router, useRouter } from 'next/router'
+import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
-import { useAccount, useDisconnect } from 'wagmi'
 import { NCLayout } from '../app/NCLayout'
 import { NavigationContextProvider, NavigationList } from '../app/NavigationList'
 import { useConnectDID } from '@/hooks/useConnectDID'
-import { useConnection } from '@/hooks/useConnection'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -16,12 +14,8 @@ type Props = {
 export const BasicLayout: FC<Props> = ({ children }) => {
   const { isLoading, showLoading, closeLoading } = useVESSLoading()
   const { currentTheme, initTheme } = useVESSTheme()
-  const { autoConnect, connectDID } = useConnectDID()
+  const { autoConnect, disConnectDID } = useConnectDID()
   const { did } = useDIDAccount()
-  const { disconnect } = useDisconnect()
-  const { connector, isConnected } = useAccount()
-  const { migrationInvitaion } = useConnection()
-  const router = useRouter()
 
   useEffect(() => {
     initTheme()
@@ -46,16 +40,14 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function init() {
+      console.log({ did })
       if (!did) {
         const session = await getAuthorizedSession()
+        console.log({ session })
         if (session) {
           await autoConnect()
-          migrationInvitaion()
-        } else if (isConnected && connector) {
-          await connectDID(connector)
-          migrationInvitaion()
         } else {
-          disconnect()
+          disConnectDID()
         }
       }
     }
