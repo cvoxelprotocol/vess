@@ -19,7 +19,7 @@ import {
   useSetStateOriginalAddress,
   useStateLoginType,
 } from '@/jotai/account'
-import { getVESS } from '@/lib/vess'
+import { getVESSService } from '@/lib/vess'
 
 export const LOGIN_TYPE = {
   WALLET: 'wallet',
@@ -36,7 +36,7 @@ export const useConnectDID = () => {
   const setChainId = useSetStateChainId()
   const setConnectionStatus = useSetStateConnectionStatus()
   const [stateLoginType, setStateLoginType] = useStateLoginType()
-  const vess = getVESS()
+  const vess = getVESSService()
   const queryClient = useQueryClient()
   const { composeClient } = useComposeContext()
   const { web3Auth } = useWeb3AuthContext()

@@ -5,10 +5,10 @@ import { useHighlightedCredentials } from './useHighlightedCredentials'
 import { useSelfClaimedMembership } from './useSelfClaimedMembership'
 import { useVerifiableCredentials } from './useVerifiableCredentials'
 import { BaseCredential, WithCeramicId } from '@/@types/credential'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 
 export const useHeldMembershipSubject = (did?: string) => {
-  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const vess = getVESS(!isProd())
   const queryClient = useQueryClient()
   const { highlightedCredentials, isFetchingHighlightedCredentials } =
     useHighlightedCredentials(did)

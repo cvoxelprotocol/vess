@@ -5,11 +5,11 @@ import { getVESS } from 'vess-sdk'
 import { useDIDAccount } from './useDIDAccount'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
 
 export const useBusinessProfile = (did?: string) => {
-  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const vess = getVESS(!isProd())
   const queryClient = useQueryClient()
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()

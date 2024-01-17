@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { getVESS } from 'vess-sdk'
 import type { WithCeramicId, CertVCWithParent } from 'vess-sdk'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 
 export const useCertificationSubject = (id?: string) => {
-  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const vess = getVESS(!isProd())
   // fetch from SBT
   const { data: certification, isInitialLoading } = useQuery<
     WithCeramicId<CertVCWithParent> | undefined

@@ -3,6 +3,7 @@ import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 import { Web3AuthNoModal } from '@web3auth/no-modal'
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 import { mainnet } from 'wagmi'
+import { isProd } from '@/constants/common'
 
 let web3AuthInstance: Web3AuthNoModal | undefined
 
@@ -20,7 +21,7 @@ const initializeInstance = (chains: any[]) => {
   const instance = new Web3AuthNoModal({
     clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID || '',
     chainConfig: chainConfig,
-    web3AuthNetwork: 'sapphire_devnet',
+    web3AuthNetwork: isProd() ? 'sapphire_mainnet' : 'sapphire_devnet',
   })
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
   // TODO: set verifier to env
@@ -33,12 +34,12 @@ const initializeInstance = (chains: any[]) => {
       },
       loginConfig: {
         google: {
-          verifier: 'vess-google-verifier-dev',
+          verifier: process.env.NEXT_PUBLIC_WEB3AUTH_GOOGLE_VERIFIER || '',
           typeOfLogin: 'google',
           clientId: process.env.NEXT_PUBLIC_WEB3AUTH_GOOGLE_CLIENT_ID || '',
         },
         discord: {
-          verifier: 'vess-discord-verifier-dev',
+          verifier: process.env.NEXT_PUBLIC_WEB3AUTH_DISCORD_VERIFIER || '',
           typeOfLogin: 'discord',
           clientId: process.env.NEXT_PUBLIC_WEB3AUTH_DISCORD_CLIENT_ID || '',
         },
