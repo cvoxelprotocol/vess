@@ -100,7 +100,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           label='自己紹介文'
           width='100%'
           defaultValue={profile.bio}
-          {...register('description', { required: true })}
+          {...register('description', { required: false })}
           placeholder='自己紹介文を入力'
         />
         {/* <Input control={control} label='名前' name='username' />
