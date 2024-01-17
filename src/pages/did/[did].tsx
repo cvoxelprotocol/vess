@@ -65,7 +65,7 @@ const Profile: NextPage<Props> = (props: Props) => {
         }
         pagePath={`https://app.vess.id/did/${props.did}`}
       />
-      <HomeContainer />
+      <HomeContainer did={props.did} />
     </>
   )
 }

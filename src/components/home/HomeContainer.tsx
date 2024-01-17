@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { PiPencilBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { HCLayout } from '@/components/app/HCLayout'
@@ -20,14 +20,23 @@ import { useModal } from '@/kai/modal'
 import { Skelton } from '@/kai/skelton'
 import { Text } from '@/kai/text/Text'
 
-export const HomeContainer: FC = () => {
-  const { did } = useDIDAccount()
+type Props = {
+  did: string
+}
+export const HomeContainer: FC<Props> = ({ did }) => {
+  const { did: myDid } = useDIDAccount()
   const { profile, isloadingProfile } = useSocialAccount(did)
   const { kai } = useKai()
   const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
     useVerifiableCredentials(did)
   const { openModal, closeModal, toggleModal } = useModal()
   const { VsUser } = useVESSUser(did)
+
+  const isEditable = useMemo(() => {
+    return myDid === did
+  }, [did, myDid])
+
+  console.log({ isEditable })
 
   return (
     <>
@@ -83,13 +92,15 @@ export const HomeContainer: FC = () => {
                 <Text as='h2' typo='headline-sm' color={kai.color.sys.onBackground}>
                   {profile.displayName || 'no name'}
                 </Text>
-                <IconButton
-                  size='sm'
-                  variant='text'
-                  color='secondary'
-                  icon={<PiPencilBold />}
-                  onPress={() => openModal('profileEdit')}
-                />
+                {isEditable && (
+                  <IconButton
+                    size='sm'
+                    variant='text'
+                    color='secondary'
+                    icon={<PiPencilBold />}
+                    onPress={() => openModal('profileEdit')}
+                  />
+                )}
               </Skelton>
             </FlexHorizontal>
             <Skelton

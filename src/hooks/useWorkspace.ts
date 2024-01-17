@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Organization } from 'vess-kit-core'
 import { removeCeramicPrefix } from 'vess-kit-web'
-import { getVESS } from '@/lib/vess'
+import { getVESSService } from '@/lib/vess'
 
 export type OrganizationWithBackendId = Organization & { orgId?: string }
 
 export const useWorkspace = (orgCeramicId?: string) => {
-  const vessKit = getVESS()
+  const vessKit = getVESSService()
 
   const { data: workspace, isInitialLoading: isLoadingOrg } = useQuery<Organization | null>(
     ['workspace', orgCeramicId],

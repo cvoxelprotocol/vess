@@ -76,6 +76,14 @@ export const createUserWithGoogle = async (body: CreateUserWithGoogleInfo): Prom
   }
 }
 
+export const createUserWithDiscord = async (body: CreateUserWithGoogleInfo): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/users/discord', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const createUserWithEmail = async (body: CreateUserInfo): Promise<Response> => {
   try {
     return await baseVessApi('POST', '/users/email', undefined, undefined, body)

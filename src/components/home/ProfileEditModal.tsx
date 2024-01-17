@@ -57,9 +57,6 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       if (files !== null && files[0]) {
         await uploadIcon(files[0])
         const objectURL = URL.createObjectURL(files[0])
-        console.log(objectURL)
-        console.log(icon)
-        console.log(cid)
         URL.revokeObjectURL(objectURL)
         // setErrors('')
       }
@@ -103,7 +100,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           label='自己紹介文'
           width='100%'
           defaultValue={profile.bio}
-          {...register('description', { required: true })}
+          {...register('description', { required: false })}
           placeholder='自己紹介文を入力'
         />
         {/* <Input control={control} label='名前' name='username' />

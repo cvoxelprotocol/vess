@@ -14,21 +14,36 @@ export type TextInputProps = {
   width?: string
   placeholder?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
+  hideLabel?: boolean
 } & Omit<TextFieldProps, 'onChange'>
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
   (
-    { onChange, onBlur, name, label, errorMessage, description, width, placeholder, ...props },
+    {
+      onChange,
+      onBlur,
+      name,
+      label,
+      errorMessage,
+      description,
+      width,
+      placeholder,
+      hideLabel,
+      ...props
+    },
     ref,
   ) => {
     return (
       <>
         <StyledTextField width={width} onBlur={onBlur} name={name} {...props}>
-          <StyledLabel>
-            <Text as='span' typo='label-md' color={'var(--kai-color-sys-on-surface)'}>
-              {label}
-            </Text>
-          </StyledLabel>
+          {!hideLabel && (
+            <StyledLabel>
+              <Text as='span' typo='label-md' color={'var(--kai-color-sys-on-surface)'}>
+                {label}
+              </Text>
+            </StyledLabel>
+          )}
+
           <StyledInput
             ref={ref}
             onChange={onChange}
