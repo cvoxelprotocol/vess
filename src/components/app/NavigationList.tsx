@@ -76,11 +76,19 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
               {({ isSelected }) => (
                 <>
                   {isSelected ? (
-                    <IconDic icon={item.id} variant={'filled'} color={kai.color.sys.onSurface} />
+                    <IconDic
+                      icon={item.id}
+                      variant={'filled'}
+                      color='var(--kai-color-sys-on-surface)'
+                    />
                   ) : (
-                    <IconDic icon={item.id} variant={'default'} color={kai.color.sys.onSurface} />
+                    <IconDic
+                      icon={item.id}
+                      variant={'default'}
+                      color='var(--kai-color-sys-on-surface)'
+                    />
                   )}
-                  <Text as='label' typo='label-lg' color={kai.color.sys.onSurface}>
+                  <Text as='label' typo='label-lg' color='var(--kai-color-sys-on-surface)'>
                     {item.label}
                   </Text>
                 </>

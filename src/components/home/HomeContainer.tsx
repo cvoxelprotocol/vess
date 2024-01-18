@@ -119,26 +119,44 @@ export const HomeContainer: FC<Props> = ({ did }) => {
               </Text>
             </Skelton>
           </FlexVertical>
-          <Tabs>
+          <Tabs defaultSelectedKey={'attendance'}>
             <TabList>
-              <Tab id='membership'>会員証</Tab>
-              <Tab id='attendance'>イベント参加証</Tab>
+              {/* <Tab id='membership'>会員証</Tab> */}
+              <Tab id='attendance'>デジタル参加証</Tab>
             </TabList>
-            <TabPanel id='membership'>
+            {/* <TabPanel id='membership'>
               <div>会員証はありません。</div>
-            </TabPanel>
+            </TabPanel> */}
             <TabPanel id='attendance'>
-              <EventListFrame>
-                {/* <EventItem id={'aaa'} />
+              {/* <EventItem id={'aaa'} />
                 <EventItem id={'aaa'} />
-                <EventItem id={'aaa'} /> */}
+              <EventItem id={'aaa'} /> */}
 
-                {attendances.length > 0 ? (
-                  attendances.map((event) => <EventItem key={event.id} item={event} />)
-                ) : (
-                  <div>イベント参加証はありません。</div>
-                )}
-              </EventListFrame>
+              {attendances.length > 0 || memberships.length > 0 || certificates.length > 0 ? (
+                <EventListFrame>
+                  {attendances.map((event) => (
+                    <EventItem key={event.id} item={event} />
+                  ))}
+                  {memberships && memberships.length > 0 && (
+                    <>
+                      {memberships.map((membership) => (
+                        <EventItem key={membership.id} item={membership} />
+                      ))}
+                    </>
+                  )}
+                  {certificates && certificates.length > 0 && (
+                    <>
+                      {certificates.map((certificate) => (
+                        <EventItem key={certificate.id} item={certificate} />
+                      ))}
+                    </>
+                  )}
+                </EventListFrame>
+              ) : (
+                <FlexVertical width='100%' alignItems='center'>
+                  <div>証明書はありません。</div>
+                </FlexVertical>
+              )}
             </TabPanel>
           </Tabs>
         </MainFrame>

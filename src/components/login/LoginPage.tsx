@@ -2,19 +2,21 @@ import styled from '@emotion/styled'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { BaseSyntheticEvent, FC, useEffect } from 'react'
+import { isMobile } from 'react-device-detect'
 import { useForm } from 'react-hook-form'
-import { GrGoogle } from 'react-icons/gr'
-import { LuExternalLink } from 'react-icons/lu'
-import { SiWalletconnect } from 'react-icons/si'
+import { PiEnvelopeSimple, PiArrowFatRightDuotone } from 'react-icons/pi'
 import { Connector, useConnect } from 'wagmi'
 import { HCLayout } from '../app/HCLayout'
 import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
+import { LoginButton } from './LoginButton'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { Separator } from '@/kai/Separator'
 import { Button } from '@/kai/button/Button'
 import { useKai } from '@/kai/hooks/useKai'
+import { IconButton } from '@/kai/icon-button'
 import { Text } from '@/kai/text/Text'
 import { TextInput } from '@/kai/text-Input/TextInput'
 
@@ -30,9 +32,17 @@ export const LoginPage: FC = () => {
 
   useEffect(() => {
     if (did) {
-      router.push(`/did/${did}`)
+      if (router.query.rPath) {
+        router.push(router.query.rPath as string)
+      } else {
+        router.push(`/did/${did}`)
+      }
     }
   }, [did, router])
+
+  useEffect(() => {
+    console.log('conncectors: ', connectors)
+  }, [connectors])
 
   const {
     handleSubmit,
@@ -69,11 +79,39 @@ export const LoginPage: FC = () => {
   return (
     <HCLayout>
       <LoginFrame>
-        <Text as='h1' typo='headline-lg' color={kai.color.sys.onSurface}>
+        <Text as='h1' typo='headline-lg' color={kai.color.sys.onSurfaceVariant}>
           ログイン / 登録
         </Text>
-        <FlexVertical gap='var(--kai-size-ref-16)' width='100%' padding='0 var(--kai-size-ref-16)'>
-          <Button
+        <FlexVertical gap='var(--kai-size-ref-16)' width='100%'>
+          <FlexHorizontal width='100%' gap='8px' alignItems='center' justifyContent='center'>
+            <LoginButton
+              iconSrc='/brand/google.png'
+              onPress={() => loginWithGoogle()}
+              isDisabled={isLoading}
+              aria-label='Googleでログイン'
+            />
+            <LoginButton
+              iconSrc='/brand/discord.png'
+              onPress={() => loginWithDiscord()}
+              isDisabled={isLoading}
+              aria-label='Discordでログイン'
+            />
+            {!isMobile && (
+              <LoginButton
+                iconSrc='/brand/metamask.png'
+                onPress={() => handleLogin(connectors[1])}
+                isDisabled={isLoading}
+                aria-label='Metamaskでログイン'
+              />
+            )}
+            <LoginButton
+              iconSrc='/brand/walletconnect.png'
+              onPress={() => handleLogin(connectors[0])}
+              isDisabled={isLoading}
+              aria-label='Walletconnectでログイン'
+            />
+          </FlexHorizontal>
+          {/* <Button
             width='100%'
             round='lg'
             size='lg'
@@ -92,18 +130,6 @@ export const LoginPage: FC = () => {
           >
             Discord
           </Button>
-          <Form id='email-login' onSubmit={handleSubmit(onClickSubmit)}>
-            <TextInput
-              label='Email'
-              width='100%'
-              {...register('email', { required: true })}
-              placeholder='Email'
-              hideLabel
-            />
-            <Button width='100%' round='lg' size='lg' type='submit' isDisabled={isLoading}>
-              Emailでログイン
-            </Button>
-          </Form>
           <Text as='h3' typo='label-lg' color={kai.color.sys.onSurface}>
             Walletでログイン
           </Text>
@@ -128,35 +154,49 @@ export const LoginPage: FC = () => {
             isDisabled={isLoading}
           >
             {connectors[1].name}
-          </Button>
-          <FlexHorizontal width='100%' gap='var(--kai-size-ref-8)' justifyContent='center'>
+          </Button> */}
+          <Separator title='または' titlePlacement='in-center' lineWeight='thick' />
+          <Form id='email-login' onSubmit={handleSubmit(onClickSubmit)}>
+            <FlexHorizontal gap='8px' width='100%'>
+              <TextInput
+                label='Email'
+                width='100%'
+                size='lg'
+                {...register('email', { required: true })}
+                placeholder='メールアドレス'
+                isLabel={false}
+                inputStartContent={<PiEnvelopeSimple size={20} />}
+              />
+              <IconButton
+                icon={<PiArrowFatRightDuotone />}
+                round='md'
+                size='lg'
+                type='submit'
+                isDisabled={isLoading}
+                variant='tonal'
+                style={{ flex: '0 0 auto' }}
+              ></IconButton>
+            </FlexHorizontal>
+          </Form>
+          <TermsFrame>
+            ログインまたは登録することで、当サービスの
             <Link
               href='https://vesslabs.notion.site/VESS-Terms-of-Use-1ae74e0b9ae74b86a5e2e7b377b79722'
               target='_blank'
+              style={{ color: 'var(--kai-color-sys-primary)' }}
             >
-              <Text
-                as='span'
-                typo='label-lg'
-                color={kai.color.sys.onPrimaryContainer}
-                endContent={<LuExternalLink />}
-              >
-                利用規約
-              </Text>
+              利用規約
             </Link>
+            および、
             <Link
               href='https://vesslabs.notion.site/VESS-Privacy-Policy-b22d5bcda02e43189c202ec952467a0d'
               target='_blank'
+              style={{ color: 'var(--kai-color-sys-primary)' }}
             >
-              <Text
-                as='span'
-                typo='label-lg'
-                color={kai.color.sys.onPrimaryContainer}
-                endContent={<LuExternalLink />}
-              >
-                プライバシーポリシー
-              </Text>
+              プライバシーポリシー
             </Link>
-          </FlexHorizontal>
+            に同意するものとします。
+          </TermsFrame>
         </FlexVertical>
         <NextImageContainer
           src='/landscape.png'
@@ -185,4 +225,13 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: var(--kai-size-ref-8);
+`
+const TermsFrame = styled.p`
+  width: 100%;
+  padding: 0 var(--kai-size-ref-8);
+  font-family: var(--kai-typo-ref-font-family-base);
+  font-weight: var(--kai-typo-sys-body-md-font-weight);
+  font-size: var(--kai-typo-sys-body-md-bold-font-size);
+  line-height: var(--kai-typo-sys-body-md-line-height);
+  color: var(--kai-color-sys-on-surface-varinant);
 `

@@ -26,20 +26,20 @@ export const DefaultHeader: FC<DefaultHeaderProps> = ({ children }) => {
       >
         {selectedNaviMeta.label}
       </MenuButton>
-      <IconButton
+      {/* <IconButton
         icon={<LuScanLine size={'100%'} />}
         variant='text'
         color='primary'
         onPress={() => router.push('/receive')}
         size='lg'
-      />
+      /> */}
     </HeaderFrame>
   )
 }
 
 const HeaderFrame = styled.header`
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   width: 100%;
   height: var(--kai-size-ref-80);

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect } from 'react'
+import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
@@ -16,11 +17,18 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
   const { issue } = useMyVerifiableCredential()
+  const [receiveStatus, setReceiveStatus] = React.useState<'default' | 'success' | 'failed'>(
+    'default',
+  )
 
   console.log({ credItem })
 
+  useEffect(() => {
+    setReceiveStatus('default')
+  }, [])
+
   const handleIssue = async () => {
-    if (did) {
+    if (!did) {
       router.push(`/login?rPath=${router.asPath}`)
       return
     }
@@ -28,11 +36,12 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
       if (credItem) {
         const isSuccess = await issue(credItem)
         if (isSuccess) {
-          router.push(`/did/${did}`)
+          setReceiveStatus('success')
         }
       }
     } catch (error) {
       console.log(error)
+      setReceiveStatus('failed')
     }
   }
 
@@ -55,34 +64,79 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
               objectFit='cover'
             />
           )}
-          <Text as='h2' typo='headline-sm' color='var(--kai-color-sys-on-background)'>
-            {credItem?.title}
-          </Text>
+          <FlexVertical gap='4px' justifyContent='center' alignItems='center'>
+            <Text as='h2' typo='headline-sm' color='var(--kai-color-sys-on-background)'>
+              {credItem?.title}
+            </Text>
+            {receiveStatus === 'success' && (
+              <Text
+                as='span'
+                typo='title-md'
+                align='center'
+                color='var(--kai-color-sys-secondary)'
+                startContent={<PiCheckCircleDuotone size='24px' />}
+              >
+                受け取りが完了しました
+              </Text>
+            )}
+            {receiveStatus === 'failed' && (
+              <Text
+                as='span'
+                typo='title-md'
+                align='center'
+                color='var(--kai-color-sys-error)'
+                startContent={<PiWarningDuotone size='24px' />}
+              >
+                受け取りに失敗しました
+              </Text>
+            )}
+          </FlexVertical>
         </FlexVertical>
         <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-8)'>
           {!did ? (
             <>
               <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
-                受け取る
-              </Button>
-              <Button
-                variant='text'
-                size='sm'
-                round='md'
-                onPress={() => {
-                  if (did) {
-                    router.push(`/did/${did}`)
-                  }
-                }}
-              >
-                受け取らずにホームへ
+                ログインして受け取る
               </Button>
             </>
           ) : (
             <>
-              <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
-                ログインして受け取る
-              </Button>
+              {receiveStatus === 'success' && (
+                <Button
+                  width='var(--kai-size-ref-240)'
+                  onPress={() => {
+                    if (did) {
+                      return router.push(`/did/${did}`)
+                    }
+                  }}
+                >
+                  ホームに戻る
+                </Button>
+              )}
+              {receiveStatus === 'failed' && (
+                <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+                  もう一度試す
+                </Button>
+              )}
+              {receiveStatus === 'default' && (
+                <>
+                  <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+                    受け取る
+                  </Button>
+                  <Button
+                    variant='text'
+                    size='sm'
+                    round='md'
+                    onPress={() => {
+                      if (did) {
+                        router.push(`/did/${did}`)
+                      }
+                    }}
+                  >
+                    受け取らずにホームへ
+                  </Button>
+                </>
+              )}
             </>
           )}
         </FlexVertical>
