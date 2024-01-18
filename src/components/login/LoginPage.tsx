@@ -40,10 +40,6 @@ export const LoginPage: FC = () => {
     }
   }, [did, router])
 
-  useEffect(() => {
-    console.log('conncectors: ', connectors)
-  }, [connectors])
-
   const {
     handleSubmit,
     register,
