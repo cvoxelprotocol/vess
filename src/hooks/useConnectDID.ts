@@ -8,7 +8,7 @@ import { mainnet } from 'viem/chains'
 import { Connector, useConnect, useDisconnect } from 'wagmi'
 import { useVESSLoading } from './useVESSLoading'
 import { useVESSUser } from './userVESSUser'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
 import { useWeb3AuthContext } from '@/context/web3AuthContext'
 import {
@@ -53,7 +53,7 @@ export const useConnectDID = () => {
       console.log({ res })
 
       showLoading()
-      const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
+      const env = isProd() ? 'mainnet' : 'testnet-clay'
       const provider = await connector?.getProvider()
       const { session } = await vess.connect(res.account, provider, env)
       console.log({ session })
@@ -148,7 +148,7 @@ export const useConnectDID = () => {
       const addresses = await client.getAddresses()
       if (!addresses || addresses.length === 0) throw new Error('addresses is undefined')
 
-      const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
+      const env = isProd() ? 'mainnet' : 'testnet-clay'
       const { session } = await vess.connect(addresses[0], web3authProvider, env)
       const user = await web3Auth.getUserInfo()
 
@@ -198,7 +198,7 @@ export const useConnectDID = () => {
   }
 
   const autoConnect = async () => {
-    const env = CERAMIC_NETWORK == 'mainnet' ? 'mainnet' : 'testnet-clay'
+    const env = isProd() ? 'mainnet' : 'testnet-clay'
     const auth = await vess.autoConnect(env)
     if (auth) {
       const { session } = auth

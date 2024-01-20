@@ -204,11 +204,11 @@ dependencies:
     specifier: 5.1.6
     version: 5.1.6
   vess-kit-core:
-    specifier: 1.0.0-beta.8
-    version: 1.0.0-beta.8
+    specifier: 1.0.1-alpha.1
+    version: 1.0.1-alpha.1
   vess-kit-web:
-    specifier: 1.0.0-beta.8
-    version: 1.0.0-beta.8(expo@49.0.21)(react-native@0.73.2)(ts-node@10.9.1)
+    specifier: 1.0.1-alpha.1
+    version: 1.0.1-alpha.1(expo@49.0.21)(react-native@0.73.2)(ts-node@10.9.1)
   vess-sdk:
     specifier: 1.0.0-alpha.33
     version: 1.0.0-alpha.33
@@ -2238,7 +2238,7 @@ packages:
       '@ceramicnetwork/streamid': 2.14.0
       codeco: 1.1.4
       multiformats: 11.0.2
-      uint8arrays: 4.0.4
+      uint8arrays: 4.0.10
 
   /@ceramicnetwork/codecs@2.2.0:
     resolution: {integrity: sha512-HRDdJN7G954F7KOZ117WxhYUC9pGoUyBc6cEr14MLhhxA9S2+bYYOKZ1VAaTFawF1FB6rQkHIT37IYPVo0tI0A==}
@@ -2689,7 +2689,7 @@ packages:
     dependencies:
       '@ceramicnetwork/stream-model': 1.8.0
       '@ceramicnetwork/stream-model-instance': 1.8.0
-      dids: 4.0.3
+      dids: 4.0.4
       json-schema-typed: 8.0.1
     transitivePeerDependencies:
       - encoding
@@ -2745,7 +2745,7 @@ packages:
     dependencies:
       codeco: 1.1.4
       multiformats: 11.0.2
-      uint8arrays: 4.0.4
+      uint8arrays: 4.0.10
 
   /@didtools/pkh-ethereum@0.0.1:
     resolution: {integrity: sha512-2hDt1f60WXUNWMVS9S9b0pmXl78ivkVxZJHeyBUkbz7O7To1rHvlgvJ0gFJ3sKVemI1llpClzwd3PEjZfGwiUw==}
@@ -2775,24 +2775,13 @@ packages:
       '@stablelib/random': 1.0.2
       caip: 1.1.0
 
-  /@didtools/pkh-ethereum@0.4.0:
-    resolution: {integrity: sha512-NaPDE8QYOpBSa1MghiF0IkCt2kZdcRm0TV/Zcm9uQMqrf2I6qy5RhiRSG+2gPkobIgI+80OIpe6xJ6BmuzWvkQ==}
-    engines: {node: '>=14.14'}
-    dependencies:
-      '@didtools/cacao': 2.1.0
-      '@ethersproject/wallet': 5.7.0
-      '@stablelib/random': 1.0.2
-      caip: 1.1.0
-      uint8arrays: 4.0.4
-    dev: false
-
   /@didtools/pkh-ethereum@0.4.1:
     resolution: {integrity: sha512-oE5bbyTauJ/WddaWnDK7bWns2E2LG4Ut33ICEcEQdlMoXM0902/vnGm8+6QE/yuLOyAllgf7DnDKvERF5IY6uQ==}
     engines: {node: '>=14.14'}
     dependencies:
       '@didtools/cacao': 2.1.0
-      '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
       '@stablelib/random': 1.0.2
       caip: 1.1.0
     dev: false
@@ -2813,10 +2802,10 @@ packages:
     engines: {node: '>=14.14'}
     dependencies:
       '@didtools/cacao': 2.1.0
-      '@noble/curves': 1.1.0
+      '@noble/curves': 1.3.0
       '@stablelib/random': 1.0.2
       caip: 1.1.0
-      uint8arrays: 4.0.4
+      uint8arrays: 4.0.10
 
   /@didtools/pkh-stacks@0.1.0:
     resolution: {integrity: sha512-dEgyHleiIa2afibchNqs07tSqddFS6pX9D5BNxbWH0NAr+FisVCA4nUXajcbd9TUbSuplClfQ4EXjjJAGqlgeg==}
@@ -2847,11 +2836,11 @@ packages:
     engines: {node: '>=14.14'}
     dependencies:
       '@didtools/cacao': 2.1.0
-      '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
       '@stablelib/random': 1.0.2
       caip: 1.1.0
-      uint8arrays: 4.0.4
+      uint8arrays: 4.0.10
 
   /@didtools/siwx@1.0.0:
     resolution: {integrity: sha512-b7sPDTNHdySoJ+Rp2p06x3rg1iTxI4yPTTA3PrPh40xcvFJ0K/YhdIb/Rzff13t92arcJ+VYGFhqtJorauV91g==}
@@ -6393,12 +6382,12 @@ packages:
     resolution: {integrity: sha512-091oBExgENk/kGj3AZmtBDMpxQPDtxQABR2B9lb1JbVTs6ytdzZNwvhxQ4MWasRNEzlbEH8jCWFCwhF/Obj5AA==}
     dependencies:
       '@noble/hashes': 1.3.1
+    dev: false
 
   /@noble/curves@1.3.0:
     resolution: {integrity: sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==}
     dependencies:
       '@noble/hashes': 1.3.3
-    dev: false
 
   /@noble/ed25519@1.7.3:
     resolution: {integrity: sha512-iR8GBkDt0Q3GyaVcIu7mSsVIqnFbkbRzGLWlvhwunacoLwt4J3swfKhfaM6rN6WY+TBGoYT1GtT1mIh2/jGbRQ==}
@@ -6414,11 +6403,11 @@ packages:
   /@noble/hashes@1.3.1:
     resolution: {integrity: sha512-EbqwksQwz9xDRGfDST86whPBgM65E0OH/pCgqW0GBVzO22bNE+NuIbeTb714+IfSjU3aRk47EUvXIb5bTsenKA==}
     engines: {node: '>= 16'}
+    dev: false
 
   /@noble/hashes@1.3.3:
     resolution: {integrity: sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==}
     engines: {node: '>= 16'}
-    dev: false
 
   /@noble/secp256k1@1.7.1:
     resolution: {integrity: sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==}
@@ -8969,10 +8958,10 @@ packages:
 
   /@scure/base@1.1.1:
     resolution: {integrity: sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==}
+    dev: false
 
   /@scure/base@1.1.5:
     resolution: {integrity: sha512-Brj9FiG2W1MRQSTB212YVPRrcbjkv48FoZi/u4l/zds/ieRrqsh7aUf6CLwkAq61oKXr/ZlTzlY66gLIj3TFTQ==}
-    dev: false
 
   /@scure/bip32@1.3.0:
     resolution: {integrity: sha512-bcKpo1oj54hGholplGLpqPHRbIsnbixFtc06nwuNM5/dwSXOq/AAYoIBRsBmnZJSdfeNW5rnff7NTAz3ZCqR9Q==}
@@ -8994,7 +8983,7 @@ packages:
     resolution: {integrity: sha512-pwrPOS16VeTKg98dYXQyIjJEcWfz7/1YJIwxUEPFfQPtc86Ym/1sVgQ2RLoD43AazMk2l/unK4ITySSpW2+82w==}
     dependencies:
       '@noble/hashes': 1.1.5
-      '@scure/base': 1.1.1
+      '@scure/base': 1.1.5
 
   /@scure/bip39@1.2.0:
     resolution: {integrity: sha512-SX/uKq52cuxm4YFXWFaVByaSHJh2w3BnokVSeUJVCv6K7WulT9u2BuNRBhuFl8vAuYnzx9bEu9WgpcNYTrYieg==}
@@ -10652,7 +10641,7 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/strings': 5.7.0
       '@ethersproject/transactions': 5.7.0
-      '@noble/curves': 1.1.0
+      '@noble/curves': 1.3.0
       '@veramo/core-types': 5.5.3
       '@veramo/utils': 5.5.3
       debug: 4.3.4
@@ -10674,7 +10663,7 @@ packages:
       '@ethersproject/strings': 5.7.0
       '@ethersproject/transactions': 5.7.0
       '@ethersproject/wallet': 5.7.0
-      '@noble/curves': 1.1.0
+      '@noble/curves': 1.3.0
       '@stablelib/nacl': 1.0.4
       '@stablelib/random': 1.0.2
       '@veramo/core-types': 5.5.3
@@ -10717,8 +10706,8 @@ packages:
     dependencies:
       '@ethersproject/signing-key': 5.7.0
       '@ethersproject/transactions': 5.7.0
-      '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
       '@veramo/core-types': 5.5.3
       credential-status: 2.0.6
       cross-fetch: 4.0.0
@@ -12881,7 +12870,7 @@ packages:
     resolution: {integrity: sha512-rpwfAcS/CMqo0oCqDf3r9eeLgScRE3l/xHDCXhM3UyrfvIn7PrLq63uHh7yYbv8NzaZn5MVsVhIRpQ+5GZ5HyA==}
     engines: {node: '>=8'}
     dependencies:
-      '@noble/hashes': 1.3.1
+      '@noble/hashes': 1.3.3
       base-x: 4.0.0
 
   /cacache@15.3.0:
@@ -12991,7 +12980,7 @@ packages:
   /cartonne@2.2.0:
     resolution: {integrity: sha512-O1rA2AQKnposZJ7oT+GtCQpcv4kfs+gqkCs5rFLBfegP3K0nWNmHj5q4d8NlUxqe3EHvAddCci6WO+ogupl3MA==}
     dependencies:
-      '@ipld/dag-cbor': 9.0.3
+      '@ipld/dag-cbor': 9.0.8
       multiformats: 11.0.2
       multihashes-sync: 1.1.3
       varintes: 2.0.5
@@ -13725,7 +13714,7 @@ packages:
   /dag-jose@4.0.0:
     resolution: {integrity: sha512-tw595L3UYoOUT9dSJPbBEG/qpRpw24kRZxa5SLRnlnr+g5L7O8oEs1d3W5TiVA1oJZbthVsf0Vi3zFN66qcEBA==}
     dependencies:
-      '@ipld/dag-cbor': 9.0.3
+      '@ipld/dag-cbor': 9.0.8
       multiformats: 11.0.2
     dev: false
 
@@ -14028,22 +14017,22 @@ packages:
   /did-jwt@7.2.4:
     resolution: {integrity: sha512-xEWP+4Q0nCC/Gpek2psYR8zu2qiLnsfgr4b1s5y6DAGrgH/BvRCIxOuX+/iyzQ6N5pHHzPRDE+wKrLh7ObnJUg==}
     dependencies:
-      '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
       '@stablelib/xchacha20poly1305': 1.0.1
       bech32: 2.0.0
       canonicalize: 2.0.0
       did-resolver: 4.1.0
       multiformats: 12.1.3
-      uint8arrays: 4.0.4
+      uint8arrays: 4.0.10
     dev: false
 
   /did-jwt@7.4.7:
     resolution: {integrity: sha512-Apz7nIfIHSKWIMaEP5L/K8xkwByvjezjTG0xiqwKdnNj1x8M0+Yasury5Dm/KPltxi2PlGfRPf3IejRKZrT8mQ==}
     dependencies:
       '@noble/ciphers': 0.4.1
-      '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.5
       canonicalize: 2.0.0
       did-resolver: 4.1.0
@@ -14106,7 +14095,7 @@ packages:
     dependencies:
       '@didtools/cacao': 2.1.0
       '@didtools/codecs': 1.0.1
-      '@didtools/pkh-ethereum': 0.4.0
+      '@didtools/pkh-ethereum': 0.4.1
       '@stablelib/random': 1.0.2
       codeco: 1.1.4
       dag-jose-utils: 3.0.0
@@ -17871,7 +17860,7 @@ packages:
   /jsontokens@4.0.1:
     resolution: {integrity: sha512-+MO415LEN6M+3FGsRz4wU20g7N2JA+2j9d9+pGaNJHviG4L8N0qzavGyENw6fJqsq9CcrHOIL6iWX5yeTZ86+Q==}
     dependencies:
-      '@noble/hashes': 1.3.1
+      '@noble/hashes': 1.3.3
       '@noble/secp256k1': 1.7.1
       base64-js: 1.5.1
 
@@ -17992,7 +17981,7 @@ packages:
     resolution: {integrity: sha512-4Yw0CeO1hKRaUsh9NIz4tn4Ysr09CdoJItyT0vHjd5iedJ+FvVt7pTbNr7IY0/+8mWvYslutAK5LFrwu5agpsA==}
     engines: {node: '>=14.14'}
     dependencies:
-      '@noble/curves': 1.1.0
+      '@noble/curves': 1.3.0
       did-jwt: 7.4.7
       dids: 4.0.4
       fast-json-stable-stringify: 2.1.0
@@ -19276,7 +19265,7 @@ packages:
   /multihashes-sync@1.1.3:
     resolution: {integrity: sha512-996qBYdXxol6Pjjw++lsdgrEMI/6S6Su4bt0D/vb5TGpJsqicVxkramwIbuRaJU4WYUTytYPGRru2s626Qkzlw==}
     dependencies:
-      '@noble/hashes': 1.3.1
+      '@noble/hashes': 1.3.3
       multiformats: 11.0.2
     dev: false
 
@@ -23014,7 +23003,6 @@ packages:
     resolution: {integrity: sha512-AnJNUGGDJAgFw/eWu/Xb9zrVKEGlwJJCaeInlf3BkecE/zcTobk5YXYIPNQJO1q5Hh1QZrQQHf0JvcHqz2hqoA==}
     dependencies:
       multiformats: 12.1.3
-    dev: false
 
   /uint8arrays@4.0.4:
     resolution: {integrity: sha512-AOoA66e/A7zoXm1mgzQjGmkWDTvCrS3ttWXLHFtlVAwMobLcaOA7G7WRNNAcyfjjYdFDtkEK6njRDX7hZLIO9Q==}
@@ -23448,8 +23436,8 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /vess-kit-core@1.0.0-beta.8:
-    resolution: {integrity: sha512-ruAwNj069DhuWpxfUBQsIwSCokypxK60ksMMs3aWgOzcy9dKS448yGiCezBZyZ4TZ3dTH5R2CLcsNcODBrEq8A==}
+  /vess-kit-core@1.0.1-alpha.1:
+    resolution: {integrity: sha512-0KTIKsk3ivTpGGVgKLLJx1XVGTOUT3KEVvi378eCynq63+01glP9BVa26VD2pt3QIQDMv3U5d4v8vlteM282rw==}
     dependencies:
       '@composedb/client': 0.6.0
       '@composedb/types': 0.6.0
@@ -23459,8 +23447,8 @@ packages:
       - encoding
     dev: false
 
-  /vess-kit-web@1.0.0-beta.8(expo@49.0.21)(react-native@0.73.2)(ts-node@10.9.1):
-    resolution: {integrity: sha512-upAg90ISwxaDkFlj7qO+EZ/6gVh3hpUIbTQqil71QqNvcuZ34lH2iXUX3vw3kOw4sx6sfD7ORoOzisa+XOcaFQ==}
+  /vess-kit-web@1.0.1-alpha.1(expo@49.0.21)(react-native@0.73.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-J2GbXe8PrnSaQePs8i2pedzAqzhFvaQqIpgoTruaxg544Jgj4MMS29uK+hOE1A/qAoj7zec3sBHHMIFKU/07lA==}
     dependencies:
       '@composedb/client': 0.6.0
       '@composedb/types': 0.6.0
@@ -23482,7 +23470,7 @@ packages:
       did-resolver: 4.1.0
       did-session: 2.0.1
       pkh-did-resolver: 1.2.0
-      vess-kit-core: 1.0.0-beta.8
+      vess-kit-core: 1.0.1-alpha.1
       web-did-resolver: 2.0.27
     transitivePeerDependencies:
       - '@google-cloud/spanner'
