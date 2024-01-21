@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 import { PiPencilBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { CredItem } from './CredItem'
 import { HCLayout } from '@/components/app/HCLayout'
 import { DefaultHeader } from '@/components/app/Header'
 import { EventItem } from '@/components/home/EventItem'
@@ -122,7 +123,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
           <Tabs defaultSelectedKey={'attendance'}>
             <TabList>
               {/* <Tab id='membership'>会員証</Tab> */}
-              <Tab id='attendance'>デジタル参加証</Tab>
+              <Tab id='attendance'>デジタル証明</Tab>
             </TabList>
             {/* <TabPanel id='membership'>
               <div>会員証はありません。</div>
@@ -135,19 +136,31 @@ export const HomeContainer: FC<Props> = ({ did }) => {
               {attendances.length > 0 || memberships.length > 0 || certificates.length > 0 ? (
                 <EventListFrame>
                   {attendances.map((event) => (
-                    <EventItem key={event.id} item={event} />
+                    <CredItem
+                      key={event.id}
+                      image={event.credentialSubject.eventIcon}
+                      name={event.credentialSubject.eventName}
+                    />
                   ))}
                   {memberships && memberships.length > 0 && (
                     <>
                       {memberships.map((membership) => (
-                        <EventItem key={membership.id} item={membership} />
+                        <CredItem
+                          key={membership.id}
+                          image={membership.credentialSubject.membershipIcon}
+                          name={membership.credentialSubject.membershipName}
+                        />
                       ))}
                     </>
                   )}
                   {certificates && certificates.length > 0 && (
                     <>
                       {certificates.map((certificate) => (
-                        <EventItem key={certificate.id} item={certificate} />
+                        <CredItem
+                          key={certificate.id}
+                          image={certificate.credentialSubject.image}
+                          name={certificate.credentialSubject.certificationName}
+                        />
                       ))}
                     </>
                   )}

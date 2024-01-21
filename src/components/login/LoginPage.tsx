@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { BaseSyntheticEvent, FC, useEffect } from 'react'
+import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useForm } from 'react-hook-form'
 import { PiEnvelopeSimple, PiArrowFatRightDuotone } from 'react-icons/pi'
@@ -14,7 +14,6 @@ import { LoginButton } from './LoginButton'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { Separator } from '@/kai/Separator'
-import { Button } from '@/kai/button/Button'
 import { useKai } from '@/kai/hooks/useKai'
 import { IconButton } from '@/kai/icon-button'
 import { Text } from '@/kai/text/Text'
@@ -30,12 +29,21 @@ export const LoginPage: FC = () => {
   const router = useRouter()
   const { did } = useDIDAccount()
 
+  // Avoid hydration error
+  const [hideMetamask, setHideMetamask] = useState(false)
+
+  useEffect(() => {
+    setHideMetamask(isMobile)
+  }, [])
+
   useEffect(() => {
     if (did) {
       if (router.query.rPath) {
         router.push(router.query.rPath as string)
+        return
       } else {
         router.push(`/did/${did}`)
+        return
       }
     }
   }, [did, router])
@@ -92,7 +100,7 @@ export const LoginPage: FC = () => {
               isDisabled={isLoading}
               aria-label='Discordでログイン'
             />
-            {!isMobile && (
+            {!hideMetamask && (
               <LoginButton
                 iconSrc='/brand/metamask.png'
                 onPress={() => handleLogin(connectors[1])}
@@ -107,50 +115,6 @@ export const LoginPage: FC = () => {
               aria-label='Walletconnectでログイン'
             />
           </FlexHorizontal>
-          {/* <Button
-            width='100%'
-            round='lg'
-            size='lg'
-            startContent={<GrGoogle />}
-            onPress={() => loginWithGoogle()}
-            isDisabled={isLoading}
-          >
-            Google
-          </Button>
-          <Button
-            width='100%'
-            round='lg'
-            size='lg'
-            onPress={() => loginWithDiscord()}
-            isDisabled={isLoading}
-          >
-            Discord
-          </Button>
-          <Text as='h3' typo='label-lg' color={kai.color.sys.onSurface}>
-            Walletでログイン
-          </Text>
-          <Button
-            variant='outlined'
-            width='100%'
-            round='lg'
-            size='lg'
-            startContent={<SiWalletconnect />}
-            onPress={() => handleLogin(connectors[0])}
-            isDisabled={isLoading}
-          >
-            {connectors[0].name}
-          </Button>
-          <Button
-            variant='outlined'
-            width='100%'
-            round='lg'
-            size='lg'
-            // startContent={<SiWalletconnect />}
-            onPress={() => handleLogin(connectors[1])}
-            isDisabled={isLoading}
-          >
-            {connectors[1].name}
-          </Button> */}
           <Separator title='または' titlePlacement='in-center' lineWeight='thick' />
           <Form id='email-login' onSubmit={handleSubmit(onClickSubmit)}>
             <FlexHorizontal gap='8px' width='100%'>

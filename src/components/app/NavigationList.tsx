@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { set } from 'date-fns'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import type { RadioProps, RadioGroupProps } from 'react-aria-components'
 import { Radio, RadioGroup } from 'react-aria-components'
 import { isMobile } from 'react-device-detect'
@@ -24,6 +24,12 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
 
+  // Avoid hydration error
+  const [isMobileClient, setIsMobileClient] = useState(false)
+  useEffect(() => {
+    setIsMobileClient(isMobile)
+  }, [])
+
   const logout = async () => {
     try {
       await disConnectDID()
@@ -43,24 +49,8 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
     })
   }, [router.pathname])
 
-  // useEffect(() => {
-  //   console.log('selectedNavi', selectedNavi)
-  //   NAVIGATION_LIST.forEach((item, index) => {
-  //     console.log('item.path', item.path)
-  //     console.log('router.pathname', router.pathname)
-  //     if (router.pathname.startsWith(item.path)) {
-  //       console.log('selectedNaviMeta.path', selectedNaviMeta.path)
-  //       jumpToURL(selectedNaviMeta?.path)
-  //     }
-  //   })
-  // }, [selectedNavi])
-
-  const jumpToURL = (url: string) => {
-    router.push(url)
-  }
-
   return (
-    <NavigationListFrame data-mobile={isMobile}>
+    <NavigationListFrame data-mobile={isMobileClient}>
       <NextImageContainer src='/logo_bard.png' width='4rem' height='4rem' objectFit='contain' />
       <NavigationItemGroup
         name='navigation'
