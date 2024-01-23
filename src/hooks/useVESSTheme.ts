@@ -8,11 +8,11 @@ export const useVESSTheme = () => {
   const { themeMode, setDarkMode, setThemeMode, initTheme, typoMode } = useThemeMode()
 
   const currentTheme = useMemo(() => {
-    return theme.schemes['dark'] // forced to dark
+    return theme.schemes[themeMode]
   }, [themeMode, theme])
 
   const currentTypo = useMemo(() => {
-    return theme.typography[typoMode]
+    return theme.typography['en']
   }, [typoMode, theme])
 
   const getBasicFont = (font: Font) => {
@@ -20,14 +20,15 @@ export const useVESSTheme = () => {
     font-size: ${font.fontSize}; \n
     line-height: ${font.lineHeight};`
   }
+  const currentEffects = theme.effects
 
   return {
     setDarkMode,
-    setThemeMode,
     initTheme,
-    themeMode,
-    getBasicFont,
     currentTheme,
     currentTypo,
+    currentEffects,
+    themeMode,
+    getBasicFont,
   }
 }

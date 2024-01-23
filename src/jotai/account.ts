@@ -1,5 +1,6 @@
 import { atom, useAtom, useSetAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { LoginTypeProps } from '@/hooks/useConnectDID'
 
 export const LOGIN_TYPE_KEY = 'vess-org-login-type'
 
@@ -37,7 +38,7 @@ export const useStateChainId = () => useAtom(chainId)
 export const useSetStateChainId = () => useSetAtom(chainId)
 export const useChainId = () => useAtomValue(chainId)
 
-export const loginType = atomWithStorage<'wallet' | 'cloud' | undefined>(LOGIN_TYPE_KEY, undefined)
+export const loginType = atomWithStorage<LoginTypeProps | undefined>(LOGIN_TYPE_KEY, undefined)
 
 export const useStateLoginType = () => useAtom(loginType)
 export const useSetStateLoginType = () => useSetAtom(loginType)

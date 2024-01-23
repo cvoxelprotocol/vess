@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compiler: {
+    styledComponents: true,
+    displayName: false,
+  },
   reactStrictMode: true,
   swcMinify: true,
   images: {

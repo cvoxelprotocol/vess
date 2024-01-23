@@ -1,6 +1,5 @@
 import { atom, useAtom } from 'jotai'
-import { BaseToastProps } from '@/components/atom/Toasts/BaseToast'
-import { NavigationItemType, NAVIGATION_ITEM, ProfileTabType } from '@/constants/ui'
+import { BaseToastProps } from '@/components/ui-v1/Toasts/BaseToast'
 
 export const themeMode = atom<'light' | 'dark'>('light')
 
@@ -42,10 +41,6 @@ export const vessToastProps = atom<BaseToastProps | null>(null)
 
 export const useStateVessToastProps = () => useAtom(vessToastProps)
 
-export const selectedNavigationItem = atom<NavigationItemType>(NAVIGATION_ITEM.HOME)
-
-export const useStateSelectedNavigationItem = () => useAtom(selectedNavigationItem)
-
 export const socialProfileEditModal = atom<boolean>(false)
 
 export const useStateSocialProfileEditModal = () => useAtom(socialProfileEditModal)
@@ -69,10 +64,6 @@ export const useStateShowTaskDetailModal = () => useAtom(showTaskDetailModal)
 export const showTaskFormModal = atom<boolean>(false)
 
 export const useStateShowTaskFormModal = () => useAtom(showTaskFormModal)
-
-export const profileTab = atom<ProfileTabType>('Connections')
-
-export const useStateProfileTab = () => useAtom(profileTab)
 
 export const showConnectModal = atom<boolean>(false)
 

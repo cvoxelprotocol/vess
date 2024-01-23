@@ -2,14 +2,9 @@ import styled from '@emotion/styled'
 import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
-import { useAccount, useDisconnect } from 'wagmi'
-import { NavigationList } from '../molecure/Navigation/NavigationList'
-import { Footer } from '../organism/Footer/Footer'
-import { BaseHeader } from '../organism/Header/BaseHeader'
-import LoadingModal from '../organism/Modal/LoadingModal'
-import { footerLinks } from '@/constants/footerLinks'
+import { NCLayout } from '../app/NCLayout'
+import { NavigationContextProvider, NavigationList } from '../app/NavigationList'
 import { useConnectDID } from '@/hooks/useConnectDID'
-import { useConnection } from '@/hooks/useConnection'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
@@ -19,70 +14,9 @@ type Props = {
 export const BasicLayout: FC<Props> = ({ children }) => {
   const { isLoading, showLoading, closeLoading } = useVESSLoading()
   const { currentTheme, initTheme } = useVESSTheme()
-  const { autoConnect, connectDID } = useConnectDID()
+  const { autoConnect, disConnectDID } = useConnectDID()
   const { did } = useDIDAccount()
-  const { disconnect } = useDisconnect()
-  const { connector, isConnected } = useAccount()
-  const { migrationInvitaion } = useConnection()
 
-  const LayoutContainer = styled.div`
-    display: grid;
-    width: 100vw;
-    height: auto;
-    min-height: 100vh;
-    grid-template-columns: 80px 1fr;
-    grid-template-rows: 80px 1fr;
-    @media (max-width: 1079px) {
-      grid-template-columns: 80px 1fr;
-      grid-template-rows: 80px 1fr;
-    }
-    @media (max-width: 599px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: 64px 1fr;
-    }
-    background: ${currentTheme.background};
-  `
-  const NaviContainer = styled.div`
-    grid-column: 1 /2;
-    @media (max-width: 1079px) {
-      grid-column: 1 /2;
-    }
-    width: 80px;
-    height: 100vh;
-    background: ${currentTheme.depth4};
-    position: fixed;
-    z-index: 30;
-    @media (max-width: 599px) {
-      display: none;
-    }
-  `
-
-  const MainWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    grid-column: 2;
-    grid-row: 2;
-    overflow: hidden;
-    @media (max-width: 599px) {
-      grid-column: 1;
-      grid-row: 2;
-    }
-  `
-
-  const MainContainer = styled.div`
-    background: ${currentTheme.background};
-    max-width: 984px;
-    width: 100%;
-    margin: 0 auto;
-    height: 100%;
-    min-height: 100vh;
-    @media (max-width: 599px) {
-      width: 100%;
-      overflow-x: hidden;
-    }
-  `
   useEffect(() => {
     initTheme()
   }, [])
@@ -106,16 +40,14 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function init() {
+      console.log({ did })
       if (!did) {
         const session = await getAuthorizedSession()
+        console.log({ session })
         if (session) {
           await autoConnect()
-          migrationInvitaion()
-        } else if (isConnected && connector) {
-          await connectDID(connector)
-          migrationInvitaion()
         } else {
-          disconnect()
+          disConnectDID()
         }
       }
     }
@@ -123,18 +55,32 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   }, [])
 
   return (
-    <>
-      <LayoutContainer>
-        <BaseHeader />
-        <NaviContainer>
-          <NavigationList />
-        </NaviContainer>
-        <MainWrapper>
-          <MainContainer id={'MainContainer'}>{children}</MainContainer>
-          <Footer src='/vess_logo_full_white.png' links={footerLinks} />
-          {isLoading && <LoadingModal />}
-        </MainWrapper>
-      </LayoutContainer>
-    </>
+    <NavigationContextProvider>
+      <CenterLayout>
+        <NCLayoutWrapper>
+          <NCLayout navigation={<NavigationList></NavigationList>}>{children}</NCLayout>
+        </NCLayoutWrapper>
+      </CenterLayout>
+    </NavigationContextProvider>
   )
 }
+
+const CenterLayout = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  place-content: center;
+  background: var(--kai-color-sys-background);
+`
+
+const NCLayoutWrapper = styled.div`
+  width: 100%;
+  max-width: var(--kai-size-breakpoint-md-min-width);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+
+  @media (min-width: 839px) {
+    overflow: visible;
+  }
+`

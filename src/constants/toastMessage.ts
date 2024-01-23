@@ -40,9 +40,9 @@ export const EVENT_ATTENDANCE_HELD_SUCCEED = 'Successfully got event attendance!
 export const EVENT_ATTENDANCE_HELD_FAILED =
   'Failed to get event attendance. Please try again or contact support'
 
-export const BUSINESS_PROFILE_SET_SUCCEED = 'Updated business profile Successfully!'
+export const BUSINESS_PROFILE_SET_SUCCEED = 'Updated your profile Successfully!'
 export const BUSINESS_PROFILE_SET_FAILED =
-  'Failed to update business profile. Please try again or contact support'
+  'Failed to update your profile. Please try again or contact support'
 
 export const SOCIAL_LINKS_SET_SUCCEED = 'Updated social links Successfully!'
 export const SOCIAL_LINKS_SET_FAILED =
@@ -55,3 +55,6 @@ export const SELF_CLAIMED_TASK_CREATION_FAILED =
 export const PROOF_OF_CONNECTION_ISSUED = 'Congrats! New connection issued!'
 export const PROOF_OF_CONNECTION_FAILED =
   'Failed to issue new connection. Please try again or contact support'
+
+export const VC_CREATION_SUCCEED = 'Successfully issued new VCs!'
+export const VC_CREATION_FAILED = 'Failed to issue VCs...'

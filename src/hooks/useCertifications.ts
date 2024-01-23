@@ -1,7 +1,7 @@
-import { useCredentials } from './useCredentials'
+import { useVerifiableCredentials } from './useVerifiableCredentials'
 
 export const useCertifications = (did?: string) => {
-  const { certificates, isInitialLoading } = useCredentials(did)
+  const { certificates, isInitialLoading } = useVerifiableCredentials(did)
 
   return {
     heldCertificationSubjects: certificates,

@@ -4,11 +4,11 @@ import type { SocialLinks, CustomResponse } from 'vess-sdk'
 import { getVESS } from 'vess-sdk'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 import { SOCIAL_LINKS_SET_FAILED, SOCIAL_LINKS_SET_SUCCEED } from '@/constants/toastMessage'
 
 export const useSocialLinks = (did?: string) => {
-  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const vess = getVESS(!isProd())
   const queryClient = useQueryClient()
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()

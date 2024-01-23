@@ -1,19 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { getVESS, removeCeramicPrefix } from 'vess-sdk'
-import { useCredentials } from './useCredentials'
 import { useHighlightedCredentials } from './useHighlightedCredentials'
 import { useSelfClaimedMembership } from './useSelfClaimedMembership'
+import { useVerifiableCredentials } from './useVerifiableCredentials'
 import { BaseCredential, WithCeramicId } from '@/@types/credential'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 
 export const useHeldMembershipSubject = (did?: string) => {
-  const vess = getVESS(CERAMIC_NETWORK !== 'mainnet')
+  const vess = getVESS(!isProd())
   const queryClient = useQueryClient()
   const { highlightedCredentials, isFetchingHighlightedCredentials } =
     useHighlightedCredentials(did)
   const { selfClaimedMemberships } = useSelfClaimedMembership(did)
-  const { memberships, isInitialLoading } = useCredentials(did)
+  const { memberships, isInitialLoading } = useVerifiableCredentials(did)
 
   const displayHeldMembership = useMemo(() => {
     if (!memberships || memberships.length === 0) return []

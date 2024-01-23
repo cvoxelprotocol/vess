@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         body: JSON.stringify({ ...req.body }),
       })
     } else {
-      return await fetch(url, {
+      response = await fetch(url, {
         method: 'POST',
         headers,
         body: JSON.stringify({ ...req.body }),

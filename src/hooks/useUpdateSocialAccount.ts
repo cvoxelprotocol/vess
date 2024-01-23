@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { formatDID } from 'vess-sdk'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
@@ -10,12 +11,14 @@ export const useUpdateSocialAccount = (did?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
   const { showToast } = useToast()
   const queryClient = useQueryClient()
+  const [isUpdatingSocialAccount, setIsUpdatingSocialAccount] = useState(false)
 
   const { mutateAsync: update } = useMutation<OrbisBaseResponse, unknown, UpdateOrbisProfileParam>(
     (param) => updateOrbisProfile(param),
     {
       onMutate: async (variables) => {
         showLoading()
+        setIsUpdatingSocialAccount(true)
         // ootimistic mutation
         await queryClient.cancelQueries(['onChainProfile', did])
         const optimistic = {
@@ -29,9 +32,11 @@ export const useUpdateSocialAccount = (did?: string) => {
       onSuccess(data, v, _) {
         if (data.status === 200) {
           closeLoading()
+          setIsUpdatingSocialAccount(false)
           showToast(BUSINESS_PROFILE_SET_SUCCEED)
         } else {
           closeLoading()
+          setIsUpdatingSocialAccount(false)
           showToast(BUSINESS_PROFILE_SET_FAILED)
           console.error(data.result)
         }
@@ -46,6 +51,7 @@ export const useUpdateSocialAccount = (did?: string) => {
         console.error('error', error)
         queryClient.invalidateQueries(['onChainProfile', did])
         closeLoading()
+        setIsUpdatingSocialAccount(false)
         showToast(BUSINESS_PROFILE_SET_FAILED)
       },
     },
@@ -53,5 +59,6 @@ export const useUpdateSocialAccount = (did?: string) => {
 
   return {
     update,
+    isUpdatingSocialAccount,
   }
 }

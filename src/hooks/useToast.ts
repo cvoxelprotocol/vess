@@ -1,20 +1,13 @@
-import { IconsType } from '@/components/atom/Icons/Icon'
-import { BaseToastProps } from '@/components/atom/Toasts/BaseToast'
+import { BaseToastProps } from '@/components/ui-v1/Toasts/BaseToast'
 import { useStateOpenToast, useStateVessToastProps } from '@/jotai/ui'
 
 export const useToast = () => {
   const [_, setOpen] = useStateOpenToast()
   const [props, setProps] = useStateVessToastProps()
 
-  const show = (
-    text: string,
-    tailIcon?: IconsType,
-    actionTitle?: string,
-    onClickAction?: () => void,
-  ) => {
+  const show = (text: string, actionTitle?: string, onClickAction?: () => void) => {
     const props: BaseToastProps = {
       text,
-      tailIcon,
       actionTitle,
       onClickAction,
     }
@@ -23,12 +16,8 @@ export const useToast = () => {
   }
 
   return {
-    showToast: (
-      text: string,
-      tailIcon?: IconsType,
-      actionTitle?: string,
-      onClickAction?: () => void,
-    ) => show(text, tailIcon, actionTitle, onClickAction),
+    showToast: (text: string, actionTitle?: string, onClickAction?: () => void) =>
+      show(text, actionTitle, onClickAction),
     props,
   }
 }

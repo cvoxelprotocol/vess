@@ -4,7 +4,7 @@ import { ComposeClient } from '@composedb/client'
 import { RuntimeCompositeDefinition } from '@composedb/types'
 import { definition as devDifinition } from '../__generated__/dev/definition.js'
 import { definition as prodDifinition } from '../__generated__/prod/definition.js'
-import { CERAMIC_NETWORK } from '@/constants/common'
+import { isProd } from '@/constants/common'
 
 export type ClientType = {
   apolloClient: ApolloClient<NormalizedCacheObject>
@@ -16,9 +16,7 @@ const createClient = (): ClientType => {
   const compose = new ComposeClient({
     ceramic: process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007',
     // cast our definition as a RuntimeCompositeDefinition
-    definition: (CERAMIC_NETWORK === 'mainnet'
-      ? prodDifinition
-      : devDifinition) as RuntimeCompositeDefinition,
+    definition: (isProd() ? prodDifinition : devDifinition) as RuntimeCompositeDefinition,
   })
   const link = new ApolloLink((operation) => {
     return new Observable((observer) => {
