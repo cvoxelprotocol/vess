@@ -69,6 +69,11 @@ const ModalOverlay = styled(RACModalOverlay)`
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  &:focus-visible {
+    position: absolute;
+    inset: none;
+    bottom: 250px;
+  }
 `
 const SlideIn = keyframes`
     from {

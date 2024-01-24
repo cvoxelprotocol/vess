@@ -33,6 +33,8 @@ const LayoutFrame = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: min-content 1fr;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `
 
 const HeaderFrame = styled.div`
