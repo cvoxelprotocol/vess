@@ -46,3 +46,6 @@ robots.txt
 
 #lock files
 pnpm-lock.yaml
+
+#misc
+.node-version

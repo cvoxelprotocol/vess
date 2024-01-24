@@ -5,6 +5,7 @@ import type { DehydratedState } from '@tanstack/react-query'
 import { MetaMaskConnector } from '@wagmi/core/connectors/metaMask'
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
 import { Provider as JotaiProvider } from 'jotai'
+import { KaiProvider } from 'kai-kit'
 import type { AppProps } from 'next/app'
 import { useState } from 'react'
 import { configureChains, mainnet, WagmiConfig, createConfig } from 'wagmi'
@@ -14,24 +15,29 @@ import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { GATracking } from '@/components/ui-v1/Common/GATracking'
 import { VESSToast } from '@/components/ui-v1/Toasts/VESSToast'
 import { ComposeWrapper } from '@/context/compose'
-import { KaiProvider } from '@/kai/kai-provider/KaiProvider'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
 import '@/styles/globals.css'
 import '@/tokens/build/css/kai-tokens.css'
+import { kaiTokens } from '@/styles/kaiTokens'
 
 const notoSans = Noto_Sans({
   style: 'normal',
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
+  variable: '--font-noto-sans',
   display: 'swap',
 })
 
 const global = css`
+  :root {
+    --kai-font-family-base: ${notoSans.style.fontFamily};
+  }
   html {
     font-family: ${notoSans.style.fontFamily};
   }
 `
+
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet],
   [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY || '' }), publicProvider()],
@@ -77,7 +83,7 @@ export default function App({
             <WagmiConfig config={wagmiConfig}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
-                  <KaiProvider>
+                  <KaiProvider style={kaiTokens}>
                     <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
                     <BasicLayout>
                       <Component {...props} />
