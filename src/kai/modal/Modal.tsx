@@ -64,8 +64,10 @@ export const Modal: FC<ModalProps> = ({
 }
 
 const ModalOverlay = styled(RACModalOverlay)`
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
