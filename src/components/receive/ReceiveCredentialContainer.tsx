@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Button } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
@@ -7,7 +8,6 @@ import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
-import { Button } from '@/kai/button/Button'
 import { Skelton } from '@/kai/skelton'
 import { Text } from '@/kai/text/Text'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
@@ -17,9 +17,9 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
   const { issue } = useMyVerifiableCredential()
-  const [receiveStatus, setReceiveStatus] = React.useState<'default' | 'success' | 'failed'>(
-    'default',
-  )
+  const [receiveStatus, setReceiveStatus] = React.useState<
+    'default' | 'receiving' | 'success' | 'failed'
+  >('default')
 
   console.log({ credItem })
 
@@ -34,6 +34,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
     }
     try {
       if (credItem) {
+        setReceiveStatus('receiving')
         const isSuccess = await issue(credItem)
         if (isSuccess) {
           setReceiveStatus('success')
@@ -60,7 +61,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
             <ImageContainer
               src={credItem?.image}
               width='var(--kai-size-ref-192)'
-              height='var(--kai-size-ref-192)'
+              // height='var(--kai-size-ref-192)'
               objectFit='cover'
             />
           )}
@@ -95,7 +96,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
         <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-8)'>
           {!did ? (
             <>
-              <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+              <Button variant='filled' width='var(--kai-size-ref-240)' onPress={handleIssue}>
                 ログインして受け取る
               </Button>
             </>
@@ -103,6 +104,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
             <>
               {receiveStatus === 'success' && (
                 <Button
+                  variant='filled'
                   width='var(--kai-size-ref-240)'
                   onPress={() => {
                     if (did) {
@@ -118,15 +120,21 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                   もう一度試す
                 </Button>
               )}
-              {receiveStatus === 'default' && (
+              {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
                 <>
-                  <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+                  <Button
+                    width='var(--kai-size-ref-240)'
+                    onPress={handleIssue}
+                    isLoading={receiveStatus === 'receiving'}
+                    loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
+                  >
                     受け取る
                   </Button>
                   <Button
                     variant='text'
                     size='sm'
                     round='md'
+                    isDisabled={receiveStatus === 'receiving'}
                     onPress={() => {
                       if (did) {
                         router.push(`/did/${did}`)

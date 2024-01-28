@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { ComponentPropsWithoutRef, FC } from 'react'
 
 type Props = {
   src: string
@@ -8,7 +8,7 @@ type Props = {
   objectFit?: string
   alt?: string
   borderRadius?: string
-}
+} & ComponentPropsWithoutRef<'div'>
 export const ImageContainer: FC<Props> = ({
   src,
   width,
@@ -16,6 +16,7 @@ export const ImageContainer: FC<Props> = ({
   objectFit = 'contain',
   alt = 'image',
   borderRadius = '0px',
+  ...props
 }) => {
   const Container = styled.div`
     width: ${width};
@@ -30,7 +31,7 @@ export const ImageContainer: FC<Props> = ({
   `
 
   return (
-    <Container>
+    <Container {...props}>
       <Content src={src} alt={alt} />
     </Container>
   )
