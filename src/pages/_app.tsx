@@ -35,6 +35,7 @@ const global = css`
   }
   html {
     font-family: ${notoSans.style.fontFamily};
+    padding: 0 !important;
   }
 `
 

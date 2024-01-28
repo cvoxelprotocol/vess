@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { useModal, useModalContext } from 'kai-kit'
 import React, { FC } from 'react'
-import { useModal, useModalContext } from '@/kai/modal'
 
 type Props = {
   navigation?: React.ReactNode
@@ -107,7 +107,9 @@ const ContentFrame = styled.div`
   width: 100vw;
   max-width: var(--kai-size-breakpoint-sm-max-width);
   height: 100vh;
-  transition: all 1s cubic-bezier(0, 0.7, 0.3, 1);
+  transition: all var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
+  transition-property: opacity, transform;
+  overflow-y: scroll;
 
   &[data-nav-opened='true'] {
     opacity: 0.4;
@@ -119,7 +121,7 @@ const ContentFrame = styled.div`
     }
   }
   &[data-modal-open='true'] {
-    opacity: 0.3;
-    transform: scale(0.9);
+    opacity: 0.4;
+    transform: scale(0.98);
   }
 `

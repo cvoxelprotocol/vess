@@ -1,4 +1,6 @@
 import styled from '@emotion/styled'
+import { did } from '@ucanto/core/schema'
+import { TextInput, useModal, IconButton, useKai } from 'kai-kit'
 import { FC, useMemo } from 'react'
 import { PiPencilBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -15,9 +17,6 @@ import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { useVESSUser } from '@/hooks/userVESSUser'
-import { useKai } from '@/kai/hooks/useKai'
-import { IconButton } from '@/kai/icon-button'
-import { useModal } from '@/kai/modal'
 import { Skelton } from '@/kai/skelton'
 import { Text } from '@/kai/text/Text'
 
@@ -53,6 +52,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
               style={{
                 border: 'var(--kai-size-ref-4) solid var(--kai-color-sys-white)',
                 borderRadius: 'var(--kai-size-sys-round-xl)',
+                overflow: 'hidden',
               }}
             >
               <>
@@ -63,7 +63,6 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                     height={kai.size.ref[144]}
                     objectFit='cover'
                     alt='Profile Icon'
-                    borderRadius={kai.size.sys.round.xl}
                   />
                 ) : (
                   <NextImageContainer
@@ -72,15 +71,14 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                     height={kai.size.ref[144]}
                     objectFit='cover'
                     alt='Profile Icon'
-                    borderRadius={kai.size.sys.round.xl}
                   />
                 )}
               </>
             </div>
           </Skelton>
-          <FlexVertical gap={kai.size.ref[12]} alignItems='center' width='100%'>
+          <FlexVertical gap={kai.size.sys.space.md} alignItems='center' width='100%'>
             <FlexHorizontal
-              gap={kai.size.ref[6]}
+              gap={kai.size.sys.space.sm}
               alignItems='center'
               justifyContent='center'
               width='100%'
@@ -95,9 +93,10 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                 </Text>
                 {isEditable && (
                   <IconButton
-                    size='sm'
-                    variant='text'
-                    color='secondary'
+                    size='xs'
+                    variant='outlined'
+                    round={'sm'}
+                    color='dominant'
                     icon={<PiPencilBold />}
                     onPress={() => openModal('profileEdit')}
                   />
@@ -128,11 +127,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
             {/* <TabPanel id='membership'>
               <div>会員証はありません。</div>
             </TabPanel> */}
-            <TabPanel id='attendance'>
-              {/* <EventItem id={'aaa'} />
-                <EventItem id={'aaa'} />
-              <EventItem id={'aaa'} /> */}
-
+            <TabPanel id='attendance' style={{ position: 'relative', zIndex: '0' }}>
               {attendances.length > 0 || memberships.length > 0 || certificates.length > 0 ? (
                 <EventListFrame>
                   {attendances.map((event) => (
@@ -184,9 +179,11 @@ const MainFrame = styled.main`
   height: 100%;
   display: flex;
   flex-direction: column;
+  z-index: var(--kai-z-index-sys-default);
   align-items: center;
   gap: var(--kai-size-ref-24);
   padding: var(--kai-size-ref-32) var(--kai-size-ref-16);
+  overflow: visible;
 `
 const EventListFrame = styled.div`
   width: 100%;
@@ -195,4 +192,16 @@ const EventListFrame = styled.div`
   grid-column-gap: var(--kai-size-ref-16);
   grid-row-gap: var(--kai-size-ref-16);
   justify-content: center;
+`
+
+const FocusDiv = styled.button`
+  width: 400px;
+  height: 80px;
+  border-radius: 16px;
+  border: none;
+
+  background: var(--kai-color-sys-layer-nearest);
+  &:focus {
+    border: 2px solid var(--kai-color-sys-dominant);
+  }
 `

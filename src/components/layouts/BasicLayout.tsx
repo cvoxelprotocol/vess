@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { useModal, Modal } from 'kai-kit'
 import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
@@ -16,6 +17,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { currentTheme, initTheme } = useVESSTheme()
   const { autoConnect, disConnectDID } = useConnectDID()
   const { did } = useDIDAccount()
+  const { openModal, closeModal } = useModal()
 
   useEffect(() => {
     initTheme()
@@ -24,9 +26,11 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   useEffect(() => {
     const start = () => {
       showLoading()
+      openModal('pageTransitionOverlay')
     }
     const end = () => {
       closeLoading()
+      closeModal('pageTransitionOverlay')
     }
     Router.events.on('routeChangeStart', start)
     Router.events.on('routeChangeComplete', end)
@@ -55,13 +59,16 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   }, [])
 
   return (
-    <NavigationContextProvider>
-      <CenterLayout>
-        <NCLayoutWrapper>
-          <NCLayout navigation={<NavigationList></NavigationList>}>{children}</NCLayout>
-        </NCLayoutWrapper>
-      </CenterLayout>
-    </NavigationContextProvider>
+    <>
+      <NavigationContextProvider>
+        <CenterLayout>
+          <NCLayoutWrapper>
+            <NCLayout navigation={<NavigationList></NavigationList>}>{children}</NCLayout>
+          </NCLayoutWrapper>
+        </CenterLayout>
+      </NavigationContextProvider>
+      <Modal name='pageTransitionOverlay' overlayOnly />
+    </>
   )
 }
 
