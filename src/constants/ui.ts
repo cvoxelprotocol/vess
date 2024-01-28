@@ -15,7 +15,7 @@ export const NAVIGATION_LIST: NavigationItemType[] = [
     id: 'HOME',
     label: 'ホーム',
     icon: 'HOME',
-    path: '/',
+    path: '/did',
   },
   // {
   //   id: 'PROFILE',

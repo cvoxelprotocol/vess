@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { set } from 'date-fns'
+import { Button } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
-import type { RadioProps, RadioGroupProps } from 'react-aria-components'
-import { Radio, RadioGroup } from 'react-aria-components'
+import type { RadioProps, RadioGroupProps, PressEvent } from 'react-aria-components'
+import { Radio, RadioGroup, Button as RACButton } from 'react-aria-components'
 import { isMobile } from 'react-device-detect'
 import { PiSignOutFill } from 'react-icons/pi'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
@@ -11,7 +11,6 @@ import { IconDic } from './IconDic'
 import { useNCLayoutContext } from './NCLayout'
 import { NAVIGATION_LIST, NavigationItemType, NavigationItemValue } from '@/constants/ui'
 import { useConnectDID } from '@/hooks/useConnectDID'
-import { Button } from '@/kai/button/Button'
 import { useKai } from '@/kai/hooks/useKai'
 import { Text } from '@/kai/text/Text'
 
@@ -51,7 +50,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
 
   return (
     <NavigationListFrame data-mobile={isMobileClient}>
-      <NextImageContainer src='/logo_bard.png' width='4rem' height='4rem' objectFit='contain' />
+      <NextImageContainer src='/VESS_app_icon.png' width='3rem' height='3rem' objectFit='contain' />
       <NavigationItemGroup
         name='navigation'
         value={selectedNavi}
@@ -62,27 +61,36 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
       >
         {NAVIGATION_LIST.map((item) => {
           return (
-            <NavigationItem key={item.id} value={item.id}>
-              {({ isSelected }) => (
-                <>
-                  {isSelected ? (
-                    <IconDic
-                      icon={item.id}
-                      variant={'filled'}
-                      color='var(--kai-color-sys-on-surface)'
-                    />
-                  ) : (
-                    <IconDic
-                      icon={item.id}
-                      variant={'default'}
-                      color='var(--kai-color-sys-on-surface)'
-                    />
-                  )}
-                  <Text as='label' typo='label-lg' color='var(--kai-color-sys-on-surface)'>
-                    {item.label}
-                  </Text>
-                </>
-              )}
+            <NavigationItem
+              key={item.id}
+              value={item.id}
+              onPress={() => {
+                closeNavigation()
+                router.push(item.path)
+              }}
+            >
+              {({ isSelected }) => {
+                return (
+                  <>
+                    {isSelected ? (
+                      <IconDic
+                        icon={item.id}
+                        variant={'filled'}
+                        color='var(--kai-color-sys-on-surface)'
+                      />
+                    ) : (
+                      <IconDic
+                        icon={item.id}
+                        variant={'default'}
+                        color='var(--kai-color-sys-on-surface)'
+                      />
+                    )}
+                    <Text as='label' typo='label-lg' color='var(--kai-color-sys-on-surface)'>
+                      {item.label}
+                    </Text>
+                  </>
+                )
+              }}
             </NavigationItem>
           )
         })}
@@ -98,8 +106,9 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
         endContent={<PiSignOutFill />}
         variant='tonal'
         width='100%'
-        color='secondary'
+        color='dominant'
         onPress={logout}
+        align='start'
       >
         ログアウトする
       </Button>
@@ -114,8 +123,9 @@ const NavigationListFrame = styled.nav`
   align-items: flex-start;
   width: var(--kai-size-ref-240);
   height: 100dvh;
-  gap: var(--kai-size-ref-32);
+  gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-ref-16);
+  padding-top: var(--kai-size-sys-space-lg);
   &[data-mobile='true'] {
     justify-content: flex-end;
   }
@@ -131,10 +141,16 @@ const NavigationItemGroup = styled(RadioGroup)`
 `
 
 /* --------  NavigationItem Component --------*/
-export type NavigationItemProps = {} & RadioProps
+export type NavigationItemProps = {
+  onPress?: (e: PressEvent) => void
+} & RadioProps
 
-export const NavigationItem: FC<NavigationItemProps> = ({ children, ...props }) => {
-  return <NavigationItemFrame {...props}>{children}</NavigationItemFrame>
+export const NavigationItem: FC<NavigationItemProps> = ({ children, onPress, ...props }) => {
+  return (
+    <ButtonFrame onPress={onPress}>
+      <NavigationItemFrame {...props}>{children}</NavigationItemFrame>
+    </ButtonFrame>
+  )
 }
 
 export const NavigationItemFrame = styled(Radio)`
@@ -146,7 +162,8 @@ export const NavigationItemFrame = styled(Radio)`
   height: fit-content;
   padding: var(--kai-size-ref-16);
   border-radius: var(--kai-size-sys-round-md);
-  transition: background 0.5s cubic-bezier(0, 0.7, 0.3, 1);
+  transition: background var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+  transition-property: background, transform;
 
   &[data-hovered] {
     background: var(--kai-color-sys-surface-container-low);
@@ -154,10 +171,35 @@ export const NavigationItemFrame = styled(Radio)`
   }
   &[data-pressed] {
     background: var(--kai-color-sys-surface-container-highest);
+    transform: scale(0.98);
   }
   &[data-selected] {
     background: var(--kai-color-sys-surface-container-high);
-    cursor: default;
+    /* cursor: default; */
+    pointer-events: none;
+  }
+`
+
+const ButtonFrame = styled(RACButton)`
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  padding: 0;
+  outline: none;
+  border: none;
+  border-radius: var(--kai-size-sys-round-md);
+  background: none;
+  transition: background var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+  transition-property: background, transform;
+  &[data-hovered] {
+    cursor: pointer;
+  }
+  &[data-pressed] {
+    transform: scale(0.98);
   }
 `
 

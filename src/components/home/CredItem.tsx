@@ -26,6 +26,7 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%' }) => {
           alt={name || 'イベント参加証明画像'}
           objectFit='cover'
           width={size}
+          style={{ zIndex: '-1' }}
         />
       </Skelton>
     </>

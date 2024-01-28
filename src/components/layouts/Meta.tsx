@@ -23,9 +23,9 @@ export const Meta: FC<MetaData> = ({
   pageImgHeight,
   robots = 'index, follow',
 }) => {
-  const defaultTitle = 'VESS Resume'
+  const defaultTitle = 'VESS'
   const defaultDescription =
-    'VESS Resume is a decentralized self-sovereign resume based on VESS Protocol. You can bring your resume to any platfomrs as you want.'
+    'VESSはあなたが持っているデジタル証明書を提示したり検証したりすることのできるプロフィールアプリです。'
 
   const title = pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle
   const description = pageDescription || defaultDescription

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
 import React, { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
@@ -6,10 +7,6 @@ import { IconUploadButton } from './IconUploadButton'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
-import { Button } from '@/kai/button/Button'
-import { Modal, useModal } from '@/kai/modal'
-import { TextInput } from '@/kai/text-Input/TextInput'
-import { TextArea } from '@/kai/text-area/TextArea'
 import { OrbisProfileDetail } from '@/lib/OrbisHelper'
 import { removeUndefined } from '@/utils/objectUtil'
 
@@ -68,20 +65,25 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
     <Modal
       name={name}
       title='プロフィール編集'
-      CTA={{
-        buttonText: '保存',
-        type: 'submit',
-        form: 'profile-edit',
-        isDisabled: status === 'uploading' || isUpdatingSocialAccount,
-      }}
+      height='calc(0.9 * var(--visual-viewport-height))'
+      CTA={
+        <Button
+          variant='text'
+          type='submit'
+          form='profile-edit'
+          isDisabled={status === 'uploading' || isUpdatingSocialAccount}
+        >
+          保存
+        </Button>
+      }
       disableClose={status === 'uploading' || isUpdatingSocialAccount}
       onClose={() => {
         setIcon('')
       }}
     >
       <Form id='profile-edit' onSubmit={handleSubmit(onClickSubmit)}>
-        <FlexHorizontal width='100%'>
-          <div style={{ width: 'var(--kai-size-ref-112)' }} />
+        <FlexHorizontal width='100%' gap='var(--kai-size-sys-space-md)'>
+          <div style={{ width: 'var(--kai-size-ref-80)' }} />
           <IconUploadButton
             defaultIcon={icon || profile.avatarSrc || '/default_profile.jpg'}
             size='lg'
@@ -91,17 +93,21 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         </FlexHorizontal>
         <TextInput
           label='ニックネーム'
+          labelWidth={'var(--kai-size-ref-80)'}
           width='100%'
           {...register('username', { required: true })}
           defaultValue={profile.displayName}
           placeholder='ニックネームを入力'
+          // align='vertical'
         />
         <TextArea
           label='自己紹介文'
+          labelWidth={'var(--kai-size-ref-80)'}
           width='100%'
           defaultValue={profile.bio}
           {...register('description', { required: false })}
           placeholder='自己紹介文を入力'
+          // align='vertical'
         />
         {/* <Input control={control} label='名前' name='username' />
         <MultiInput label={'自己紹介文'} name={`description`} control={control} />
@@ -115,5 +121,6 @@ const Form = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--kai-size-ref-8);
+  gap: var(--kai-size-sys-space-md);
+  padding: var(--kai-size-sys-space-md);
 `

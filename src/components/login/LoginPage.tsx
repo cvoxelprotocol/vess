@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Button, IconButton, TextInput } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
@@ -13,11 +14,9 @@ import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { LoginButton } from './LoginButton'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { Separator } from '@/kai/Separator'
 import { useKai } from '@/kai/hooks/useKai'
-import { IconButton } from '@/kai/icon-button'
+import { Separator } from '@/kai/separator'
 import { Text } from '@/kai/text/Text'
-import { TextInput } from '@/kai/text-Input/TextInput'
 
 type EmailLoginProps = {
   email: string
@@ -122,7 +121,8 @@ export const LoginPage: FC = () => {
                 label='Email'
                 width='100%'
                 size='lg'
-                {...register('email', { required: true })}
+                errorMessage={errors.email?.message}
+                {...register('email', { required: 'メールアドレスを入力してください' })}
                 placeholder='メールアドレス'
                 isLabel={false}
                 inputStartContent={<PiEnvelopeSimple size={20} />}
@@ -143,7 +143,7 @@ export const LoginPage: FC = () => {
             <Link
               href='https://vesslabs.notion.site/VESS-Terms-of-Use-1ae74e0b9ae74b86a5e2e7b377b79722'
               target='_blank'
-              style={{ color: 'var(--kai-color-sys-primary)' }}
+              style={{ color: 'var(--kai-color-sys-dominant)' }}
             >
               利用規約
             </Link>
@@ -151,7 +151,7 @@ export const LoginPage: FC = () => {
             <Link
               href='https://vesslabs.notion.site/VESS-Privacy-Policy-b22d5bcda02e43189c202ec952467a0d'
               target='_blank'
-              style={{ color: 'var(--kai-color-sys-primary)' }}
+              style={{ color: 'var(--kai-color-sys-dominant)' }}
             >
               プライバシーポリシー
             </Link>
@@ -178,6 +178,7 @@ const LoginFrame = styled.div`
   justify-content: flex-end;
   gap: var(--kai-size-ref-24);
   padding: 0;
+  background: var(--kai-color-sys-background);
 `
 
 const Form = styled.form`
@@ -193,5 +194,5 @@ const TermsFrame = styled.p`
   font-weight: var(--kai-typo-sys-body-md-font-weight);
   font-size: var(--kai-typo-sys-body-md-bold-font-size);
   line-height: var(--kai-typo-sys-body-md-line-height);
-  color: var(--kai-color-sys-on-surface-varinant);
+  color: var(--kai-color-sys-on-layer-minor);
 `

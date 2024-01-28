@@ -44,9 +44,11 @@ const HeaderFrame = styled.div`
   top: 0;
   left: 0;
   right: 0;
+  z-index: var(--kai-z-index-sys-fixed-default);
 `
 
 const ContentFrame = styled.div`
   grid-column: 1 / 2;
   grid-row: 2 / 3;
+  /* overflow-y: scroll; */
 `
