@@ -18,7 +18,7 @@ const Login: NextPage = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: ${currentTheme.background};
+    background: var(--kai-color-sys-background);
     padding: 8px;
   `
 
