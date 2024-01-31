@@ -147,8 +147,8 @@ dependencies:
     specifier: ^1.12.1
     version: 1.12.1(@babel/core@7.22.8)(react@18.2.0)
   kai-kit:
-    specifier: 0.0.17
-    version: 0.0.17(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.3.1)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.1.0
+    version: 0.1.0(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.3.1)(react-dom@18.2.0)(react@18.2.0)
   modern-css-reset:
     specifier: ^1.4.0
     version: 1.4.0
@@ -12589,7 +12589,6 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: false
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
@@ -14627,8 +14626,8 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
-  /kai-kit@0.0.17(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.3.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-toj615XKBAdAs0TbH/D+qsBhpXaZH1zRVAGzPI50l1LvilKm4H4m5yGtGtglXEUOQoTpkMBC8xm1pQlJsu3pNQ==}
+  /kai-kit@0.1.0(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.3.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-2yOwVWit6u0E6k+B1pf8jQB4x4bxFz397Pwnf5nXjx6MA4cZw2rAkKan6fRAn2uSOQI551gIsd6oclY+/ZB6Uw==}
     peerDependencies:
       '@emotion/react': ^11.11.1
       '@emotion/styled': ^11.11.0
