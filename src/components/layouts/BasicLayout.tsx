@@ -74,7 +74,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
 const CenterLayout = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   display: grid;
   place-content: center;
   background: var(--kai-color-sys-background);
@@ -83,7 +83,7 @@ const CenterLayout = styled.div`
 const NCLayoutWrapper = styled.div`
   width: 100%;
   max-width: var(--kai-size-breakpoint-md-min-width);
-  height: 100vh;
+  height: 100svh;
   display: flex;
   overflow: hidden;
 

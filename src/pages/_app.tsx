@@ -18,7 +18,6 @@ import { ComposeWrapper } from '@/context/compose'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
 import '@/styles/globals.css'
-import '@/tokens/build/css/kai-tokens.css'
 import { kaiTokens } from '@/styles/kaiTokens'
 
 const notoSans = Noto_Sans({
@@ -36,6 +35,9 @@ const global = css`
   html {
     font-family: ${notoSans.style.fontFamily};
     padding: 0 !important;
+  }
+  body {
+    min-height: 100svh;
   }
 `
 

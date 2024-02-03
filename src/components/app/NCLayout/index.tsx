@@ -74,7 +74,7 @@ export const NCLayout: FC<Props> = ({
 
 const LayoutFrame = styled.div<{ contentWidth?: number }>`
   display: grid;
-  height: 100vh;
+  height: 100svh;
   grid-template-columns: min-content min-content;
   background: var(--kai-color-sys-background);
 
@@ -106,7 +106,7 @@ const ContentFrame = styled.div`
   grid-row: 1 / 2;
   width: 100vw;
   max-width: var(--kai-size-breakpoint-sm-max-width);
-  height: 100vh;
+  height: 100svh;
   transition: all var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   transition-property: opacity, transform;
   overflow-y: scroll;
