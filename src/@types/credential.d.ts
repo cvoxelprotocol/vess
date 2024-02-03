@@ -77,10 +77,14 @@ type CredItemRequest = CredItemInput & {
 
 export type OrganizationType = {
   address: string
-  ceramicId: string
+  ceramicId: string | null
   id: string
   keyId: string
   name: string
+  desc: string | null
+  icon: string | null
+  useCompose: boolean | null
+  primaryColor: string | null
 }
 
 export type VSUser = {

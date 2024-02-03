@@ -45,14 +45,14 @@ export const useMyVerifiableCredential = () => {
     showLoading()
     try {
       const type = item.credentialType.name as CredType
-      const workspace = await vess.getOrganization(item.organization.ceramicId)
+      const workspace = item.organization
       console.log({ item })
 
       let commonContent
       switch (type) {
         case 'attendance':
           commonContent = {
-            eventId: item.ceramicId,
+            eventId: item.ceramicId || item.id,
             eventName: item.title,
             eventIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
@@ -62,7 +62,7 @@ export const useMyVerifiableCredential = () => {
         case 'membership':
           commonContent = {
             organizationName: workspace.name,
-            organizationId: workspace.id,
+            organizationId: workspace.ceramicId || workspace.id,
             organizationIcon: workspace.icon || '',
             membershipName: item.title,
             membershipIcon: item.image,
@@ -72,7 +72,7 @@ export const useMyVerifiableCredential = () => {
           break
         case 'certificate':
           commonContent = {
-            certificationId: item.ceramicId,
+            certificationId: item.ceramicId || item.id,
             certificationName: item.title,
             image: item.image || '',
             startDate: item.startDate ? item.startDate : '',
@@ -94,7 +94,7 @@ export const useMyVerifiableCredential = () => {
         holders: [subjectUniqueInput],
         credentialItemId: item.id,
         expirationDate: undefined,
-        saveCompose: true,
+        saveCompose: workspace.useCompose || false,
       }
       const res = await issueVerifiableCredentials(body)
       if (!res) {
