@@ -72,7 +72,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               height='fit-content'
               objectFit='contain'
               maxWidth='400px'
-              maxHeight='300px'
+              maxHeight='240px'
               style={{ flex: '0 0 auto' }}
             />
             <FlexHorizontal gap='var(--kai-size-sys-space-sm)'>

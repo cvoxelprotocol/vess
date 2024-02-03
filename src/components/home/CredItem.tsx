@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
-import React, { FC } from 'react'
+import image from 'next/image'
+import Image from 'next/image'
+import router, { useRouter } from 'next/router'
+import React, { FC, useEffect, useRef } from 'react'
 import { Button } from 'react-aria-components'
 import { PiCheckCircleFill } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -15,6 +17,24 @@ type Props = {
 
 export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
   const router = useRouter()
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [isSquare, setIsSquare] = React.useState(false)
+
+  useEffect(() => {
+    console.log('passed')
+    if (imgRef.current) {
+      const img = imgRef.current
+      img.onload = () => {
+        console.log('naturalWidth', img.naturalWidth)
+        console.log('naturalHeight', img.naturalHeight)
+        if (img.naturalWidth / img.naturalHeight < 1.4) {
+          setIsSquare(true)
+        } else {
+          setIsSquare(false)
+        }
+      }
+    }
+  }, [image, imgRef])
 
   const handleClick = () => {
     if (credId) {
@@ -29,19 +49,28 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
         isLoading={!image}
         width='100%'
         height='auto'
-        aspectRatio='1'
+        aspectRatio='1.618 / 1'
         maskColor='var(--kai-color-sys-background)'
-        radius='var(--kai-size-sys-round-full)'
+        radius='var(--kai-size-sys-round-md)'
         borderWidth='var(--kai-size-ref-2)'
       >
-        <CredItemFrame onPress={() => handleClick()}>
-          <ImageContainer
-            src={image || '/sample/event_sample.jpg'}
-            alt={name || 'イベント参加証明画像'}
-            objectFit='cover'
-            width={size}
-            style={{ zIndex: 0 }}
-          />
+        <CredItemFrame onPress={() => handleClick()} data-square={isSquare || undefined}>
+          {isSquare ? (
+            <CredImageFrame>
+              <CredImageBackground src={image} ref={imgRef} />
+              <CredImageOverlay />
+              <CredImage src={image || ''} />
+            </CredImageFrame>
+          ) : (
+            <ImageContainer
+              src={image || '/sample/event_sample.png'}
+              alt={name || 'イベント参加証明画像'}
+              objectFit='cover'
+              width={size}
+              style={{ zIndex: 0 }}
+              ref={imgRef}
+            />
+          )}
           <IconFrame>
             <PiCheckCircleFill size={32} color={'var(--kai-color-sys-success)'} />
           </IconFrame>
@@ -51,10 +80,59 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
   )
 }
 
+const CredImageFrame = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.618 / 1;
+  overflow: hidden;
+  border-radius: var(--kai-size-sys-round-md);
+  border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline-minor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--kai-size-sys-space-lg);
+`
+
+const CredImageBackground = styled.img`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  aspect-ratio: 1.618 / 1;
+  opacity: 0.4;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(12px);
+`
+
+const CredImageOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: var(--kai-color-sys-neutral);
+  opacity: 0.1;
+`
+
+const CredImage = styled.div<{ src: string }>`
+  position: absolute;
+  top: var(--kai-size-sys-space-md);
+  right: var(--kai-size-sys-space-md);
+  left: var(--kai-size-sys-space-md);
+  bottom: var(--kai-size-sys-space-md);
+  background-image: url(${(props) => props.src});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+`
+
 const CredItemFrame = styled(Button)`
   border: none;
   position: relative;
-  transition: background var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+  transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   transition-property: background, transform, opacity;
   border-radius: var(--kai-size-sys-round-xs);
   background: transparent;

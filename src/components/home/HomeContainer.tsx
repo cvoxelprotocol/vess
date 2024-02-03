@@ -36,8 +36,6 @@ export const HomeContainer: FC<Props> = ({ did }) => {
     return myDid === did
   }, [did, myDid])
 
-  console.log({ isEditable })
-
   return (
     <>
       <HCLayout header={<DefaultHeader />}>
@@ -145,7 +143,8 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                       {memberships.map((membership) => (
                         <CredItem
                           key={membership.id}
-                          image={membership.credentialSubject.membershipIcon}
+                          // image={membership.credentialSubject.membershipIcon}
+                          image={'/sample/event_sample.png'}
                           name={membership.credentialSubject.membershipName}
                           credId={membership.id}
                         />
@@ -194,7 +193,7 @@ const EventListFrame = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--kai-size-ref-240), 1fr));
-  grid-column-gap: var(--kai-size-ref-8);
+  grid-column-gap: var(--kai-size-ref-12);
   grid-row-gap: var(--kai-size-ref-12);
   justify-content: center;
 `
