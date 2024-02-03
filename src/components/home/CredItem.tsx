@@ -25,8 +25,6 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
     if (imgRef.current) {
       const img = imgRef.current
       img.onload = () => {
-        console.log('naturalWidth', img.naturalWidth)
-        console.log('naturalHeight', img.naturalHeight)
         if (img.naturalWidth / img.naturalHeight < 1.4) {
           setIsSquare(true)
         } else {

@@ -143,8 +143,8 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                       {memberships.map((membership) => (
                         <CredItem
                           key={membership.id}
-                          // image={membership.credentialSubject.membershipIcon}
-                          image={'/sample/event_sample.png'}
+                          image={membership.credentialSubject.membershipIcon}
+                          // image={'/sample/event_sample.png'}
                           name={membership.credentialSubject.membershipName}
                           credId={membership.id}
                         />

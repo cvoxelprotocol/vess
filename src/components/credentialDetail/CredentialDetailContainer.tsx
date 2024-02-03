@@ -64,7 +64,13 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
         }
       >
         <CredImageFrame>
-          <Skelton isLoading={isInitialLoading} width='354px' height='237px' radius='24px'>
+          <Skelton
+            isLoading={!memberships[0]?.credentialSubject.membershipIcon}
+            width='100%'
+            radius='24px'
+            height='auto'
+            aspectRatio='1.618 / 1'
+          >
             <ImageContainer
               src={memberships[0]?.credentialSubject.membershipIcon}
               // src='/sample/event_sample.jpg'
@@ -115,7 +121,12 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
         </CredImageFrame>
         <CredInfoFrame>
           <div style={{ width: '100%', flex: 0 }}>
-            <Text as='h2' typo='title-lg' color='var(--kai-color-sys-on-layer)'>
+            <Text
+              as='h2'
+              typo='title-lg'
+              color='var(--kai-color-sys-on-layer)'
+              isLoading={isInitialLoading}
+            >
               {memberships[0]?.credentialSubject.membershipName}
             </Text>
           </div>
@@ -124,7 +135,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 説明文
               </Text>
-              <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+              <Text
+                typo='body-lg'
+                color='var(--kai-color-sys-on-layer)'
+                isLoading={isInitialLoading}
+              >
                 (どこから取得できるかわかりませんでした。)
               </Text>
             </InfoItemFrame>
@@ -140,7 +155,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   objectFit='contain'
                   alt='Organization Icon'
                 />
-                <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+                <Text
+                  typo='body-lg'
+                  color='var(--kai-color-sys-on-layer)'
+                  isLoading={isInitialLoading}
+                >
                   {memberships[0]?.credentialSubject.organizationName}
                 </Text>
               </FlexHorizontal>
@@ -149,7 +168,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 所有者
               </Text>
-              <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+              <Text
+                typo='body-lg'
+                color='var(--kai-color-sys-on-layer)'
+                isLoading={isInitialLoading}
+              >
                 {memberships[0]?.credentialSubject.id}
               </Text>
             </InfoItemFrame>
@@ -157,7 +180,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 有効開始日
               </Text>
-              <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+              <Text
+                typo='body-lg'
+                color='var(--kai-color-sys-on-layer)'
+                isLoading={isInitialLoading}
+              >
                 {memberships[0]?.credentialSubject.startDate}
               </Text>
             </InfoItemFrame>
@@ -165,7 +192,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 有効期限日
               </Text>
-              <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+              <Text
+                typo='body-lg'
+                color='var(--kai-color-sys-on-layer)'
+                isLoading={isInitialLoading}
+              >
                 {memberships[0]?.credentialSubject.endDate || '無期限'}
               </Text>
             </InfoItemFrame>

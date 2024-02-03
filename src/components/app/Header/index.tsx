@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Modal, useModal } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 import { LuAlignJustify, LuScanLine } from 'react-icons/lu'
@@ -21,7 +22,9 @@ export const DefaultHeader: FC<DefaultHeaderProps> = ({ children }) => {
     <HeaderFrame>
       <MenuButton
         startContent={<IconDic icon={selectedNaviMeta.id} variant={'default'} size='80%' />}
-        onPress={toggleNavigation}
+        onPress={() => {
+          toggleNavigation()
+        }}
       >
         {selectedNaviMeta.label}
       </MenuButton>
