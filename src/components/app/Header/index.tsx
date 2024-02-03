@@ -6,7 +6,6 @@ import { useNCLayoutContext } from '../NCLayout'
 import { IconDic } from '@/components/app/IconDic'
 import { MenuButton } from '@/components/app/MenuButton'
 import { useNavigationContext } from '@/components/app/NavigationList'
-import { useKai } from '@/kai/hooks/useKai'
 import { IconButton } from '@/kai/icon-button'
 
 type DefaultHeaderProps = {

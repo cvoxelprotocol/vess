@@ -1,5 +1,6 @@
 import { css } from '@emotion/css'
 import styled from '@emotion/styled'
+import { useKai } from 'kai-kit'
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -9,7 +10,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { useKai } from '../hooks/useKai'
 import { Skelton } from '../skelton'
 
 type TextLocalProps = {
