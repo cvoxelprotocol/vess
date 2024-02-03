@@ -18,24 +18,24 @@ export const NextImageContainer: FC<Props> = ({
   borderRadius,
   height = '100%',
 }) => {
-  const Container = styled.div`
-    width: ${width};
-    height: ${height};
-    border-radius: ${borderRadius};
-    position: relative;
-    overflow: hidden;
-    border: none;
-    outline: none;
-  `
-  const Content = styled(Image)`
-    object-fit: ${objectFit};
-    border: none;
-    outline: none;
-  `
-
   return (
-    <Container>
-      <Content src={src} fill alt={alt} sizes={width} />
+    <Container width={width} height={height} borderRadius={borderRadius}>
+      <Content src={src} fill alt={alt} sizes={width} objectFit={objectFit} />
     </Container>
   )
 }
+
+const Container = styled.div<{ width: string; height: string; borderRadius?: string }>`
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  border-radius: ${(props) => props.borderRadius || '0px'};
+  position: relative;
+  overflow: hidden;
+  border: none;
+  outline: none;
+`
+const Content = styled(Image)<{ objectFit: string }>`
+  object-fit: ${(props) => props.objectFit};
+  border: none;
+  outline: none;
+`

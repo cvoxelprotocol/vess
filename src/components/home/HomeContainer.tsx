@@ -63,6 +63,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                     height={kai.size.ref[144]}
                     objectFit='cover'
                     alt='Profile Icon'
+                    borderRadius='calc(var(--kai-size-sys-round-xl) - var(--kai-size-ref-4))'
                   />
                 ) : (
                   <NextImageContainer
@@ -71,6 +72,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                     height={kai.size.ref[144]}
                     objectFit='cover'
                     alt='Profile Icon'
+                    borderRadius='calc(var(--kai-size-sys-round-xl) - var(--kai-size-ref-4))'
                   />
                 )}
               </>
@@ -135,6 +137,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                       key={event.id}
                       image={event.credentialSubject.eventIcon}
                       name={event.credentialSubject.eventName}
+                      credId={event.id}
                     />
                   ))}
                   {memberships && memberships.length > 0 && (
@@ -144,6 +147,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                           key={membership.id}
                           image={membership.credentialSubject.membershipIcon}
                           name={membership.credentialSubject.membershipName}
+                          credId={membership.id}
                         />
                       ))}
                     </>
@@ -155,6 +159,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                           key={certificate.id}
                           image={certificate.credentialSubject.image}
                           name={certificate.credentialSubject.certificationName}
+                          credId={certificate.id}
                         />
                       ))}
                     </>
@@ -188,9 +193,9 @@ const MainFrame = styled.main`
 const EventListFrame = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--kai-size-ref-112), 1fr));
-  grid-column-gap: var(--kai-size-ref-16);
-  grid-row-gap: var(--kai-size-ref-16);
+  grid-template-columns: repeat(auto-fill, minmax(var(--kai-size-ref-240), 1fr));
+  grid-column-gap: var(--kai-size-ref-8);
+  grid-row-gap: var(--kai-size-ref-12);
   justify-content: center;
 `
 
