@@ -21,7 +21,9 @@ export const DefaultHeader: FC<DefaultHeaderProps> = ({ children }) => {
   return (
     <HeaderFrame>
       <MenuButton
-        startContent={<IconDic icon={selectedNaviMeta.id} variant={'default'} size='80%' />}
+        startContent={
+          <IconDic icon={selectedNaviMeta?.id || 'HOME'} variant={'default'} size='80%' />
+        }
         onPress={() => {
           toggleNavigation()
         }}
