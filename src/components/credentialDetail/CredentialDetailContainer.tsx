@@ -11,12 +11,14 @@ import {
   Spinner,
 } from 'kai-kit'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { CredType } from '@/@types/credential'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import useScrollCondition from '@/hooks/useScrollCondition'
-import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
+import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
+import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { getVESSService } from '@/lib/vess'
 
 export type CredDetailProps = {
@@ -26,8 +28,9 @@ export type CredDetailProps = {
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useDIDAccount()
   const router = useRouter()
-  const { certificates, attendances, memberships, isInitialLoading, CredentialsByHolder } =
-    useVerifiableCredentials(did)
+  const { isInitialLoading, credential } = useVerifiableCredential(id)
+  const vessKit = getVESSService()
+  const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
     text: '元データ(JSON)をコピーしました。',
@@ -39,10 +42,32 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const { scrollInfo } = useScrollCondition(scrollRef)
 
-  const verify = async (plainCred: string) => {
-    const vessKit = getVESSService()
+  const vcImage = useMemo(() => {
+    if (!credential) return ''
+    const type = credential.credentialType.name as CredType
+    let image: string | null = null
+    switch (type) {
+      case 'attendance':
+        image = credential.vc.credentialSubject.image || credential.vc.credentialSubject.eventIcon
+        break
+      case 'membership':
+        image =
+          credential.vc.credentialSubject.image || credential.vc.credentialSubject.membershipIcon
+        break
+      case 'certificate':
+        image = credential.vc.credentialSubject.image
+        break
+      default:
+        break
+    }
+    // use credentialItem image if there is no image prop in vc.credentialSubject.
+    return image || credential.credentialItem?.image || '/VESS_app_icon.png'
+  }, [credential])
+
+  const verify = async (plainCred?: string) => {
+    if (!plainCred) return
     setVerified('verifying')
-    const result = await vessKit.verifyCredential(plainCred) // plainCredentialはJSON文字列
+    const result = await vessKit.verifyCredential(plainCred)
     setTimeout(() => {
       if (result.verified === true) {
         setVerified('verified')
@@ -51,10 +76,10 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       }
     }, 600)
   }
-  const [verified, setVerified] = useState<'verified' | 'failed' | 'verifying'>('verifying')
+
   useEffect(() => {
-    verify(CredentialsByHolder?.data[0]?.plainCredential || '{}')
-  }, [CredentialsByHolder?.data[0]?.plainCredential])
+    verify(credential?.plainCredential)
+  }, [credential?.plainCredential])
 
   return (
     <>
@@ -65,15 +90,14 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       >
         <CredImageFrame>
           <Skelton
-            isLoading={!memberships[0]?.credentialSubject.membershipIcon}
+            isLoading={!vcImage}
             width='100%'
             radius='24px'
             height='auto'
             aspectRatio='1.618 / 1'
           >
             <ImageContainer
-              src={memberships[0]?.credentialSubject.membershipIcon}
-              // src='/sample/event_sample.jpg'
+              src={vcImage}
               width='100%'
               height='fit-content'
               objectFit='contain'
@@ -114,7 +138,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='neutral'
                 variant='tonal'
                 round='sm'
-                onPress={() => verify(CredentialsByHolder?.data[0]?.plainCredential || '')}
+                onPress={() => verify(credential?.plainCredential)}
               />
             </FlexHorizontal>
           </Skelton>
@@ -127,7 +151,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               color='var(--kai-color-sys-on-layer)'
               isLoading={isInitialLoading}
             >
-              {memberships[0]?.credentialSubject.membershipName}
+              {credential?.credentialItem?.title || ''}
             </Text>
           </div>
           <InfoItemsFrame ref={scrollRef}>
@@ -140,7 +164,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                (どこから取得できるかわかりませんでした。)
+                {credential?.credentialItem?.description || ''}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -149,7 +173,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               </Text>
               <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
                 <ImageContainer
-                  src={memberships[0]?.credentialSubject.organizationIcon}
+                  src={credential?.organization?.icon || '/default_profile.jpg'}
                   width='20px'
                   height='20px'
                   objectFit='contain'
@@ -160,7 +184,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   color='var(--kai-color-sys-on-layer)'
                   isLoading={isInitialLoading}
                 >
-                  {memberships[0]?.credentialSubject.organizationName}
+                  {credential?.organization?.name || credential?.issuerDid || 'Unknown'}
                 </Text>
               </FlexHorizontal>
             </InfoItemFrame>
@@ -173,7 +197,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {memberships[0]?.credentialSubject.id}
+                {credential?.vc.credentialSubject.id}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -185,7 +209,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {memberships[0]?.credentialSubject.startDate}
+                {credential?.vc.credentialSubject.startDate}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -197,7 +221,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {memberships[0]?.credentialSubject.endDate || '無期限'}
+                {credential?.vc.credentialSubject.endDate || '無期限'}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -211,13 +235,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   color='subdominant'
                   onPress={() => {
                     openSnackbar()
-                    copy(
-                      JSON.stringify(
-                        JSON.parse(CredentialsByHolder?.data[0]?.plainCredential || '{}'),
-                        null,
-                        2,
-                      ),
-                    )
+                    copy(JSON.stringify(JSON.parse(credential?.plainCredential || '{}'), null, 2))
                   }}
                   style={{
                     position: 'absolute',
@@ -228,25 +246,23 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   コピー
                 </Chip>
                 <JsonFrame>
-                  {JSON.stringify(
-                    JSON.parse(CredentialsByHolder?.data[0]?.plainCredential || '{}'),
-                    null,
-                    2,
-                  )}
+                  {JSON.stringify(JSON.parse(credential?.plainCredential || '{}'), null, 2)}
                 </JsonFrame>
               </PlainCredFrame>
             </InfoItemFrame>
           </InfoItemsFrame>
           <ActionFrame>
-            <Button
-              variant='outlined'
-              color='subdominant'
-              startContent={<PiX />}
-              onPress={() => router.push(`/did/${did}`)}
-              size='sm'
-            >
-              閉じる
-            </Button>
+            {!!did && (
+              <Button
+                variant='outlined'
+                color='subdominant'
+                startContent={<PiX />}
+                onPress={() => router.push(`/did/${did}`)}
+                size='sm'
+              >
+                閉じる
+              </Button>
+            )}
             <Button
               variant='tonal'
               color='subdominant'
