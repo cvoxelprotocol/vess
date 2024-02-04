@@ -86,7 +86,7 @@ export default function App({
             <WagmiConfig config={wagmiConfig}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
-                  <KaiProvider style={kaiTokens}>
+                  <KaiProvider style={kaiTokens} defaultTheme='light'>
                     <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
                     <BasicLayout>
                       <Component {...props} />

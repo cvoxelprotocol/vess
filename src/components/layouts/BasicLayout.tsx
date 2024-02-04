@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useModal, Modal } from 'kai-kit'
+import { useModal, Modal, useKai } from 'kai-kit'
 import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-sdk'
@@ -18,9 +18,10 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { autoConnect, disConnectDID } = useConnectDID()
   const { did } = useDIDAccount()
   const { openModal, closeModal } = useModal()
+  const { setDarkMode, setLightMode } = useKai()
 
   useEffect(() => {
-    initTheme()
+    setLightMode()
   }, [])
 
   useEffect(() => {
