@@ -72,3 +72,7 @@ export const useStateShowConnectModal = () => useAtom(showConnectModal)
 export const focusEditable = atom<boolean>(false)
 
 export const useStateFocusEditable = () => useAtom(focusEditable)
+
+export const vcVerifiedStatus = atom<'verified' | 'failed' | 'verifying' | 'idle'>('idle')
+
+export const useStateVcVerifiedStatus = () => useAtom(vcVerifiedStatus)
