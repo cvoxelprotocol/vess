@@ -5,11 +5,9 @@ import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { LoginPage } from '@/components/login/LoginPage'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 
 const Login: NextPage = () => {
   const { did } = useDIDAccount()
-  const { currentTheme } = useVESSTheme()
   const router = useRouter()
 
   const Wrapper = styled.main`
