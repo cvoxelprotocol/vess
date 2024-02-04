@@ -67,10 +67,10 @@ export const NCLayout: FC<Props> = ({
           ref={attachToRef}
         >
           {children}
+          {isNavigationOpen && !isOpenSomeModal && (
+            <CloseNaviOverlay onPress={() => setIsNavigationOpen(false)} />
+          )}
         </ContentFrame>
-        {isNavigationOpen && !isOpenSomeModal && (
-          <CloseNaviOverlay onPress={() => setIsNavigationOpen(false)} />
-        )}
       </LayoutFrame>
     </NCLayoutContext.Provider>
   )
@@ -132,7 +132,7 @@ const ContentFrame = styled.div`
 `
 
 const CloseNaviOverlay = styled(Button)`
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   left: 0;

@@ -164,7 +164,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {credential?.credentialItem?.description || ''}
+                {credential?.credentialItem?.description || '説明文はありません。'}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -286,7 +286,7 @@ const CredDetailFrame = styled.div`
   height: 100svh;
   display: grid;
   grid-template-rows: 360px minmax(0, 1fr);
-  transition: all 1.5s var(--kai-motion-sys-easing-standard);
+  transition: all var(--kai-motion-sys-duration-slow) var(--kai-motion-sys-easing-standard);
 
   &[data-scroll-down='true'] {
     grid-template-rows: var(--kai-size-ref-160) minmax(0, 1fr);
