@@ -4,7 +4,6 @@ import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CredType, VSCredentialItemFromBuckup } from '@/@types/credential'
 import { VC_CREATION_SUCCEED, VC_CREATION_FAILED } from '@/constants/toastMessage'
-import { getVESSService } from '@/lib/vess'
 import { issueVerifiableCredentials } from '@/lib/vessApi'
 
 export interface SubjectUniqueInput {
@@ -30,7 +29,6 @@ export const useMyVerifiableCredential = () => {
   const queryClient = useQueryClient()
   const { showToast } = useToast()
   const { showLoading, closeLoading } = useVESSLoading()
-  const vess = getVESSService()
   const { did } = useDIDAccount()
 
   const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {

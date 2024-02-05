@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, IconButton, TextInput } from 'kai-kit'
+import { Button, IconButton, TextInput, useKai } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
@@ -14,7 +14,6 @@ import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { LoginButton } from './LoginButton'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useKai } from '@/kai/hooks/useKai'
 import { Separator } from '@/kai/separator'
 import { Text } from '@/kai/text/Text'
 
@@ -183,7 +182,7 @@ export const LoginPage: FC = () => {
 
 const LoginFrame = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;

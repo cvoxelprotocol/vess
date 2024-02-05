@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { useKai } from 'kai-kit'
 import React, { FC } from 'react'
 import {
   Tabs as RACTabs,
@@ -13,7 +14,6 @@ import type {
   TabPanelProps as RACTabPanelProps,
 } from 'react-aria-components'
 
-import { useKai } from '@/kai/hooks/useKai'
 import { Text } from '@/kai/text/Text'
 
 /* Tabs Component */

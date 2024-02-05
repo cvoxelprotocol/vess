@@ -11,13 +11,11 @@ import { IconDic } from './IconDic'
 import { useNCLayoutContext } from './NCLayout'
 import { NAVIGATION_LIST, NavigationItemType, NavigationItemValue } from '@/constants/ui'
 import { useConnectDID } from '@/hooks/useConnectDID'
-import { useKai } from '@/kai/hooks/useKai'
 import { Text } from '@/kai/text/Text'
 
 export type NavigationListProps = {} & RadioGroupProps
 
 export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...props }) => {
-  const { kai } = useKai()
   const { disConnectDID } = useConnectDID()
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
@@ -108,7 +106,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
         width='100%'
         color='dominant'
         onPress={logout}
-        align='start'
+        align='space-between'
       >
         ログアウトする
       </Button>
@@ -122,7 +120,7 @@ const NavigationListFrame = styled.nav`
   justify-content: flex-start;
   align-items: flex-start;
   width: var(--kai-size-ref-240);
-  height: 100dvh;
+  height: 100svh;
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-ref-16);
   padding-top: var(--kai-size-sys-space-lg);

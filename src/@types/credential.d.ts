@@ -1,6 +1,35 @@
+export type WorkspaceType = {
+  id: string
+  address: string
+  ceramicId: string
+  name: string
+  desc?: string
+  icon?: string
+  primaryColor?: string
+  useCompose?: boolean
+}
+
 export type CredentialType = {
   id: string
   name: string
+}
+
+export type VSCredentialItem = {
+  id: string
+  ceramicId: string | null
+  organizationId: string | null
+  credentialTypeId: string
+  collectionId: string
+  title: string
+  description: string | null
+  link: string | null
+  icon: string | null
+  image: string | null
+  primaryColor: string | null
+  startDate: Date
+  endDate: Date | null
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type CredentialStruct = {
@@ -15,6 +44,12 @@ export type CredentialStruct = {
   createdAt: Date
   updatedAt: Date
   credentialType: CredentialType
+  credentialItem?: VSCredentialItem
+  organization?: WorkspaceType
+}
+
+export type CredentialResponse = {
+  data: CredentialStruct
 }
 
 export type CredentialsResponse = {
@@ -83,8 +118,8 @@ export type OrganizationType = {
   name: string
   desc: string | null
   icon: string | null
-  useCompose: boolean | null
   primaryColor: string | null
+  useCompose: boolean | null
 }
 
 export type VSUser = {

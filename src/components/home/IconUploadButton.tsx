@@ -1,11 +1,11 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
+import { useKai } from 'kai-kit'
 import React, { FC } from 'react'
 import { FileTrigger, Button } from 'react-aria-components'
 import type { FileTriggerProps } from 'react-aria-components'
 import { PiCameraPlusBold } from 'react-icons/pi'
 import { CommonSpinner } from '../ui-v1/Loading/CommonSpinner'
-import { useKai } from '@/kai/hooks/useKai'
 
 type IconUploadButtonProps = {
   defaultIcon: string
