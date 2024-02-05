@@ -1,4 +1,10 @@
-import React, { FC } from 'react'
+import styled from '@emotion/styled'
+import image from 'next/image'
+import Image from 'next/image'
+import router, { useRouter } from 'next/router'
+import React, { FC, useEffect, useRef } from 'react'
+import { Button } from 'react-aria-components'
+import { PiCheckCircleFill } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Skelton } from '@/kai/skelton'
 
@@ -6,9 +12,34 @@ type Props = {
   image?: string
   name?: string
   size?: string
+  credId?: string
 }
 
-export const CredItem: FC<Props> = ({ image, name, size = '100%' }) => {
+export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
+  const router = useRouter()
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [isSquare, setIsSquare] = React.useState(false)
+
+  useEffect(() => {
+    console.log('passed')
+    if (imgRef.current) {
+      const img = imgRef.current
+      img.onload = () => {
+        if (img.naturalWidth / img.naturalHeight < 1.4) {
+          setIsSquare(true)
+        } else {
+          setIsSquare(false)
+        }
+      }
+    }
+  }, [image, imgRef])
+
+  const handleClick = () => {
+    if (credId) {
+      router.push(`/creds/detail/${credId}`)
+    }
+  }
+
   return (
     <>
       <Skelton
@@ -16,19 +47,121 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%' }) => {
         isLoading={!image}
         width='100%'
         height='auto'
-        aspectRatio='1'
+        aspectRatio='1.618 / 1'
         maskColor='var(--kai-color-sys-background)'
-        radius='var(--kai-size-sys-round-full)'
+        radius='var(--kai-size-sys-round-md)'
         borderWidth='var(--kai-size-ref-2)'
       >
-        <ImageContainer
-          src={image || '/sample/event_sample.jpg'}
-          alt={name || 'イベント参加証明画像'}
-          objectFit='cover'
-          width={size}
-          style={{ zIndex: '-1' }}
-        />
+        <CredItemFrame onPress={() => handleClick()} data-square={isSquare || undefined}>
+          {isSquare ? (
+            <CredImageFrame>
+              <CredImageBackground src={image} ref={imgRef} />
+              <CredImageOverlay />
+              <CredImage src={image || ''} />
+            </CredImageFrame>
+          ) : (
+            <ImageContainer
+              src={image || '/sample/event_sample.png'}
+              alt={name || 'イベント参加証明画像'}
+              objectFit='cover'
+              width={size}
+              style={{ zIndex: 0 }}
+              ref={imgRef}
+            />
+          )}
+          <IconFrame>
+            <PiCheckCircleFill size={32} color={'var(--kai-color-sys-success)'} />
+          </IconFrame>
+        </CredItemFrame>
       </Skelton>
     </>
   )
 }
+
+const CredImageFrame = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.618 / 1;
+  overflow: hidden;
+  border-radius: var(--kai-size-sys-round-md);
+  border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline-minor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--kai-size-sys-space-lg);
+`
+
+const CredImageBackground = styled.img`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  aspect-ratio: 1.618 / 1;
+  opacity: 0.4;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(12px);
+`
+
+const CredImageOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: var(--kai-color-sys-neutral);
+  opacity: 0.1;
+`
+
+const CredImage = styled.div<{ src: string }>`
+  position: absolute;
+  top: var(--kai-size-sys-space-md);
+  right: var(--kai-size-sys-space-md);
+  left: var(--kai-size-sys-space-md);
+  bottom: var(--kai-size-sys-space-md);
+  background-image: url(${(props) => props.src});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+`
+
+const CredItemFrame = styled(Button)`
+  border: none;
+  position: relative;
+  transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
+  transition-property: background, transform, opacity;
+  border-radius: var(--kai-size-sys-round-xs);
+  background: transparent;
+  padding: 0;
+  overflow: visible;
+
+  &[data-hovered] {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  &[data-focused] {
+    outline: none;
+  }
+  &[data-focus-visible] {
+    outline: var(--kai-size-ref-1) solid var(--kai-color-sys-dominant);
+    outline-offset: var(--kai-size-ref-2);
+  }
+  &[data-pressed] {
+    transform: scale(0.98);
+    opacity: var(--kai-opacity-sys-state-pressed);
+  }
+`
+
+const IconFrame = styled.div`
+  position: absolute;
+  top: calc(1 * var(--kai-size-ref-12));
+  right: calc(1 * var(--kai-size-ref-16));
+  width: var(--kai-size-ref-32);
+  height: var(--kai-size-ref-32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--kai-z-index-sys-component-nearer);
+`

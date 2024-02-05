@@ -2,6 +2,17 @@ import { VSCredentialItemFromBuckup, VSUser } from '@/@types/credential'
 import { CreateUserInfo, CreateUserWithGoogleInfo } from '@/@types/user'
 import { getCurrentDomain } from '@/utils/url'
 
+export const getCredential = async (id?: string): Promise<Response> => {
+  if (!id) {
+    throw new Error('credenital id is undefined')
+  }
+  try {
+    return await baseVessApi('GET', `/v2/credential/item`, id)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const getCredentials = async (did?: string): Promise<Response> => {
   if (!did) {
     throw new Error('did is undefined')

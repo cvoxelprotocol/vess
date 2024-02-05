@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { useModal, useModalContext } from 'kai-kit'
+import { Modal, useModal, useModalContext } from 'kai-kit'
 import React, { FC } from 'react'
+import { Button } from 'react-aria-components'
 
 type Props = {
   navigation?: React.ReactNode
@@ -66,6 +67,9 @@ export const NCLayout: FC<Props> = ({
           ref={attachToRef}
         >
           {children}
+          {isNavigationOpen && !isOpenSomeModal && (
+            <CloseNaviOverlay onPress={() => setIsNavigationOpen(false)} />
+          )}
         </ContentFrame>
       </LayoutFrame>
     </NCLayoutContext.Provider>
@@ -74,7 +78,7 @@ export const NCLayout: FC<Props> = ({
 
 const LayoutFrame = styled.div<{ contentWidth?: number }>`
   display: grid;
-  height: 100vh;
+  height: 100svh;
   grid-template-columns: min-content min-content;
   background: var(--kai-color-sys-background);
 
@@ -92,7 +96,7 @@ const NavigationFrame = styled.div`
   grid-row: 1 / 2;
   width: 0;
   height: auto;
-  transition: width 1s cubic-bezier(0, 0.7, 0.3, 1);
+  transition: width var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   /* background: var(--kai-color-sys-surface-container-high); */
   overflow: hidden;
   &[data-nav-opened='true'] {
@@ -104,16 +108,17 @@ const NavigationFrame = styled.div`
 const ContentFrame = styled.div`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
+  position: relative;
   width: 100vw;
   max-width: var(--kai-size-breakpoint-sm-max-width);
-  height: 100vh;
+  height: 100svh;
   transition: all var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   transition-property: opacity, transform;
   overflow-y: scroll;
 
   &[data-nav-opened='true'] {
     opacity: 0.4;
-    transform: scale(0.98);
+    /* transform: scale(0.98); */
   }
   &:hover {
     &[data-nav-opened='true'] {
@@ -124,4 +129,16 @@ const ContentFrame = styled.div`
     opacity: 0.4;
     transform: scale(0.98);
   }
+`
+
+const CloseNaviOverlay = styled(Button)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: transparent;
+  opacity: 0;
+  outline: none;
+  border: none;
 `

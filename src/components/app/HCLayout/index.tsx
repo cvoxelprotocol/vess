@@ -30,7 +30,7 @@ export const HCLayout: FC<Props> = ({
 
 const LayoutFrame = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   display: grid;
   grid-template-rows: min-content 1fr;
   overflow-y: scroll;

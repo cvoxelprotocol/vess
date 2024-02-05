@@ -71,6 +71,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           variant='text'
           type='submit'
           form='profile-edit'
+          width='auto'
           isDisabled={status === 'uploading' || isUpdatingSocialAccount}
         >
           保存
@@ -83,7 +84,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
     >
       <Form id='profile-edit' onSubmit={handleSubmit(onClickSubmit)}>
         <FlexHorizontal width='100%' gap='var(--kai-size-sys-space-md)'>
-          <div style={{ width: 'var(--kai-size-ref-80)' }} />
+          <div style={{ width: 'var(--kai-size-ref-96)' }} />
           <IconUploadButton
             defaultIcon={icon || profile.avatarSrc || '/default_profile.jpg'}
             size='lg'
@@ -93,7 +94,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         </FlexHorizontal>
         <TextInput
           label='ニックネーム'
-          labelWidth={'var(--kai-size-ref-80)'}
+          labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           {...register('username', { required: true })}
           defaultValue={profile.displayName}
@@ -102,7 +103,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         />
         <TextArea
           label='自己紹介文'
-          labelWidth={'var(--kai-size-ref-80)'}
+          labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           defaultValue={profile.bio}
           {...register('description', { required: false })}

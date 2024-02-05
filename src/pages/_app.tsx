@@ -1,5 +1,4 @@
 import { css, Global, ThemeProvider } from '@emotion/react'
-import { Noto_Sans } from '@next/font/google'
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import { MetaMaskConnector } from '@wagmi/core/connectors/metaMask'
@@ -7,6 +6,7 @@ import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
 import { Provider as JotaiProvider } from 'jotai'
 import { KaiProvider } from 'kai-kit'
 import type { AppProps } from 'next/app'
+import { Noto_Sans } from 'next/font/google'
 import { useState } from 'react'
 import { configureChains, mainnet, WagmiConfig, createConfig } from 'wagmi'
 import { infuraProvider } from 'wagmi/providers/infura'
@@ -18,7 +18,6 @@ import { ComposeWrapper } from '@/context/compose'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
 import '@/styles/globals.css'
-import '@/tokens/build/css/kai-tokens.css'
 import { kaiTokens } from '@/styles/kaiTokens'
 
 const notoSans = Noto_Sans({
@@ -36,6 +35,9 @@ const global = css`
   html {
     font-family: ${notoSans.style.fontFamily};
     padding: 0 !important;
+  }
+  body {
+    min-height: 100svh;
   }
 `
 
@@ -84,7 +86,7 @@ export default function App({
             <WagmiConfig config={wagmiConfig}>
               <ComposeWrapper>
                 <ThemeProvider theme={theme}>
-                  <KaiProvider style={kaiTokens}>
+                  <KaiProvider style={kaiTokens} defaultTheme='light'>
                     <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
                     <BasicLayout>
                       <Component {...props} />
