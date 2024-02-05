@@ -86,7 +86,7 @@ export const useMyVerifiableCredential = () => {
         id: did,
       }
       const body: IssueCredentialRequest = {
-        issuerAddress: item.organization.address,
+        issuerAddress: workspace.address,
         credTypeName: type,
         commonContent: commonContent,
         holders: [subjectUniqueInput],

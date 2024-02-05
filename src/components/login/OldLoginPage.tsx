@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'kai-kit'
+import { Button, useKai } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
@@ -10,7 +10,6 @@ import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
-import { useKai } from '@/kai/hooks/useKai'
 import { Text } from '@/kai/text/Text'
 
 export const OldLoginPage: FC = () => {
