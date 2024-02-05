@@ -144,17 +144,6 @@ export const LoginPage: FC = () => {
               ></IconButton>
             </FlexHorizontal>
           </Form>
-          <Separator title='旧ログイン' titlePlacement='in-center' lineWeight='thick' />
-          <FlexHorizontal width='100%' gap='8px' alignItems='center' justifyContent='center'>
-            <Button
-              variant='filled'
-              width='var(--kai-size-ref-320)'
-              onPress={() => loginWithEmailAndPw()}
-              isDisabled={isLoading}
-            >
-              Email/PWでログイン
-            </Button>
-          </FlexHorizontal>
           <TermsFrame>
             ログインまたは登録することで、当サービスの
             <Link
@@ -174,6 +163,12 @@ export const LoginPage: FC = () => {
             </Link>
             に同意するものとします。
           </TermsFrame>
+          {/* temporary one */}
+          <FlexVertical alignItems='center' justifyContent='center' width='100%'>
+            <Link href='/old/login' style={{ color: 'var(--kai-color-sys-dominant)' }}>
+              旧ログイン(メール/パスワード)はこちら
+            </Link>
+          </FlexVertical>
         </FlexVertical>
         <NextImageContainer
           src='/landscape.png'
