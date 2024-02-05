@@ -43,6 +43,11 @@ const initializeInstance = (chains: any[]) => {
           typeOfLogin: 'discord',
           clientId: process.env.NEXT_PUBLIC_WEB3AUTH_DISCORD_CLIENT_ID || '',
         },
+        jwt: {
+          verifier: process.env.NEXT_PUBLIC_WEB3AUTH_AUTH0_VERIFIER || '',
+          typeOfLogin: 'jwt',
+          clientId: process.env.NEXT_PUBLIC_WEB3AUTH_AUTH0_CLIENT_ID || '',
+        },
       },
     },
     privateKeyProvider: privateKeyProvider,

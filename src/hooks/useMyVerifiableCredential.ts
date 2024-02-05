@@ -50,7 +50,7 @@ export const useMyVerifiableCredential = () => {
       switch (type) {
         case 'attendance':
           commonContent = {
-            eventId: item.ceramicId,
+            eventId: item.ceramicId || item.id,
             eventName: item.title,
             eventIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
@@ -70,7 +70,7 @@ export const useMyVerifiableCredential = () => {
           break
         case 'certificate':
           commonContent = {
-            certificationId: item.ceramicId,
+            certificationId: item.ceramicId || item.id,
             certificationName: item.title,
             image: item.image || '',
             startDate: item.startDate ? item.startDate : '',
@@ -86,13 +86,13 @@ export const useMyVerifiableCredential = () => {
         id: did,
       }
       const body: IssueCredentialRequest = {
-        issuerAddress: item.organization.address,
+        issuerAddress: workspace.address,
         credTypeName: type,
         commonContent: commonContent,
         holders: [subjectUniqueInput],
         credentialItemId: item.id,
         expirationDate: undefined,
-        saveCompose: item.organization.useCompose || false,
+        saveCompose: workspace.useCompose || false,
       }
       const res = await issueVerifiableCredentials(body)
       if (!res) {

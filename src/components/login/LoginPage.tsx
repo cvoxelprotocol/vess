@@ -23,7 +23,13 @@ type EmailLoginProps = {
 export const LoginPage: FC = () => {
   const { kai } = useKai()
   const { connectors, error, isLoading } = useConnect()
-  const { loginWithWallet, loginWithGoogle, loginWithEmail, loginWithDiscord } = useConnectDID()
+  const {
+    loginWithWallet,
+    loginWithGoogle,
+    loginWithEmail,
+    loginWithDiscord,
+    loginWithEmailAndPw,
+  } = useConnectDID()
   const router = useRouter()
   const { did } = useDIDAccount()
 
@@ -156,6 +162,12 @@ export const LoginPage: FC = () => {
             </Link>
             に同意するものとします。
           </TermsFrame>
+          {/* temporary one */}
+          <FlexVertical alignItems='center' justifyContent='center' width='100%'>
+            <Link href='/old/login' style={{ color: 'var(--kai-color-sys-dominant)' }}>
+              旧ログイン(メール/パスワード)はこちら
+            </Link>
+          </FlexVertical>
         </FlexVertical>
         <NextImageContainer
           src='/landscape.png'
