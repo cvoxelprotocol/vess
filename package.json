@@ -68,7 +68,7 @@
     "react-select": "^5.7.0",
     "typescript": "5.1.6",
     "vess-kit-core": "1.0.1-alpha.3",
-    "vess-kit-web": "1.0.1-alpha.6",
+    "vess-kit-web": "1.0.1-alpha.7",
     "vess-sdk": "1.0.0-alpha.33",
     "viem": "^1.6.0",
     "wagmi": "^1.3.10"
