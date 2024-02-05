@@ -20,6 +20,7 @@ import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { getVESSService } from '@/lib/vess'
+import { formatDate } from '@/utils/date'
 
 export type CredDetailProps = {
   id?: string
@@ -209,7 +210,8 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {credential?.vc.credentialSubject.startDate}
+                {formatDate(credential?.vc.issuanceDate) ||
+                  formatDate(credential?.vc.credentialSubject.startDate)}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -221,7 +223,9 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {credential?.vc.credentialSubject.endDate || '無期限'}
+                {formatDate(credential?.vc.expirationDate) ||
+                  formatDate(credential?.vc.credentialSubject.endDate) ||
+                  '無期限'}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>

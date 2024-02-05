@@ -4,7 +4,6 @@ import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CredType, VSCredentialItemFromBuckup } from '@/@types/credential'
 import { VC_CREATION_SUCCEED, VC_CREATION_FAILED } from '@/constants/toastMessage'
-import { getVESSService } from '@/lib/vess'
 import { issueVerifiableCredentials } from '@/lib/vessApi'
 
 export interface SubjectUniqueInput {
@@ -30,7 +29,6 @@ export const useMyVerifiableCredential = () => {
   const queryClient = useQueryClient()
   const { showToast } = useToast()
   const { showLoading, closeLoading } = useVESSLoading()
-  const vess = getVESSService()
   const { did } = useDIDAccount()
 
   const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {
@@ -45,7 +43,7 @@ export const useMyVerifiableCredential = () => {
     showLoading()
     try {
       const type = item.credentialType.name as CredType
-      const workspace = await vess.getOrganization(item.organization.ceramicId)
+      const workspace = item.organization
       console.log({ item })
 
       let commonContent
@@ -62,7 +60,7 @@ export const useMyVerifiableCredential = () => {
         case 'membership':
           commonContent = {
             organizationName: workspace.name,
-            organizationId: workspace.id,
+            organizationId: workspace.ceramicId || workspace.id,
             organizationIcon: workspace.icon || '',
             membershipName: item.title,
             membershipIcon: item.image,
@@ -94,7 +92,7 @@ export const useMyVerifiableCredential = () => {
         holders: [subjectUniqueInput],
         credentialItemId: item.id,
         expirationDate: undefined,
-        saveCompose: true,
+        saveCompose: item.organization.useCompose || false,
       }
       const res = await issueVerifiableCredentials(body)
       if (!res) {

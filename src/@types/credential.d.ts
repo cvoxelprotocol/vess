@@ -116,6 +116,10 @@ export type OrganizationType = {
   id: string
   keyId: string
   name: string
+  desc: string | null
+  icon: string | null
+  primaryColor: string | null
+  useCompose: boolean | null
 }
 
 export type VSUser = {

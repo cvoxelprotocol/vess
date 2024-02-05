@@ -7,7 +7,7 @@ export const parseISOStrToDate = (iso: string): Date => {
 
 export const formatDate = (date?: string): string => {
   if (!date) return ''
-  return format(parseISO(date), 'LLL dd, yyyy')
+  return format(parseISO(date), 'yyyy/MM/dd')
 }
 
 export const convertTimestampToDateStr = (timestamp?: string): string => {
