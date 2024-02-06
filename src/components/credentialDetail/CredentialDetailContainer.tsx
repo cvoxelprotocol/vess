@@ -13,13 +13,13 @@ import {
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
+import { verifyCredential } from 'vess-kit-web'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredType } from '@/@types/credential'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
-import { getVESSService } from '@/lib/vess'
 import { formatDate } from '@/utils/date'
 
 export type CredDetailProps = {
@@ -30,7 +30,6 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useDIDAccount()
   const router = useRouter()
   const { isInitialLoading, credential } = useVerifiableCredential(id)
-  const vessKit = getVESSService()
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -68,7 +67,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const verify = async (plainCred?: string) => {
     if (!plainCred) return
     setVerified('verifying')
-    const result = await vessKit.verifyCredential(plainCred)
+    const result = await verifyCredential(plainCred)
     setTimeout(() => {
       if (result.verified === true) {
         setVerified('verified')

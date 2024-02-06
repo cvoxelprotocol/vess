@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
-import image from 'next/image'
-import Image from 'next/image'
-import router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import React, { FC, useEffect, useRef } from 'react'
 import { Button } from 'react-aria-components'
 import { PiCheckCircleFill } from 'react-icons/pi'
@@ -21,7 +19,6 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
   const [isSquare, setIsSquare] = React.useState(false)
 
   useEffect(() => {
-    console.log('passed')
     if (imgRef.current) {
       const img = imgRef.current
       img.onload = () => {

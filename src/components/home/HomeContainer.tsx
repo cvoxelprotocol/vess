@@ -1,13 +1,11 @@
 import styled from '@emotion/styled'
-import { did } from '@ucanto/core/schema'
-import { TextInput, useModal, IconButton, useKai } from 'kai-kit'
+import { useModal, IconButton, useKai } from 'kai-kit'
 import { FC, useMemo } from 'react'
 import { PiPencilBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredItem } from './CredItem'
 import { HCLayout } from '@/components/app/HCLayout'
 import { DefaultHeader } from '@/components/app/Header'
-import { EventItem } from '@/components/home/EventItem'
 import { ProfileEditModal } from '@/components/home/ProfileEditModal'
 import { Tab, TabList, TabPanel, Tabs } from '@/components/home/tab'
 import { FlexHorizontal } from '@/components/ui-v1/Common/FlexHorizontal'
@@ -16,7 +14,6 @@ import { NextImageContainer } from '@/components/ui-v1/Images/NextImageContainer
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
-import { useVESSUser } from '@/hooks/userVESSUser'
 import { Skelton } from '@/kai/skelton'
 import { Text } from '@/kai/text/Text'
 
@@ -29,8 +26,7 @@ export const HomeContainer: FC<Props> = ({ did }) => {
   const { kai } = useKai()
   const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
     useVerifiableCredentials(did)
-  const { openModal, closeModal, toggleModal } = useModal()
-  const { VsUser } = useVESSUser(did)
+  const { openModal } = useModal()
 
   const isEditable = useMemo(() => {
     return myDid === did
@@ -121,12 +117,8 @@ export const HomeContainer: FC<Props> = ({ did }) => {
           </FlexVertical>
           <Tabs defaultSelectedKey={'attendance'}>
             <TabList>
-              {/* <Tab id='membership'>会員証</Tab> */}
               <Tab id='attendance'>デジタル証明</Tab>
             </TabList>
-            {/* <TabPanel id='membership'>
-              <div>会員証はありません。</div>
-            </TabPanel> */}
             <TabPanel id='attendance' style={{ position: 'relative', zIndex: '0' }}>
               {attendances.length > 0 || memberships.length > 0 || certificates.length > 0 ? (
                 <EventListFrame>
@@ -144,7 +136,6 @@ export const HomeContainer: FC<Props> = ({ did }) => {
                         <CredItem
                           key={membership.id}
                           image={membership.credentialSubject.membershipIcon}
-                          // image={'/sample/event_sample.png'}
                           name={membership.credentialSubject.membershipName}
                           credId={membership.id}
                         />
