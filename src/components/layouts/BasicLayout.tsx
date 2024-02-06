@@ -8,13 +8,11 @@ import { NavigationContextProvider, NavigationList } from '../app/NavigationList
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
-import { useVESSTheme } from '@/hooks/useVESSTheme'
 type Props = {
   children: React.ReactNode
 }
 export const BasicLayout: FC<Props> = ({ children }) => {
-  const { isLoading, showLoading, closeLoading } = useVESSLoading()
-  const { currentTheme, initTheme } = useVESSTheme()
+  const { showLoading, closeLoading } = useVESSLoading()
   const { autoConnect, disConnectDID } = useConnectDID()
   const { did } = useDIDAccount()
   const { openModal, closeModal } = useModal()

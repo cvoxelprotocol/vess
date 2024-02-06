@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, IconButton, TextInput, useKai } from 'kai-kit'
+import { IconButton, TextInput, useKai } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
@@ -22,14 +22,8 @@ type EmailLoginProps = {
 }
 export const LoginPage: FC = () => {
   const { kai } = useKai()
-  const { connectors, error, isLoading } = useConnect()
-  const {
-    loginWithWallet,
-    loginWithGoogle,
-    loginWithEmail,
-    loginWithDiscord,
-    loginWithEmailAndPw,
-  } = useConnectDID()
+  const { connectors, isLoading } = useConnect()
+  const { loginWithWallet, loginWithGoogle, loginWithEmail, loginWithDiscord } = useConnectDID()
   const router = useRouter()
   const { did } = useDIDAccount()
 
