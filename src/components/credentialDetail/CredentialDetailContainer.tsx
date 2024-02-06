@@ -13,13 +13,13 @@ import {
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
-import { verifyCredential } from 'vess-kit-web'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredType } from '@/@types/credential'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
+import { verifyCredential } from '@/lib/veramo'
 import { formatDate } from '@/utils/date'
 
 export type CredDetailProps = {
