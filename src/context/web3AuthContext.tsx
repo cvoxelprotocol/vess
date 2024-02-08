@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react'
-import { initializeWeb3Auth } from '@/lib/web3auth'
+import { web3AuthAgent } from '@/lib/web3auth'
 
-const web3Auth = initializeWeb3Auth()
+const web3Auth = web3AuthAgent.initializeInstance()
 const Web3AuthContext = createContext({ web3Auth })
 
 export const Web3AuthProvider = ({ children }: any) => {

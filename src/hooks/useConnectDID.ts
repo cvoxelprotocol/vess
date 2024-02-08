@@ -92,6 +92,7 @@ export const useConnectDID = () => {
       const web3authProvider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
         loginProvider: 'google',
       })
+      console.log({ web3authProvider })
       return await connectDIDWithWeb3Auth(web3authProvider, LOGIN_TYPE.GOOGLE)
     } catch (error) {
       console.error(error)
