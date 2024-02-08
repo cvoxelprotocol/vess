@@ -158,7 +158,12 @@ export const LoginPage: FC = () => {
           </TermsFrame>
           {/* temporary one */}
           <FlexVertical alignItems='center' justifyContent='center' width='100%'>
-            <Link href='/old/login' style={{ color: 'var(--kai-color-sys-dominant)' }}>
+            <Link
+              href={`/old/login${
+                router.query.rPath ? (('?rPath=' + router.query.rPath) as string) : ''
+              }`}
+              style={{ color: 'var(--kai-color-sys-dominant)' }}
+            >
               旧ログイン(メール/パスワード)はこちら
             </Link>
           </FlexVertical>
