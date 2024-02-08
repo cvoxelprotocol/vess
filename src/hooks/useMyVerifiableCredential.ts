@@ -50,7 +50,7 @@ export const useMyVerifiableCredential = () => {
       switch (type) {
         case 'attendance':
           commonContent = {
-            eventId: item.ceramicId || item.id,
+            eventId: !!item.ceramicId && item.ceramicId !== '' ? item.ceramicId : item.id,
             eventName: item.title,
             eventIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
@@ -70,7 +70,7 @@ export const useMyVerifiableCredential = () => {
           break
         case 'certificate':
           commonContent = {
-            certificationId: item.ceramicId || item.id,
+            certificationId: !!item.ceramicId && item.ceramicId !== '' ? item.ceramicId : item.id,
             certificationName: item.title,
             image: item.image || '',
             startDate: item.startDate ? item.startDate : '',
