@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import image from 'next/image'
 import Image from 'next/image'
 import router, { useRouter } from 'next/router'
 import React, { FC, useEffect, useRef } from 'react'
