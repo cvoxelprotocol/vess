@@ -4,7 +4,6 @@ import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { CredType, VSCredentialItemFromBuckup } from '@/@types/credential'
 import { VC_CREATION_SUCCEED, VC_CREATION_FAILED } from '@/constants/toastMessage'
-import { getVESSService } from '@/lib/vess'
 import { issueVerifiableCredentials } from '@/lib/vessApi'
 
 export interface SubjectUniqueInput {
@@ -30,7 +29,6 @@ export const useMyVerifiableCredential = () => {
   const queryClient = useQueryClient()
   const { showToast } = useToast()
   const { showLoading, closeLoading } = useVESSLoading()
-  const vess = getVESSService()
   const { did } = useDIDAccount()
 
   const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {
@@ -45,14 +43,14 @@ export const useMyVerifiableCredential = () => {
     showLoading()
     try {
       const type = item.credentialType.name as CredType
-      const workspace = await vess.getOrganization(item.organization.ceramicId)
+      const workspace = item.organization
       console.log({ item })
 
       let commonContent
       switch (type) {
         case 'attendance':
           commonContent = {
-            eventId: item.ceramicId,
+            eventId: !!item.ceramicId && item.ceramicId !== '' ? item.ceramicId : item.id,
             eventName: item.title,
             eventIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
@@ -62,7 +60,7 @@ export const useMyVerifiableCredential = () => {
         case 'membership':
           commonContent = {
             organizationName: workspace.name,
-            organizationId: workspace.id,
+            organizationId: workspace.ceramicId || workspace.id,
             organizationIcon: workspace.icon || '',
             membershipName: item.title,
             membershipIcon: item.image,
@@ -72,7 +70,7 @@ export const useMyVerifiableCredential = () => {
           break
         case 'certificate':
           commonContent = {
-            certificationId: item.ceramicId,
+            certificationId: !!item.ceramicId && item.ceramicId !== '' ? item.ceramicId : item.id,
             certificationName: item.title,
             image: item.image || '',
             startDate: item.startDate ? item.startDate : '',
@@ -88,13 +86,13 @@ export const useMyVerifiableCredential = () => {
         id: did,
       }
       const body: IssueCredentialRequest = {
-        issuerAddress: item.organization.address,
+        issuerAddress: workspace.address,
         credTypeName: type,
         commonContent: commonContent,
         holders: [subjectUniqueInput],
         credentialItemId: item.id,
         expirationDate: undefined,
-        saveCompose: true,
+        saveCompose: workspace.useCompose || false,
       }
       const res = await issueVerifiableCredentials(body)
       if (!res) {

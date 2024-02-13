@@ -20,7 +20,6 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
   const [isSquare, setIsSquare] = React.useState(false)
 
   useEffect(() => {
-    console.log('passed')
     if (imgRef.current) {
       const img = imgRef.current
       img.onload = () => {

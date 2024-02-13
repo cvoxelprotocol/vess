@@ -1,19 +1,11 @@
-import { GetServerSideProps, NextPage } from 'next'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { CredentialDetailContainer } from '@/components/credentialDetail/CredentialDetailContainer'
 import { Meta } from '@/components/layouts/Meta'
 
-export type CredDetailProps = {
-  id?: string
-}
-export const getServerSideProps: GetServerSideProps<CredDetailProps, { id: string }> = async (
-  ctx,
-) => {
-  const id = ctx.params?.id
-  return {
-    props: { id: id },
-  }
-}
-const CredentialDetail: NextPage = ({ id }: CredDetailProps) => {
+const CredentialDetail: NextPage = () => {
+  const router = useRouter()
+  const id = router.query.id as string
   return (
     <>
       <Meta pageTitle='Credential Detail' />

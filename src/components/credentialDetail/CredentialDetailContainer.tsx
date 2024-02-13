@@ -15,11 +15,13 @@ import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredType } from '@/@types/credential'
+import { ReservedPropKeys } from '@/constants/credential'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
-import { getVESSService } from '@/lib/vess'
+import { verifyCredential } from '@/lib/veramo'
+import { formatDate } from '@/utils/date'
 
 export type CredDetailProps = {
   id?: string
@@ -29,7 +31,6 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useDIDAccount()
   const router = useRouter()
   const { isInitialLoading, credential } = useVerifiableCredential(id)
-  const vessKit = getVESSService()
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -64,10 +65,23 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
     return image || credential.credentialItem?.image || '/VESS_app_icon.png'
   }, [credential])
 
+  const otherSubjectProps = useMemo(() => {
+    if (!credential) return []
+    const subject = credential?.vc.credentialSubject
+    // remove ReservedPropKeys
+    const keys = Object.keys(subject || {}).filter((key) => !ReservedPropKeys.includes(key))
+    return keys.map((key) => {
+      return {
+        key: key,
+        value: subject[key],
+      }
+    })
+  }, [credential])
+
   const verify = async (plainCred?: string) => {
     if (!plainCred) return
     setVerified('verifying')
-    const result = await vessKit.verifyCredential(plainCred)
+    const result = await verifyCredential(plainCred)
     setTimeout(() => {
       if (result.verified === true) {
         setVerified('verified')
@@ -209,7 +223,8 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {credential?.vc.credentialSubject.startDate}
+                {formatDate(credential?.vc.issuanceDate) ||
+                  formatDate(credential?.vc.credentialSubject.startDate)}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -221,9 +236,30 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {credential?.vc.credentialSubject.endDate || '無期限'}
+                {formatDate(credential?.vc.expirationDate) ||
+                  formatDate(credential?.vc.credentialSubject.endDate) ||
+                  '無期限'}
               </Text>
             </InfoItemFrame>
+            {otherSubjectProps.length > 0 && (
+              <>
+                <InfoItemFrame>
+                  <Text typo='title-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    その他の項目
+                  </Text>
+                </InfoItemFrame>
+                {otherSubjectProps.map((prop, index) => (
+                  <InfoItemFrame key={index}>
+                    <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                      {prop.key}
+                    </Text>
+                    <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+                      {prop.value}
+                    </Text>
+                  </InfoItemFrame>
+                ))}
+              </>
+            )}
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 元データ(JSON)

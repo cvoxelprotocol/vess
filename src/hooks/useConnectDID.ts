@@ -133,6 +133,25 @@ export const useConnectDID = () => {
     }
   }
 
+  const loginWithEmailAndPw = async (): Promise<boolean> => {
+    try {
+      if (!web3Auth) throw new Error('web3Auth.instance is undefined')
+      await web3Auth.init()
+      const web3authProvider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: 'jwt',
+        extraLoginOptions: {
+          domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || '',
+          verifierIdField: 'sub',
+        },
+      })
+      return await connectDIDWithWeb3Auth(web3authProvider, LOGIN_TYPE.EMAIL)
+    } catch (error) {
+      console.error(error)
+      disConnectDID()
+      return false
+    }
+  }
+
   const connectDIDWithWeb3Auth = async (
     web3authProvider: IProvider | null,
     loginType: LoginTypeProps,
@@ -256,5 +275,6 @@ export const useConnectDID = () => {
     loginWithGoogle,
     loginWithDiscord,
     loginWithEmail,
+    loginWithEmailAndPw,
   }
 }

@@ -8,6 +8,15 @@ import { HomeContainer } from '@/components/home/HomeContainer'
 import { Meta } from '@/components/layouts/Meta'
 import { fetchProfile } from '@/lib/profile'
 
+export const maxDuration = 60
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+  maxDuration: 60,
+}
+
 export type Props = {
   did: string
   DehydratedState?: DehydratedState

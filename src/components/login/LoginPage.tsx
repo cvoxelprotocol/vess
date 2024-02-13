@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, IconButton, TextInput, useKai } from 'kai-kit'
+import { IconButton, TextInput, useKai } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ type EmailLoginProps = {
 }
 export const LoginPage: FC = () => {
   const { kai } = useKai()
-  const { connectors, error, isLoading } = useConnect()
+  const { connectors, isLoading } = useConnect()
   const { loginWithWallet, loginWithGoogle, loginWithEmail, loginWithDiscord } = useConnectDID()
   const router = useRouter()
   const { did } = useDIDAccount()
@@ -156,6 +156,17 @@ export const LoginPage: FC = () => {
             </Link>
             に同意するものとします。
           </TermsFrame>
+          {/* temporary one */}
+          <FlexVertical alignItems='center' justifyContent='center' width='100%'>
+            <Link
+              href={`/old/login${
+                router.query.rPath ? (('?rPath=' + router.query.rPath) as string) : ''
+              }`}
+              style={{ color: 'var(--kai-color-sys-dominant)' }}
+            >
+              旧ログイン(メール/パスワード)はこちら
+            </Link>
+          </FlexVertical>
         </FlexVertical>
         <NextImageContainer
           src='/landscape.png'
