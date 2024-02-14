@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { formatDID } from 'vess-sdk'
+import { formatDID } from 'vess-kit-web'
 import { useENS } from './useENS'
 import { DisplayProfile } from '@/@types'
 import { fetchProfile } from '@/lib/profile'
