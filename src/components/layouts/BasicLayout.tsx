@@ -43,7 +43,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function init() {
-      console.log({ did })
       if (!did) {
         const session = await getAuthorizedSession()
         console.log({ session })
