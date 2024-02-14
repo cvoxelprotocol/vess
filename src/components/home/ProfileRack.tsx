@@ -1,6 +1,5 @@
-import { profile } from 'console'
 import styled from '@emotion/styled'
-import { is } from 'date-fns/locale'
+import copy from 'copy-to-clipboard'
 import {
   FlexHorizontal,
   FlexVertical,
@@ -11,7 +10,9 @@ import {
   Chip,
   useBreakpoint,
   useModal,
+  useSnackbar,
 } from 'kai-kit'
+import router from 'next/router'
 import { FC, useMemo } from 'react'
 import { PiPencil, PiShareFat } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -22,6 +23,7 @@ import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useOriginalAddress } from '@/jotai/account'
+import { handleShareLink } from '@/lib/shareLink'
 
 type ProfileRackProps = {
   did: string
@@ -37,6 +39,10 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
   const { kai } = useKai()
   const { matches } = useBreakpoint()
   const { openModal } = useModal()
+  const { openSnackbar: openProfileURLCopied } = useSnackbar({
+    id: 'share-profile-url-copied',
+    text: '共有用URLをコピーしました。',
+  })
 
   const mainId = useMemo(() => {
     if (ensProfile) {
@@ -200,10 +206,16 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               width='var(--kai-size-ref-160)'
               height='var(--kai-typo-sys-label-lg-line-height)'
             >
-              <FlexHorizontal gap='var(--kai-size-sys-space-sm)' alignItems='center'>
-                <Text as='p' typo='label-lg' color='var(--kai-color-sys-neutral)'>
-                  {mainId.render}
-                </Text>
+              <FlexHorizontal
+                gap='var(--kai-size-sys-space-sm)'
+                alignItems='center'
+                style={{ zIndex: 0 }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  router.push(`/identity?tab=id`)
+                }}
+              >
+                {mainId.render}
                 <FlexHorizontal
                   gap='var(--kai-size-sys-space-none)'
                   alignItems='center'
@@ -264,6 +276,10 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 startContent={<PiShareFat />}
                 style={{ flex: 1 }}
                 isDisabled={isloadingProfile}
+                onPress={() => {
+                  openProfileURLCopied()
+                  copy(`https://app.vess.id${router.asPath}`)
+                }}
               >
                 共有する
               </Chip>

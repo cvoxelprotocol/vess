@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { FlexHorizontal, FlexVertical, Text } from 'kai-kit'
-import { FC } from 'react'
+import { useRouter } from 'next/router'
+import { FC, useEffect, useState } from 'react'
+import type { Key } from 'react-aria-components'
 import { HCLayout } from '../app/HCLayout'
 import { DefaultHeader } from '../app/Header'
 import { CredItem } from '../home/CredItem'
@@ -21,12 +23,27 @@ export const IdentityContainer: FC = () => {
   const { lensProfile, lensLoading } = useLensProfile(did)
   const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
     useVerifiableCredentials(did)
+  const router = useRouter()
+  const [tabKey, setTabKey] = useState<Key>('attendance')
+
+  useEffect(() => {
+    if (!did) {
+      router.push(`/login`)
+    }
+    if (router.query.tab) {
+      setTabKey(router.query.tab as Key)
+    }
+  }, [did, router])
 
   return (
     <>
       <HCLayout header={<DefaultHeader />}>
         <MainFrame>
-          <Tabs defaultSelectedKey={'attendance'}>
+          <Tabs
+            defaultSelectedKey={'attendance'}
+            selectedKey={tabKey}
+            onSelectionChange={(k) => setTabKey(k)}
+          >
             <TabList style={{ flex: 0 }}>
               <Tab id='attendance'>デジタル証明</Tab>
               <Tab id='id'>ID</Tab>
