@@ -33,8 +33,8 @@ const MenuButtonFrame = styled(RACButtton)`
   align-items: center;
   padding: var(--kai-size-ref-12);
   border-radius: var(--kai-size-sys-round-sm);
-  background: var(--kai-color-sys-surface-container);
-  border: var(--kai-size-ref-1) solid var(--kai-color-sys-primary-container);
+  background: var(--kai-color-sys-layer-nearer);
+  border: var(--kai-size-ref-1) solid var(--kai-color-sys-layer-farthest);
   transition: all 0.5s cubic-bezier(0, 0.7, 0.3, 1);
 
   &[data-hovered='true'] {

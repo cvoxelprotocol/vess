@@ -166,16 +166,14 @@ export const NavigationItemFrame = styled(Radio)`
   transition-property: background, transform;
 
   &[data-hovered] {
-    background: var(--kai-color-sys-surface-container-low);
+    background: var(--kai-color-sys-layer-default);
     cursor: pointer;
   }
   &[data-pressed] {
-    background: var(--kai-color-sys-surface-container-highest);
     transform: scale(0.98);
   }
   &[data-selected] {
-    background: var(--kai-color-sys-surface-container-high);
-    /* cursor: default; */
+    background: var(--kai-color-sys-layer-nearer);
     pointer-events: none;
   }
 `

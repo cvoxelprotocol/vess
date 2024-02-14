@@ -88,11 +88,6 @@ const TabsFrame = styled(RACTabs)<{ width: string }>`
       &:focus {
         outline: none;
       }
-
-      &:focus-visible {
-        outline: var(--kai-size-ref-2) solid var(--kai-color-sys-primary);
-        outline-offset: var(--kai-size-ref-2);
-      }
     }
   }
 `
