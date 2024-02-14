@@ -54,6 +54,8 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
         value={selectedNavi}
         onChange={(value) => {
           setSelectedNavi && setSelectedNavi(value as NavigationItemValue)
+          closeNavigation()
+          router.push(NAVIGATION_LIST.find((item) => item.id === value)?.path || '/')
         }}
         {...props}
       >

@@ -7,6 +7,8 @@ import {
   PiUserFill,
   PiGearBold,
   PiGearFill,
+  PiPersonBold,
+  PiPersonFill,
 } from 'react-icons/pi'
 
 /* Change ONLY THIS OBJECT to add new icon */
@@ -18,6 +20,10 @@ export const ICONS = {
   PROFILE: {
     default: 'PiUserBold',
     filled: 'PiUserFill',
+  },
+  IDENTITY: {
+    default: 'PiPersonBold',
+    filled: 'PiPersonFill',
   },
   SETTING: {
     default: 'PiGearBold',
@@ -44,6 +50,9 @@ export const IconDic: FC<IconDicProps> = ({ icon, variant = 'default', ...props 
     case 'PROFILE':
       if (variant === 'default') return <PiUserBold {...props} />
       else return <PiUserFill {...props} />
+    case 'IDENTITY':
+      if (variant === 'default') return <PiPersonBold {...props} />
+      else return <PiPersonFill {...props} />
     case 'SETTING':
       if (variant === 'default') return <PiGearBold {...props} />
       else return <PiGearFill {...props} />

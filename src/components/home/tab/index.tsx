@@ -39,6 +39,7 @@ const TabsFrame = styled(RACTabs)<{ width: string }>`
   width: ${({ width }) => width};
 
   .react-aria-TabPanel {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,6 +49,7 @@ const TabsFrame = styled(RACTabs)<{ width: string }>`
   }
 
   .react-aria-TabList {
+    flex: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,7 +57,7 @@ const TabsFrame = styled(RACTabs)<{ width: string }>`
     width: 100%;
     height: 100%;
     padding: var(--kai-size-ref-4);
-    background: var(--kai-color-sys-surface-container-high);
+    background: var(--kai-color-sys-layer-default);
     border-radius: var(--kai-size-sys-round-sm);
 
     .react-aria-Tab {

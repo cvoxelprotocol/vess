@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import Image from 'next/image'
-import router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import React, { FC, useEffect, useRef } from 'react'
 import { Button } from 'react-aria-components'
-import { PiCheckCircleFill } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { Skelton } from '@/kai/skelton'
 
 type Props = {
@@ -68,7 +67,8 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
             />
           )}
           <IconFrame>
-            <PiCheckCircleFill size={32} color={'var(--kai-color-sys-success)'} />
+            <NextImageContainer src='/icon/verified_rich.png' width='32px' />
+            {/* <PiCheckCircleFill size={32} color={'var(--kai-color-sys-success)'} /> */}
           </IconFrame>
         </CredItemFrame>
       </Skelton>
