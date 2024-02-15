@@ -3,23 +3,21 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
-import { OldLoginPage } from '@/components/login/OldLoginPage'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
-
-const OldLogin: NextPage = () => {
+const NoDid: NextPage = () => {
   const { did } = useDIDAccount()
   const { currentTheme } = useVESSTheme()
   const router = useRouter()
 
   const Wrapper = styled.main`
     width: 100%;
-    height: 100%;
+    height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--kai-color-sys-background);
-    padding: 8px;
+    background: ${currentTheme.background};
+    padding: 16px;
   `
 
   useEffect(() => {
@@ -30,10 +28,9 @@ const OldLogin: NextPage = () => {
 
   return (
     <Wrapper>
-      <Meta pagePath={`https://app.vess.id/login`} />
-      <OldLoginPage />
+      <Meta robots='noindex, follow' />
     </Wrapper>
   )
 }
 
-export default OldLogin
+export default NoDid
