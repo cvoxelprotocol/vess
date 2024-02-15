@@ -14,7 +14,9 @@ let client: ClientType | undefined
 
 const createClient = (): ClientType => {
   const compose = new ComposeClient({
-    ceramic: process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007',
+    ceramic: isProd()
+      ? process.env.NEXT_PUBLIC_COMPOSE_DB_ENDPOINT || 'http://localhost:7007'
+      : 'http://localhost:7007',
     // cast our definition as a RuntimeCompositeDefinition
     definition: (isProd() ? prodDifinition : devDifinition) as RuntimeCompositeDefinition,
   })

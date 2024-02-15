@@ -7,6 +7,7 @@ import { useVESSLoading } from './useVESSLoading'
 import { isProd } from '@/constants/common'
 import { SOCIAL_LINKS_SET_FAILED, SOCIAL_LINKS_SET_SUCCEED } from '@/constants/toastMessage'
 
+// TODO: replace with vess-web-kit
 export const useSocialLinks = (did?: string) => {
   const vess = getVESS(!isProd())
   const queryClient = useQueryClient()

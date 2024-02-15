@@ -1,11 +1,11 @@
 import React, { createContext, useContext } from 'react'
-import { initializeWeb3Auth } from '@/lib/web3auth'
+import { Web3AuthService } from '@/lib/web3auth'
 
-const web3Auth = initializeWeb3Auth()
-const Web3AuthContext = createContext({ web3Auth })
+const web3AuthService = Web3AuthService.getInstance()
+const Web3AuthContext = createContext({ web3AuthService })
 
 export const Web3AuthProvider = ({ children }: any) => {
-  return <Web3AuthContext.Provider value={{ web3Auth }}>{children}</Web3AuthContext.Provider>
+  return <Web3AuthContext.Provider value={{ web3AuthService }}>{children}</Web3AuthContext.Provider>
 }
 
 export const useWeb3AuthContext = () => useContext(Web3AuthContext)

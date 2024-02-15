@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { formatDID } from 'vess-sdk'
+import { formatDID } from 'vess-kit-web'
 import { fetchOrbisProfile } from './OrbisHelper'
 import { initializeApollo } from './apollo'
 import { DisplayProfile } from '@/@types'
