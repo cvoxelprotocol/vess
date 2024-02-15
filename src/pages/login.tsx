@@ -1,14 +1,19 @@
 import styled from '@emotion/styled'
+import { ADAPTER_STATUS } from '@web3auth/base'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { LoginPage } from '@/components/login/LoginPage'
+import { useWeb3AuthContext } from '@/context/web3AuthContext'
+import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
 
 const Login: NextPage = () => {
   const { did } = useDIDAccount()
   const router = useRouter()
+  const { web3AuthService } = useWeb3AuthContext()
+  const { connectDIDWithWeb3Auth } = useConnectDID()
 
   const Wrapper = styled.main`
     width: 100%;
@@ -25,6 +30,41 @@ const Login: NextPage = () => {
       router.push(`/did/${did}`)
     }
   }, [did, router])
+
+  useEffect(() => {
+    async function init() {
+      try {
+        if (web3AuthService) {
+          console.log('web3AuthService.isInitialized', web3AuthService.isInitialized)
+          if (!web3AuthService.isInitialized) {
+            await web3AuthService.initWeb3Auth()
+          }
+          web3AuthService.subscribe(async (status: string, data?: any) => {
+            console.log('Status: ', status)
+            if (status === ADAPTER_STATUS.CONNECTED) {
+              const res = await connectDIDWithWeb3Auth(web3AuthService.provider)
+              if (res) {
+                console.log('connected DID with Web3Auth provider')
+              } else {
+                console.log('failed to connect DID with Web3Auth provider')
+              }
+            } else if (status === ADAPTER_STATUS.ERRORED) {
+              console.log('failed to connect Web3Auth provider')
+            }
+          })
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    init()
+
+    return () => {
+      if (web3AuthService) {
+        web3AuthService.unsubscribeAll()
+      }
+    }
+  }, [web3AuthService])
 
   return (
     <Wrapper>

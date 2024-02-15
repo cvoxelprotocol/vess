@@ -1,14 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useToast } from './useToast'
-import { useVESSLoading } from './useVESSLoading'
+import { useQuery } from '@tanstack/react-query'
 import { VSCredentialItemFromBuckup } from '@/@types/credential'
 import { getCredentialItem } from '@/lib/vessApi'
 
 export const useCredentialItem = (id?: string) => {
-  const queryClient = useQueryClient()
-  const { showToast } = useToast()
-  const { showLoading, closeLoading } = useVESSLoading()
-
   const { data: credItem, isInitialLoading } = useQuery<VSCredentialItemFromBuckup | null>(
     ['credItem', id],
     () => fetchCredItem(id),

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { useModal, Modal, useKai } from 'kai-kit'
 import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
-import { getAuthorizedSession } from 'vess-sdk'
+import { getAuthorizedSession } from 'vess-kit-web'
 import { NCLayout } from '../app/NCLayout'
 import { NavigationContextProvider, NavigationList } from '../app/NavigationList'
 import { useConnectDID } from '@/hooks/useConnectDID'
@@ -43,7 +43,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function init() {
-      console.log({ did })
       if (!did) {
         const session = await getAuthorizedSession()
         console.log({ session })

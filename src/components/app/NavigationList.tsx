@@ -40,7 +40,6 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   useEffect(() => {
     NAVIGATION_LIST.forEach((item, index) => {
       if (router.pathname.startsWith(item.path)) {
-        console.log('router.pathname', router.pathname)
         setSelectedNavi && setSelectedNavi(item.id)
       }
     })

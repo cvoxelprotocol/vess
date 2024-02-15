@@ -61,9 +61,7 @@ export const LoginPage: FC = () => {
     e?.stopPropagation()
     try {
       const { email } = data
-      const isSuccess = await loginWithEmail(email)
-      if (isSuccess) {
-      }
+      await loginWithEmail(email)
     } catch (error) {
       console.error(error)
     }
