@@ -8,6 +8,7 @@ import { LoginPage } from '@/components/login/LoginPage'
 import { useWeb3AuthContext } from '@/context/web3AuthContext'
 import { useConnectDID } from '@/hooks/useConnectDID'
 import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { Web3AuthService } from '@/lib/web3auth'
 
 const Login: NextPage = () => {
   const { did } = useDIDAccount()
@@ -32,7 +33,7 @@ const Login: NextPage = () => {
   }, [did, router])
 
   useEffect(() => {
-    async function init() {
+    async function init(web3AuthService: Web3AuthService) {
       try {
         console.log('login web3AuthService: ', web3AuthService)
         if (web3AuthService) {
@@ -40,6 +41,10 @@ const Login: NextPage = () => {
           if (!web3AuthService.isInitialized) {
             await web3AuthService.initWeb3Auth()
           }
+          console.log(
+            'web3AuthService.isInitialized after initialized:',
+            web3AuthService.isInitialized,
+          )
           web3AuthService.subscribe(async (status: string, data?: any) => {
             console.log('Status: ', status)
             if (status === ADAPTER_STATUS.CONNECTED) {
@@ -58,7 +63,7 @@ const Login: NextPage = () => {
         console.log(error)
       }
     }
-    init()
+    init(web3AuthService)
 
     return () => {
       if (web3AuthService) {
@@ -66,7 +71,7 @@ const Login: NextPage = () => {
         web3AuthService.unsubscribeAll()
       }
     }
-  }, [web3AuthService])
+  }, [web3AuthService, connectDIDWithWeb3Auth])
 
   return (
     <Wrapper>
