@@ -34,6 +34,7 @@ const Login: NextPage = () => {
   useEffect(() => {
     async function init() {
       try {
+        console.log('login web3AuthService: ', web3AuthService)
         if (web3AuthService) {
           console.log('web3AuthService.isInitialized', web3AuthService.isInitialized)
           if (!web3AuthService.isInitialized) {
@@ -61,6 +62,7 @@ const Login: NextPage = () => {
 
     return () => {
       if (web3AuthService) {
+        console.log('login unsubscribeAll')
         web3AuthService.unsubscribeAll()
       }
     }

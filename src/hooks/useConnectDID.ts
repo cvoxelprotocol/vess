@@ -221,7 +221,6 @@ export const useConnectDID = () => {
   const disConnectDID = async (): Promise<void> => {
     disconnect()
     vess.disconnect()
-    console.log('disconnectDID web3AuthService.web3auth: ', web3AuthService.web3auth)
     if (web3AuthService.web3auth && web3AuthService.web3auth.connected) {
       await web3AuthService.web3auth.logout()
     }
