@@ -55,13 +55,6 @@ const OldLogin: NextPage = () => {
       }
     }
     init()
-
-    return () => {
-      if (web3AuthService) {
-        console.log('login unsubscribeAll')
-        web3AuthService.unsubscribeAll()
-      }
-    }
   }, [web3AuthService])
 
   useEffect(() => {

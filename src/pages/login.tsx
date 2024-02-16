@@ -64,13 +64,6 @@ const Login: NextPage = () => {
       }
     }
     init(web3AuthService)
-
-    return () => {
-      if (web3AuthService) {
-        console.log('login unsubscribeAll')
-        web3AuthService.unsubscribeAll()
-      }
-    }
   }, [web3AuthService, connectDIDWithWeb3Auth])
 
   return (
