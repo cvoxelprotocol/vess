@@ -6,7 +6,6 @@ import {
   Skelton,
   useKai,
   Text,
-  Flex,
   Chip,
   useBreakpoint,
   useModal,
@@ -22,8 +21,7 @@ import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
-import { useOriginalAddress } from '@/jotai/account'
-import { handleShareLink } from '@/lib/shareLink'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 
 type ProfileRackProps = {
   did: string
@@ -31,7 +29,7 @@ type ProfileRackProps = {
 }
 
 export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
-  const originalAddress = useOriginalAddress()
+  const { originalAddress } = useVESSAuthUser()
   const { profile, isloadingProfile } = useSocialAccount(did)
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
@@ -154,7 +152,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
             width={kai.size.ref[80]}
             height={kai.size.ref[80]}
             radius={kai.size.sys.round.lg}
-            isLoading={isloadingProfile || !profile.avatarSrc}
+            isLoading={isloadingProfile}
           >
             <div
               style={{
@@ -278,7 +276,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 isDisabled={isloadingProfile}
                 onPress={() => {
                   openProfileURLCopied()
-                  copy(`https://app.vess.id${router.asPath}`)
+                  copy(`https://app.vess.id/did/${did}`)
                 }}
               >
                 共有する

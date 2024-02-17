@@ -6,26 +6,27 @@ import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useForm } from 'react-hook-form'
 import { PiEnvelopeSimple, PiArrowFatRightDuotone } from 'react-icons/pi'
-import { Connector, useConnect } from 'wagmi'
 import { HCLayout } from '../app/HCLayout'
 import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { LoginButton } from './LoginButton'
-import { useConnectDID } from '@/hooks/useConnectDID'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useStateRPath } from '@/jotai/ui'
 import { Separator } from '@/kai/separator'
 import { Text } from '@/kai/text/Text'
+import { DidAuthService } from '@/lib/didAuth'
+import { config } from '@/lib/wagmi'
 
 type EmailLoginProps = {
   email: string
 }
 export const LoginPage: FC = () => {
   const { kai } = useKai()
-  const { connectors, isLoading } = useConnect()
-  const { loginWithWallet, loginWithGoogle, loginWithEmail, loginWithDiscord } = useConnectDID()
   const router = useRouter()
-  const { did } = useDIDAccount()
+  const didAuthService = DidAuthService.getInstance()
+  const { did } = useVESSAuthUser()
+  const [rPath, setRpath] = useStateRPath()
 
   // Avoid hydration error
   const [hideMetamask, setHideMetamask] = useState(false)
@@ -36,15 +37,17 @@ export const LoginPage: FC = () => {
 
   useEffect(() => {
     if (did) {
-      if (router.query.rPath) {
-        router.push(router.query.rPath as string)
+      if (rPath) {
+        const returnUrl = rPath.startsWith('/') ? rPath : `/${rPath}`
+        setRpath(null)
+        router.push(returnUrl)
         return
       } else {
         router.push(`/did/${did}`)
         return
       }
     }
-  }, [did, router])
+  }, [did])
 
   const {
     handleSubmit,
@@ -61,17 +64,15 @@ export const LoginPage: FC = () => {
     e?.stopPropagation()
     try {
       const { email } = data
-      const isSuccess = await loginWithEmail(email)
-      if (isSuccess) {
-      }
+      await didAuthService.loginWithEmail(email)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const handleLogin = async (connector?: Connector<any, any>) => {
+  const handleLogin = async (connector?: any) => {
     try {
-      const isSuccess = await loginWithWallet(connector)
+      const isSuccess = await didAuthService.loginWithWallet(connector)
       if (isSuccess) {
       }
     } catch (error) {
@@ -88,28 +89,28 @@ export const LoginPage: FC = () => {
           <FlexHorizontal width='100%' gap='8px' alignItems='center' justifyContent='center'>
             <LoginButton
               iconSrc='/brand/google.png'
-              onPress={() => loginWithGoogle()}
-              isDisabled={isLoading}
+              onPress={() => didAuthService.loginWithGoogle()}
+              isDisabled={didAuthService.isConnecting}
               aria-label='Googleでログイン'
             />
             <LoginButton
               iconSrc='/brand/discord.png'
-              onPress={() => loginWithDiscord()}
-              isDisabled={isLoading}
+              onPress={() => didAuthService.loginWithDiscord()}
+              isDisabled={didAuthService.isConnecting}
               aria-label='Discordでログイン'
             />
             {!hideMetamask && (
               <LoginButton
                 iconSrc='/brand/metamask.png'
-                onPress={() => handleLogin(connectors[1])}
-                isDisabled={isLoading}
+                onPress={() => handleLogin(config.connectors[1])}
+                isDisabled={didAuthService.isConnecting}
                 aria-label='Metamaskでログイン'
               />
             )}
             <LoginButton
               iconSrc='/brand/walletconnect.png'
-              onPress={() => handleLogin(connectors[0])}
-              isDisabled={isLoading}
+              onPress={() => handleLogin(config.connectors[0])}
+              isDisabled={didAuthService.isConnecting}
               aria-label='Walletconnectでログイン'
             />
           </FlexHorizontal>
@@ -131,7 +132,7 @@ export const LoginPage: FC = () => {
                 round='md'
                 size='lg'
                 type='submit'
-                isDisabled={isLoading}
+                isDisabled={didAuthService.isConnecting}
                 variant='tonal'
                 style={{ flex: '0 0 auto' }}
               ></IconButton>

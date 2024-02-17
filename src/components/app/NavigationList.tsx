@@ -1,22 +1,21 @@
 import styled from '@emotion/styled'
-import { Button } from 'kai-kit'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
 import type { RadioProps, RadioGroupProps, PressEvent } from 'react-aria-components'
 import { Radio, RadioGroup, Button as RACButton } from 'react-aria-components'
 import { isMobile } from 'react-device-detect'
-import { PiSignOutFill } from 'react-icons/pi'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { IconDic } from './IconDic'
 import { useNCLayoutContext } from './NCLayout'
 import { NAVIGATION_LIST, NavigationItemType, NavigationItemValue } from '@/constants/ui'
-import { useConnectDID } from '@/hooks/useConnectDID'
 import { Text } from '@/kai/text/Text'
 
 export type NavigationListProps = {} & RadioGroupProps
 
+const LogoutButton = dynamic(() => import('@/components/app/LogoutButton'), { ssr: false })
+
 export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...props }) => {
-  const { disConnectDID } = useConnectDID()
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
@@ -27,20 +26,9 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
     setIsMobileClient(isMobile)
   }, [])
 
-  const logout = async () => {
-    try {
-      await disConnectDID()
-      closeNavigation()
-      router.push('/login')
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
   useEffect(() => {
-    NAVIGATION_LIST.forEach((item, index) => {
+    NAVIGATION_LIST.forEach((item) => {
       if (router.pathname.startsWith(item.path)) {
-        console.log('router.pathname', router.pathname)
         setSelectedNavi && setSelectedNavi(item.id)
       }
     })
@@ -102,16 +90,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
           border: `0.5px solid var(--kai-color-sys-outline-variant)`,
         }}
       />
-      <Button
-        endContent={<PiSignOutFill />}
-        variant='tonal'
-        width='100%'
-        color='dominant'
-        onPress={logout}
-        align='space-between'
-      >
-        ログアウトする
-      </Button>
+      <LogoutButton />
     </NavigationListFrame>
   )
 }

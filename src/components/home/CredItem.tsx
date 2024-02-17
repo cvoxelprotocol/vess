@@ -68,7 +68,6 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
           )}
           <IconFrame>
             <NextImageContainer src='/icon/verified_rich.png' width='32px' />
-            {/* <PiCheckCircleFill size={32} color={'var(--kai-color-sys-success)'} /> */}
           </IconFrame>
         </CredItemFrame>
       </Skelton>

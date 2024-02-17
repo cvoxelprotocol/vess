@@ -16,8 +16,8 @@ import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'rea
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredType } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
 import useScrollCondition from '@/hooks/useScrollCondition'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { verifyCredential } from '@/lib/veramo'
@@ -28,7 +28,7 @@ export type CredDetailProps = {
 }
 
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
-  const { did } = useDIDAccount()
+  const { did } = useVESSAuthUser()
   const router = useRouter()
   const { isInitialLoading, credential } = useVerifiableCredential(id)
   const [verified, setVerified] = useStateVcVerifiedStatus()

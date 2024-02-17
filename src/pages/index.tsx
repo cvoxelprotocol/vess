@@ -1,24 +1,42 @@
+import styled from '@emotion/styled'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { HomeContainer } from '@/components/home/HomeContainer'
 import { Meta } from '@/components/layouts/Meta'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
-const Home: NextPage = () => {
-  const { did } = useDIDAccount()
-  const router = useRouter()
+import { LoginPage } from '@/components/login/LoginPage'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 
-  useEffect(() => {
-    if (!did) {
-      router.push(`/login`)
-    }
-  }, [did])
-  return (
-    <>
-      <Meta />
-      <HomeContainer did={did || ''} />
-    </>
-  )
+const Home: NextPage = () => {
+  const { did, connection } = useVESSAuthUser()
+
+  const Wrapper = styled.main`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--kai-color-sys-background);
+    padding: 8px;
+  `
+
+  if (connection === 'connecting') {
+    return <></>
+  }
+
+  if (did) {
+    return (
+      <>
+        <Meta />
+        <HomeContainer did={did} />
+      </>
+    )
+  } else {
+    return (
+      <Wrapper>
+        <Meta pagePath={`https://app.vess.id/login`} />
+        <LoginPage />
+      </Wrapper>
+    )
+  }
 }
 
 export default Home

@@ -6,13 +6,15 @@ import { HCLayout } from '@/components/app/HCLayout'
 import { DefaultHeader } from '@/components/app/Header'
 import { Tab, TabList, TabPanel, Tabs } from '@/components/home/tab'
 import { FlexVertical } from '@/components/ui-v1/Common/FlexVertical'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
+
 type Props = {
   did: string
 }
+
 export const HomeContainer: FC<Props> = ({ did }) => {
-  const { did: myDid } = useDIDAccount()
+  const { did: myDid } = useVESSAuthUser()
   const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
     useVerifiableCredentials(did)
 

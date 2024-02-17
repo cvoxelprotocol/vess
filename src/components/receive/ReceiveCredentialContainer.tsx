@@ -6,16 +6,18 @@ import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useStateRPath } from '@/jotai/ui'
 import { Skelton } from '@/kai/skelton'
 import { Text } from '@/kai/text/Text'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 
 export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
-  const { did } = useDIDAccount()
+  const { did } = useVESSAuthUser()
   const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
+  const [rPath, setRpath] = useStateRPath()
   const { issue } = useMyVerifiableCredential()
   const [receiveStatus, setReceiveStatus] = React.useState<
     'default' | 'receiving' | 'success' | 'failed'
@@ -29,7 +31,8 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
 
   const handleIssue = async () => {
     if (!did) {
-      router.push(`/login?rPath=${router.asPath}`)
+      setRpath(router.asPath)
+      router.push(`/login`)
       return
     }
     try {

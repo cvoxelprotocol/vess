@@ -3,33 +3,35 @@ import { Button, useKai } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
-import { useConnect } from 'wagmi'
 import { HCLayout } from '../app/HCLayout'
 import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
-import { useConnectDID } from '@/hooks/useConnectDID'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useStateRPath } from '@/jotai/ui'
 import { Text } from '@/kai/text/Text'
+import { DidAuthService } from '@/lib/didAuth'
 
 export const OldLoginPage: FC = () => {
   const { kai } = useKai()
-  const { isLoading } = useConnect()
-  const { loginWithEmailAndPw } = useConnectDID()
+  const didAuthService = DidAuthService.getInstance()
   const router = useRouter()
-  const { did } = useDIDAccount()
+  const { did } = useVESSAuthUser()
+  const [rPath, setRpath] = useStateRPath()
 
   useEffect(() => {
     if (did) {
-      if (router.query.rPath) {
-        router.push(router.query.rPath as string)
+      if (rPath) {
+        const returnUrl = rPath.startsWith('/') ? rPath : `/${rPath}`
+        setRpath(null)
+        router.push(returnUrl)
         return
       } else {
         router.push(`/did/${did}`)
         return
       }
     }
-  }, [did, router])
+  }, [did])
 
   return (
     <HCLayout>
@@ -42,8 +44,8 @@ export const OldLoginPage: FC = () => {
             <Button
               variant='filled'
               width='var(--kai-size-ref-320)'
-              onPress={() => loginWithEmailAndPw()}
-              isDisabled={isLoading}
+              onPress={() => didAuthService.loginWithEmailAndPw()}
+              isDisabled={didAuthService.isConnecting}
             >
               メール / パスワードでログイン
             </Button>

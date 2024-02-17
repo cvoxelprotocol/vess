@@ -9,15 +9,14 @@ import { CredItem } from '../home/CredItem'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { Tab, TabList, TabPanel, Tabs } from '@/components/home/tab'
 import { useCcProfile } from '@/hooks/useCcProfile'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
-import { useOriginalAddress } from '@/jotai/account'
 
 export const IdentityContainer: FC = () => {
-  const { did } = useDIDAccount()
-  const originalAddress = useOriginalAddress()
+  const { did } = useVESSAuthUser()
+  const { originalAddress } = useVESSAuthUser()
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
   const { lensProfile, lensLoading } = useLensProfile(did)
