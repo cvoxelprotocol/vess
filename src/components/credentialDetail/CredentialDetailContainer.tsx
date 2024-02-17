@@ -15,6 +15,7 @@ import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredType } from '@/@types/credential'
+import { ReservedPropKeys } from '@/constants/credential'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
@@ -62,6 +63,19 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
     }
     // use credentialItem image if there is no image prop in vc.credentialSubject.
     return image || credential.credentialItem?.image || '/VESS_app_icon.png'
+  }, [credential])
+
+  const otherSubjectProps = useMemo(() => {
+    if (!credential) return []
+    const subject = credential?.vc.credentialSubject
+    // remove ReservedPropKeys
+    const keys = Object.keys(subject || {}).filter((key) => !ReservedPropKeys.includes(key))
+    return keys.map((key) => {
+      return {
+        key: key,
+        value: subject[key],
+      }
+    })
   }, [credential])
 
   const verify = async (plainCred?: string) => {
@@ -227,6 +241,25 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   '無期限'}
               </Text>
             </InfoItemFrame>
+            {otherSubjectProps.length > 0 && (
+              <>
+                <InfoItemFrame>
+                  <Text typo='title-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    その他の項目
+                  </Text>
+                </InfoItemFrame>
+                {otherSubjectProps.map((prop, index) => (
+                  <InfoItemFrame key={index}>
+                    <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                      {prop.key}
+                    </Text>
+                    <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+                      {prop.value}
+                    </Text>
+                  </InfoItemFrame>
+                ))}
+              </>
+            )}
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 元データ(JSON)
