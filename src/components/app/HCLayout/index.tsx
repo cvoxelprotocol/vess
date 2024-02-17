@@ -21,20 +21,21 @@ export const HCLayout: FC<Props> = ({
   backgroundColor = 'transparent',
 }) => {
   return (
-    <LayoutFrame>
+    <LayoutFrame background={backgroundColor}>
       <HeaderFrame>{header}</HeaderFrame>
       <ContentFrame>{children}</ContentFrame>
     </LayoutFrame>
   )
 }
 
-const LayoutFrame = styled.div`
+const LayoutFrame = styled.div<{ background: string }>`
   width: 100%;
   height: 100svh;
   display: grid;
   grid-template-rows: min-content 1fr;
   overflow-y: scroll;
   overflow-x: hidden;
+  background: ${({ background }) => background};
 `
 
 const HeaderFrame = styled.div`

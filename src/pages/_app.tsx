@@ -6,7 +6,6 @@ import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
 import { Provider as JotaiProvider } from 'jotai'
 import { KaiProvider } from 'kai-kit'
 import type { AppProps } from 'next/app'
-import dynamic from 'next/dynamic'
 import { Noto_Sans } from 'next/font/google'
 import { useState } from 'react'
 import { configureChains, mainnet, WagmiConfig, createConfig } from 'wagmi'
@@ -14,14 +13,13 @@ import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { GATracking } from '@/components/ui-v1/Common/GATracking'
+import { VESSToast } from '@/components/ui-v1/Toasts/VESSToast'
 import { ComposeWrapper } from '@/context/compose'
 import { Web3AuthProvider } from '@/context/web3AuthContext'
 import { theme } from '@/lib/theme'
 import 'modern-css-reset/dist/reset.min.css'
 import '@/styles/globals.css'
 import { kaiTokens } from '@/styles/kaiTokens'
-
-const VESSToast = dynamic(() => import('@/components/ui-v1/Toasts/VESSToast'), { ssr: false })
 
 const notoSans = Noto_Sans({
   style: 'normal',

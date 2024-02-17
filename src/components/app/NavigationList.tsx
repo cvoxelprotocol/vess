@@ -40,6 +40,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   useEffect(() => {
     NAVIGATION_LIST.forEach((item, index) => {
       if (router.pathname.startsWith(item.path)) {
+        console.log('router.pathname', router.pathname)
         setSelectedNavi && setSelectedNavi(item.id)
       }
     })
@@ -53,6 +54,8 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
         value={selectedNavi}
         onChange={(value) => {
           setSelectedNavi && setSelectedNavi(value as NavigationItemValue)
+          closeNavigation()
+          router.push(NAVIGATION_LIST.find((item) => item.id === value)?.path || '/')
         }}
         {...props}
       >
@@ -163,16 +166,14 @@ export const NavigationItemFrame = styled(Radio)`
   transition-property: background, transform;
 
   &[data-hovered] {
-    background: var(--kai-color-sys-surface-container-low);
+    background: var(--kai-color-sys-layer-default);
     cursor: pointer;
   }
   &[data-pressed] {
-    background: var(--kai-color-sys-surface-container-highest);
     transform: scale(0.98);
   }
   &[data-selected] {
-    background: var(--kai-color-sys-surface-container-high);
-    /* cursor: default; */
+    background: var(--kai-color-sys-layer-nearer);
     pointer-events: none;
   }
 `

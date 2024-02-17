@@ -5,7 +5,7 @@ import { useThemeMode } from '@/hooks/useThemeMode'
 
 export const useVESSTheme = () => {
   const theme = useTheme()
-  const { themeMode, setDarkMode, initTheme, typoMode } = useThemeMode()
+  const { themeMode, setDarkMode, setThemeMode, initTheme, typoMode } = useThemeMode()
 
   const currentTheme = useMemo(() => {
     return theme.schemes[themeMode]

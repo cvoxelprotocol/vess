@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { formatDID } from 'vess-kit-web'
+import { formatDID } from 'vess-sdk'
 import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'

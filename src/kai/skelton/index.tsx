@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { ComponentPropsWithoutRef, FC } from 'react'
+import React, { ComponentProps, ComponentPropsWithoutRef, ComponentPropsWithRef, FC } from 'react'
 import { SemanticColors } from '@/@types/theme'
 import { useVESSTheme } from '@/hooks/useVESSTheme'
 

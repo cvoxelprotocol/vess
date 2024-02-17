@@ -1,18 +1,13 @@
 import { getAddress } from '@ethersproject/address'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  type CUSTOM_LOGIN_PROVIDER_TYPE,
-  LOGIN_PROVIDER,
-  type LOGIN_PROVIDER_TYPE,
-} from '@toruslabs/openlogin-utils'
-import { type IProvider } from '@web3auth/base'
+import { type IProvider, WALLET_ADAPTERS } from '@web3auth/base'
 import { useMemo } from 'react'
 import { getAddressFromPkh } from 'vess-kit-web'
 import { createWalletClient, custom } from 'viem'
 import { mainnet } from 'viem/chains'
 import { Connector, useConnect, useDisconnect } from 'wagmi'
 import { useVESSLoading } from './useVESSLoading'
-import { useVESSUser } from './useVESSUser'
+import { useVESSUser } from './userVESSUser'
 import { isProd } from '@/constants/common'
 import { useComposeContext } from '@/context/compose'
 import { useWeb3AuthContext } from '@/context/web3AuthContext'
@@ -26,6 +21,14 @@ import {
 } from '@/jotai/account'
 import { getVESSService } from '@/lib/vess'
 
+export const LOGIN_TYPE = {
+  WALLET: 'wallet',
+  GOOGLE: 'google',
+  DISCORD: 'discord',
+  EMAIL: 'email',
+} as const
+export type LoginTypeProps = typeof LOGIN_TYPE[keyof typeof LOGIN_TYPE]
+
 export const useConnectDID = () => {
   const setMyDid = useSetStateMyDid()
   const setAccount = useSetStateAccount()
@@ -36,7 +39,7 @@ export const useConnectDID = () => {
   const vess = getVESSService()
   const queryClient = useQueryClient()
   const { composeClient } = useComposeContext()
-  const { web3AuthService } = useWeb3AuthContext()
+  const { web3Auth } = useWeb3AuthContext()
   const { disconnect } = useDisconnect()
   const { connectAsync } = useConnect()
   const { addUserOnlyWithDid, addUserWithEmail, addUserWithGoogle, addUserWithDiscord } =
@@ -65,7 +68,7 @@ export const useConnectDID = () => {
         setLoginState(
           session.did.parent,
           getAddress(getAddressFromPkh(session.did.parent)),
-          'wallet',
+          LOGIN_TYPE.WALLET,
         )
         queryClient.invalidateQueries(['hasAuthorizedSession'])
       } else {
@@ -82,62 +85,80 @@ export const useConnectDID = () => {
     }
   }
 
-  const loginWithGoogle = async (): Promise<void> => {
+  const loginWithGoogle = async (): Promise<boolean> => {
     try {
-      if (!web3AuthService) throw new Error('web3Auth.instance is undefined')
-      if (!web3AuthService.isInitialized) {
-        await web3AuthService.initWeb3Auth()
-      }
-      await web3AuthService.loginWithGoogle()
+      if (!web3Auth) throw new Error('web3Auth.instance is undefined')
+      await web3Auth.init()
+      const web3authProvider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: 'google',
+      })
+      return await connectDIDWithWeb3Auth(web3authProvider, LOGIN_TYPE.GOOGLE)
     } catch (error) {
       console.error(error)
       disConnectDID()
+      return false
     }
   }
 
-  const loginWithDiscord = async (): Promise<void> => {
+  const loginWithDiscord = async (): Promise<boolean> => {
     try {
-      if (!web3AuthService) throw new Error('web3Auth.instance is undefined')
-      if (!web3AuthService.isInitialized) {
-        await web3AuthService.initWeb3Auth()
-      }
-      await web3AuthService.loginWithDiscord()
+      if (!web3Auth) throw new Error('web3Auth.instance is undefined')
+      await web3Auth.init()
+      const web3authProvider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: 'discord',
+      })
+      return await connectDIDWithWeb3Auth(web3authProvider, LOGIN_TYPE.DISCORD)
     } catch (error) {
       console.error(error)
       disConnectDID()
+      return false
     }
   }
 
-  const loginWithEmail = async (email: string): Promise<void> => {
+  const loginWithEmail = async (email: string): Promise<boolean> => {
     try {
-      if (!web3AuthService) throw new Error('web3Auth.instance is undefined')
-      if (!web3AuthService.isInitialized) {
-        await web3AuthService.initWeb3Auth()
-      }
-      await web3AuthService.loginWithEmail(email)
+      if (!web3Auth) throw new Error('web3Auth.instance is undefined')
+      await web3Auth.init()
+      const web3authProvider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: 'email_passwordless',
+        extraLoginOptions: {
+          login_hint: email,
+        },
+      })
+      return await connectDIDWithWeb3Auth(web3authProvider, LOGIN_TYPE.EMAIL)
     } catch (error) {
       console.error(error)
       disConnectDID()
+      return false
     }
   }
 
-  const loginWithEmailAndPw = async (): Promise<void> => {
+  const loginWithEmailAndPw = async (): Promise<boolean> => {
     try {
-      if (!web3AuthService) throw new Error('web3Auth.instance is undefined')
-      if (!web3AuthService.isInitialized) {
-        await web3AuthService.initWeb3Auth()
-      }
-      await web3AuthService.loginWithEmailAndPw()
+      if (!web3Auth) throw new Error('web3Auth.instance is undefined')
+      await web3Auth.init()
+      const web3authProvider = await web3Auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: 'jwt',
+        extraLoginOptions: {
+          domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || '',
+          verifierIdField: 'sub',
+        },
+      })
+      return await connectDIDWithWeb3Auth(web3authProvider, LOGIN_TYPE.EMAIL)
     } catch (error) {
       console.error(error)
       disConnectDID()
+      return false
     }
   }
 
-  const connectDIDWithWeb3Auth = async (web3authProvider: IProvider | null): Promise<boolean> => {
+  const connectDIDWithWeb3Auth = async (
+    web3authProvider: IProvider | null,
+    loginType: LoginTypeProps,
+  ): Promise<boolean> => {
     try {
       if (!web3authProvider) throw new Error('web3authProvider is null')
-      console.log({ web3authProvider })
+
       showLoading()
       const client = createWalletClient({
         chain: mainnet,
@@ -148,12 +169,11 @@ export const useConnectDID = () => {
 
       const env = isProd() ? 'mainnet' : 'testnet-clay'
       const { session } = await vess.connect(addresses[0], web3authProvider, env)
-      const user = await web3AuthService.web3auth.getUserInfo()
-      console.log({ user })
+      const user = await web3Auth.getUserInfo()
 
       let isLoginSucceeded = false
-      switch (user.typeOfLogin) {
-        case LOGIN_PROVIDER.GOOGLE:
+      switch (loginType) {
+        case LOGIN_TYPE.GOOGLE:
           isLoginSucceeded = await addUserWithGoogle({
             did: session.did.parent,
             email: user.email,
@@ -161,7 +181,7 @@ export const useConnectDID = () => {
             accessToken: user.oAuthAccessToken,
           })
           break
-        case LOGIN_PROVIDER.DISCORD:
+        case LOGIN_TYPE.DISCORD:
           isLoginSucceeded = await addUserWithDiscord({
             did: session.did.parent,
             email: user.email,
@@ -169,13 +189,7 @@ export const useConnectDID = () => {
             accessToken: user.oAuthAccessToken,
           })
           break
-        case LOGIN_PROVIDER.EMAIL_PASSWORDLESS:
-          isLoginSucceeded = await addUserWithEmail({
-            did: session.did.parent,
-            email: user.email,
-          })
-          break
-        case LOGIN_PROVIDER.JWT:
+        case LOGIN_TYPE.EMAIL:
           isLoginSucceeded = await addUserWithEmail({
             did: session.did.parent,
             email: user.email,
@@ -188,7 +202,7 @@ export const useConnectDID = () => {
       if (isLoginSucceeded) {
         // @ts-ignore TODO:fixed
         composeClient.setDID(session.did)
-        setLoginState(session.did.parent, addresses[0], user.typeOfLogin)
+        setLoginState(session.did.parent, addresses[0], loginType)
         queryClient.invalidateQueries(['hasAuthorizedSession'])
       } else {
         disConnectDID()
@@ -221,10 +235,10 @@ export const useConnectDID = () => {
   const disConnectDID = async (): Promise<void> => {
     disconnect()
     vess.disconnect()
-    console.log('disconnectDID web3AuthService.web3auth: ', web3AuthService.web3auth)
-    if (web3AuthService.web3auth && web3AuthService.web3auth.connected) {
-      await web3AuthService.web3auth.logout()
+    if (web3Auth && web3Auth.connected) {
+      await web3Auth.logout()
     }
+
     clearState()
   }
 
@@ -239,11 +253,7 @@ export const useConnectDID = () => {
     queryClient.invalidateQueries(['hasAuthorizedSession'])
   }
 
-  const setLoginState = (
-    did: string,
-    address: string,
-    loginType?: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE,
-  ): void => {
+  const setLoginState = (did: string, address: string, loginType?: LoginTypeProps): void => {
     setMyDid(did)
     setAccount(address)
     setOriginalAddress(address)
@@ -266,6 +276,5 @@ export const useConnectDID = () => {
     loginWithDiscord,
     loginWithEmail,
     loginWithEmailAndPw,
-    connectDIDWithWeb3Auth,
   }
 }
