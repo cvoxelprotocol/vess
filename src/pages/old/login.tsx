@@ -16,7 +16,7 @@ const OldLogin: NextPage = () => {
 
   return (
     <Wrapper>
-      <Meta pagePath={`https://app.vess.id/login`} />
+      <Meta pagePath={`https://app.vess.id/old/login`} />
       <OldLoginPage />
     </Wrapper>
   )
