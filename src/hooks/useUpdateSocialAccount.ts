@@ -1,15 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { formatDID } from 'vess-kit-web'
-import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
-import { BUSINESS_PROFILE_SET_FAILED, BUSINESS_PROFILE_SET_SUCCEED } from '@/constants/toastMessage'
 import { OrbisBaseResponse, UpdateOrbisProfileParam } from '@/lib/OrbisHelper'
 import { updateOrbisProfile } from '@/lib/OrbisUpdateHelper'
 
 export const useUpdateSocialAccount = (did?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
-  const { showToast } = useToast()
   const queryClient = useQueryClient()
   const [isUpdatingSocialAccount, setIsUpdatingSocialAccount] = useState(false)
 
@@ -33,11 +30,9 @@ export const useUpdateSocialAccount = (did?: string) => {
         if (data.status === 200) {
           closeLoading()
           setIsUpdatingSocialAccount(false)
-          showToast(BUSINESS_PROFILE_SET_SUCCEED)
         } else {
           closeLoading()
           setIsUpdatingSocialAccount(false)
-          showToast(BUSINESS_PROFILE_SET_FAILED)
           console.error(data.result)
         }
         const optimistic = {
@@ -52,7 +47,6 @@ export const useUpdateSocialAccount = (did?: string) => {
         queryClient.invalidateQueries(['onChainProfile', did])
         closeLoading()
         setIsUpdatingSocialAccount(false)
-        showToast(BUSINESS_PROFILE_SET_FAILED)
       },
     },
   )

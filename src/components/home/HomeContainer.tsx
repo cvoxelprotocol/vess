@@ -11,8 +11,8 @@ import { Tab, TabList, TabPanel, Tabs } from '@/components/home/tab'
 import { FlexHorizontal } from '@/components/ui-v1/Common/FlexHorizontal'
 import { FlexVertical } from '@/components/ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '@/components/ui-v1/Images/NextImageContainer'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
 import { useSocialAccount } from '@/hooks/useSocialAccount'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { Skelton } from '@/kai/skelton'
 import { Text } from '@/kai/text/Text'
@@ -21,7 +21,7 @@ type Props = {
   did: string
 }
 export const HomeContainer: FC<Props> = ({ did }) => {
-  const { did: myDid } = useDIDAccount()
+  const { did: myDid } = useVESSAuthUser()
   const { profile, isloadingProfile } = useSocialAccount(did)
   const { kai } = useKai()
   const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =

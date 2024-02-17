@@ -5,16 +5,15 @@ import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-kit-web'
 import { NCLayout } from '../app/NCLayout'
 import { NavigationContextProvider, NavigationList } from '../app/NavigationList'
-import { useConnectDID } from '@/hooks/useConnectDID'
-import { useDIDAccount } from '@/hooks/useDIDAccount'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSLoading } from '@/hooks/useVESSLoading'
+import { autoVESSConnect } from '@/lib/vess'
 type Props = {
   children: React.ReactNode
 }
 export const BasicLayout: FC<Props> = ({ children }) => {
   const { showLoading, closeLoading } = useVESSLoading()
-  const { autoConnect, disConnectDID } = useConnectDID()
-  const { did } = useDIDAccount()
+  const { did } = useVESSAuthUser()
   const { openModal, closeModal } = useModal()
   const { setDarkMode, setLightMode } = useKai()
 
@@ -47,9 +46,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
         const session = await getAuthorizedSession()
         console.log({ session })
         if (session) {
-          await autoConnect()
-        } else {
-          disConnectDID()
+          await autoVESSConnect()
         }
       }
     }

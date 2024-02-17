@@ -2,17 +2,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import type { SocialLinks, CustomResponse } from 'vess-sdk'
 import { getVESS } from 'vess-sdk'
-import { useToast } from './useToast'
 import { useVESSLoading } from './useVESSLoading'
 import { isProd } from '@/constants/common'
-import { SOCIAL_LINKS_SET_FAILED, SOCIAL_LINKS_SET_SUCCEED } from '@/constants/toastMessage'
 
 // TODO: replace with vess-web-kit
 export const useSocialLinks = (did?: string) => {
   const vess = getVESS(!isProd())
   const queryClient = useQueryClient()
   const { showLoading, closeLoading } = useVESSLoading()
-  const { showToast } = useToast()
 
   const { mutateAsync: storeSocialLinks, isLoading: isStoringSocialLinks } = useMutation<
     CustomResponse<{ streamId: string | undefined }>,
@@ -25,17 +22,14 @@ export const useSocialLinks = (did?: string) => {
     onSuccess(data) {
       if (data.streamId) {
         closeLoading()
-        showToast(SOCIAL_LINKS_SET_SUCCEED)
       } else {
         closeLoading()
-        showToast(SOCIAL_LINKS_SET_FAILED)
         console.error(data.result)
       }
     },
     onError(error) {
       console.error('error', error)
       closeLoading()
-      showToast(SOCIAL_LINKS_SET_FAILED)
     },
     onSettled: () => {
       queryClient.invalidateQueries(['socialLinks', did])

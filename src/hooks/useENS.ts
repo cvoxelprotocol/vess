@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchEnsAvatar, fetchEnsName } from '@wagmi/core'
+import { getEnsAvatar, getEnsName } from '@wagmi/core'
 
 import { DisplayProfile } from '@/@types'
+import { config } from '@/lib/wagmi'
 
 export const useENS = (address?: `0x${string}` | undefined) => {
   const { data: ensProfile, isInitialLoading } = useQuery(
@@ -17,11 +18,11 @@ export const useENS = (address?: `0x${string}` | undefined) => {
 
   const fetchENS = async (address?: `0x${string}` | undefined): Promise<DisplayProfile | null> => {
     if (!address) return null
-    const ensName = await fetchEnsName({
+    const ensName = await getEnsName(config, {
       address: address,
     })
-    const avatarUrl = fetchEnsAvatar({
-      name: ensName? ensName : '',
+    const avatarUrl = getEnsAvatar(config, {
+      name: ensName ? ensName : '',
     })
     const res = await Promise.all([ensName, avatarUrl])
     return res[0]

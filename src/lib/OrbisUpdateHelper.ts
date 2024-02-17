@@ -1,6 +1,7 @@
 import { Orbis } from '@orbisclub/orbis-sdk'
 import { getPublicClient } from '@wagmi/core'
 import { OrbisBaseResponse, OrbisProfileDetail } from './OrbisHelper'
+import { config } from './wagmi'
 
 export type UpdateOrbisProfileParam = {
   did: string
@@ -15,7 +16,7 @@ export const updateOrbisProfile = async (
   }
   try {
     const orbis = new Orbis()
-    const publicClient = getPublicClient() // publicClient is renamed method for getProvider by Wagmi
+    const publicClient = getPublicClient(config) // publicClient is renamed method for getProvider by Wagmi
     const orbisConnection = await orbis.isConnected()
     if (!orbisConnection) {
       await orbis.connect(publicClient, false)

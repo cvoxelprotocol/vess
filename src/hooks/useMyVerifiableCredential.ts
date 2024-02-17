@@ -1,9 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useDIDAccount } from './useDIDAccount'
-import { useToast } from './useToast'
+import { useVESSAuthUser } from './useVESSAuthUser'
 import { useVESSLoading } from './useVESSLoading'
 import { CredType, VSCredentialItemFromBuckup } from '@/@types/credential'
-import { VC_CREATION_SUCCEED, VC_CREATION_FAILED } from '@/constants/toastMessage'
 import { issueVerifiableCredentials } from '@/lib/vessApi'
 
 export interface SubjectUniqueInput {
@@ -27,17 +25,14 @@ export interface saveCredentialToComposeDBResponse {
 
 export const useMyVerifiableCredential = () => {
   const queryClient = useQueryClient()
-  const { showToast } = useToast()
   const { showLoading, closeLoading } = useVESSLoading()
-  const { did } = useDIDAccount()
+  const { did } = useVESSAuthUser()
 
   const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {
     if (!item.organization) {
-      showToast('Failed to receive credential information')
       return false
     }
     if (!did) {
-      showToast('You are not logged in')
       return false
     }
     showLoading()
@@ -105,16 +100,13 @@ export const useMyVerifiableCredential = () => {
       queryClient.invalidateQueries(['credItem', item.id])
       if (vcs && vcs.length > 0) {
         closeLoading()
-        showToast(VC_CREATION_SUCCEED)
         return true
       }
       closeLoading()
-      showToast(VC_CREATION_FAILED)
       return false
     } catch (error) {
       console.error('error', error)
       closeLoading()
-      showToast(VC_CREATION_FAILED)
       return false
     }
   }
