@@ -65,6 +65,8 @@ export class DidAuthService {
 
   async loginWithWallet(connector?: any): Promise<boolean> {
     try {
+      this.loadingState()
+
       // connect vess sdk
       const connectRes = await connect(config, { connector })
       console.log({ connectRes })
@@ -89,6 +91,8 @@ export class DidAuthService {
       return isLoginSucceeded
     } catch (error) {
       console.error(error)
+      this.clearState()
+
       return false
     }
   }
@@ -167,6 +171,9 @@ export class DidAuthService {
     try {
       if (!web3authProvider) throw new Error('web3authProvider is null')
       console.log({ web3authProvider })
+
+      this.loadingState()
+
       const client = createWalletClient({
         chain: mainnet,
         transport: custom(web3authProvider),
@@ -220,9 +227,12 @@ export class DidAuthService {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
         this.setLoginState(session.did.parent, addresses[0], user.typeOfLogin)
+      } else {
+        this.clearState()
       }
       return isLoginSucceeded
     } catch (error) {
+      this.clearState()
       throw error
     }
   }
@@ -310,23 +320,35 @@ export class DidAuthService {
   ): void {
     console.log('setVESSAuth called')
     setVESSAuth({
-      did: did,
-      account: address,
-      originalAddress: address,
-      chainId: 1,
+      user: {
+        did: did,
+        account: address,
+        originalAddress: address,
+        chainId: 1,
+        stateLoginType: loginType,
+      },
       connectionStatus: 'connected',
-      stateLoginType: loginType,
     })
   }
 
   private clearState(): void {
-    setVESSAuth(null)
+    setVESSAuth({
+      user: undefined,
+      connectionStatus: 'disconnected',
+    })
+  }
+
+  private loadingState(): void {
+    setVESSAuth({
+      user: undefined,
+      connectionStatus: 'connecting',
+    })
   }
 
   async disConnectDID(): Promise<void> {
     disconnectVESSAuth()
-    const vessUser = getVESSAuth()
-    if (vessUser?.stateLoginType === 'wallet') {
+    const vessAuth = getVESSAuth()
+    if (vessAuth?.user?.stateLoginType === 'wallet') {
       disconnect(config)
     }
     if (this.web3auth && this.web3auth.connected) {

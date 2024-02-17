@@ -77,7 +77,6 @@
     "typescript": "5.1.6",
     "vess-kit-core": "1.0.1-alpha.3",
     "vess-kit-web": "1.0.1-alpha.9",
-    "vess-sdk": "1.0.0-alpha.33",
     "viem": "2.x",
     "web-did-resolver": "^2.0.27"
   },

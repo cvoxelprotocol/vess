@@ -21,24 +21,42 @@ export const disconnectVESSAuth = () => {
 }
 
 export const autoVESSConnect = async () => {
-  const env = isProd() ? 'mainnet' : 'testnet-clay'
-  const vess = getVESSService()
-  const auth = await vess.autoConnect(env)
-  if (auth) {
-    const { session } = auth
-    const { composeClient } = initializeApolloForCompose()
-    // @ts-ignore TODO:fixed
-    composeClient.setDID(session.did)
-    const vessUser = getVESSAuth()
-    const address = getAddress(getAddressFromPkh(session.did.parent))
+  try {
     setVESSAuth({
-      did: session.did.parent,
-      account: address,
-      originalAddress: address,
-      chainId: 1,
-      connectionStatus: 'connected',
-      stateLoginType: vessUser?.stateLoginType,
+      user: undefined,
+      connectionStatus: 'connecting',
     })
-    console.log('Connection restored!')
+    const env = isProd() ? 'mainnet' : 'testnet-clay'
+    const vess = getVESSService()
+    const auth = await vess.autoConnect(env)
+    if (auth) {
+      const { session } = auth
+      const { composeClient } = initializeApolloForCompose()
+      // @ts-ignore TODO:fixed
+      composeClient.setDID(session.did)
+      const vessAuth = getVESSAuth()
+      const address = getAddress(getAddressFromPkh(session.did.parent))
+      setVESSAuth({
+        user: {
+          did: session.did.parent,
+          account: address,
+          originalAddress: address,
+          chainId: 1,
+          stateLoginType: vessAuth?.user?.stateLoginType,
+        },
+        connectionStatus: 'connected',
+      })
+      console.log('Connection restored!')
+    } else {
+      setVESSAuth({
+        user: undefined,
+        connectionStatus: 'connecting',
+      })
+    }
+  } catch (error) {
+    setVESSAuth({
+      user: undefined,
+      connectionStatus: 'disconnected',
+    })
   }
 }

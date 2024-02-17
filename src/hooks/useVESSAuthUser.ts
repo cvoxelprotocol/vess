@@ -3,14 +3,14 @@ import { useVESSAuthContext, vessAuthAtom } from '@/context/DidAuthContext'
 
 export const useVESSAuthUser = () => {
   const store = useVESSAuthContext()
-  const vessUser = useAtomValue(vessAuthAtom, { store })
+  const vessAuth = useAtomValue(vessAuthAtom, { store })
 
   return {
-    did: vessUser?.did,
-    account: vessUser?.account,
-    originalAddress: vessUser?.originalAddress,
-    connection: vessUser?.connectionStatus,
-    chainId: vessUser?.chainId,
-    loginType: vessUser?.stateLoginType,
+    did: vessAuth?.user?.did,
+    account: vessAuth?.user?.account,
+    originalAddress: vessAuth?.user?.originalAddress,
+    connection: vessAuth?.connectionStatus,
+    chainId: vessAuth?.user?.chainId,
+    loginType: vessAuth?.user?.stateLoginType,
   }
 }
