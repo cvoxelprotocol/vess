@@ -276,7 +276,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 isDisabled={isloadingProfile}
                 onPress={() => {
                   openProfileURLCopied()
-                  copy(`https://app.vess.id${router.asPath}`)
+                  copy(`https://app.vess.id/did/${did}`)
                 }}
               >
                 共有する
