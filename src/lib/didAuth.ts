@@ -25,8 +25,10 @@ import {
   createUserWithDiscord,
   createUserWithEmail,
   createUserWithGoogle,
+  vessLogout,
 } from './vessApi'
 import { config } from './wagmi'
+import { VSUser } from '@/@types/credential'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
 import { isGoodResponse } from '@/utils/http'
@@ -82,11 +84,28 @@ export class DidAuthService {
       if (isLoginSucceeded) {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
-        this.setLoginState(
-          session.did.parent,
-          getAddress(getAddressFromPkh(session.did.parent)),
-          'wallet',
-        )
+
+        if (res) {
+          const resJson = (await res.json()) as VSUser
+          const { name, avatar, description } = resJson
+          this.setLoginState(
+            session.did.parent,
+            getAddress(getAddressFromPkh(session.did.parent)),
+            name,
+            avatar,
+            description,
+            'wallet',
+          )
+        } else {
+          this.setLoginState(
+            session.did.parent,
+            getAddress(getAddressFromPkh(session.did.parent)),
+            null,
+            null,
+            null,
+            'wallet',
+          )
+        }
       }
       return isLoginSucceeded
     } catch (error) {
@@ -185,7 +204,7 @@ export class DidAuthService {
       console.log({ user })
 
       let isLoginSucceeded = false
-      let res = null
+      let res: Response | null = null
       switch (user.typeOfLogin) {
         case LOGIN_PROVIDER.GOOGLE:
           res = await createUserWithGoogle({
@@ -226,7 +245,21 @@ export class DidAuthService {
       if (isLoginSucceeded) {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
-        this.setLoginState(session.did.parent, addresses[0], user.typeOfLogin)
+
+        if (res) {
+          const resJson = (await res.json()) as VSUser
+          const { name, avatar, description } = resJson
+          this.setLoginState(
+            session.did.parent,
+            addresses[0],
+            name,
+            avatar,
+            description,
+            user.typeOfLogin,
+          )
+        } else {
+          this.setLoginState(session.did.parent, addresses[0], null, null, null, user.typeOfLogin)
+        }
       } else {
         this.clearState()
       }
@@ -316,6 +349,9 @@ export class DidAuthService {
   private setLoginState(
     did: string,
     address: string,
+    name: string | null,
+    avatar: string | null,
+    description: string | null,
     loginType?: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE,
   ): void {
     console.log('setVESSAuth called')
@@ -326,6 +362,9 @@ export class DidAuthService {
         originalAddress: address,
         chainId: 1,
         stateLoginType: loginType,
+        name: name,
+        avatar: avatar,
+        description: description,
       },
       connectionStatus: 'connected',
     })
@@ -354,6 +393,8 @@ export class DidAuthService {
     if (this.web3auth && this.web3auth.connected) {
       await this.web3auth.logout()
     }
+    //remove session
+    await vessLogout()
     this.clearState()
   }
   //===Common===

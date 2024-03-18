@@ -14,14 +14,15 @@ import {
 import router from 'next/router'
 import { FC, useMemo } from 'react'
 import { PiPencil, PiShareFat } from 'react-icons/pi'
+import { getAddressFromPkh } from 'vess-kit-web'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { ProfileEditModal } from './ProfileEditModal'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 
 type ProfileRackProps = {
   did: string
@@ -30,9 +31,11 @@ type ProfileRackProps = {
 
 export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
   const { originalAddress } = useVESSAuthUser()
-  const { profile, isloadingProfile } = useSocialAccount(did)
+  const { vsUser, isInitialLoading } = useVESSUserProfile(did)
   const { ccProfile, ccLoading } = useCcProfile(did)
-  const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
+  const { ensProfile, isInitialLoading: ensLoading } = useENS(
+    getAddressFromPkh(did) as `0x${string}`,
+  )
   const { lensProfile, lensLoading } = useLensProfile(did)
   const { kai } = useKai()
   const { matches } = useBreakpoint()
@@ -152,7 +155,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
             width={kai.size.ref[80]}
             height={kai.size.ref[80]}
             radius={kai.size.sys.round.lg}
-            isLoading={isloadingProfile}
+            isLoading={isInitialLoading}
           >
             <div
               style={{
@@ -162,9 +165,9 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               }}
             >
               <>
-                {profile.avatarSrc ? (
+                {vsUser?.avatar ? (
                   <ImageContainer
-                    src={profile.avatarSrc}
+                    src={vsUser?.avatar}
                     width={kai.size.ref[80]}
                     height={kai.size.ref[80]}
                     objectFit='cover'
@@ -195,12 +198,12 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               as='h2'
               typo='title-lg'
               color='var(--kai-color-sys-on-layer)'
-              isLoading={isloadingProfile}
+              isLoading={isInitialLoading}
             >
-              {profile.displayName || 'no name'}
+              {vsUser?.name || 'no name'}
             </Text>
             <Skelton
-              isLoading={ccLoading || ensLoading || lensLoading || isloadingProfile}
+              isLoading={isInitialLoading}
               width='var(--kai-size-ref-160)'
               height='var(--kai-typo-sys-label-lg-line-height)'
             >
@@ -248,9 +251,9 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
             typo='body-lg'
             color='var(--kai-color-sys-on-layer)'
             style={{ padding: '0 var(--kai-size-sys-space-sm)' }}
-            isLoading={isloadingProfile}
+            isLoading={isInitialLoading}
           >
-            {profile.bio || ''}
+            {vsUser?.description || ''}
           </Text>
           {isEditable && (
             <FlexHorizontal
@@ -264,7 +267,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 startContent={<PiPencil />}
                 onPress={() => openModal('profileEdit')}
                 style={{ flex: 1 }}
-                isDisabled={isloadingProfile}
+                isDisabled={isInitialLoading}
               >
                 編集する
               </Chip>
@@ -273,7 +276,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 color='neutral'
                 startContent={<PiShareFat />}
                 style={{ flex: 1 }}
-                isDisabled={isloadingProfile}
+                isDisabled={isInitialLoading}
                 onPress={() => {
                   openProfileURLCopied()
                   copy(`https://app.vess.id/did/${did}`)
