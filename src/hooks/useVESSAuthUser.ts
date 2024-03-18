@@ -12,5 +12,8 @@ export const useVESSAuthUser = () => {
     connection: vessAuth?.connectionStatus,
     chainId: vessAuth?.user?.chainId,
     loginType: vessAuth?.user?.stateLoginType,
+    name: vessAuth?.user?.name,
+    avatar: vessAuth?.user?.avatar,
+    description: vessAuth?.user?.description,
   }
 }

@@ -4,10 +4,10 @@ import React, { BaseSyntheticEvent, FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
 import { IconUploadButton } from './IconUploadButton'
+import { UpdateUserInfo } from '@/@types/user'
 import { useFileUpload } from '@/hooks/useFileUpload'
-import { useSocialAccount } from '@/hooks/useSocialAccount'
-import { useUpdateSocialAccount } from '@/hooks/useUpdateSocialAccount'
-import { OrbisProfileDetail } from '@/lib/OrbisHelper'
+import { useUpdateProfile } from '@/hooks/useUpdateProfile'
+import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { removeUndefined } from '@/utils/objectUtil'
 
 export type ProfileEditModalProps = {
@@ -16,34 +16,37 @@ export type ProfileEditModalProps = {
 }
 
 export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
-  const { profile } = useSocialAccount(did)
   const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
-  const { update, isUpdatingSocialAccount } = useUpdateSocialAccount(did)
+  const { vsUser } = useVESSUserProfile(did)
+  const { update, isUpdatingProfile } = useUpdateProfile(did)
   const {
     handleSubmit,
     setError,
     setValue,
     register,
     formState: { errors },
-  } = useForm<OrbisProfileDetail>({
+  } = useForm<UpdateUserInfo>({
     defaultValues: {
-      username: profile.displayName,
-      pfp: profile.avatarSrc || '',
-      description: profile.bio || '',
+      name: vsUser?.name || '',
+      avatar: vsUser?.avatar || '',
+      description: vsUser?.description || '',
     },
   })
-  const { openModal, closeModal } = useModal()
+  const { closeModal } = useModal()
 
-  const onClickSubmit = async (data: OrbisProfileDetail, e?: BaseSyntheticEvent) => {
+  const onClickSubmit = async (data: UpdateUserInfo, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
     if (!icon) console.error('NO pfp')
     // ToDo: Add ipfs url of VESS default profile image here
-    const content: OrbisProfileDetail = removeUndefined<OrbisProfileDetail>({
-      ...data,
-      pfp: icon ? icon : data.pfp,
+    const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
+      name: data.name || vsUser?.name || '',
+      avatar: icon ? icon : data.avatar,
+      description: data.description || vsUser?.description || '',
+      did,
     })
-    const res = await update({ did, content })
+    console.log({ content })
+    const res = await update(content)
     if (res.status === 200) {
       closeModal(name)
     }
@@ -72,12 +75,12 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           type='submit'
           form='profile-edit'
           width='auto'
-          isDisabled={status === 'uploading' || isUpdatingSocialAccount}
+          isDisabled={status === 'uploading' || isUpdatingProfile}
         >
           保存
         </Button>
       }
-      disableClose={status === 'uploading' || isUpdatingSocialAccount}
+      disableClose={status === 'uploading' || isUpdatingProfile}
       onClose={() => {
         setIcon('')
       }}
@@ -86,7 +89,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         <FlexHorizontal width='100%' gap='var(--kai-size-sys-space-md)'>
           <div style={{ width: 'var(--kai-size-ref-96)' }} />
           <IconUploadButton
-            defaultIcon={icon || profile.avatarSrc || '/default_profile.jpg'}
+            defaultIcon={icon || vsUser?.avatar || '/default_profile.jpg'}
             size='lg'
             onSelect={(files) => onSelect(files)}
             isUploading={status === 'uploading'}
@@ -96,8 +99,8 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           label='ニックネーム'
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
-          {...register('username', { required: true })}
-          defaultValue={profile.displayName}
+          {...register('name', { required: true })}
+          defaultValue={vsUser?.name || ''}
           placeholder='ニックネームを入力'
           // align='vertical'
         />
@@ -105,7 +108,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           label='自己紹介文'
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
-          defaultValue={profile.bio}
+          defaultValue={vsUser?.description || ''}
           {...register('description', { required: false })}
           placeholder='自己紹介文を入力'
           // align='vertical'
