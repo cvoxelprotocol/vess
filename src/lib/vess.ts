@@ -39,7 +39,6 @@ export const autoVESSConnect = async () => {
       const vessAuth = getVESSAuth()
       const address = getAddress(getAddressFromPkh(session.did.parent))
 
-      // get access token
       const res = await userAuth({ did: session.did.parent })
       const resJson = (await res.json()) as VSUser
       const { name, avatar, description } = resJson

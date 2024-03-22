@@ -53,8 +53,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (isAuthApi(endpoint)) {
         console.log({ resJson })
         const { access_token } = resJson
-        session.accessToken = access_token
-        session.isLoggedIn = true
+        if (access_token) {
+          session.accessToken = access_token
+          session.isLoggedIn = true
+        }
         await session.save()
       }
       res.status(response.status).json(resJson)
