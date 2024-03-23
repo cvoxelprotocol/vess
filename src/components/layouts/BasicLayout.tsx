@@ -44,7 +44,6 @@ export const BasicLayout: FC<Props> = ({ children }) => {
     async function init() {
       if (!did) {
         const session = await getAuthorizedSession()
-        console.log({ session })
         if (session) {
           await autoVESSConnect()
         }

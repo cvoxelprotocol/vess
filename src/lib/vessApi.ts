@@ -1,6 +1,29 @@
 import { VSCredentialItemFromBuckup, VSUser } from '@/@types/credential'
-import { CreateUserInfo, CreateUserWithGoogleInfo } from '@/@types/user'
+import {
+  CreateUserInfo,
+  CreateUserWithGoogleInfo,
+  UpdateUserInfo,
+  UserAuthInfo,
+} from '@/@types/user'
 import { getCurrentDomain } from '@/utils/url'
+
+export const isAuthApi = (endpoint: string) => {
+  return (
+    endpoint === '/users/auth' ||
+    endpoint === '/users/did' ||
+    endpoint === '/users/email' ||
+    endpoint === '/users/google' ||
+    endpoint === '/users/discord'
+  )
+}
+
+export const isAuthProtectedApi = (endpoint: string) => {
+  return endpoint === '/users/info'
+}
+
+export const isLogout = (endpoint: string) => {
+  return endpoint === '/auth/logout'
+}
 
 export const getCredential = async (id?: string): Promise<Response> => {
   if (!id) {
@@ -111,6 +134,30 @@ export const createUserOnlyWithDid = async (body: CreateUserInfo): Promise<Respo
   }
 }
 
+export const updateUserProfile = async (body: UpdateUserInfo): Promise<Response> => {
+  try {
+    return await baseVessApi('PUT', '/users/info', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const userAuth = async (body: UserAuthInfo): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/users/auth', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const vessLogout = async (): Promise<Response> => {
+  try {
+    return await baseVessApi('GET', '/auth/logout')
+  } catch (error) {
+    throw error
+  }
+}
+
 const baseVessApi = async (
   method: 'GET' | 'POST' | 'PUT' = 'POST',
   endpoint: string,
@@ -119,9 +166,16 @@ const baseVessApi = async (
   body?: any,
 ): Promise<Response> => {
   try {
-    let url = `${
-      getCurrentDomain() || `${process.env.NEXT_PUBLIC_VESS_URL}`
-    }/api/vessApi?endpoint=${endpoint}&slug=${slug || ''}`
+    let baseUrl = getCurrentDomain() || process.env.NEXT_PUBLIC_VESS_URL
+    let url =
+      isAuthApi(endpoint) && method === 'POST'
+        ? `${baseUrl}/api/auth/login?endpoint=${endpoint}&slug=${slug || ''}`
+        : isAuthProtectedApi(endpoint)
+        ? `${baseUrl}/api/auth/profile?endpoint=${endpoint}&slug=${slug || ''}`
+        : isLogout(endpoint)
+        ? `${baseUrl}/api/auth/logout`
+        : `${baseUrl}/api/vessApi?endpoint=${endpoint}&slug=${slug || ''}`
+
     if (query) {
       url = url + `&q=${encodeURIComponent(query)}`
     }

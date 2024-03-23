@@ -6,7 +6,6 @@ import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-kit-w
 import { DisplayProfile } from '@/@types'
 import { HomeContainer } from '@/components/home/HomeContainer'
 import { Meta } from '@/components/layouts/Meta'
-import { fetchProfile } from '@/lib/profile'
 
 export const maxDuration = 60
 
@@ -51,15 +50,9 @@ export const getStaticProps: GetStaticProps<Props, { did?: string }> = async ({ 
       redirect: { destination: `/`, permanent: false },
     }
   }
-  const profile = await fetchProfile(formatedDid)
-  await queryClient.prefetchQuery<DisplayProfile>(
-    ['onChainprofile', formatedDid],
-    () => fetchProfile(formatedDid),
-    { initialData: profile },
-  )
 
   return {
-    props: { dehydratedState: dehydrate(queryClient), did: formatedDid, profile },
+    props: { dehydratedState: dehydrate(queryClient), did: formatedDid, profile: null },
     revalidate: 300,
   }
 }

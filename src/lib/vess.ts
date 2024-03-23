@@ -2,6 +2,8 @@ import { type AuthResponse } from 'vess-kit-core'
 import { getAddressFromPkh, getVESSKit } from 'vess-kit-web'
 import { getAddress } from 'viem'
 import { initializeApolloForCompose } from './apolloForCompose'
+import { userAuth } from './vessApi'
+import { VSUser } from '@/@types/credential'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
 
@@ -36,6 +38,10 @@ export const autoVESSConnect = async () => {
       composeClient.setDID(session.did)
       const vessAuth = getVESSAuth()
       const address = getAddress(getAddressFromPkh(session.did.parent))
+
+      const res = await userAuth({ did: session.did.parent })
+      const resJson = (await res.json()) as VSUser
+      const { name, avatar, description } = resJson
       setVESSAuth({
         user: {
           did: session.did.parent,
@@ -43,6 +49,9 @@ export const autoVESSConnect = async () => {
           originalAddress: address,
           chainId: 1,
           stateLoginType: vessAuth?.user?.stateLoginType,
+          name,
+          avatar,
+          description,
         },
         connectionStatus: 'connected',
       })

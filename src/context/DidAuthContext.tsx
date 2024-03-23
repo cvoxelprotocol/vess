@@ -8,6 +8,9 @@ export type VESSUser = {
   originalAddress: string | undefined
   chainId: number | undefined
   stateLoginType: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE | undefined
+  name: string | null
+  avatar?: string | null
+  description?: string | null
 }
 
 export type VESSUserInfo = {
