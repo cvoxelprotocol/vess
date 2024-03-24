@@ -45,6 +45,34 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
     text: '共有用URLをコピーしました。',
   })
 
+  const avatarUrl = useMemo(() => {
+    if (vsUser?.avatar) {
+      return vsUser.avatar
+    } else if (ensProfile?.avatarSrc) {
+      return ensProfile?.avatarSrc
+    } else if (ccProfile?.avatarSrc) {
+      return ccProfile?.avatarSrc
+    } else if (lensProfile?.avatarSrc) {
+      return lensProfile?.avatarSrc
+    } else {
+      return undefined
+    }
+  }, [ensProfile, vsUser, ccProfile, lensProfile])
+
+  const displayName = useMemo(() => {
+    if (vsUser?.name) {
+      return vsUser.name
+    } else if (ensProfile?.displayName) {
+      return ensProfile.displayName
+    } else if (ccProfile?.displayName) {
+      return ccProfile.displayName
+    } else if (lensProfile?.displayName) {
+      return lensProfile.displayName
+    } else {
+      return 'no name'
+    }
+  }, [ensProfile, vsUser, ccProfile, lensProfile])
+
   const mainId = useMemo(() => {
     if (ensProfile) {
       return {
@@ -165,9 +193,9 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               }}
             >
               <>
-                {vsUser?.avatar ? (
+                {avatarUrl ? (
                   <ImageContainer
-                    src={vsUser?.avatar}
+                    src={avatarUrl}
                     width={kai.size.ref[80]}
                     height={kai.size.ref[80]}
                     objectFit='cover'
@@ -200,7 +228,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               color='var(--kai-color-sys-on-layer)'
               isLoading={isInitialLoading}
             >
-              {vsUser?.name || 'no name'}
+              {displayName}
             </Text>
             <Skelton
               isLoading={isInitialLoading}
