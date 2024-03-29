@@ -140,10 +140,10 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 }
               >
                 {verified === 'verified'
-                  ? 'この証明書は有効です'
+                  ? 'この証明は有効です'
                   : verified === 'verifying'
                   ? '検証中'
-                  : 'この証明書は無効です'}
+                  : 'この証明は無効です'}
               </Chip>
 
               <IconButton
