@@ -8,12 +8,31 @@ type ImageProps = {
   stageWidth: number // キャンバスの幅
   stageHeight: number // キャンバスの高さ
   editable?: boolean
+  isSelected?: boolean
+  onSelect?: () => void
+  visibleTransformers?: boolean
 }
 
-const CanvasImage: React.FC<ImageProps> = ({ imageUrl, stageWidth, stageHeight, editable }) => {
+const CanvasImage: React.FC<ImageProps> = ({
+  imageUrl,
+  stageWidth,
+  stageHeight,
+  editable,
+  isSelected,
+  onSelect,
+  visibleTransformers,
+}) => {
   const [image, status] = useImage(imageUrl, 'anonymous')
   const imageRef = useRef<any>()
-  const transformerRef = useRef<any>()
+  const transformerRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (isSelected && transformerRef.current) {
+      // トランスフォーマーを選択した画像に適用
+      transformerRef.current.nodes([imageRef.current])
+      transformerRef.current.getLayer().batchDraw()
+    }
+  }, [isSelected])
 
   useEffect(() => {
     if (image && imageRef.current) {
@@ -31,7 +50,7 @@ const CanvasImage: React.FC<ImageProps> = ({ imageUrl, stageWidth, stageHeight, 
       imageRef.current.getLayer().batchDraw()
 
       // トランスフォーマーの更新
-      if (editable) {
+      if (editable && transformerRef?.current) {
         transformerRef.current.nodes([imageRef.current])
         transformerRef.current.getLayer().batchDraw()
       }
@@ -57,18 +76,27 @@ const CanvasImage: React.FC<ImageProps> = ({ imageUrl, stageWidth, stageHeight, 
 
   return (
     <>
-      <Image image={image} ref={imageRef} draggable={editable} onTransformEnd={onTransform} />
-      <Transformer
-        ref={transformerRef}
-        rotateEnabled={true}
-        borderEnabled={true}
-        anchorSize={10}
-        anchorStrokeWidth={2}
-        anchorFill='#fff'
-        anchorStroke='#666'
-        borderStroke='#ddd'
-        borderDash={[6, 2]}
+      <Image
+        image={image}
+        onClick={onSelect}
+        onTap={onSelect}
+        ref={imageRef}
+        draggable={editable}
+        onTransformEnd={onTransform}
       />
+      {isSelected && visibleTransformers && (
+        <Transformer
+          ref={transformerRef}
+          rotateEnabled
+          keepRatio={true}
+          anchorSize={10}
+          anchorStrokeWidth={2}
+          anchorFill='#fff'
+          anchorStroke='#666'
+          borderStroke='#ddd'
+          borderDash={[6, 2]}
+        />
+      )}
     </>
   )
 }
@@ -81,16 +109,48 @@ type Props = {
 const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
   console.log({ images })
   const stageRef = useRef<any>(null)
+  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [visibleTransformers, setVisibleTransformers] = useState(true)
+
+  const handleDownload = () => {
+    setVisibleTransformers(false)
+
+    setTimeout(() => {
+      const dataURL = stageRef.current.toDataURL({ pixelRatio: 3 })
+      const link = document.createElement('a')
+      link.download = 'vess-avatar.png'
+      link.href = dataURL
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }, 100) // 非表示状態を適用するために少し遅延を入れる
+
+    setTimeout(() => {
+      // Transformerを再表示
+      setVisibleTransformers(true)
+    }, 500)
+  }
+
   return (
     <>
       <Stage ref={stageRef} width={window.innerWidth - 20} height={320}>
         <Layer>
           <CanvasImage imageUrl={avatarUrl} stageWidth={window.innerWidth - 20} stageHeight={320} />
           {images.map((image, i) => (
-            <CanvasImage key={i} imageUrl={image} stageWidth={80} stageHeight={80} editable />
+            <CanvasImage
+              key={i}
+              imageUrl={image}
+              stageWidth={80}
+              stageHeight={80}
+              editable
+              isSelected={i === selectedId}
+              onSelect={() => setSelectedId(i)}
+              visibleTransformers={visibleTransformers}
+            />
           ))}
         </Layer>
       </Stage>
+      <button onClick={handleDownload}>Download Image</button>
     </>
   )
 }
