@@ -61,6 +61,7 @@ const CanvasImage: React.FC<ImageProps> = ({
   const onTransform = () => {
     // 更新されたプロパティ (位置、サイズ、回転) を保存または使用する
     const node = imageRef.current
+    console.log('node: ', node.attrs)
     const scaleX = node.scaleX()
     const scaleY = node.scaleY()
 
@@ -71,12 +72,13 @@ const CanvasImage: React.FC<ImageProps> = ({
   }
 
   if (!editable) {
-    return <Image image={image} ref={imageRef} draggable={editable} />
+    return <Image id={imageUrl} image={image} ref={imageRef} draggable={editable} />
   }
 
   return (
     <>
       <Image
+        id={imageUrl}
         image={image}
         onClick={onSelect}
         onTap={onSelect}
@@ -95,6 +97,7 @@ const CanvasImage: React.FC<ImageProps> = ({
           anchorStroke='#666'
           borderStroke='#ddd'
           borderDash={[6, 2]}
+          enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
         />
       )}
     </>
@@ -131,6 +134,20 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
     }, 500)
   }
 
+  const handleSave = () => {
+    setVisibleTransformers(false)
+
+    setTimeout(() => {
+      const stageJson = stageRef.current.toJSON()
+      console.log({ stageJson })
+    }, 100) // 非表示状態を適用するために少し遅延を入れる
+
+    setTimeout(() => {
+      // Transformerを再表示
+      setVisibleTransformers(true)
+    }, 500)
+  }
+
   return (
     <>
       <Stage ref={stageRef} width={window.innerWidth - 20} height={320}>
@@ -151,6 +168,7 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
         </Layer>
       </Stage>
       <button onClick={handleDownload}>Download Image</button>
+      <button onClick={handleSave}>Save Canvas</button>
     </>
   )
 }
