@@ -193,26 +193,41 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   objectFit='contain'
                   alt='Organization Icon'
                 />
-                <Text
-                  typo='body-lg'
-                  color='var(--kai-color-sys-on-layer)'
-                  isLoading={isInitialLoading}
-                >
-                  {credential?.organization?.name || credential?.issuerDid || 'Unknown'}
-                </Text>
+                {credential?.issuerDid ? (
+                  <Button
+                    variant='text'
+                    style={{ padding: '0' }}
+                    color='var(--kai-color-sys-on-layer)'
+                    onPress={() => router.push(`/did/${credential?.issuerDid}`)}
+                    size='sm'
+                  >
+                    {credential?.organization?.name || credential?.issuerDid || 'Unknown'}
+                  </Button>
+                ) : (
+                  <Text
+                    typo='body-lg'
+                    color='var(--kai-color-sys-on-layer)'
+                    isLoading={isInitialLoading}
+                  >
+                    {credential?.organization?.name || credential?.issuerDid || 'Unknown'}
+                  </Text>
+                )}
               </FlexHorizontal>
             </InfoItemFrame>
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 所有者
               </Text>
-              <Text
-                typo='body-lg'
+              <Button
+                style={{ padding: '0' }}
+                align='start'
+                variant='text'
                 color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
+                onPress={() => router.push(`/did/${credential?.vc.credentialSubject.id}`)}
+                size='sm'
               >
                 {credential?.vc.credentialSubject.id}
-              </Text>
+              </Button>
             </InfoItemFrame>
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
@@ -288,7 +303,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             </InfoItemFrame>
           </InfoItemsFrame>
           <ActionFrame>
-            {!!did && (
+            {/* {!!did && (
               <Button
                 variant='outlined'
                 color='subdominant'
@@ -298,7 +313,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               >
                 閉じる
               </Button>
-            )}
+            )} */}
             <Button
               variant='tonal'
               color='subdominant'
@@ -402,7 +417,7 @@ const ActionFrame = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: end;
   gap: var(--kai-size-sys-space-md);
   width: 100%;
   background: var(--kai-color-sys-layer-default);
