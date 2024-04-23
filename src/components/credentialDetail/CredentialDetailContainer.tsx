@@ -229,17 +229,46 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 {credential?.vc.credentialSubject.id}
               </Button>
             </InfoItemFrame>
+            {credential?.credentialType.name === 'attendance' &&
+              credential?.vc.credentialSubject.startDate && (
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    開始日
+                  </Text>
+                  <Text
+                    typo='body-lg'
+                    color='var(--kai-color-sys-on-layer)'
+                    isLoading={isInitialLoading}
+                  >
+                    {formatDate(credential?.vc.credentialSubject.startDate)}
+                  </Text>
+                </InfoItemFrame>
+              )}
+            {credential?.credentialType.name === 'attendance' &&
+              credential?.vc.credentialSubject.endDate && (
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    終了日
+                  </Text>
+                  <Text
+                    typo='body-lg'
+                    color='var(--kai-color-sys-on-layer)'
+                    isLoading={isInitialLoading}
+                  >
+                    {formatDate(credential?.vc.credentialSubject.endDate)}
+                  </Text>
+                </InfoItemFrame>
+              )}
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                有効開始日
+                発行日
               </Text>
               <Text
                 typo='body-lg'
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {formatDate(credential?.vc.issuanceDate) ||
-                  formatDate(credential?.vc.credentialSubject.startDate)}
+                {formatDate(credential?.vc.issuanceDate)}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -251,9 +280,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {formatDate(credential?.vc.expirationDate) ||
-                  formatDate(credential?.vc.credentialSubject.endDate) ||
-                  '無期限'}
+                {formatDate(credential?.vc.expirationDate) || '無期限'}
               </Text>
             </InfoItemFrame>
             {otherSubjectProps.length > 0 && (
