@@ -1,9 +1,14 @@
 import styled from '@emotion/styled'
+import { FlexHorizontal, FlexVertical, Text } from 'kai-kit'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { getAddressFromPkh } from 'vess-kit-web'
+import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { HCLayout } from '@/components/app/HCLayout'
 import { DefaultHeader } from '@/components/app/Header'
+import { vcImage } from '@/components/avatar/ImageCanvas'
+import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
@@ -18,6 +23,8 @@ type Props = {
 const ImageCanvas = dynamic(() => import('@/components/avatar/ImageCanvas'), { ssr: false })
 
 export const AvatarContainer: FC<Props> = ({ did }) => {
+  const router = useRouter()
+  const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { did: myDid } = useVESSAuthUser()
   const { vsUser } = useVESSUserProfile(did)
   const { ccProfile } = useCcProfile(did)
@@ -45,17 +52,44 @@ export const AvatarContainer: FC<Props> = ({ did }) => {
   const images = useMemo(() => {
     console.log({ formatedCredentials })
     return formatedCredentials.map((item) => {
-      return item.image as string
+      return { id: item.id, url: item.image } as vcImage
     })
   }, [formatedCredentials])
+
+  const profileAvatar = useMemo(() => {
+    return avatars?.find((avatar) => avatar.isProfilePhoto)
+  }, [avatars])
 
   return (
     <>
       <HCLayout header={<DefaultHeader />}>
         <MainFrame>
           {avatarUrl && images && images.length > 0 && (
-            <ImageCanvas avatarUrl={avatarUrl} images={images} />
+            <ImageCanvas
+              avatarUrl={avatarUrl}
+              images={images}
+              did={did}
+              profileAvatar={profileAvatar}
+            />
           )}
+          <Text as='p' typo='title-lg' color='var(--kai-color-sys-on-layer)'>
+            作成済みアバター
+          </Text>
+          <FlexHorizontal>
+            {avatars &&
+              avatars.length > 0 &&
+              avatars.map((avatar) => {
+                return (
+                  <ImageContainer
+                    key={avatar.id}
+                    src={avatar.avatarUrl}
+                    width={'160px'}
+                    height='auto'
+                    onClick={() => router.push(`/avatar/id/${avatar.id}`)}
+                  />
+                )
+              })}
+          </FlexHorizontal>
         </MainFrame>
       </HCLayout>
     </>

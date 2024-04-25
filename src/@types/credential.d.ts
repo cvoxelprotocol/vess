@@ -174,6 +174,7 @@ export type VSCredential = {
   updatedAt: Date
   credentialItemId: string
   holder: VSUser
+  credentialType?: CredentialType | null
 }
 
 type Tag = {

@@ -44,3 +44,19 @@ export const getAddressFromPkhForWagmi = (did?: string): `0x${string}` | undefin
   }
   return `0x${did.replace(`did:pkh:${ETH_CHAIN_ID}0x`, '')}`
 }
+
+export const dataURLtoFile = (dataurl: string, filename: string): File | null => {
+  const [header, base64Data] = dataurl.split(',')
+  if (!header || !base64Data) return null
+
+  const mimeMatch = header.match(/:(.*?);/)
+  if (!mimeMatch || mimeMatch.length < 2) return null
+
+  const mime = mimeMatch[1]
+  if (!mime) return null
+
+  const binaryString = Buffer.from(base64Data, 'base64').toString('binary')
+  const u8arr = Uint8Array.from(binaryString, (c) => c.charCodeAt(0))
+
+  return new File([u8arr], filename, { type: mime })
+}

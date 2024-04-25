@@ -1,7 +1,10 @@
 import { VSCredentialItemFromBuckup, VSUser } from '@/@types/credential'
 import {
+  AddAvatarRequest,
+  Avatar,
   CreateUserInfo,
   CreateUserWithGoogleInfo,
+  UpdateAvatarRequest,
   UpdateUserInfo,
   UserAuthInfo,
 } from '@/@types/user'
@@ -18,11 +21,67 @@ export const isAuthApi = (endpoint: string) => {
 }
 
 export const isAuthProtectedApi = (endpoint: string) => {
-  return endpoint === '/users/info'
+  return (
+    endpoint === '/users/info' ||
+    endpoint === '/avatar/add' ||
+    endpoint === '/avatar/update' ||
+    endpoint === '/avatar/delete'
+  )
 }
 
 export const isLogout = (endpoint: string) => {
   return endpoint === '/auth/logout'
+}
+
+export const getAvatarList = async (did?: string): Promise<Avatar[]> => {
+  if (!did) {
+    throw new Error('did is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/avatar/did`, did)
+    const resjson = await res.json()
+    return resjson as Avatar[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getAvatar = async (canvasId?: string): Promise<Avatar | null> => {
+  if (!canvasId) {
+    throw new Error('canvasId is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/avatar/canvas`, canvasId)
+    const resjson = await res.json()
+    return resjson as Avatar | null
+  } catch (error) {
+    throw error
+  }
+}
+
+export const addAvatar = async (body: AddAvatarRequest): Promise<Response> => {
+  try {
+    console.log({ body })
+    return await baseVessApi('POST', '/avatar/add', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateAvatar = async (body: UpdateAvatarRequest): Promise<Response> => {
+  try {
+    return await baseVessApi('PUT', '/avatar/update', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteAvatar = async (canvasId: string): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/avatar/delete', undefined, undefined, { canvasId })
+  } catch (error) {
+    throw error
+  }
 }
 
 export const getCredential = async (id?: string): Promise<Response> => {

@@ -65,7 +65,7 @@ const Profile: NextPage<Props> = (props: Props) => {
         pageDescription={
           props.profile?.bio || `This is ${props.profile?.displayName}'s profile page.`
         }
-        pagePath={`https://app.vess.id/avatar/${props.did}`}
+        pagePath={`https://app.vess.id/avatar/d/${props.did}`}
       />
       <AvatarContainer did={props.did} />
     </>

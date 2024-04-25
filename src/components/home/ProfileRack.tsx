@@ -303,7 +303,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 variant='tonal'
                 color='neutral'
                 startContent={<PiPencil />}
-                onPress={() => router.push(`/avatar/${did}`)}
+                onPress={() => router.push(`/avatar/d/${did}`)}
                 style={{ flex: 1 }}
                 isDisabled={isInitialLoading}
               >

@@ -1,12 +1,16 @@
 // components/ImageCanvas.tsx
-import { FlexHorizontal } from 'kai-kit'
-import React, { useState, useRef, useEffect } from 'react'
+import { FlexHorizontal, Text } from 'kai-kit'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { Stage, Layer, Image, Transformer } from 'react-konva'
 import useImage from 'use-image'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { AddAvatarRequest, Avatar, CanvasJson } from '@/@types/user'
+import { useAvatar } from '@/hooks/useAvatar'
+import { useFileUpload } from '@/hooks/useFileUpload'
+import { dataURLtoFile } from '@/utils/objectUtil'
 
 type ImageProps = {
-  img?: any
+  imgObj?: vcImage
   imageUrl: string
   stageWidth: number // キャンバスの幅
   stageHeight: number // キャンバスの高さ
@@ -24,7 +28,7 @@ const CanvasImage: React.FC<ImageProps> = ({
   isSelected,
   onSelect,
   visibleTransformers,
-  img,
+  imgObj,
 }) => {
   const [image, status] = useImage(imageUrl, 'anonymous')
   const imageRef = useRef<any>()
@@ -42,18 +46,38 @@ const CanvasImage: React.FC<ImageProps> = ({
   useEffect(() => {
     if (initialized) return
     if (image && imageRef.current) {
-      // 画像とキャンバスのサイズに基づいてスケールを計算
-      const scaleX = stageWidth / image.width
-      const scaleY = stageHeight / image.height
-      const scale = Math.min(scaleX, scaleY, 1) // キャンバスを超えないように調整、または元のサイズを保持
+      if (imgObj?.width) {
+        imageRef.current.width(imgObj?.width)
+      }
+      if (imgObj?.height) {
+        imageRef.current.height(imgObj?.height)
+      }
+      imageRef.current.rotate(imgObj?.rotation || 0)
+      imageRef.current.skew({ x: imgObj?.skewX || 0, y: imgObj?.skewY || 0 })
 
-      imageRef.current.scale({ x: scale, y: scale })
-      // 画像を中央に配置
-      imageRef.current.position({
-        x: img?.x || (stageWidth - image.width * scale) / 2,
-        y: img?.y || (stageHeight - image.height * scale) / 2,
-      })
-      imageRef.current.getLayer().batchDraw()
+      // Scale
+      if (!imgObj?.width && !imgObj?.height) {
+        const scaleX = imgObj?.scaleX || stageWidth / image.width
+        const scaleY = imgObj?.scaleY || stageHeight / image.height
+        const scale = Math.min(scaleX, scaleY, 1)
+
+        imageRef.current.scale({ x: scale, y: scale })
+        // position
+        imageRef.current.position({
+          x: (stageWidth - image.width * scale) / 2,
+          y: (stageHeight - image.height * scale) / 2,
+        })
+      }
+
+      // position
+      if (imgObj?.x && imgObj?.y) {
+        imageRef.current.position({
+          x: imgObj?.x,
+          y: imgObj?.y,
+        })
+      }
+
+      imageRef.current.getLayer()?.batchDraw()
 
       // トランスフォーマーの更新
       if (editable && transformerRef?.current) {
@@ -64,30 +88,39 @@ const CanvasImage: React.FC<ImageProps> = ({
         setInitialized(true)
       }
     }
-  }, [image, stageWidth, stageHeight, editable, img])
+  }, [image, stageWidth, stageHeight, editable, imgObj])
 
   // トランスフォームの操作をトリガーするためのイベントハンドラ
   const onTransform = () => {
     // 更新されたプロパティ (位置、サイズ、回転) を保存または使用する
     const node = imageRef.current
-    console.log('node: ', node.attrs)
-    const scaleX = node.scaleX()
-    const scaleY = node.scaleY()
-
-    node.width(node.width() * scaleX)
-    node.height(node.height() * scaleY)
-    node.scaleX(1)
-    node.scaleY(1)
+    const scaleX = node?.scaleX()
+    const scaleY = node?.scaleY()
+    if (scaleX) {
+      node?.width(node?.width() * scaleX)
+    }
+    if (scaleY) {
+      node?.height(node?.height() * scaleY)
+    }
+    node?.scaleX(1)
+    node?.scaleY(1)
   }
 
   if (!editable) {
-    return <Image id={imageUrl} image={image} ref={imageRef} draggable={editable} />
+    return (
+      <Image
+        id={imgObj?.id || 'sourcePhotoUrl'}
+        image={image}
+        ref={imageRef}
+        draggable={editable}
+      />
+    )
   }
 
   return (
     <>
       <Image
-        id={imageUrl}
+        id={imgObj?.id}
         image={image}
         onClick={onSelect}
         onTap={onSelect}
@@ -113,18 +146,34 @@ const CanvasImage: React.FC<ImageProps> = ({
   )
 }
 
-type Props = {
-  images: string[]
-  avatarUrl: string
+export type vcImage = {
+  id: string
+  url: string
+  [x: string]: any
 }
 
-const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
-  console.log({ images })
+type Props = {
+  images: vcImage[]
+  avatarUrl: string
+  did: string
+  profileAvatar?: Avatar
+}
+
+const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar }) => {
   const stageRef = useRef<any>(null)
-  const dragUrl = useRef()
-  const [stagedImages, setStagedImages] = useState<any[]>([])
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const dragUrl = useRef<vcImage | null>(null)
+  const [stagedImages, setStagedImages] = useState<vcImage[]>([])
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [visibleTransformers, setVisibleTransformers] = useState(true)
+  const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
+
+  const { add } = useAvatar(did)
+
+  useEffect(() => {
+    if (profileAvatar) {
+      setStagedImages(profileAvatar.canvasJson.vcImages || [])
+    }
+  }, [profileAvatar])
 
   const handleDownload = () => {
     setVisibleTransformers(false)
@@ -148,9 +197,59 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
   const handleSave = () => {
     setVisibleTransformers(false)
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const stageJson = stageRef.current.toJSON()
-      console.log({ stageJson })
+      const stageJ = JSON.parse(stageJson) as { [x: string]: any }
+
+      const stage = stageJ.attrs
+      const layer = stageJ.children[0]
+
+      const children = layer.children
+      const attrs = children.map((c) => c.attrs)
+      const sourcePhoto = attrs.find((a) => a.id === 'sourcePhotoUrl')
+
+      const vcChildren = attrs.filter((a) => a.id !== 'sourcePhotoUrl')
+      const vcImages: vcImage[] = vcChildren.map((vc) => {
+        const imageUrl = stagedImages.find((si) => si.id === vc.id)?.url
+        if (!imageUrl) return null
+        return {
+          ...vc,
+          id: vc.id,
+          url: imageUrl,
+        }
+      })
+      const canvasJson: CanvasJson = {
+        stageWidth: stage.width,
+        stageHeight: stage.height,
+        baseImage: {
+          ...sourcePhoto,
+          url: avatarUrl,
+        },
+        vcImages: vcImages,
+      }
+      console.log('canvasJson:', canvasJson)
+
+      const dataURL = stageRef.current.toDataURL({ pixelRatio: 3 })
+      const file = dataURLtoFile(dataURL, 'vess-avatar.png')
+      if (!file) {
+        console.log('file is null')
+        return
+      }
+      const newUrl = await uploadIcon(file)
+      if (!newUrl) {
+        console.log('newUrl is null')
+        return
+      }
+      const vcs = stagedImages.map((image) => image.id)
+      const avatarRequest: AddAvatarRequest = {
+        did: did,
+        sourcePhotoUrl: avatarUrl,
+        canvasJson: canvasJson,
+        isProfilePhoto: true,
+        credentialIds: vcs,
+        avatarUrl: newUrl,
+      }
+      await add(avatarRequest)
     }, 100) // 非表示状態を適用するために少し遅延を入れる
 
     setTimeout(() => {
@@ -185,30 +284,34 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
           // register event position
           stageRef.current.setPointersPositions(e)
           // add image
-          const id = Math.random()
           setStagedImages(
             stagedImages.concat([
               {
-                id: id,
                 ...stageRef.current.getPointerPosition(),
-                src: dragUrl.current,
+                id: dragUrl.current?.id,
+                url: dragUrl.current?.url,
               },
             ]),
           )
-          setSelectedId(id)
+          setSelectedId(dragUrl.current?.id || '')
         }}
         onDragOver={(e) => e.preventDefault()}
       >
         <Stage ref={stageRef} width={320} height={320} style={{ border: '1px solid grey' }}>
           <Layer>
-            <CanvasImage imageUrl={avatarUrl} stageWidth={320} stageHeight={320} />
+            <CanvasImage
+              imageUrl={profileAvatar?.canvasJson?.baseImage.url || avatarUrl}
+              imgObj={profileAvatar?.canvasJson?.baseImage}
+              stageWidth={profileAvatar?.canvasJson?.baseImage?.width || 320}
+              stageHeight={profileAvatar?.canvasJson?.baseImage?.height || 320}
+            />
             {stagedImages.map((image) => (
               <CanvasImage
                 key={image.id}
-                img={image}
-                imageUrl={image.src}
-                stageWidth={80}
-                stageHeight={80}
+                imgObj={image}
+                imageUrl={image.url}
+                stageWidth={image.width || 80}
+                stageHeight={image.height || 80}
                 editable
                 isSelected={image.id === selectedId}
                 onSelect={() => setSelectedId(image.id)}
@@ -218,31 +321,37 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images }) => {
           </Layer>
         </Stage>
       </div>
+      <Text as='p' typo='title-lg' color='var(--kai-color-sys-on-layer)'>
+        デジタルステッカー(drag & dropで配置可能)
+      </Text>
       <FlexHorizontal gap='12px'>
         {images &&
           images.length > 0 &&
           images.map((image) => {
             return (
               <ImageContainer
-                key={image}
-                src={image}
+                id={image.id}
+                key={image.id}
+                src={image.url}
                 width='80px'
                 height='fit-content'
                 objectFit='contain'
                 draggable={true}
                 onDragStart={(e) => {
                   e.dataTransfer.setData('text', '')
-                  console.log('e.target.src: ', e.target.src)
-                  dragUrl.current = e.target.src
+                  console.log('e.target: ', e.target)
+                  dragUrl.current = { url: e.target.src, id: image.id }
                 }}
               />
             )
           })}
       </FlexHorizontal>
-      <button onClick={handleDownload}>Download Image</button>
-      <button onClick={handleRemove}>Remove</button>
-      <button onClick={handleRemoveAll}>Remove All</button>
-      <button onClick={handleSave}>Save Canvas</button>
+      <FlexHorizontal gap='12px'>
+        <button onClick={handleDownload}>Download Image</button>
+        <button onClick={handleRemove}>Remove</button>
+        <button onClick={handleRemoveAll}>Remove All</button>
+        <button onClick={handleSave}>Save Canvas</button>
+      </FlexHorizontal>
     </>
   )
 }

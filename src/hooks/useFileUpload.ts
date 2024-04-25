@@ -50,6 +50,7 @@ export const useFileUpload = () => {
     const cid = await upload([icon])
     setName(fileName)
     setIcon(`https://${cid}${DWEB_LINK}`)
+    return `https://${cid}${DWEB_LINK}`
   }
 
   const resetUploadStatus = () => {
