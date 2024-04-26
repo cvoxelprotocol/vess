@@ -194,9 +194,6 @@ dependencies:
   typescript:
     specifier: 5.1.6
     version: 5.1.6
-  use-image:
-    specifier: ^1.1.1
-    version: 1.1.1(react-dom@18.2.0)(react@18.2.0)
   vess-kit-core:
     specifier: 1.0.1-alpha.3
     version: 1.0.1-alpha.3(typescript@5.1.6)
@@ -22315,16 +22312,6 @@ packages:
   /urlpattern-polyfill@8.0.2:
     resolution: {integrity: sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==}
     dev: true
-
-  /use-image@1.1.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-n4YO2k8AJG/BcDtxmBx8Aa+47kxY5m335dJiCQA5tTeVU4XdhrhqR6wT0WISRXwdMEOv5CSjqekDZkEMiiWaYQ==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
 
   /use-sync-external-store@1.2.0(react@18.2.0):
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}

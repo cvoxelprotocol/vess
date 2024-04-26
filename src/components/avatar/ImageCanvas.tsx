@@ -1,12 +1,13 @@
 // components/ImageCanvas.tsx
-import { FlexHorizontal, Text } from 'kai-kit'
+import { FlexHorizontal, FlexVertical, Text } from 'kai-kit'
 import React, { useState, useRef, useEffect, useMemo } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Stage, Layer, Image, Transformer } from 'react-konva'
-import useImage from 'use-image'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { AddAvatarRequest, Avatar, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useFileUpload } from '@/hooks/useFileUpload'
+import { useImage } from '@/hooks/useImage'
 import { dataURLtoFile } from '@/utils/objectUtil'
 
 type ImageProps = {
@@ -30,7 +31,7 @@ const CanvasImage: React.FC<ImageProps> = ({
   visibleTransformers,
   imgObj,
 }) => {
-  const [image, status] = useImage(imageUrl, 'anonymous')
+  const { image } = useImage(`${imageUrl}`)
   const imageRef = useRef<any>()
   const transformerRef = useRef<any>(null)
   const [initialized, setInitialized] = useState(false)
@@ -124,6 +125,7 @@ const CanvasImage: React.FC<ImageProps> = ({
         image={image}
         onClick={onSelect}
         onTap={onSelect}
+        onTouchEnd={onSelect}
         ref={imageRef}
         draggable={editable}
         onTransformEnd={onTransform}
@@ -166,6 +168,12 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [visibleTransformers, setVisibleTransformers] = useState(true)
   const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
+
+  // Avoid hydration error
+  const [isMobileClient, setIsMobileClient] = useState(false)
+  useEffect(() => {
+    setIsMobileClient(isMobile)
+  }, [])
 
   const { add } = useAvatar(did)
 
@@ -322,28 +330,46 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
         </Stage>
       </div>
       <Text as='p' typo='title-lg' color='var(--kai-color-sys-on-layer)'>
-        デジタルステッカー(drag & dropで配置可能)
+        {`デジタルステッカー ${!isMobileClient ? '(drag & dropで配置可能)' : ''}`}
       </Text>
       <FlexHorizontal gap='12px'>
         {images &&
           images.length > 0 &&
           images.map((image) => {
             return (
-              <ImageContainer
-                id={image.id}
-                key={image.id}
-                src={image.url}
-                width='80px'
-                height='fit-content'
-                objectFit='contain'
-                draggable={true}
-                onDragStart={(e) => {
-                  e.dataTransfer.setData('text', '')
-                  console.log('e.target: ', e.target)
-                  const target = e.target as HTMLImageElement
-                  dragUrl.current = { url: target.src, id: image.id }
-                }}
-              />
+              <FlexVertical key={image.id}>
+                <ImageContainer
+                  id={image.id}
+                  src={image.url}
+                  width='80px'
+                  height='80px'
+                  objectFit='contain'
+                  draggable={true}
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('text', '')
+                    const target = e.target as HTMLImageElement
+                    dragUrl.current = { url: target.src, id: image.id }
+                  }}
+                />
+                {isMobileClient && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setStagedImages(
+                        stagedImages.concat([
+                          {
+                            id: image.id,
+                            url: image.url,
+                          },
+                        ]),
+                      )
+                      setSelectedId(image.id)
+                    }}
+                  >
+                    追加
+                  </button>
+                )}
+              </FlexVertical>
             )
           })}
       </FlexHorizontal>

@@ -78,7 +78,6 @@
     "react-konva": "^18.2.10",
     "react-responsive-carousel": "^3.2.23",
     "typescript": "5.1.6",
-    "use-image": "^1.1.1",
     "vess-kit-core": "1.0.1-alpha.3",
     "vess-kit-web": "1.0.1-alpha.9",
     "viem": "2.x",

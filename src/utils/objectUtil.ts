@@ -60,3 +60,20 @@ export const dataURLtoFile = (dataurl: string, filename: string): File | null =>
 
   return new File([u8arr], filename, { type: mime })
 }
+
+export const loadImage = (url?: string): Promise<HTMLImageElement | undefined> => {
+  return new Promise((resolve, reject) => {
+    if (!url) return resolve(undefined)
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.crossOrigin = 'Anonymous'
+    img.src = url
+  })
+}
+
+export const loadImageWithoutCache = async (
+  url?: string,
+): Promise<HTMLImageElement | undefined> => {
+  return await loadImage(`${url}?rd=${new Date().getTime().toString()}`)
+}
