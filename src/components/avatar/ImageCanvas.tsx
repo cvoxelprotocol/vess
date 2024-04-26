@@ -205,11 +205,11 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
       const layer = stageJ.children[0]
 
       const children = layer.children
-      const attrs = children.map((c) => c.attrs)
-      const sourcePhoto = attrs.find((a) => a.id === 'sourcePhotoUrl')
+      const attrs = children.map((c: { attrs: any }) => c.attrs)
+      const sourcePhoto = attrs.find((a: { id: string }) => a.id === 'sourcePhotoUrl')
 
-      const vcChildren = attrs.filter((a) => a.id !== 'sourcePhotoUrl')
-      const vcImages: vcImage[] = vcChildren.map((vc) => {
+      const vcChildren = attrs.filter((a: { id: string }) => a.id !== 'sourcePhotoUrl')
+      const vcImages: vcImage[] = vcChildren.map((vc: { id: string }) => {
         const imageUrl = stagedImages.find((si) => si.id === vc.id)?.url
         if (!imageUrl) return null
         return {
@@ -340,7 +340,8 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
                 onDragStart={(e) => {
                   e.dataTransfer.setData('text', '')
                   console.log('e.target: ', e.target)
-                  dragUrl.current = { url: e.target.src, id: image.id }
+                  const target = e.target as HTMLImageElement
+                  dragUrl.current = { url: target.src, id: image.id }
                 }}
               />
             )
