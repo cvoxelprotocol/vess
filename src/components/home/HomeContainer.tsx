@@ -15,8 +15,7 @@ type Props = {
 
 export const HomeContainer: FC<Props> = ({ did }) => {
   const { did: myDid } = useVESSAuthUser()
-  const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
-    useVerifiableCredentials(did)
+  const { isInitialLoading, formatedCredentials } = useVerifiableCredentials(did)
 
   const isEditable = useMemo(() => {
     return myDid === did
@@ -32,36 +31,16 @@ export const HomeContainer: FC<Props> = ({ did }) => {
               <Tab id='attendance'>デジタル証明</Tab>
             </TabList>
             <TabPanel id='attendance' style={{ position: 'relative', zIndex: '0' }}>
-              {attendances.length > 0 || memberships.length > 0 || certificates.length > 0 ? (
+              {formatedCredentials.length > 0 ? (
                 <EventListFrame>
-                  {attendances.map((event) => (
-                    <CredItem
-                      key={event.id}
-                      image={event.credentialSubject.eventIcon}
-                      name={event.credentialSubject.eventName}
-                      credId={event.id}
-                    />
-                  ))}
-                  {memberships && memberships.length > 0 && (
+                  {formatedCredentials && formatedCredentials.length > 0 && (
                     <>
-                      {memberships.map((membership) => (
+                      {formatedCredentials.map((credential) => (
                         <CredItem
-                          key={membership.id}
-                          image={membership.credentialSubject.membershipIcon}
-                          name={membership.credentialSubject.membershipName}
-                          credId={membership.id}
-                        />
-                      ))}
-                    </>
-                  )}
-                  {certificates && certificates.length > 0 && (
-                    <>
-                      {certificates.map((certificate) => (
-                        <CredItem
-                          key={certificate.id}
-                          image={certificate.credentialSubject.image}
-                          name={certificate.credentialSubject.certificationName}
-                          credId={certificate.id}
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
                         />
                       ))}
                     </>

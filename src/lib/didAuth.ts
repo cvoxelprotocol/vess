@@ -87,8 +87,9 @@ export class DidAuthService {
 
         if (res) {
           const resJson = (await res.json()) as VSUser
-          const { name, avatar, description } = resJson
+          const { name, avatar, description, id } = resJson
           this.setLoginState(
+            id,
             session.did.parent,
             getAddress(getAddressFromPkh(session.did.parent)),
             name,
@@ -98,6 +99,7 @@ export class DidAuthService {
           )
         } else {
           this.setLoginState(
+            '',
             session.did.parent,
             getAddress(getAddressFromPkh(session.did.parent)),
             null,
@@ -248,8 +250,9 @@ export class DidAuthService {
 
         if (res) {
           const resJson = (await res.json()) as VSUser
-          const { name, avatar, description } = resJson
+          const { name, avatar, description, id } = resJson
           this.setLoginState(
+            id,
             session.did.parent,
             addresses[0],
             name,
@@ -258,7 +261,15 @@ export class DidAuthService {
             user.typeOfLogin,
           )
         } else {
-          this.setLoginState(session.did.parent, addresses[0], null, null, null, user.typeOfLogin)
+          this.setLoginState(
+            '',
+            session.did.parent,
+            addresses[0],
+            null,
+            null,
+            null,
+            user.typeOfLogin,
+          )
         }
       } else {
         this.clearState()
@@ -347,6 +358,7 @@ export class DidAuthService {
   }
 
   private setLoginState(
+    id: string,
     did: string,
     address: string,
     name: string | null,
@@ -357,6 +369,7 @@ export class DidAuthService {
     console.log('setVESSAuth called')
     setVESSAuth({
       user: {
+        id: id,
         did: did,
         account: address,
         originalAddress: address,

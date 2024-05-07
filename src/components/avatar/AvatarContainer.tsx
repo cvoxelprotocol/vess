@@ -32,8 +32,7 @@ export const AvatarContainer: FC<Props> = ({ did }) => {
     getAddressFromPkh(did) as `0x${string}`,
   )
   const { lensProfile, lensLoading } = useLensProfile(did)
-  const { formatedCredentials, isInitialLoading, certificates, attendances, memberships } =
-    useVerifiableCredentials(did)
+  const { formatedCredentials } = useVerifiableCredentials(did)
 
   const avatarUrl = useMemo(() => {
     if (vsUser?.avatar) {

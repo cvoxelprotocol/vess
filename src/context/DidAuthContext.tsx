@@ -3,6 +3,7 @@ import { atom, createStore } from 'jotai'
 import React, { createContext, useContext } from 'react'
 
 export type VESSUser = {
+  id: string
   did: string | undefined
   account: string | undefined
   originalAddress: string | undefined

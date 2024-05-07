@@ -6,6 +6,7 @@ export const useVESSAuthUser = () => {
   const vessAuth = useAtomValue(vessAuthAtom, { store })
 
   return {
+    id: vessAuth?.user?.id,
     did: vessAuth?.user?.did,
     account: vessAuth?.user?.account,
     originalAddress: vessAuth?.user?.originalAddress,

@@ -14,7 +14,6 @@ import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
-import { CredType } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
@@ -45,24 +44,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
 
   const vcImage = useMemo(() => {
     if (!credential) return ''
-    const type = credential.credentialType.name as CredType
-    let image: string | null = null
-    switch (type) {
-      case 'attendance':
-        image = credential.vc.credentialSubject.image || credential.vc.credentialSubject.eventIcon
-        break
-      case 'membership':
-        image =
-          credential.vc.credentialSubject.image || credential.vc.credentialSubject.membershipIcon
-        break
-      case 'certificate':
-        image = credential.vc.credentialSubject.image
-        break
-      default:
-        break
-    }
-    // use credentialItem image if there is no image prop in vc.credentialSubject.
-    return image || credential.credentialItem?.image || '/VESS_app_icon.png'
+    return credential.image || credential.credentialItem?.image || '/VESS_app_icon.png'
   }, [credential])
 
   const otherSubjectProps = useMemo(() => {
@@ -92,7 +74,9 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   }
 
   useEffect(() => {
-    verify(credential?.plainCredential)
+    if (credential?.plainCredential) {
+      verify(credential?.plainCredential)
+    }
   }, [credential?.plainCredential])
 
   return (
