@@ -46,10 +46,16 @@ export type CredentialStruct = {
   credentialType?: CredentialType
   credentialItem?: VSCredentialItem
   organization?: WorkspaceType
+  user?: VSUser
+}
+
+export type CredentialWithHolderUser = {
+  credential: CredentialStruct
+  holder?: VSUser | null
 }
 
 export type CredentialResponse = {
-  data: CredentialStruct
+  data: CredentialWithHolderUser
 }
 
 export type CredentialsResponse = {

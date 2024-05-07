@@ -29,7 +29,7 @@ export type CredDetailProps = {
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useVESSAuthUser()
   const router = useRouter()
-  const { isInitialLoading, credential } = useVerifiableCredential(id)
+  const { isInitialLoading, credential, holder } = useVerifiableCredential(id)
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -78,6 +78,34 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       verify(credential?.plainCredential)
     }
   }, [credential?.plainCredential])
+
+  const issuer = useMemo(() => {
+    console.log({ credential })
+    if (!credential) return { name: 'Unknown', icon: '/default_profile.jpg' }
+    if (credential.organization) {
+      return {
+        name: credential.organization.name,
+        icon: credential.organization.icon || '/default_profile.jpg',
+      }
+    } else if (credential.user) {
+      return {
+        name: credential.user.name,
+        icon: credential.user.avatar || '/default_profile.jpg',
+      }
+    }
+    return {
+      name: credential.issuerDid,
+      icon: '/default_profile.jpg',
+    }
+  }, [credential])
+
+  const holderInfo = useMemo(() => {
+    if (!holder) return { name: credential?.holderDid, icon: '/default_profile.jpg' }
+    return {
+      name: holder.name || holder.did,
+      icon: holder.avatar || '/default_profile.jpg',
+    }
+  }, [holder, credential])
 
   return (
     <>
@@ -171,7 +199,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               </Text>
               <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
                 <ImageContainer
-                  src={credential?.organization?.icon || '/default_profile.jpg'}
+                  src={issuer.icon}
                   width='20px'
                   height='20px'
                   objectFit='contain'
@@ -182,7 +210,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   color='var(--kai-color-sys-on-layer)'
                   isLoading={isInitialLoading}
                 >
-                  {credential?.organization?.name || credential?.issuerDid || 'Unknown'}
+                  {issuer.name}
                 </Text>
               </FlexHorizontal>
             </InfoItemFrame>
@@ -190,13 +218,22 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 所有者
               </Text>
-              <Text
-                typo='body-lg'
-                color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
-              >
-                {credential?.vc.credentialSubject.id}
-              </Text>
+              <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
+                <ImageContainer
+                  src={holderInfo.icon}
+                  width='20px'
+                  height='20px'
+                  objectFit='contain'
+                  alt='Organization Icon'
+                />
+                <Text
+                  typo='body-lg'
+                  color='var(--kai-color-sys-on-layer)'
+                  isLoading={isInitialLoading}
+                >
+                  {holderInfo.name}
+                </Text>
+              </FlexHorizontal>
             </InfoItemFrame>
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
