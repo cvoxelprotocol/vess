@@ -49,7 +49,6 @@ export const AvatarContainer: FC<Props> = ({ did }) => {
   }, [ensProfile, vsUser, ccProfile, lensProfile])
 
   const images = useMemo(() => {
-    console.log({ formatedCredentials })
     return formatedCredentials.map((item) => {
       return { id: item.id, url: item.image } as vcImage
     })

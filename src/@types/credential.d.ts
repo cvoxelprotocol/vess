@@ -49,8 +49,7 @@ export type CredentialStruct = {
   user?: VSUser
 }
 
-export type CredentialWithHolderUser = {
-  credential: CredentialStruct
+export type CredentialWithHolderUser = CredentialStruct & {
   holder?: VSUser | null
 }
 

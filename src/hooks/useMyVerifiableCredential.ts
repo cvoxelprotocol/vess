@@ -96,7 +96,6 @@ export const useMyVerifiableCredential = () => {
       const subjectUniqueInput = {
         id: did,
       }
-      issueSocialVerifiableCredentials
 
       let res: Response | undefined
       if (workspace) {
