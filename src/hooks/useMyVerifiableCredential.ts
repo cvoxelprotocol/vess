@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useVESSAuthUser } from './useVESSAuthUser'
 import { useVESSLoading } from './useVESSLoading'
 import { CredType, VSCredentialItemFromBuckup } from '@/@types/credential'
-import { issueVerifiableCredentials } from '@/lib/vessApi'
+import { issueSocialVerifiableCredentials, issueVerifiableCredentials } from '@/lib/vessApi'
 
 export interface SubjectUniqueInput {
   id: string
@@ -18,6 +18,14 @@ export interface IssueCredentialRequest {
   saveCompose?: boolean
 }
 
+export interface IssueSocialCredentialRequest {
+  userId: string
+  commonContent: any
+  holders: SubjectUniqueInput[]
+  credentialItemId: string
+  expirationDate?: string
+}
+
 export interface saveCredentialToComposeDBResponse {
   vc: any
   ceramicId?: string
@@ -29,16 +37,14 @@ export const useMyVerifiableCredential = () => {
   const { did } = useVESSAuthUser()
 
   const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {
-    if (!item.organization) {
-      return false
-    }
     if (!did) {
       return false
     }
     showLoading()
     try {
-      const type = item.credentialType.name as CredType
+      const type = item.credentialType?.name ? (item.credentialType?.name as CredType) : 'default'
       const workspace = item.organization
+      const user = item.user
       console.log({ item })
 
       let commonContent
@@ -54,9 +60,9 @@ export const useMyVerifiableCredential = () => {
           break
         case 'membership':
           commonContent = {
-            organizationName: workspace.name,
-            organizationId: workspace.ceramicId || workspace.id,
-            organizationIcon: workspace.icon || '',
+            organizationName: workspace?.name,
+            organizationId: workspace?.ceramicId || workspace?.id,
+            organizationIcon: workspace?.icon || '',
             membershipName: item.title,
             membershipIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
@@ -74,22 +80,48 @@ export const useMyVerifiableCredential = () => {
           break
 
         default:
+          commonContent = {
+            name: item.title,
+            image: item.icon || item.image || '',
+            description: item.description || '',
+            primaryColor: item.primaryColor || '',
+            startDate: item.startDate ? item.startDate : '',
+            endDate: item.endDate ? item.endDate : '',
+            itemId: item.id,
+            ceramicId: item.ceramicId || '',
+          }
           break
       }
 
       const subjectUniqueInput = {
         id: did,
       }
-      const body: IssueCredentialRequest = {
-        issuerAddress: workspace.address,
-        credTypeName: type,
-        commonContent: commonContent,
-        holders: [subjectUniqueInput],
-        credentialItemId: item.id,
-        expirationDate: undefined,
-        saveCompose: workspace.useCompose || false,
+
+      let res: Response | undefined
+      if (workspace) {
+        const body: IssueCredentialRequest = {
+          issuerAddress: workspace.address,
+          credTypeName: type,
+          commonContent: commonContent,
+          holders: [subjectUniqueInput],
+          credentialItemId: item.id,
+          expirationDate: undefined,
+          saveCompose: workspace.useCompose || false,
+        }
+        res = await issueVerifiableCredentials(body)
+      } else if (user) {
+        const body: IssueSocialCredentialRequest = {
+          userId: user.id,
+          commonContent: commonContent,
+          holders: [subjectUniqueInput],
+          credentialItemId: item.id,
+          expirationDate: undefined,
+        }
+        console.log({ body })
+        res = await issueSocialVerifiableCredentials(body)
+      } else {
+        throw new Error('workspace or user is undefined')
       }
-      const res = await issueVerifiableCredentials(body)
       if (!res) {
         throw new Error('res is undefined')
       }

@@ -43,13 +43,18 @@ export type CredentialStruct = {
   plainCredential: string
   createdAt: Date
   updatedAt: Date
-  credentialType: CredentialType
+  credentialType?: CredentialType
   credentialItem?: VSCredentialItem
   organization?: WorkspaceType
+  user?: VSUser
+}
+
+export type CredentialWithHolderUser = CredentialStruct & {
+  holder?: VSUser | null
 }
 
 export type CredentialResponse = {
-  data: CredentialStruct
+  data: CredentialWithHolderUser
 }
 
 export type CredentialsResponse = {
@@ -189,10 +194,10 @@ type Tagged = {
 export type VSCredentialItemFromBuckup = {
   id: string
   ceramicId: string | undefined
-  credentialTypeId: string
-  credentialType: CredentialType
-  collectionId: string
-  organizationId: string | null
+  credentialTypeId?: string
+  credentialType?: CredentialType
+  collectionId?: string
+  organizationId?: string | null
   title: string
   description: string | null
   icon: string | null
@@ -202,11 +207,37 @@ export type VSCredentialItemFromBuckup = {
   endDate: string | null
   createdAt: string
   updatedAt: string
-  organization?: OrganizationType
+  organization?: OrganizationType | null
   Tagged: Tagged[]
   credentials?: VSCredential[]
+  userId?: string | null
+  user?: VSUser
 }
 
 export type GetCollectionItemResponse = GetCollectionResponse & {
   items: VSCredentialItemFromBuckup[]
+}
+
+export interface IIssueCredentialItemByUserRequest {
+  userId: string
+  title: string
+  description?: string
+  icon?: string
+  image?: string
+  startDate?: string
+  endDate?: string
+  primaryColor?: string
+  tags?: string[]
+  link?: string
+  credentialTypeName?: string
+  saveCompose: boolean
+  expirationDate?: string
+  validDuraion?: string
+  collectionId?: string
+}
+
+export interface ICreateHolderContentsRequest {
+  itemId: string
+  userId: string
+  holderContentsData: any[]
 }

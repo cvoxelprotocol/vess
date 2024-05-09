@@ -20,8 +20,7 @@ export const IdentityContainer: FC = () => {
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
   const { lensProfile, lensLoading } = useLensProfile(did)
-  const { CredentialsByHolder, isInitialLoading, certificates, attendances, memberships } =
-    useVerifiableCredentials(did)
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   const router = useRouter()
   const [tabKey, setTabKey] = useState<Key>('attendance')
 
@@ -48,40 +47,16 @@ export const IdentityContainer: FC = () => {
               <Tab id='id'>ID</Tab>
             </TabList>
             <TabPanel id='attendance' style={{}}>
-              {attendances.length > 0 || memberships.length > 0 || certificates.length > 0 ? (
+              {formatedCredentials.length > 0 ? (
                 <EventListFrame>
-                  {attendances.map((event) => (
+                  {formatedCredentials.map((credential) => (
                     <CredItem
-                      key={event.id}
-                      image={event.credentialSubject.eventIcon}
-                      name={event.credentialSubject.eventName}
-                      credId={event.id}
+                      key={credential.id}
+                      image={credential.image}
+                      name={credential.title}
+                      credId={credential.id}
                     />
                   ))}
-                  {memberships && memberships.length > 0 && (
-                    <>
-                      {memberships.map((membership) => (
-                        <CredItem
-                          key={membership.id}
-                          image={membership.credentialSubject.membershipIcon}
-                          name={membership.credentialSubject.membershipName}
-                          credId={membership.id}
-                        />
-                      ))}
-                    </>
-                  )}
-                  {certificates && certificates.length > 0 && (
-                    <>
-                      {certificates.map((certificate) => (
-                        <CredItem
-                          key={certificate.id}
-                          image={certificate.credentialSubject.image}
-                          name={certificate.credentialSubject.certificationName}
-                          credId={certificate.id}
-                        />
-                      ))}
-                    </>
-                  )}
                 </EventListFrame>
               ) : (
                 <FlexVertical width='100%' alignItems='center'>

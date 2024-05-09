@@ -33,18 +33,18 @@ export const AvatarDetailContainer: FC<Props> = ({ canvasId }) => {
       .map((item) => {
         let title = ''
         let image = ''
-        if (item.credentialType.name === 'attendance') {
+        if (item.credentialType?.name === 'attendance') {
           title = item.credentialSubject.eventName
           image = item.credentialSubject.eventIcon
-        } else if (item.credentialType.name === 'membership') {
+        } else if (item.credentialType?.name === 'membership') {
           title = item.credentialSubject.membershipName
           image = item.credentialSubject.membershipIcon
-        } else if (item.credentialType.name === 'certificate') {
+        } else if (item.credentialType?.name === 'certificate') {
           title = item.credentialSubject.certificationName
           image = item.credentialSubject.image
         } else {
           title = item.credentialSubject.name || item.credentialSubject.title
-          image = item.credentialSubject.image
+          image = item.credentialSubject.image || item.credentialSubject.icon || ''
         }
         return {
           ...item,

@@ -19,6 +19,7 @@ type ImageProps = {
   isSelected?: boolean
   onSelect?: () => void
   visibleTransformers?: boolean
+  isSourcePhoto?: boolean
 }
 
 const CanvasImage: React.FC<ImageProps> = ({
@@ -30,6 +31,7 @@ const CanvasImage: React.FC<ImageProps> = ({
   onSelect,
   visibleTransformers,
   imgObj,
+  isSourcePhoto,
 }) => {
   const { image } = useImage(`${imageUrl}`)
   const imageRef = useRef<any>()
@@ -110,7 +112,7 @@ const CanvasImage: React.FC<ImageProps> = ({
   if (!editable) {
     return (
       <Image
-        id={imgObj?.id || 'sourcePhotoUrl'}
+        id={isSourcePhoto ? 'sourcePhotoUrl' : imgObj?.id}
         image={image}
         ref={imageRef}
         draggable={editable}
@@ -167,7 +169,7 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
   const [stagedImages, setStagedImages] = useState<vcImage[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [visibleTransformers, setVisibleTransformers] = useState(true)
-  const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
+  const { uploadIcon } = useFileUpload()
 
   // Avoid hydration error
   const [isMobileClient, setIsMobileClient] = useState(false)
@@ -251,7 +253,7 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
       const vcs = stagedImages.map((image) => image.id)
       const avatarRequest: AddAvatarRequest = {
         did: did,
-        sourcePhotoUrl: avatarUrl,
+        sourcePhotoUrl: sourcePhoto?.url || profileAvatar?.sourcePhotoUrl || avatarUrl,
         canvasJson: canvasJson,
         isProfilePhoto: true,
         credentialIds: vcs,
@@ -308,10 +310,12 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
         <Stage ref={stageRef} width={320} height={320} style={{ border: '1px solid grey' }}>
           <Layer>
             <CanvasImage
-              imageUrl={profileAvatar?.canvasJson?.baseImage.url || avatarUrl}
+              imageUrl={profileAvatar?.sourcePhotoUrl || profileAvatar?.canvasJson?.baseImage.url}
               imgObj={profileAvatar?.canvasJson?.baseImage}
               stageWidth={profileAvatar?.canvasJson?.baseImage?.width || 320}
               stageHeight={profileAvatar?.canvasJson?.baseImage?.height || 320}
+              editable={false}
+              isSourcePhoto
             />
             {stagedImages.map((image) => (
               <CanvasImage
