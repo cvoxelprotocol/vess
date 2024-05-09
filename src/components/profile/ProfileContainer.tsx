@@ -53,6 +53,7 @@ export const ProfileContainer: FC = () => {
           <ProfileImage
             src={profileAvatarUrl || vsUser?.avatar || '/default_profile.jpg'}
             alt='プロフィール画像'
+            key={'profileAvatar'}
           />
           <IconButton
             variant='tonal'
