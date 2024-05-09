@@ -1,12 +1,15 @@
 import styled from '@emotion/styled'
 import { useScroll } from 'framer-motion'
-import { Button, IconButton, Text, useKai, useModal } from 'kai-kit'
+import { Button, FlexHorizontal, IconButton, Text, useKai, useModal, Skelton } from 'kai-kit'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { BsQrCodeScan } from 'react-icons/bs'
-import { PiPaintBrushBroadDuotone, PiExport } from 'react-icons/pi'
+import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
+import { DefaultHeader } from '../app/Header'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 
+import { ProfileEditModal } from '../home/ProfileEditModal'
 import { useAvatar } from '@/hooks/useAvatar'
+import { useFileUpload } from '@/hooks/useFileUpload'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 
@@ -20,6 +23,7 @@ export const ProfileContainer: FC = () => {
     container: scrollRef,
   })
   const [scrollProgress, setScrollProgress] = useState(1)
+  const { icon } = useFileUpload()
 
   useEffect(() => {
     const unsubscribe = scrollY.onChange((latest) => {
@@ -36,39 +40,40 @@ export const ProfileContainer: FC = () => {
   //   return avatars?.find((avatar) => avatar.isProfilePhoto)
   // }, [avatars])
 
-  const profileAvatarUrl = useMemo(() => {
-    const profileAvatar = avatars?.find((avatar) => avatar.isProfilePhoto)
-    console.log('avatarURL: ', profileAvatar)
-    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
+  const profileAvatar = useMemo(() => {
+    return avatars?.find((avatar) => avatar.isProfilePhoto)
   }, [avatars, vsUser?.avatar])
-
-  useEffect(() => {
-    console.log('profileAvatarUrl', profileAvatarUrl)
-  }, [profileAvatarUrl])
 
   return (
     <>
       <ProfileFrame>
+        {/* <DefaultHeader style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }} /> */}
         <ProfileTop scrollProgress={scrollProgress}>
-          <ProfileImage
-            src={profileAvatarUrl || vsUser?.avatar || '/default_profile.jpg'}
-            alt='プロフィール画像'
-            key={'profileAvatar'}
-          />
+          <Skelton
+            isLoading={!profileAvatar?.avatarUrl && !vsUser?.avatar}
+            width='100%'
+            aspectRatio='1'
+          >
+            <ProfileImage
+              src={(profileAvatar?.avatarUrl || vsUser?.avatar) ?? 'default_profile.jpg'}
+              alt='プロフィール画像'
+              key={'profileAvatar'}
+            />
+          </Skelton>
           <IconButton
             variant='tonal'
-            color='dominant'
+            color='subdominant'
             size='lg'
             icon={<PiPaintBrushBroadDuotone size={24} />}
             onPress={() => openModal()}
             style={{
               position: 'absolute',
-              top: 'var(--kai-size-sys-space-md)',
+              bottom: 'var(--kai-size-sys-space-md)',
               left: 'var(--kai-size-sys-space-md)',
               zIndex: 10,
             }}
           />
-          <IconButton
+          {/* <IconButton
             variant='filled'
             color='dominant'
             size='lg'
@@ -78,7 +83,7 @@ export const ProfileContainer: FC = () => {
               top: 'var(--kai-size-sys-space-md)',
               right: 'var(--kai-size-sys-space-md)',
             }}
-          />
+          /> */}
           <IconButton
             variant='tonal'
             color='dominant'
@@ -86,7 +91,7 @@ export const ProfileContainer: FC = () => {
             icon={<PiExport size={24} />}
             style={{
               position: 'absolute',
-              top: '80px',
+              bottom: 'var(--kai-size-sys-space-md)',
               right: 'var(--kai-size-sys-space-md)',
             }}
           />
@@ -96,24 +101,31 @@ export const ProfileContainer: FC = () => {
           <ProfileInfoFrame>
             <ScrollIndicator />
             <BasicProfileFrame>
-              <Text typo='headline-sm' color={'var(--kai-color-sys-on-layer)'}>
-                {vsUser?.name}
-              </Text>
+              <FlexHorizontal justifyContent='space-between' width='100%'>
+                <Text
+                  typo='headline-sm'
+                  color={'var(--kai-color-sys-on-layer)'}
+                  isLoading={isLoadingUser}
+                >
+                  {vsUser?.name}
+                </Text>
+                <IconButton
+                  icon={<PiPencil />}
+                  variant='tonal'
+                  color='neutral'
+                  size='xs'
+                  onPress={() => openModal('profileEdit')}
+                />
+              </FlexHorizontal>
               <Text typo='body-md' color={'var(--kai-color-sys-on-layer)'} lineClamp={3}>
                 {vsUser?.description}
               </Text>
-              <IconButton
-                variant='tonal'
-                color='dominant'
-                size='lg'
-                icon={<PiPaintBrushBroadDuotone size={24} />}
-                onPress={() => openModal()}
-              />
             </BasicProfileFrame>
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
       </ProfileFrame>
       <AvatarEditModal />
+      <ProfileEditModal name={'profileEdit'} did={did || ''} />
     </>
   )
 }
@@ -189,4 +201,5 @@ const BasicProfileFrame = styled.div`
   display: flex;
   flex-direction: column;
   gap: var(--kai-size-sys-space-sm);
+  width: 100%;
 `
