@@ -58,7 +58,9 @@ export const BasicLayout: FC<Props> = ({ children }) => {
       <NavigationContextProvider>
         <CenterLayout {...breakpointProps}>
           <NCLayoutWrapper {...breakpointProps}>
-            <NCLayout navigation={<NavigationList></NavigationList>}>{children}</NCLayout>
+            <NCLayout id='NCLayout' navigation={<NavigationList></NavigationList>}>
+              {children}
+            </NCLayout>
           </NCLayoutWrapper>
         </CenterLayout>
       </NavigationContextProvider>
@@ -77,20 +79,12 @@ const CenterLayout = styled.div`
 
 const NCLayoutWrapper = styled.div`
   width: 100vw;
-  max-width: var(--kai-size-breakpoint-md-min-width);
+  max-width: var(--kai-size-breakpoint-xs-max-width);
   height: 100svh;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
 
   &[data-media-lg] {
     max-width: 100%;
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 100vw;
-  }
-
-  @media (min-width: 839px) {
-    overflow: visible;
   }
 `
