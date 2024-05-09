@@ -3,7 +3,7 @@ import { FC, memo, useEffect, useRef, useState } from 'react'
 import { Transformer, Layer, Image } from 'react-konva'
 import { StickerType, useStickers } from './StickersProvider'
 import { useImage } from '@/hooks/useImage'
-import { useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import { isTransformer, useIstransformerAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
 
 export type StickerImageProps = {
   isSelected?: boolean
@@ -28,7 +28,7 @@ export const StickerImage: FC<StickerImageProps> = ({
   onSelect,
 }) => {
   const { image } = useImage(imgUrl)
-  const [visibleTransformers, setVisibleTransformers] = useState(true)
+  const [isTransformer, setIsTransformer] = useIstransformerAtom()
   const transformerRef = useRef<any>(null)
   const imageRef = useRef<any>(null)
 
@@ -110,7 +110,7 @@ export const StickerImage: FC<StickerImageProps> = ({
         }}
         onTransformEnd={onTransform}
       />
-      {isSelected && visibleTransformers && (
+      {isSelected && isTransformer && (
         <Transformer
           ref={transformerRef}
           rotateEnabled

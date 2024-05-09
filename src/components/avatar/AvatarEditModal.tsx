@@ -1,6 +1,7 @@
 import { DndContext } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import styled from '@emotion/styled'
+import { useAtomValue, useSetAtom } from 'jotai'
 import {
   Button,
   FlexVertical,
@@ -11,7 +12,7 @@ import {
   FlexHorizontal,
   IconButton,
 } from 'kai-kit'
-import { FC, useEffect, useMemo, memo, useCallback } from 'react'
+import { FC, useEffect, useMemo, memo, useCallback, useState, useRef } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrash, PiStickerDuotone, PiUserSquare, PiUserSwitch } from 'react-icons/pi'
 import { IconUploadButton } from '../home/IconUploadButton'
@@ -19,11 +20,14 @@ import { DraggableSticker } from './DraggableSticker'
 import { DroppableAvatar } from './DroppableAvatar'
 import { vcImage } from './ImageCanvas'
 import { StickerType } from './StickersProvider'
+import { AddAvatarRequest, CanvasJson } from '@/@types/user'
+import { useAvatar } from '@/hooks/useAvatar'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
-import { useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import { useIstransformerAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import { dataURLtoFile } from '@/utils/objectUtil'
 
 export const AvatarEditModal: FC = () => {
   const { did } = useVESSAuthUser()
@@ -34,7 +38,11 @@ export const AvatarEditModal: FC = () => {
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
 
+  const stageRef = useRef<any>()
   const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
+  const [isTransformer, setIsTransformer] = useIstransformerAtom()
+  const { add } = useAvatar(did)
+  const [isSaving, setIsSaving] = useState(false)
 
   const stickerImages = useMemo(() => {
     console.log({ formatedCredentials })
@@ -65,11 +73,87 @@ export const AvatarEditModal: FC = () => {
     })
   }
 
+  const handleSave = () => {
+    setIsTransformer(false)
+    setIsSaving(true)
+
+    setTimeout(async () => {
+      if (!stageRef.current) {
+        console.log('stageRef.current is null')
+        return
+      }
+      const stageJson = stageRef.current.toJSON()
+      const stageJ = JSON.parse(stageJson) as { [x: string]: any }
+      console.log('stageJson:', stageJ)
+
+      const stage = stageJ.attrs
+      const layer = stageJ.children[0]
+
+      const children = layer.children
+      const attrs = children.map((c: { attrs: any }) => c.attrs)
+      const sourcePhoto = attrs.find((a: { id: string }) => a.id === 'sourcePhotoUrl')
+
+      const vcChildren = attrs.filter((a: { id: string }) => a.id !== 'sourcePhotoUrl')
+      const vcImages: vcImage[] = vcChildren.map((vc: { id: string }) => {
+        const imageUrl = stickers.find((si) => si.id === vc.id)?.imgUrl
+        if (!imageUrl) return null
+        return {
+          ...vc,
+          id: vc.id,
+          url: imageUrl,
+        }
+      })
+
+      // baseImageがプロフィール画像でvcImgesがステッカー
+      const canvasJson: CanvasJson = {
+        stageWidth: stage.width,
+        stageHeight: stage.height,
+        baseImage: {
+          ...sourcePhoto,
+          url: icon || vsUser?.avatar,
+        },
+        vcImages: vcImages,
+      }
+      console.log('canvasJson:', canvasJson)
+
+      const dataURL = stageRef.current.toDataURL({ pixelRatio: 3 })
+      const file = dataURLtoFile(dataURL, 'vess-avatar.png')
+      if (!file) {
+        console.log('file is null')
+        return
+      }
+      const newUrl = await uploadIcon(file)
+      if (!newUrl) {
+        console.log('newUrl is null')
+        return
+      } else {
+        console.log('newUrl:', newUrl)
+      }
+      const vcs = stickers.map((sticker) => sticker.id)
+      const avatarRequest: AddAvatarRequest = {
+        did: did || '',
+        sourcePhotoUrl: icon || vsUser?.avatar || '',
+        canvasJson: canvasJson,
+        isProfilePhoto: true,
+        credentialIds: vcs,
+        avatarUrl: newUrl,
+      }
+      await add(avatarRequest)
+      setIsSaving(false)
+      onClose()
+    }, 100) // 非表示状態を適用するために少し遅延を入れる
+
+    setTimeout(() => {
+      // Transformerを再表示
+      setIsTransformer(true)
+    }, 500)
+  }
+
   const onClose = () => {
-    console.log('Closing Modal')
     setIcon('')
     setSelectedID(undefined)
     setStickers([])
+    closeModal()
   }
 
   const onSelect = useCallback(
@@ -83,12 +167,6 @@ export const AvatarEditModal: FC = () => {
     },
     [cid, icon, uploadIcon],
   )
-  // useEffect(() => {
-  //   console.log('Dropped Stickers: ', stickers)
-  //   if (stickers.length > 0) {
-  //     console.log('Stickers 0: ', stickers[0])
-  //   }
-  // }, [stickers])
 
   return (
     <>
@@ -98,7 +176,9 @@ export const AvatarEditModal: FC = () => {
             <FlexVertical gap={'var(--kai-size-sys-space-md)'} justifyContent='space-between'>
               <DroppableAvatar
                 baseAvatarImgUrl={(icon || vsUser?.avatar) ?? 'default_profile.jpg'}
+                ref={stageRef}
               />
+
               <StickerTools>
                 <InstantTools data-visible={selectedID ? true : undefined}>
                   <IconButton
@@ -132,7 +212,14 @@ export const AvatarEditModal: FC = () => {
               >
                 キャンセル
               </Button>
-              <Button variant='tonal' style={{ flexGrow: 1 }}>
+              <Button
+                variant='tonal'
+                style={{ flexGrow: 1 }}
+                isLoading={isSaving}
+                onPress={() => {
+                  handleSave()
+                }}
+              >
                 保存する
               </Button>
             </FlexHorizontal>
