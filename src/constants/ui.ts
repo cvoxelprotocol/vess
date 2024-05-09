@@ -11,18 +11,19 @@ export type NavigationItemType = {
 }
 
 export const NAVIGATION_LIST: NavigationItemType[] = [
+  // Exception
   {
-    id: 'USER',
-    label: 'みなもとこうき',
-    icon: 'HOME',
+    id: 'PROFILE',
+    label: '',
+    icon: 'PROFILE',
     path: '/profile',
   },
-  {
-    id: 'HOME',
-    label: 'ホーム',
-    icon: 'HOME',
-    path: '/',
-  },
+  // {
+  //   id: 'HOME',
+  //   label: 'ホーム',
+  //   icon: 'HOME',
+  //   path: '/',
+  // },
   {
     id: 'IDENTITY',
     label: 'アイデンティティ',

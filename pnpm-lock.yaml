@@ -147,8 +147,8 @@ dependencies:
     specifier: ^2.6.4
     version: 2.6.4(@types/react@18.0.27)(react@18.2.0)
   kai-kit:
-    specifier: 0.1.6-beta.7
-    version: registry.npmjs.org/kai-kit@0.1.6-beta.7(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.1.6-beta.8
+    version: registry.npmjs.org/kai-kit@0.1.6-beta.8(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
   konva:
     specifier: ^9.3.6
     version: 9.3.6
@@ -25425,11 +25425,11 @@ packages:
     engines: {'0': node >= 0.2.0}
     dev: false
 
-  registry.npmjs.org/kai-kit@0.1.6-beta.7(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-8/zcpcrI1SZRS/SroKJFyuoGtRzLxUoAL6qP046zpw4enf2LdfbMARIZkO7XEZMfVDRiuSc/AGP+/RVCiCmmww==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/kai-kit/-/kai-kit-0.1.6-beta.7.tgz}
-    id: registry.npmjs.org/kai-kit/0.1.6-beta.7
+  registry.npmjs.org/kai-kit@0.1.6-beta.8(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-da8ZxCwQhLwW6/lRS9uiKARoYUDukDB1Hl6Uo0c03NLpnNnqjRkK+WsMTw1qsQsuJ1evFyLnv5X12qQhPcjzWA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/kai-kit/-/kai-kit-0.1.6-beta.8.tgz}
+    id: registry.npmjs.org/kai-kit/0.1.6-beta.8
     name: kai-kit
-    version: 0.1.6-beta.7
+    version: 0.1.6-beta.8
     peerDependencies:
       '@emotion/react': ^11.11.1
       '@emotion/styled': ^11.11.0
