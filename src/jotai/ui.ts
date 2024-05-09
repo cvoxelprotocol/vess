@@ -1,5 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { StickerType } from '@/components/avatar/StickersProvider'
 
 export const themeMode = atomWithStorage<'light' | 'dark'>('vessThemeMode', 'light')
 
@@ -20,3 +21,9 @@ export const useStateVcVerifiedStatus = () => useAtom(vcVerifiedStatus)
 export const rPath = atomWithStorage<string | null>('vessRPath', null)
 
 export const useStateRPath = () => useAtom(rPath)
+
+// Stickers
+export const stickers = atom<StickerType[]>([])
+export const useStickersAtom = () => useAtom(stickers)
+export const selectedID = atom<string | undefined>(undefined)
+export const useSelectedIDAtom = () => useAtom(selectedID)
