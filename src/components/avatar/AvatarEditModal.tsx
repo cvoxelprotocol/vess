@@ -12,12 +12,11 @@ import {
   FlexHorizontal,
   IconButton,
 } from 'kai-kit'
+import dynamic from 'next/dynamic'
 import { FC, useEffect, useMemo, memo, useCallback, useState, useRef } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrash, PiStickerDuotone, PiUserSquare, PiUserSwitch } from 'react-icons/pi'
 import { IconUploadButton } from '../home/IconUploadButton'
-import { DraggableSticker } from './DraggableSticker'
-import { DroppableAvatar } from './DroppableAvatar'
 import { vcImage } from './ImageCanvas'
 import { StickerType } from './StickersProvider'
 import { AddAvatarRequest, CanvasJson } from '@/@types/user'
@@ -29,12 +28,17 @@ import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { useIstransformerAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
 import { dataURLtoFile } from '@/utils/objectUtil'
 
+const DroppableAvatar = dynamic(() => import('@/components/avatar/DroppableAvatar'), { ssr: false })
+const DraggableSticker = dynamic(() => import('@/components/avatar/DraggableSticker'), {
+  ssr: false,
+})
+
 export const AvatarEditModal: FC = () => {
   const { did } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
+  const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal, closeModal } = useModal()
-  const { formatedCredentials, isInitialLoading, certificates, attendances, memberships } =
-    useVerifiableCredentials(did)
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
 
@@ -82,6 +86,10 @@ export const AvatarEditModal: FC = () => {
         console.log('stageRef.current is null')
         return
       }
+      if (stageRef.current.retry) {
+        stageRef.current.retry()
+      }
+      console.log('stageRef.current:', stageRef.current)
       const stageJson = stageRef.current.toJSON()
       const stageJ = JSON.parse(stageJson) as { [x: string]: any }
       console.log('stageJson:', stageJ)
@@ -167,6 +175,9 @@ export const AvatarEditModal: FC = () => {
     },
     [cid, icon, uploadIcon],
   )
+  const profileAvatar = useMemo(() => {
+    return avatars?.find((avatar) => avatar.isProfilePhoto)
+  }, [avatars])
 
   return (
     <>
@@ -175,8 +186,10 @@ export const AvatarEditModal: FC = () => {
           <ContentFrame>
             <FlexVertical gap={'var(--kai-size-sys-space-md)'} justifyContent='space-between'>
               <DroppableAvatar
-                baseAvatarImgUrl={(icon || vsUser?.avatar) ?? 'default_profile.jpg'}
-                ref={stageRef}
+                baseAvatarImgUrl={
+                  (icon || profileAvatar?.avatarUrl || vsUser?.avatar) ?? 'default_profile.jpg'
+                }
+                stageRef={stageRef}
               />
 
               <StickerTools>
@@ -195,7 +208,9 @@ export const AvatarEditModal: FC = () => {
                 </InstantTools>
                 <IconUploadButton
                   onSelect={onSelect}
-                  defaultIcon={icon || vsUser?.avatar || '/default_profile.jpg'}
+                  defaultIcon={
+                    icon || profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
+                  }
                   isUploading={status === 'uploading'}
                 />
               </StickerTools>

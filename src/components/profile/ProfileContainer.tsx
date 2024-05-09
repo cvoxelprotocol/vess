@@ -1,21 +1,19 @@
-import { relative } from 'path'
 import styled from '@emotion/styled'
-import { color, motion, px, transform, useScroll } from 'framer-motion'
-import type { MotionValue } from 'framer-motion'
+import { useScroll } from 'framer-motion'
 import { Button, IconButton, Text, useKai, useModal } from 'kai-kit'
-import Image from 'next/image'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { BsQrCodeScan } from 'react-icons/bs'
 import { PiPaintBrushBroadDuotone, PiExport } from 'react-icons/pi'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
-import { StickersProvider } from '../avatar/StickersProvider'
-import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+
+import { useAvatar } from '@/hooks/useAvatar'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 
 export const ProfileContainer: FC = () => {
   const { did } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
+  const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal } = useModal()
   const scrollRef = useRef<HTMLDivElement>(null)
   const { scrollY } = useScroll({
@@ -33,11 +31,29 @@ export const ProfileContainer: FC = () => {
     }
   }, [])
 
+  // const profileAvatar = useMemo(() => {
+  //   console.log('Avatar in useMemo: ', avatars)
+  //   return avatars?.find((avatar) => avatar.isProfilePhoto)
+  // }, [avatars])
+
+  const profileAvatarUrl = useMemo(() => {
+    const profileAvatar = avatars?.find((avatar) => avatar.isProfilePhoto)
+    console.log('avatarURL: ', profileAvatar)
+    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
+  }, [avatars, vsUser?.avatar])
+
+  useEffect(() => {
+    console.log('profileAvatarUrl', profileAvatarUrl)
+  }, [profileAvatarUrl])
+
   return (
     <>
       <ProfileFrame>
         <ProfileTop scrollProgress={scrollProgress}>
-          <ProfileImage src={vsUser?.avatar ?? '/default_profile.jpg'} alt='プロフィール画像' />
+          <ProfileImage
+            src={profileAvatarUrl || vsUser?.avatar || '/default_profile.jpg'}
+            alt='プロフィール画像'
+          />
           <IconButton
             variant='tonal'
             color='dominant'

@@ -1,89 +1,77 @@
 import { useDroppable } from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import { add } from 'date-fns'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { Button, IconButton } from 'kai-kit'
-import { FC, useEffect, useState, memo, useRef, useCallback, forwardRef } from 'react'
-import { PiTrash } from 'react-icons/pi'
+import dynamic from 'next/dynamic'
+import { FC, useEffect, useState, forwardRef } from 'react'
 import { Stage, Layer, Image, Transformer } from 'react-konva'
-import { StickerImages } from './CanvasSticker'
-import { vcImage } from './ImageCanvas'
-import { CanvasJson, AddAvatarRequest } from '@/@types/user'
-import { useAvatar } from '@/hooks/useAvatar'
-import { useFileUpload } from '@/hooks/useFileUpload'
 import { useImage } from '@/hooks/useImage'
-import { selectedID, useIstransformerAtom, stickers as stickersAtom } from '@/jotai/ui'
-import { dataURLtoFile } from '@/utils/objectUtil'
+import { selectedID, stickers as stickersAtom } from '@/jotai/ui'
+
+const StickerImages = dynamic(() => import('@/components/avatar/CanvasSticker'), { ssr: false })
 
 export type DroppableAvatarProps = {
   baseAvatarImgUrl: string
 }
 
-export const DroppableAvatar = forwardRef<any, DroppableAvatarProps>(
-  ({ baseAvatarImgUrl }, stageRef) => {
-    const { setNodeRef, node } = useDroppable({
-      id: 'droppableAvatar',
-    })
-    const [frameSize, setFrameSize] = useState({ width: 0, height: 0 })
-    const { image } = useImage(`${baseAvatarImgUrl}`)
-    const setSelectedID = useSetAtom(selectedID)
+const _DroppableAvatar = forwardRef<any, DroppableAvatarProps>(({ baseAvatarImgUrl }, stageRef) => {
+  const { setNodeRef, node } = useDroppable({
+    id: 'droppableAvatar',
+  })
+  const [frameSize, setFrameSize] = useState({ width: 0, height: 0 })
+  const { image } = useImage(`${baseAvatarImgUrl}`)
+  const setSelectedID = useSetAtom(selectedID)
 
-    useEffect(() => {
-      const updateSize = () => {
-        if (node.current) {
-          const { width, height } = node.current.getBoundingClientRect()
-          setFrameSize({ width, height })
-        }
+  useEffect(() => {
+    const updateSize = () => {
+      if (node.current) {
+        const { width, height } = node.current.getBoundingClientRect()
+        setFrameSize({ width, height })
       }
-
-      window.addEventListener('resize', updateSize)
-      updateSize() // 初期サイズを設定
-
-      return () => {
-        window.removeEventListener('resize', updateSize)
-      }
-    }, [node])
-
-    const deselect = () => {
-      setSelectedID(undefined)
     }
 
-    // useEffect(() => {
-    //   if (action === 'save') {
-    //     try {
-    //       handleSave()
-    //       // onSave?.()
-    //       onChangeAciton?.('idle')
-    //     } catch {
-    //       console.log('error')
-    //       onChangeAciton?.('idle')
-    //     }
-    //   }
-    // }, [action])
+    window.addEventListener('resize', updateSize)
+    updateSize() // 初期サイズを設定
 
-    return (
-      <>
-        <DroppableFrame ref={setNodeRef}>
-          <Stage width={frameSize.width} height={frameSize.height} ref={stageRef}>
-            <Layer>
-              <Image
-                id='profile'
-                image={image}
-                alt='aaa'
-                width={frameSize.width}
-                height={frameSize.height}
-                onClick={deselect}
-                onTap={deselect}
-                onTouchEnd={deselect}
-              />
-            </Layer>
-            <StickerImages />
-          </Stage>
-        </DroppableFrame>
-      </>
-    )
-  },
-)
+    return () => {
+      window.removeEventListener('resize', updateSize)
+    }
+  }, [node])
+
+  const deselect = () => {
+    setSelectedID(undefined)
+  }
+
+  return (
+    <>
+      <DroppableFrame ref={setNodeRef}>
+        <Stage width={frameSize.width} height={frameSize.height} ref={stageRef}>
+          <Layer>
+            <Image
+              id='profile'
+              image={image}
+              alt='aaa'
+              width={frameSize.width}
+              height={frameSize.height}
+              onClick={deselect}
+              onTap={deselect}
+              onTouchEnd={deselect}
+            />
+          </Layer>
+          <StickerImages />
+        </Stage>
+      </DroppableFrame>
+    </>
+  )
+})
+
+_DroppableAvatar.displayName = '_DroppableAvatar'
+
+const DroppableAvatar = ({
+  stageRef,
+  baseAvatarImgUrl,
+}: DroppableAvatarProps & { stageRef: React.RefObject<any> }) => {
+  return <_DroppableAvatar ref={stageRef} baseAvatarImgUrl={baseAvatarImgUrl} />
+}
 
 DroppableAvatar.displayName = 'DroppableAvatar'
 
@@ -96,3 +84,5 @@ const DroppableFrame = styled.div`
   border: 1px solid var(--kai-color-sys-neutral-outline);
   overflow: hidden;
 `
+
+export default DroppableAvatar

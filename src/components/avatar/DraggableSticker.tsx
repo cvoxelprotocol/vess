@@ -13,7 +13,7 @@ type DraggableStickerProps = {
   imageUrl: string
 }
 
-export const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl }) => {
+const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const [stickerSize, setStickerSize] = useState({ width: 0, height: 0 })
 
@@ -139,3 +139,5 @@ const StickerUnderlay = styled.img`
   z-index: var(--kai-z-index-sys-component-default);
   opacity: var(--kai-opacity-ref-40);
 `
+
+export default DraggableSticker

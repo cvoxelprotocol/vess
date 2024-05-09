@@ -129,7 +129,7 @@ export const StickerImage: FC<StickerImageProps> = ({
   )
 }
 
-export const StickerImages: FC = () => {
+const StickerImages: FC = () => {
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
 
@@ -161,3 +161,5 @@ export const StickerImages: FC = () => {
     </Layer>
   )
 }
+
+export default StickerImages
