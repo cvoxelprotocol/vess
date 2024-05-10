@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { log } from '@web3auth/base'
 import { useScroll } from 'framer-motion'
 import { Button, FlexHorizontal, IconButton, Text, useKai, useModal, Skelton } from 'kai-kit'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
@@ -35,11 +36,6 @@ export const ProfileContainer: FC = () => {
     }
   }, [])
 
-  // const profileAvatar = useMemo(() => {
-  //   console.log('Avatar in useMemo: ', avatars)
-  //   return avatars?.find((avatar) => avatar.isProfilePhoto)
-  // }, [avatars])
-
   const profileAvatar = useMemo(() => {
     return avatars?.find((avatar) => avatar.isProfilePhoto)
   }, [avatars, vsUser?.avatar])
@@ -57,7 +53,7 @@ export const ProfileContainer: FC = () => {
             <ProfileImage
               src={(profileAvatar?.avatarUrl || vsUser?.avatar) ?? 'default_profile.jpg'}
               alt='プロフィール画像'
-              key={'profileAvatar'}
+              key={profileAvatar?.avatarUrl || vsUser?.avatar}
             />
           </Skelton>
           <IconButton
@@ -124,7 +120,7 @@ export const ProfileContainer: FC = () => {
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
       </ProfileFrame>
-      <AvatarEditModal />
+      <AvatarEditModal profileAvatar={profileAvatar} />
       <ProfileEditModal name={'profileEdit'} did={did || ''} />
     </>
   )

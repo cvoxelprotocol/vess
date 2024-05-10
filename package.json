@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.9",
+    "@aws-sdk/client-s3": "^3.572.0",
     "@composedb/client": "0.4.0",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -81,6 +82,7 @@
     "react-konva": "^18.2.10",
     "react-responsive-carousel": "^3.2.23",
     "typescript": "5.1.6",
+    "uuid": "^9.0.1",
     "vess-kit-core": "1.0.1-alpha.3",
     "vess-kit-web": "1.0.1-alpha.9",
     "viem": "2.x",
@@ -104,6 +106,7 @@
     "@types/react-datepicker": "^4.11.2",
     "@types/react-dom": "^18.0.10",
     "@types/three": "^0.149.0",
+    "@types/uuid": "^9.0.8",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "copy-to-clipboard": "^3.3.3",
     "eslint": "^8.30.0",

@@ -47,7 +47,7 @@ const _DroppableAvatar = forwardRef<any, DroppableAvatarProps>(({ baseAvatarImgU
         <Stage width={frameSize.width} height={frameSize.height} ref={stageRef}>
           <Layer>
             <Image
-              id='profile'
+              id='sourcePhotoUrl'
               image={image}
               alt='aaa'
               width={frameSize.width}

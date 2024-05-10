@@ -1,7 +1,6 @@
 import { DndContext } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import { useAtomValue, useSetAtom } from 'jotai'
 import {
   Button,
   FlexVertical,
@@ -13,13 +12,13 @@ import {
   IconButton,
 } from 'kai-kit'
 import dynamic from 'next/dynamic'
-import { FC, useEffect, useMemo, memo, useCallback, useState, useRef } from 'react'
+import { FC, useMemo, useCallback, useState, useRef, useEffect } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrash, PiStickerDuotone, PiUserSquare, PiUserSwitch } from 'react-icons/pi'
 import { IconUploadButton } from '../home/IconUploadButton'
 import { vcImage } from './ImageCanvas'
 import { StickerType } from './StickersProvider'
-import { AddAvatarRequest, CanvasJson } from '@/@types/user'
+import { AddAvatarRequest, Avatar, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
@@ -33,17 +32,21 @@ const DraggableSticker = dynamic(() => import('@/components/avatar/DraggableStic
   ssr: false,
 })
 
-export const AvatarEditModal: FC = () => {
+type Props = {
+  profileAvatar?: Avatar
+}
+
+export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   const { did } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
-  const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
+  const { avatars } = useAvatar(did)
   const { openModal, closeModal } = useModal()
   const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
 
   const stageRef = useRef<any>()
-  const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
+  const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const [isTransformer, setIsTransformer] = useIstransformerAtom()
   const { add } = useAvatar(did)
   const [isSaving, setIsSaving] = useState(false)
@@ -54,6 +57,45 @@ export const AvatarEditModal: FC = () => {
       return { id: item.id, url: item.image } as vcImage
     })
   }, [formatedCredentials])
+
+  const baseImage = useMemo(() => {
+    return (icon ||
+      profileAvatar?.sourcePhotoUrl ||
+      profileAvatar?.canvasJson?.baseImage.url ||
+      profileAvatar?.avatarUrl ||
+      vsUser?.avatar) as string
+  }, [
+    icon,
+    profileAvatar?.sourcePhotoUrl,
+    profileAvatar?.canvasJson?.baseImage.url,
+    profileAvatar?.avatarUrl,
+    vsUser?.avatar,
+  ])
+
+  const currentStickers = useMemo(() => {
+    return (
+      profileAvatar?.canvasJson?.vcImages?.map((vci) => {
+        return {
+          id: vci.id,
+          imgUrl: vci.url,
+          position: {
+            x: vci.x,
+            y: vci.y,
+          },
+          width: vci.width,
+          height: vci.height,
+          rotation: vci.rotation,
+        } as StickerType
+      }) || []
+    )
+  }, [profileAvatar])
+
+  useEffect(() => {
+    console.log({ profileAvatar })
+    if (profileAvatar) {
+      setStickers(currentStickers)
+    }
+  }, [profileAvatar])
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event
@@ -92,13 +134,12 @@ export const AvatarEditModal: FC = () => {
       console.log('stageRef.current:', stageRef.current)
       const stageJson = stageRef.current.toJSON()
       const stageJ = JSON.parse(stageJson) as { [x: string]: any }
-      console.log('stageJson:', stageJ)
+      console.log('stageJson:', JSON.stringify(stageJ, null, 2))
 
       const stage = stageJ.attrs
-      const layer = stageJ.children[0]
-
-      const children = layer.children
-      const attrs = children.map((c: { attrs: any }) => c.attrs)
+      const attrs = stageJ.children.flatMap((child: { children: any[] }) =>
+        child.children.map((grandChild) => grandChild.attrs),
+      )
       const sourcePhoto = attrs.find((a: { id: string }) => a.id === 'sourcePhotoUrl')
 
       const vcChildren = attrs.filter((a: { id: string }) => a.id !== 'sourcePhotoUrl')
@@ -118,7 +159,7 @@ export const AvatarEditModal: FC = () => {
         stageHeight: stage.height,
         baseImage: {
           ...sourcePhoto,
-          url: icon || vsUser?.avatar,
+          url: baseImage,
         },
         vcImages: vcImages,
       }
@@ -132,15 +173,13 @@ export const AvatarEditModal: FC = () => {
       }
       const newUrl = await uploadIcon(file)
       if (!newUrl) {
-        console.log('newUrl is null')
         return
-      } else {
-        console.log('newUrl:', newUrl)
       }
       const vcs = stickers.map((sticker) => sticker.id)
       const avatarRequest: AddAvatarRequest = {
         did: did || '',
-        sourcePhotoUrl: icon || vsUser?.avatar || '',
+        sourcePhotoUrl:
+          icon || sourcePhoto?.url || profileAvatar?.sourcePhotoUrl || vsUser?.avatar || '',
         canvasJson: canvasJson,
         isProfilePhoto: true,
         credentialIds: vcs,
@@ -160,7 +199,7 @@ export const AvatarEditModal: FC = () => {
   const onClose = () => {
     setIcon('')
     setSelectedID(undefined)
-    setStickers([])
+    setStickers(currentStickers)
     closeModal()
   }
 
@@ -173,11 +212,8 @@ export const AvatarEditModal: FC = () => {
         // setErrors('')
       }
     },
-    [cid, icon, uploadIcon],
+    [icon, uploadIcon],
   )
-  const profileAvatar = useMemo(() => {
-    return avatars?.find((avatar) => avatar.isProfilePhoto)
-  }, [avatars])
 
   return (
     <>
@@ -186,9 +222,7 @@ export const AvatarEditModal: FC = () => {
           <ContentFrame>
             <FlexVertical gap={'var(--kai-size-sys-space-md)'} justifyContent='space-between'>
               <DroppableAvatar
-                baseAvatarImgUrl={
-                  (icon || profileAvatar?.avatarUrl || vsUser?.avatar) ?? 'default_profile.jpg'
-                }
+                baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
                 stageRef={stageRef}
               />
 

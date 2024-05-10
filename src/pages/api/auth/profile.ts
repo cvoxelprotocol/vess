@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         body: JSON.stringify({ ...req.body }),
       })
     }
-
+    console.log({ url })
     console.log({ response })
 
     if (isGoodResponse(response.status)) {
