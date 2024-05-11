@@ -16,7 +16,7 @@ export type ProfileEditModalProps = {
 }
 
 export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
-  const { uploadIcon, status, icon, setIcon, cid } = useFileUpload()
+  const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const { vsUser } = useVESSUserProfile(did)
   const { update, isUpdatingProfile } = useUpdateProfile(did)
   const {
@@ -61,7 +61,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         // setErrors('')
       }
     },
-    [cid, icon, uploadIcon],
+    [icon, uploadIcon],
   )
 
   return (

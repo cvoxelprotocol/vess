@@ -1,6 +1,6 @@
 import type { IconsName, IconVariants } from '@/components/app/IconDic'
 
-export type NavigationItemValue = 'HOME' | 'PROFILE' | 'SETTING' | 'IDENTITY'
+export type NavigationItemValue = 'HOME' | 'PROFILE' | 'SETTING' | 'IDENTITY' | 'USER'
 
 export type NavigationItemType = {
   id: NavigationItemValue
@@ -11,12 +11,19 @@ export type NavigationItemType = {
 }
 
 export const NAVIGATION_LIST: NavigationItemType[] = [
+  // Exception
   {
-    id: 'HOME',
-    label: 'ホーム',
-    icon: 'HOME',
-    path: '/',
+    id: 'PROFILE',
+    label: '',
+    icon: 'PROFILE',
+    path: '/profile',
   },
+  // {
+  //   id: 'HOME',
+  //   label: 'ホーム',
+  //   icon: 'HOME',
+  //   path: '/',
+  // },
   {
     id: 'IDENTITY',
     label: 'アイデンティティ',

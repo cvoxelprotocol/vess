@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Modal, useModal, useModalContext } from 'kai-kit'
+import { Modal, useBreakpoint, useModal, useModalContext } from 'kai-kit'
 import React, { FC } from 'react'
 import { Button } from 'react-aria-components'
 
@@ -51,13 +51,17 @@ export const NCLayout: FC<Props> = ({
   const [isNavigationOpen, setIsNavigationOpen] = React.useState(false)
   const { isOpenSomeModal } = useModalContext()
   const { attachToRef } = useModal()
+  const { matches, breakpointProps } = useBreakpoint()
 
   return (
     <NCLayoutContext.Provider
       value={{ isNavigationOpen: isNavigationOpen, setIsNavigationOpen: setIsNavigationOpen }}
     >
-      <LayoutFrame>
-        <NavigationFrame data-nav-opened={isNavigationOpen && !isOpenSomeModal}>
+      <LayoutFrame {...breakpointProps}>
+        <NavigationFrame
+          data-nav-opened={(isNavigationOpen || matches.lg) && !isOpenSomeModal}
+          {...breakpointProps}
+        >
           {navigation}
         </NavigationFrame>
         <ContentFrame
@@ -77,11 +81,17 @@ export const NCLayout: FC<Props> = ({
 }
 
 const LayoutFrame = styled.div<{ contentWidth?: number }>`
+  position: relative;
   display: grid;
   height: 100svh;
   grid-template-columns: min-content min-content;
   background: var(--kai-color-sys-background);
+  width: 100%;
 
+  &[data-media-lg] {
+    display: flex;
+    justify-content: center;
+  }
   /* md */
   /* @media (min-width: var(--kai-size-breakpoint-md-min-width)) {
     width: 100vw;
@@ -99,9 +109,18 @@ const NavigationFrame = styled.div`
   transition: width var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   /* background: var(--kai-color-sys-surface-container-high); */
   overflow: hidden;
+
   &[data-nav-opened='true'] {
     width: var(--kai-size-ref-240);
     height: 100%;
+  }
+
+  &[data-media-lg] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--kai-size-ref-240);
   }
 `
 
@@ -110,7 +129,7 @@ const ContentFrame = styled.div`
   grid-row: 1 / 2;
   position: relative;
   width: 100vw;
-  max-width: var(--kai-size-breakpoint-sm-max-width);
+  max-width: var(--kai-size-breakpoint-xs-max-width);
   height: 100svh;
   transition: all var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   transition-property: opacity, transform;

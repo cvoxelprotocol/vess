@@ -310,7 +310,11 @@ const ImageCanvas: React.FC<Props> = ({ avatarUrl, images, did, profileAvatar })
         <Stage ref={stageRef} width={320} height={320} style={{ border: '1px solid grey' }}>
           <Layer>
             <CanvasImage
-              imageUrl={profileAvatar?.sourcePhotoUrl || profileAvatar?.canvasJson?.baseImage.url}
+              imageUrl={
+                profileAvatar?.sourcePhotoUrl ||
+                profileAvatar?.canvasJson?.baseImage.url ||
+                avatarUrl
+              }
               imgObj={profileAvatar?.canvasJson?.baseImage}
               stageWidth={profileAvatar?.canvasJson?.baseImage?.width || 320}
               stageHeight={profileAvatar?.canvasJson?.baseImage?.height || 320}

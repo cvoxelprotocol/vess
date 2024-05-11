@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useVESSLoading } from './useVESSLoading'
 import { useVESSUserProfile } from './useVESSUserProfile'
 import { AddAvatarRequest, Avatar, UpdateAvatarRequest } from '@/@types/user'
@@ -145,6 +145,10 @@ export const useAvatar = (did?: string, canvasId?: string) => {
     },
   )
 
+  const profileAvatar = useMemo(() => {
+    return avatars?.find((avatar) => avatar.isProfilePhoto)
+  }, [avatars])
+
   return {
     add,
     update,
@@ -154,5 +158,6 @@ export const useAvatar = (did?: string, canvasId?: string) => {
     isInitialLoading,
     avatar,
     isLoadingAvatar,
+    profileAvatar,
   }
 }

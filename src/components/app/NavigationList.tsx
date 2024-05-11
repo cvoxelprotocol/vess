@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
+import { Text, Switch, useKai, FlexVertical } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+import { useTheme } from 'next-themes'
 import React, { FC, useEffect, useState } from 'react'
 import type { RadioProps, RadioGroupProps, PressEvent } from 'react-aria-components'
 import { Radio, RadioGroup, Button as RACButton } from 'react-aria-components'
@@ -9,7 +11,9 @@ import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { IconDic } from './IconDic'
 import { useNCLayoutContext } from './NCLayout'
 import { NAVIGATION_LIST, NavigationItemType, NavigationItemValue } from '@/constants/ui'
-import { Text } from '@/kai/text/Text'
+import { useAvatar } from '@/hooks/useAvatar'
+import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 
 export type NavigationListProps = {} & RadioGroupProps
 
@@ -19,6 +23,10 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
+  const { did } = useVESSAuthUser()
+  const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
+  const { profileAvatar, isInitialLoading: isLoadingAvatars } = useAvatar(did)
+  const { setMode, currentMode } = useKai()
 
   // Avoid hydration error
   const [isMobileClient, setIsMobileClient] = useState(false)
@@ -36,61 +44,91 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
 
   return (
     <NavigationListFrame data-mobile={isMobileClient}>
-      <NextImageContainer src='/VESS_app_icon.png' width='3rem' height='3rem' objectFit='contain' />
-      <NavigationItemGroup
-        name='navigation'
-        value={selectedNavi}
-        onChange={(value) => {
-          setSelectedNavi && setSelectedNavi(value as NavigationItemValue)
-          closeNavigation()
-          router.push(NAVIGATION_LIST.find((item) => item.id === value)?.path || '/')
-        }}
-        {...props}
-      >
-        {NAVIGATION_LIST.map((item) => {
-          return (
-            <NavigationItem
-              key={item.id}
-              value={item.id}
-              onPress={() => {
-                closeNavigation()
-                router.push(item.path)
-              }}
-            >
-              {({ isSelected }) => {
-                return (
-                  <>
-                    {isSelected ? (
-                      <IconDic
-                        icon={item.id}
-                        variant={'filled'}
-                        color='var(--kai-color-sys-on-surface)'
-                      />
-                    ) : (
-                      <IconDic
-                        icon={item.id}
-                        variant={'default'}
-                        color='var(--kai-color-sys-on-surface)'
-                      />
-                    )}
-                    <Text as='label' typo='label-lg' color='var(--kai-color-sys-on-surface)'>
-                      {item.label}
-                    </Text>
-                  </>
-                )
-              }}
-            </NavigationItem>
-          )
-        })}
-      </NavigationItemGroup>
-      <div
-        style={{
-          width: '100%',
-          height: '0px',
-          border: `0.5px solid var(--kai-color-sys-outline-variant)`,
-        }}
-      />
-      <LogoutButton />
+      <FlexVertical gap='var(--kai-size-sys-space-md)' width='100%'>
+        <NextImageContainer
+          src='/VESS_app_icon.png'
+          width='2.5rem'
+          height='2.5rem'
+          objectFit='contain'
+        />
+        <NavigationItemGroup
+          name='navigation'
+          value={selectedNavi}
+          onChange={(value) => {
+            setSelectedNavi && setSelectedNavi(value as NavigationItemValue)
+            closeNavigation()
+            router.push(NAVIGATION_LIST.find((item) => item.id === value)?.path || '/')
+          }}
+          {...props}
+        >
+          <NavigationItem value='PROFILE' onPress={() => router.push('/profile')}>
+            <NavigationIcon
+              src={profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'}
+            ></NavigationIcon>
+            <Text typo='label-lg' color='var(--kai-color-sys-on-surface)' lineClamp={1}>
+              {vsUser?.name || 'プロフィール'}
+            </Text>
+          </NavigationItem>
+          {NAVIGATION_LIST.filter((item) => item.id !== 'PROFILE').map((item) => {
+            return (
+              <NavigationItem
+                key={item.id}
+                value={item.id}
+                onPress={() => {
+                  closeNavigation()
+                  router.push(item.path)
+                }}
+              >
+                {({ isSelected }) => {
+                  return (
+                    <>
+                      {isSelected ? (
+                        <IconDic
+                          icon={item.id}
+                          variant={'filled'}
+                          size='20'
+                          color='var(--kai-color-sys-on-surface)'
+                        />
+                      ) : (
+                        <IconDic
+                          icon={item.id}
+                          variant={'default'}
+                          size='20'
+                          color='var(--kai-color-sys-on-surface)'
+                        />
+                      )}
+                      <Text typo='label-lg' color='var(--kai-color-sys-on-surface)'>
+                        {item.label}
+                      </Text>
+                    </>
+                  )
+                }}
+              </NavigationItem>
+            )
+          })}
+        </NavigationItemGroup>
+      </FlexVertical>
+      <FlexVertical gap='var(--kai-size-sys-space-md)' width='100%'>
+        <div
+          style={{
+            width: '100%',
+            height: '0px',
+            border: `0.5px solid var(--kai-color-sys-outline-variant)`,
+          }}
+        />
+        <Switch
+          variant='fullWidth'
+          width='100%'
+          isSelected={currentMode === 'dark'}
+          onChange={(value) => setMode(value ? 'dark' : 'light')}
+          style={{ padding: '0 var(--kai-size-sys-space-sm)' }}
+        >
+          <Text typo='label-lg' color='var(--kai-color-sys-on-layer)'>
+            ダークモード
+          </Text>
+        </Switch>
+        <LogoutButton />
+      </FlexVertical>
     </NavigationListFrame>
   )
 }
@@ -98,16 +136,13 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
 const NavigationListFrame = styled.nav`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
   width: var(--kai-size-ref-240);
   height: 100svh;
   gap: var(--kai-size-sys-space-md);
-  padding: var(--kai-size-ref-16);
-  padding-top: var(--kai-size-sys-space-lg);
-  &[data-mobile='true'] {
-    justify-content: flex-end;
-  }
+  padding: var(--kai-size-sys-space-lg) var(--kai-size-ref-16) var(--kai-size-sys-space-lg)
+    var(--kai-size-ref-16);
 `
 const NavigationItemGroup = styled(RadioGroup)`
   display: flex;
@@ -155,6 +190,13 @@ export const NavigationItemFrame = styled(Radio)`
     background: var(--kai-color-sys-layer-nearer);
     pointer-events: none;
   }
+`
+
+const NavigationIcon = styled.img`
+  width: var(--kai-size-ref-20);
+  height: var(--kai-size-ref-20);
+  border-radius: var(--kai-size-sys-round-md);
+  object-fit: cover;
 `
 
 const ButtonFrame = styled(RACButton)`

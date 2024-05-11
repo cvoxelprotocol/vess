@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useModal, Modal, useKai } from 'kai-kit'
+import { useModal, Modal, useKai, useBreakpoint } from 'kai-kit'
 import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
 import { getAuthorizedSession } from 'vess-kit-web'
@@ -16,6 +16,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { did } = useVESSAuthUser()
   const { openModal, closeModal } = useModal()
   const { setDarkMode, setLightMode } = useKai()
+  const { breakpointProps } = useBreakpoint()
 
   useEffect(() => {
     setLightMode()
@@ -55,9 +56,11 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   return (
     <>
       <NavigationContextProvider>
-        <CenterLayout>
-          <NCLayoutWrapper>
-            <NCLayout navigation={<NavigationList></NavigationList>}>{children}</NCLayout>
+        <CenterLayout {...breakpointProps}>
+          <NCLayoutWrapper {...breakpointProps}>
+            <NCLayout id='NCLayout' navigation={<NavigationList></NavigationList>}>
+              {children}
+            </NCLayout>
           </NCLayoutWrapper>
         </CenterLayout>
       </NavigationContextProvider>
@@ -75,13 +78,13 @@ const CenterLayout = styled.div`
 `
 
 const NCLayoutWrapper = styled.div`
-  width: 100%;
-  max-width: var(--kai-size-breakpoint-md-min-width);
+  width: 100vw;
+  max-width: var(--kai-size-breakpoint-xs-max-width);
   height: 100svh;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
 
-  @media (min-width: 839px) {
-    overflow: visible;
+  &[data-media-lg] {
+    max-width: 100%;
   }
 `
