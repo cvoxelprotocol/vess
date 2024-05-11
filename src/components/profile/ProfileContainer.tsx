@@ -1,18 +1,17 @@
 import styled from '@emotion/styled'
-import { log } from '@web3auth/base'
 import { useScroll } from 'framer-motion'
-import { Button, FlexHorizontal, IconButton, Text, useKai, useModal, Skelton } from 'kai-kit'
+import { FlexHorizontal, IconButton, Text, useModal, Skelton, FlexVertical } from 'kai-kit'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
-import { BsQrCodeScan } from 'react-icons/bs'
+import { BsTwitterX } from 'react-icons/bs'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
-import { DefaultHeader } from '../app/Header'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { useAvatar } from '@/hooks/useAvatar'
-import { useFileUpload } from '@/hooks/useFileUpload'
+import { useImage } from '@/hooks/useImage'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
+import { shareOnX } from '@/utils/share'
 
 export const ProfileContainer: FC = () => {
   const { did } = useVESSAuthUser()
@@ -24,7 +23,6 @@ export const ProfileContainer: FC = () => {
     container: scrollRef,
   })
   const [scrollProgress, setScrollProgress] = useState(1)
-  const { icon } = useFileUpload()
 
   useEffect(() => {
     const unsubscribe = scrollY.onChange((latest) => {
@@ -40,6 +38,41 @@ export const ProfileContainer: FC = () => {
     return avatars?.find((avatar) => avatar.isProfilePhoto)
   }, [avatars, vsUser?.avatar])
 
+  const avatarImageUrl = useMemo(() => {
+    return profileAvatar?.avatarUrl || vsUser?.avatar || 'default_profile.jpg'
+  }, [profileAvatar, vsUser?.avatar])
+
+  const { image: avatarImage } = useImage(avatarImageUrl)
+
+  const downloadAvatar = async () => {
+    if (!avatarImage || !avatarImageUrl) return
+    const ext = avatarImageUrl.split('.').pop()
+    const canvas = document.createElement('canvas')
+    canvas.width = avatarImage.naturalWidth
+    canvas.height = avatarImage.naturalHeight
+    const context = canvas.getContext('2d')
+    if (context) {
+      context.drawImage(avatarImage, 0, 0)
+      const a = document.createElement('a')
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          a.href = URL.createObjectURL(blob)
+          a.download = `vess-avatar.${ext}`
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+        }
+      })
+    }
+  }
+
+  const Tweet = () => {
+    //Dont upload this to production!!
+    const currentUrl = window.location.href
+    const intent = shareOnX('hgeo', avatarImageUrl, currentUrl)
+    window.open(intent, '_blank')
+  }
+
   return (
     <>
       <ProfileFrame>
@@ -51,7 +84,7 @@ export const ProfileContainer: FC = () => {
             aspectRatio='1'
           >
             <ProfileImage
-              src={(profileAvatar?.avatarUrl || vsUser?.avatar) ?? 'default_profile.jpg'}
+              src={avatarImageUrl}
               alt='プロフィール画像'
               key={profileAvatar?.avatarUrl || vsUser?.avatar}
             />
@@ -69,28 +102,31 @@ export const ProfileContainer: FC = () => {
               zIndex: 10,
             }}
           />
-          {/* <IconButton
-            variant='filled'
-            color='dominant'
-            size='lg'
-            icon={<BsQrCodeScan size={24} />}
-            style={{
-              position: 'absolute',
-              top: 'var(--kai-size-sys-space-md)',
-              right: 'var(--kai-size-sys-space-md)',
-            }}
-          /> */}
-          <IconButton
-            variant='tonal'
-            color='dominant'
-            size='lg'
-            icon={<PiExport size={24} />}
+          <FlexVertical
+            gap='4px'
+            justifyContent='center'
+            alignItems='center'
             style={{
               position: 'absolute',
               bottom: 'var(--kai-size-sys-space-md)',
               right: 'var(--kai-size-sys-space-md)',
             }}
-          />
+          >
+            <IconButton
+              variant='tonal'
+              color='dominant'
+              size='lg'
+              icon={<BsTwitterX size={24} />}
+              onPress={() => Tweet()}
+            />
+            <IconButton
+              variant='tonal'
+              color='dominant'
+              size='lg'
+              icon={<PiExport size={24} />}
+              onPress={() => downloadAvatar()}
+            />
+          </FlexVertical>
         </ProfileTop>
         <ProfileInfoOuterFrame ref={scrollRef}>
           <DummyBox />
