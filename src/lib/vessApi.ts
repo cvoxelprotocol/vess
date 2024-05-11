@@ -14,6 +14,7 @@ import {
   UserAuthInfo,
   VSUserResponse,
 } from '@/@types/user'
+import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
 
 export const isAuthApi = (endpoint: string) => {
@@ -238,6 +239,24 @@ export const getVESSUserByVessId = async (
     return resjson as VSUserResponse
   } catch (error) {
     throw error
+  }
+}
+
+export const getVESSUserByVessIdForServerUseOnly = async (
+  vessId?: string,
+  includeDetials: boolean = false,
+): Promise<VSUserResponse | null> => {
+  try {
+    let q = includeDetials ? `includeDetials=${includeDetials}` : undefined
+    const res = await baseVessApi('GET', '/users/vess', vessId, q)
+    if (isGoodResponse(res.status)) {
+      const j = (await res.json()) as VSUserResponse
+      return JSON.parse(JSON.stringify(j))
+    }
+    return null
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }
 
