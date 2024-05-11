@@ -212,6 +212,13 @@ export type VSCredentialItemFromBuckup = {
   credentials?: VSCredential[]
   userId?: string | null
   user?: VSUser
+  sticker?: Sticker[]
+}
+
+export type Sticker = {
+  id: string
+  credentialItemId: string
+  image: string
 }
 
 export type GetCollectionItemResponse = GetCollectionResponse & {

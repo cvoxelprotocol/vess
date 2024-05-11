@@ -54,7 +54,10 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   const stickerImages = useMemo(() => {
     console.log({ formatedCredentials })
     return formatedCredentials.map((item) => {
-      return { id: item.id, url: item.image } as vcImage
+      return {
+        id: item.id,
+        url: item.sticker && item.sticker.length > 0 ? item.sticker[0] : item.image,
+      } as vcImage
     })
   }, [formatedCredentials])
 
