@@ -241,6 +241,7 @@ export interface IIssueCredentialItemByUserRequest {
   expirationDate?: string
   validDuraion?: string
   collectionId?: string
+  stickers?: string[]
 }
 
 export interface ICreateHolderContentsRequest {

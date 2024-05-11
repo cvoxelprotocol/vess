@@ -26,6 +26,9 @@ export const CredItemCreateContainer: FC = () => {
       endDate: new Date('2025-01-01').toISOString(),
       link: 'https://vess.id/',
       saveCompose: false,
+      stickers: [
+        'https://vess-storage.s3.ap-northeast-1.amazonaws.com/653c3f23-75af-4943-bf5b-7ef6b84c8149.png',
+      ],
     }
     const res = await create(param)
     console.log({ res })
