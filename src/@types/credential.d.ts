@@ -134,6 +134,7 @@ export type VSUser = {
   description: string | null
   did: string | null
   email: string | null
+  vessId: string | null
   createdAt: Date
   updatedAt: Date
   profiles?: Profile[]

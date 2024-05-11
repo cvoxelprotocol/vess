@@ -12,6 +12,7 @@ import {
   UpdateAvatarRequest,
   UpdateUserInfo,
   UserAuthInfo,
+  VSUserResponse,
 } from '@/@types/user'
 import { getCurrentDomain } from '@/utils/url'
 
@@ -205,6 +206,36 @@ export const getVESSUserByDid = async (did?: string): Promise<VSUser> => {
     const res = await baseVessApi('GET', '/users/did', did)
     const resjson = await res.json()
     return resjson as VSUser
+  } catch (error) {
+    throw error
+  }
+}
+
+export const checkVESSId = async (vessId?: string): Promise<boolean> => {
+  if (!vessId) {
+    throw new Error('vessId is undefined')
+  }
+  try {
+    const res = await getVESSUserByVessId(vessId)
+    console.log('getVESSUserByVessId: ', res)
+    return !!res.user
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getVESSUserByVessId = async (
+  vessId?: string,
+  includeDetials: boolean = false,
+): Promise<VSUserResponse> => {
+  if (!vessId) {
+    throw new Error('vessId is undefined')
+  }
+  try {
+    let q = includeDetials ? `includeDetials=${includeDetials}` : undefined
+    const res = await baseVessApi('GET', '/users/vess', vessId, q)
+    const resjson = await res.json()
+    return resjson as VSUserResponse
   } catch (error) {
     throw error
   }

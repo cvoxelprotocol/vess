@@ -26,6 +26,7 @@ export const useUpdateProfile = (did?: string) => {
           avatar: variables.avatar || '',
           name: variables.name || (!!did ? formatDID(did, 12) : ''),
           description: variables.description || '',
+          vessId: variables.vessId || '',
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
         return { optimistic }
@@ -44,6 +45,7 @@ export const useUpdateProfile = (did?: string) => {
           avatar: v.avatar || '',
           name: v.name || (!!did ? formatDID(did, 12) : ''),
           description: v.description || '',
+          vessId: v.vessId || '',
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
       },

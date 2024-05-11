@@ -10,6 +10,7 @@ export interface UpdateUserInfo {
   name?: string
   avatar?: string
   description?: string
+  vessId?: string
 }
 
 export interface UserAuthInfo {
@@ -63,4 +64,8 @@ export type CanvasJson = {
   stageHeight: number
   baseImage: vcImage
   vcImages: vcImage[]
+}
+
+export type VSUserResponse = {
+  user: VSUser | null
 }

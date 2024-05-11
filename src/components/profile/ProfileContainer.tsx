@@ -149,6 +149,11 @@ export const ProfileContainer: FC = () => {
                   onPress={() => openModal('profileEdit')}
                 />
               </FlexHorizontal>
+              {vsUser?.vessId && (
+                <Text typo='body-lg' color={'var(--kai-color-sys-on-layer)'} lineClamp={3}>
+                  {`@${vsUser?.vessId}`}
+                </Text>
+              )}
               <Text typo='body-md' color={'var(--kai-color-sys-on-layer)'} lineClamp={3}>
                 {vsUser?.description}
               </Text>
