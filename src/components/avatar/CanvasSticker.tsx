@@ -1,9 +1,15 @@
 import { KonvaEventObject } from 'konva/lib/Node'
 import { FC, memo, useEffect, useRef, useState } from 'react'
 import { Transformer, Layer, Image } from 'react-konva'
-import { StickerType, useStickers } from './StickersProvider'
+import { StickerType } from '@/@types/avatar'
 import { useImage } from '@/hooks/useImage'
-import { isTransformer, useIstransformerAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import {
+  isTransformer,
+  useAvatarSizeAtom,
+  useIstransformerAtom,
+  useSelectedIDAtom,
+  useStickersAtom,
+} from '@/jotai/ui'
 
 export type StickerImageProps = {
   isSelected?: boolean
@@ -31,6 +37,7 @@ export const StickerImage: FC<StickerImageProps> = ({
   const [isTransformer, setIsTransformer] = useIstransformerAtom()
   const transformerRef = useRef<any>(null)
   const imageRef = useRef<any>(null)
+  const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
 
   useEffect(() => {
     if (isSelected && transformerRef.current) {
@@ -40,6 +47,7 @@ export const StickerImage: FC<StickerImageProps> = ({
     }
   }, [isSelected])
 
+  // TODO: Stage外にいったStickerを自動削除する処理
   const onTransform = (e: KonvaEventObject<Event>) => {
     // 更新されたプロパティ (位置、サイズ、回転) を保存または使用する
     const node = imageRef.current
@@ -55,11 +63,11 @@ export const StickerImage: FC<StickerImageProps> = ({
     node?.scaleY(1)
     onUpdate?.({
       position: {
-        x: node?.x(),
-        y: node?.y(),
+        x: node?.x() / avatarSize,
+        y: node?.y() / avatarSize,
       },
-      width: node?.width(),
-      height: node?.height(),
+      width: node?.width() / avatarSize,
+      height: node?.height() / avatarSize,
       rotation: node?.rotation(),
     })
   }
@@ -70,14 +78,14 @@ export const StickerImage: FC<StickerImageProps> = ({
         ref={imageRef}
         id={id}
         image={image}
-        alt='aaa'
-        width={width}
-        height={height}
+        alt='ステッカー画像'
+        width={width * avatarSize}
+        height={height * avatarSize}
         scaleX={scale}
         scaleY={scale}
         rotation={rotation}
-        x={position.x}
-        y={position.y}
+        x={position.x * avatarSize}
+        y={position.y * avatarSize}
         draggable={isEditable}
       />
     )
@@ -89,13 +97,13 @@ export const StickerImage: FC<StickerImageProps> = ({
         id={id}
         image={image}
         alt='aaa'
-        width={width}
-        height={height}
+        width={width * avatarSize}
+        height={height * avatarSize}
         scaleX={scale}
         scaleY={scale}
         rotation={rotation}
-        x={position.x}
-        y={position.y}
+        x={position.x * avatarSize}
+        y={position.y * avatarSize}
         draggable={true}
         onClick={onSelect}
         onTap={onSelect}
@@ -103,8 +111,8 @@ export const StickerImage: FC<StickerImageProps> = ({
         onDragEnd={(e) => {
           onUpdate?.({
             position: {
-              x: e.target.x(),
-              y: e.target.y(),
+              x: e.target.x() / avatarSize,
+              y: e.target.y() / avatarSize,
             },
           })
         }}
