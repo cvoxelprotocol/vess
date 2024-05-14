@@ -1,20 +1,36 @@
 import styled from '@emotion/styled'
 import { useScroll } from 'framer-motion'
-import { FlexHorizontal, IconButton, Text, useModal, Skelton, FlexVertical } from 'kai-kit'
+import {
+  FlexHorizontal,
+  IconButton,
+  Text,
+  useModal,
+  Skelton,
+  FlexVertical,
+  useBreakpoint,
+} from 'kai-kit'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { BsTwitterX } from 'react-icons/bs'
+import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
+import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 
+import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
+import { IdPlate } from './IdPlate'
 import { useAvatar } from '@/hooks/useAvatar'
+import { useCcProfile } from '@/hooks/useCcProfile'
+import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
+import { useLensProfile } from '@/hooks/useLensProfile'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
+import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { shareOnX } from '@/utils/share'
 
 export const ProfileContainer: FC = () => {
-  const { did } = useVESSAuthUser()
+  const { did, originalAddress } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal } = useModal()
@@ -22,7 +38,12 @@ export const ProfileContainer: FC = () => {
   const { scrollY } = useScroll({
     container: scrollRef,
   })
+  const { ccProfile, ccLoading } = useCcProfile(did)
+  const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   const [scrollProgress, setScrollProgress] = useState(1)
+  const { openNavigation } = useNCLayoutContext()
+  const { matches } = useBreakpoint()
 
   useEffect(() => {
     const unsubscribe = scrollY.onChange((latest) => {
@@ -78,6 +99,21 @@ export const ProfileContainer: FC = () => {
       <ProfileFrame>
         {/* <DefaultHeader style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }} /> */}
         <ProfileTop scrollProgress={scrollProgress}>
+          {!matches.lg && (
+            <IconButton
+              icon={<FiMenu size={32} />}
+              variant='outlined'
+              color='neutral'
+              onPress={() => openNavigation()}
+              size='md'
+              style={{
+                position: 'absolute',
+                top: 'var(--kai-size-sys-space-md)',
+                left: 'var(--kai-size-sys-space-md)',
+                zIndex: 10,
+              }}
+            />
+          )}
           <Skelton
             isLoading={!profileAvatar?.avatarUrl && !vsUser?.avatar}
             width='100%'
@@ -92,7 +128,7 @@ export const ProfileContainer: FC = () => {
           <IconButton
             variant='tonal'
             color='subdominant'
-            size='lg'
+            size='md'
             icon={<PiPaintBrushBroadDuotone size={24} />}
             onPress={() => openModal()}
             style={{
@@ -103,7 +139,7 @@ export const ProfileContainer: FC = () => {
             }}
           />
           <FlexVertical
-            gap='4px'
+            gap='var(--kai-size-sys-space-sm)'
             justifyContent='center'
             alignItems='center'
             style={{
@@ -112,17 +148,17 @@ export const ProfileContainer: FC = () => {
               right: 'var(--kai-size-sys-space-md)',
             }}
           >
-            <IconButton
+            {/* <IconButton
               variant='tonal'
               color='dominant'
-              size='lg'
+              size='md'
               icon={<BsTwitterX size={24} />}
               onPress={() => Tweet()}
-            />
+            /> */}
             <IconButton
               variant='tonal'
               color='dominant'
-              size='lg'
+              size='md'
               icon={<PiExport size={24} />}
               onPress={() => downloadAvatar()}
             />
@@ -132,27 +168,90 @@ export const ProfileContainer: FC = () => {
           <DummyBox />
           <ProfileInfoFrame>
             <ScrollIndicator />
-            <BasicProfileFrame>
-              <FlexHorizontal justifyContent='space-between' width='100%'>
-                <Text
-                  typo='headline-sm'
-                  color={'var(--kai-color-sys-on-layer)'}
-                  isLoading={isLoadingUser}
+            <FlexVertical width='100%' gap='var(--kai-size-sys-space-sm)'>
+              <BasicProfileFrame>
+                <FlexHorizontal
+                  justifyContent='start'
+                  width='100%'
+                  gap='var(--kai-size-sys-space-xs)'
                 >
-                  {vsUser?.name}
+                  <Text
+                    typo='headline-sm'
+                    color={'var(--kai-color-sys-on-layer)'}
+                    isLoading={isLoadingUser}
+                  >
+                    {vsUser?.name}
+                  </Text>
+                  <IconButton
+                    icon={<PiPencil />}
+                    variant='text'
+                    color='neutral'
+                    size='xs'
+                    onPress={() => openModal('profileEdit')}
+                  />
+                </FlexHorizontal>
+                <Text typo='body-md' color={'var(--kai-color-sys-on-layer)'} lineClamp={3}>
+                  {vsUser?.description}
                 </Text>
-                <IconButton
-                  icon={<PiPencil />}
-                  variant='tonal'
-                  color='neutral'
-                  size='xs'
-                  onPress={() => openModal('profileEdit')}
-                />
+              </BasicProfileFrame>
+              <FlexHorizontal
+                gap='var(--kai-size-sys-space-xs)'
+                width='100%'
+                flexWrap='no-wrap'
+                style={{ overflow: 'scroll', paddingLeft: 'var(--kai-size-sys-space-md)' }}
+              >
+                <IdPlate iconURL={'/brand/vess.png'} id={originalAddress as string} />
+                {ensProfile && <IdPlate iconURL={'/brand/ens.png'} id={ensProfile?.displayName} />}
+                {ccProfile && (
+                  <IdPlate iconURL={'/brand/cyberconnect.png'} id={ccProfile?.displayName} />
+                )}
               </FlexHorizontal>
-              <Text typo='body-md' color={'var(--kai-color-sys-on-layer)'} lineClamp={3}>
-                {vsUser?.description}
+            </FlexVertical>
+            <FlexVertical
+              gap='var(--kai-size-sys-space-sm)'
+              width='100%'
+              style={{ overflowY: 'visible' }}
+            >
+              <Text
+                typo='title-lg'
+                color='var(--kai-color-sys-on-layer)'
+                style={{
+                  padding: '0 var(--kai-size-sys-space-md)',
+                }}
+              >
+                最新の証明書
               </Text>
-            </BasicProfileFrame>
+              <FlexHorizontal
+                gap='var(--kai-size-sys-space-sm)'
+                flexWrap='nowrap'
+                style={{
+                  width: '100%',
+                  padding: '0 var(--kai-size-sys-space-md)',
+                  overflowY: 'visible',
+                  overflowX: 'scroll',
+                }}
+              >
+                {(formatedCredentials && formatedCredentials.length) > 0 ? (
+                  <>
+                    {formatedCredentials.map((credential) => (
+                      <>
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          height='var(--kai-size-ref-128)'
+                        />
+                      </>
+                    ))}
+                  </>
+                ) : (
+                  <Text typo='label-lg' color='var(--kai-color-sys-neutral)'>
+                    最新の証明書はありません
+                  </Text>
+                )}
+              </FlexHorizontal>
+            </FlexVertical>
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
       </ProfileFrame>
@@ -209,11 +308,13 @@ const ProfileInfoFrame = styled.div`
   display: flex;
   position: relative;
   flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--kai-size-sys-space-lg);
   height: 800px;
   max-height: 90%;
   padding-top: var(--kai-size-sys-space-xl);
-  padding-left: var(--kai-size-sys-space-md);
-  padding-right: var(--kai-size-sys-space-md);
+  padding-left: var(--kai-size-sys-space-none);
+  padding-right: var(--kai-size-sys-space-none);
   background: var(--kai-color-sys-layer-default);
   border-top: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
   z-index: 10;
@@ -234,4 +335,6 @@ const BasicProfileFrame = styled.div`
   flex-direction: column;
   gap: var(--kai-size-sys-space-sm);
   width: 100%;
+  padding-left: var(--kai-size-sys-space-md);
+  padding-right: var(--kai-size-sys-space-md);
 `

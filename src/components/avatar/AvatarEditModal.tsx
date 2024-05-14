@@ -265,7 +265,6 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                 baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
                 stageRef={stageRef}
               />
-              <Button onPress={() => setStickers([])}>全て削除</Button>
             </AvatarFrame>
 
             <FlexHorizontal gap={'var(--kai-size-sys-space-md)'} style={{ width: '100%' }}>

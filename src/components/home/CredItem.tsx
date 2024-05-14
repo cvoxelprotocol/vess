@@ -9,11 +9,12 @@ import { Skelton } from '@/kai/skelton'
 type Props = {
   image?: string
   name?: string
-  size?: string
   credId?: string
+  width?: string
+  height?: string
 }
 
-export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
+export const CredItem: FC<Props> = ({ image, name, credId, width = '100%', height = 'auto' }) => {
   const router = useRouter()
   const imgRef = useRef<HTMLImageElement>(null)
   const [isSquare, setIsSquare] = React.useState(false)
@@ -42,7 +43,7 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
       <Skelton
         variant='filled'
         isLoading={!image}
-        width='100%'
+        width={width}
         height='auto'
         aspectRatio='1.618 / 1'
         maskColor='var(--kai-color-sys-background)'
@@ -51,7 +52,7 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
       >
         <CredItemFrame onPress={() => handleClick()} data-square={isSquare || undefined}>
           {isSquare ? (
-            <CredImageFrame>
+            <CredImageFrame width={width} height={height}>
               <CredImageBackground src={image} ref={imgRef} />
               <CredImageOverlay />
               <CredImage src={image || ''} />
@@ -61,7 +62,8 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
               src={image || '/sample/event_sample.png'}
               alt={name || 'イベント参加証明画像'}
               objectFit='cover'
-              width={size}
+              width={width}
+              height={height}
               style={{ zIndex: 0 }}
               ref={imgRef}
             />
@@ -75,9 +77,10 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
   )
 }
 
-const CredImageFrame = styled.div`
+const CredImageFrame = styled.div<{ width: string; height: string }>`
   position: relative;
-  width: 100%;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   aspect-ratio: 1.618 / 1;
   overflow: hidden;
   border-radius: var(--kai-size-sys-round-md);
@@ -125,6 +128,7 @@ const CredImage = styled.div<{ src: string }>`
 `
 
 const CredItemFrame = styled(Button)`
+  flex-shrink: 0;
   border: none;
   position: relative;
   transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
