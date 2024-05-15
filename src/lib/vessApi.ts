@@ -68,14 +68,14 @@ export const getPostByUser = async (userId?: string): Promise<Post[] | null> => 
   }
 }
 
-export const getPostById = async (id?: string): Promise<Post[] | null> => {
+export const getPostById = async (id?: string): Promise<Post | null> => {
   if (!id) {
     throw new Error('id is undefined')
   }
   try {
     const res = await baseVessApi('GET', `/v2/post/item`, id)
     const resjson = await res.json()
-    return resjson?.data as Post[] | null
+    return resjson?.data as Post | null
   } catch (error) {
     throw error
   }
