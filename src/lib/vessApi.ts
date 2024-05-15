@@ -6,9 +6,11 @@ import {
 } from '@/@types/credential'
 import {
   AddAvatarRequest,
+  AddPostRequest,
   Avatar,
   CreateUserInfo,
   CreateUserWithGoogleInfo,
+  Post,
   UpdateAvatarRequest,
   UpdateUserInfo,
   UserAuthInfo,
@@ -38,6 +40,62 @@ export const isAuthProtectedApi = (endpoint: string) => {
 
 export const isLogout = (endpoint: string) => {
   return endpoint === '/auth/logout'
+}
+
+export const getPostByCredItem = async (credItemId?: string): Promise<Post[] | null> => {
+  if (!credItemId) {
+    throw new Error('credItemId is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/v2/post/cred`, credItemId)
+    const resjson = await res.json()
+    return resjson?.data as Post[] | null
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getPostByUser = async (userId?: string): Promise<Post[] | null> => {
+  if (!userId) {
+    throw new Error('userId is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/v2/post/user`, userId)
+    const resjson = await res.json()
+    return resjson?.data as Post[] | null
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getPostById = async (id?: string): Promise<Post[] | null> => {
+  if (!id) {
+    throw new Error('id is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/v2/post/item`, id)
+    const resjson = await res.json()
+    return resjson?.data as Post[] | null
+  } catch (error) {
+    throw error
+  }
+}
+
+export const addPost = async (body: AddPostRequest): Promise<Response> => {
+  try {
+    console.log({ body })
+    return await baseVessApi('POST', '/v2/post/add', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deletePost = async (postId: string, userId: string): Promise<Response> => {
+  try {
+    return await baseVessApi('PUT', '/v2/post/delete', postId, undefined, { userId })
+  } catch (error) {
+    throw error
+  }
 }
 
 export const getAvatarList = async (did?: string): Promise<Avatar[]> => {
