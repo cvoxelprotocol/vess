@@ -1,17 +1,14 @@
 import styled from '@emotion/styled'
-import { FlexHorizontal } from 'kai-kit'
-import { useRouter } from 'next/router'
+import { FlexHorizontal, Skelton } from 'kai-kit'
 import { FC } from 'react'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
-import { Skelton } from '@/kai/skelton'
 
 type Props = {
   id?: string
 }
 export const PostFeedContainer: FC<Props> = ({ id }) => {
-  const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
   console.log({ credItem })
 

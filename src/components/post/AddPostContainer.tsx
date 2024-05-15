@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'kai-kit'
+import { Button, Text, Skelton } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
@@ -12,8 +12,6 @@ import { usePost } from '@/hooks/usePost'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useStateRPath } from '@/jotai/ui'
-import { Skelton } from '@/kai/skelton'
-import { Text } from '@/kai/text/Text'
 
 type Props = {
   id?: string
