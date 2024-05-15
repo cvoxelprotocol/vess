@@ -1,7 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { StickerType } from '@/components/avatar/StickersProvider'
-
+import { StickerType } from '@/@types/avatar'
 export const themeMode = atomWithStorage<'light' | 'dark'>('vessThemeMode', 'light')
 
 export const useStateThemeMode = () => useAtom(themeMode)
@@ -29,3 +28,5 @@ export const selectedID = atom<string | undefined>(undefined)
 export const useSelectedIDAtom = () => useAtom(selectedID)
 export const isTransformer = atom<boolean>(true)
 export const useIstransformerAtom = () => useAtom(isTransformer)
+export const avatarSize = atom<number>(100)
+export const useAvatarSizeAtom = () => useAtom(avatarSize)

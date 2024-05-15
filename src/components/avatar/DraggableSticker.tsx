@@ -1,21 +1,23 @@
 // components/ImageCanvas.tsx
 import { useDraggable, DragOverlay } from '@dnd-kit/core'
-import type { DragEndEvent } from '@dnd-kit/core'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { FlexHorizontal, FlexVertical, Text } from 'kai-kit'
-import image from 'next/image'
 import React, { FC, useState, useRef, useEffect, useMemo } from 'react'
-import { StickerType, useStickers } from './StickersProvider'
-import { useImage } from '@/hooks/useImage'
+import { Button } from 'react-aria-components'
+import { useStickers } from '@/hooks/useStickers'
+import { useAvatarSizeAtom } from '@/jotai/ui'
+
 type DraggableStickerProps = {
   id: string
   imageUrl: string
+  onAddEnd?: () => void
 }
 
-const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl }) => {
+const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl, onAddEnd }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const [stickerSize, setStickerSize] = useState({ width: 0, height: 0 })
+  const { addSticker } = useStickers()
+  const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
 
   const { attributes, listeners, setNodeRef, transform, isDragging, over, node } = useDraggable({
     id: id ?? imageUrl,
@@ -56,7 +58,21 @@ const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl }) => {
   // }, [stickerSize])
 
   return (
-    <StickerFrame>
+    <StickerFrame
+      onPress={() => {
+        addSticker({
+          id: id,
+          imgUrl: imageUrl,
+          width: stickerSize.width / avatarSize,
+          height: stickerSize.height / avatarSize,
+          position: {
+            x: 0.5 - stickerSize.width / (2 * avatarSize),
+            y: 0.5 - stickerSize.height / (2 * avatarSize),
+          },
+        })
+        onAddEnd?.()
+      }}
+    >
       <StickerUnderlay src={imageUrl} draggable={false} />
       <StickerImage
         ref={setNodeRef}
@@ -86,10 +102,23 @@ const DroppingAnimation = keyframes`
       }
     `
 
-const StickerFrame = styled.div`
+const StickerFrame = styled(Button)`
+  appearance: none;
   position: relative;
   width: 100%;
   aspect-ratio: 1;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: transform var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+
+  &[data-hovered] {
+    transform: scale(1.02);
+  }
+
+  &[data-pressed] {
+    transform: scale(0.98);
+  }
 `
 
 const StickerImage = styled.img<{

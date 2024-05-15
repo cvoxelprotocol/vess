@@ -86,17 +86,9 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       }}
     >
       <Form id='profile-edit' onSubmit={handleSubmit(onClickSubmit)}>
-        <FlexHorizontal width='100%' gap='var(--kai-size-sys-space-md)'>
-          <div style={{ width: 'var(--kai-size-ref-96)' }} />
-          <IconUploadButton
-            defaultIcon={icon || vsUser?.avatar || '/default_profile.jpg'}
-            size='lg'
-            onSelect={(files) => onSelect(files)}
-            isUploading={status === 'uploading'}
-          />
-        </FlexHorizontal>
         <TextInput
           label='ニックネーム'
+          align='vertical'
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           {...register('name', { required: true })}
@@ -106,6 +98,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         />
         <TextArea
           label='自己紹介文'
+          align='vertical'
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           defaultValue={vsUser?.description || ''}
@@ -126,5 +119,5 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: var(--kai-size-sys-space-md);
-  padding: var(--kai-size-sys-space-md);
+  padding: var(--kai-size-sys-space-none);
 `

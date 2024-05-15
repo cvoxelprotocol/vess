@@ -63,7 +63,7 @@
     "graphql": "^16.6.0",
     "iron-session": "^8.0.1",
     "jotai": "^2.6.4",
-    "kai-kit": "0.1.6-beta.8",
+    "kai-kit": "0.1.6-beta.10",
     "konva": "^9.3.6",
     "modern-css-reset": "^1.4.0",
     "next": "^13.5.6",

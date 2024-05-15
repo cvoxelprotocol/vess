@@ -61,7 +61,13 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
           }}
           {...props}
         >
-          <NavigationItem value='PROFILE' onPress={() => router.push('/profile')}>
+          <NavigationItem
+            value='PROFILE'
+            onPress={() => {
+              closeNavigation()
+              router.push(`/did/${did}`)
+            }}
+          >
             <NavigationIcon
               src={profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'}
             ></NavigationIcon>
