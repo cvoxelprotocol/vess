@@ -14,7 +14,7 @@ type Props = {
   height?: string
 }
 
-export const CredItem: FC<Props> = ({ image, name, credId, width = '100%', height = 'auto' }) => {
+export const CredItem: FC<Props> = ({ image, name, credId, width, height }) => {
   const router = useRouter()
   const imgRef = useRef<HTMLImageElement>(null)
   const [isSquare, setIsSquare] = React.useState(false)
@@ -50,9 +50,14 @@ export const CredItem: FC<Props> = ({ image, name, credId, width = '100%', heigh
         radius='var(--kai-size-sys-round-md)'
         borderWidth='var(--kai-size-ref-2)'
       >
-        <CredItemFrame onPress={() => handleClick()} data-square={isSquare || undefined}>
+        <CredItemFrame
+          onPress={() => handleClick()}
+          data-square={isSquare || undefined}
+          width={width}
+          height={height}
+        >
           {isSquare ? (
-            <CredImageFrame width={width} height={height}>
+            <CredImageFrame>
               <CredImageBackground src={image} ref={imgRef} />
               <CredImageOverlay />
               <CredImage src={image || ''} />
@@ -61,9 +66,8 @@ export const CredItem: FC<Props> = ({ image, name, credId, width = '100%', heigh
             <ImageContainer
               src={image || '/sample/event_sample.png'}
               alt={name || 'イベント参加証明画像'}
-              objectFit='cover'
-              width={width}
-              height={height}
+              objectFit='contain'
+              width={'100%'}
               style={{ zIndex: 0 }}
               ref={imgRef}
             />
@@ -76,11 +80,40 @@ export const CredItem: FC<Props> = ({ image, name, credId, width = '100%', heigh
     </>
   )
 }
-
-const CredImageFrame = styled.div<{ width: string; height: string }>`
+const CredItemFrame = styled(Button)<{ width?: string; height?: string }>`
+  flex-shrink: 0;
+  border: none;
+  width: ${(props) => props.width ?? 'auto'};
+  height: ${(props) => props.height ?? 'auto'};
+  aspect-ratio: 1.618 / 1;
   position: relative;
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
+  transition-property: background, transform, opacity;
+  border-radius: var(--kai-size-sys-round-xs);
+  background: transparent;
+  padding: 0;
+  overflow: visible;
+
+  &[data-hovered] {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  &[data-focused] {
+    outline: none;
+  }
+  &[data-focus-visible] {
+    outline: var(--kai-size-ref-1) solid var(--kai-color-sys-dominant);
+    outline-offset: var(--kai-size-ref-2);
+  }
+  &[data-pressed] {
+    transform: scale(0.98);
+    opacity: var(--kai-opacity-sys-state-pressed);
+  }
+`
+
+const CredImageFrame = styled.div`
+  position: relative;
+  width: 100%;
   aspect-ratio: 1.618 / 1;
   overflow: hidden;
   border-radius: var(--kai-size-sys-round-md);
@@ -125,34 +158,6 @@ const CredImage = styled.div<{ src: string }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-`
-
-const CredItemFrame = styled(Button)`
-  flex-shrink: 0;
-  border: none;
-  position: relative;
-  transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
-  transition-property: background, transform, opacity;
-  border-radius: var(--kai-size-sys-round-xs);
-  background: transparent;
-  padding: 0;
-  overflow: visible;
-
-  &[data-hovered] {
-    transform: scale(1.02);
-    cursor: pointer;
-  }
-  &[data-focused] {
-    outline: none;
-  }
-  &[data-focus-visible] {
-    outline: var(--kai-size-ref-1) solid var(--kai-color-sys-dominant);
-    outline-offset: var(--kai-size-ref-2);
-  }
-  &[data-pressed] {
-    transform: scale(0.98);
-    opacity: var(--kai-opacity-sys-state-pressed);
-  }
 `
 
 const IconFrame = styled.div`

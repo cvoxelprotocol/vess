@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useScroll } from 'framer-motion'
+import { useMotionValueEvent, useScroll, motion, useTransform } from 'framer-motion'
 import {
   FlexHorizontal,
   IconButton,
@@ -37,26 +37,22 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal } = useModal()
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const { scrollY } = useScroll({
-    container: scrollRef,
-  })
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
   const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
-  const [scrollProgress, setScrollProgress] = useState(1)
+  // const [scrollProgress, setScrollProgress] = useState(1)
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
 
-  useEffect(() => {
-    const unsubscribe = scrollY.onChange((latest) => {
-      const progress = Math.max(0, Math.min(1, 1 - latest / 300))
-      setScrollProgress(progress)
-    })
-    return () => {
-      unsubscribe()
-    }
-  }, [])
+  // for Scroll Animation
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const { scrollY, scrollYProgress } = useScroll({
+    container: scrollRef,
+  })
+  const sProgressY = useTransform(() => Math.max(0, Math.min(1, 1 - scrollY.get() / 300)))
+  const borderRadius = useTransform(sProgressY, [0, 1], [24, 0])
+  const opacity = useTransform(sProgressY, [0, 1], [0.4, 1])
+  const scale = useTransform(sProgressY, [0, 1], [0.95, 1])
 
   const profileAvatar = useMemo(() => {
     return avatars?.find((avatar) => avatar.isProfilePhoto)
@@ -101,7 +97,13 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
     <>
       <ProfileFrame>
         {/* <DefaultHeader style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }} /> */}
-        <ProfileTop scrollProgress={scrollProgress}>
+        <ProfileTop
+          style={{
+            opacity: opacity,
+            scale: scale,
+            borderRadius: borderRadius,
+          }}
+        >
           {!matches.lg && (
             <IconButton
               icon={<FiMenu size={32} />}
@@ -213,27 +215,20 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
             <FlexVertical
               gap='var(--kai-size-sys-space-sm)'
               width='100%'
-              style={{ overflowY: 'visible' }}
+              flexWrap='nowrap'
+              style={{ flexGrow: 1, overflowY: 'hidden' }}
             >
               <Text
                 typo='title-lg'
                 color='var(--kai-color-sys-on-layer)'
                 style={{
                   padding: '0 var(--kai-size-sys-space-md)',
+                  flexShrink: 0,
                 }}
               >
                 最新の証明書
               </Text>
-              <FlexHorizontal
-                gap='var(--kai-size-sys-space-sm)'
-                flexWrap='nowrap'
-                style={{
-                  width: '100%',
-                  padding: '0 var(--kai-size-sys-space-md)',
-                  overflowY: 'visible',
-                  overflowX: 'scroll',
-                }}
-              >
+              <CredList>
                 {(formatedCredentials && formatedCredentials.length) > 0 ? (
                   <>
                     {formatedCredentials.map((credential) => (
@@ -243,7 +238,70 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                           image={credential.image}
                           name={credential.title}
                           credId={credential.id}
-                          height='var(--kai-size-ref-128)'
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
                         />
                       </>
                     ))}
@@ -253,7 +311,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                     最新の証明書はありません
                   </Text>
                 )}
-              </FlexHorizontal>
+              </CredList>
             </FlexVertical>
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
@@ -266,18 +324,15 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
 
 const ProfileFrame = styled.div`
   position: relative;
-  height: 100vh;
+  height: 100svh;
   overflow: scroll;
 `
-const ProfileTop = styled.div<{ scrollProgress: number }>`
+const ProfileTop = styled(motion.div)`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   aspect-ratio: 1;
-  border-radius: ${({ scrollProgress }) => (scrollProgress < 0.9 ? '24px' : '0px')};
-  opacity: ${({ scrollProgress }) => 0.4 + 0.6 * scrollProgress};
-  transform: scale(${({ scrollProgress }) => 0.95 + 0.05 * scrollProgress});
   z-index: 1;
   transition: var(--kai-motion-sys-easing-standard) var(--kai-motion-sys-duration-slow);
   transition-property: opacity transform border-radius;
@@ -295,7 +350,7 @@ const ProfileInfoOuterFrame = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   overflow: scroll;
 `
 
@@ -336,8 +391,20 @@ const ScrollIndicator = styled.div`
 const BasicProfileFrame = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: start;
+  align-items: start;
   gap: var(--kai-size-sys-space-sm);
   width: 100%;
   padding-left: var(--kai-size-sys-space-md);
   padding-right: var(--kai-size-sys-space-md);
+`
+
+const CredList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: var(--kai-size-sys-space-md);
+  column-gap: var(--kai-size-sys-space-sm);
+  width: 100%;
+  padding: 0 var(--kai-size-sys-space-md);
+  overflow-y: scroll;
 `
