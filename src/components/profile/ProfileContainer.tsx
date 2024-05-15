@@ -242,10 +242,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               <CredList>
                 {(formatedCredentials && formatedCredentials.length) > 0 ? (
                   <>
-                    {formatedCredentials.map((credential) => (
+                    {formatedCredentials.map((credential, index) => (
                       <>
                         <CredItem
-                          key={credential.id}
+                          key={`${credential.id}-${index}`}
                           image={credential.image}
                           name={credential.title}
                           credId={credential.id}
