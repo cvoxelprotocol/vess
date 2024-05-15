@@ -82,7 +82,11 @@ const NCLayoutWrapper = styled.div`
   max-width: var(--kai-size-breakpoint-xs-max-width);
   height: 100svh;
   display: flex;
-  overflow: visible;
+  overflow: hidden;
+
+  &[data-media-md] {
+    overflow: visible;
+  }
 
   &[data-media-lg] {
     max-width: 100%;
