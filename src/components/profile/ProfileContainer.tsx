@@ -12,6 +12,7 @@ import {
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
+import { getAddressFromPkh } from 'vess-kit-web'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 
@@ -33,12 +34,13 @@ type ProfileContainerProps = {
 }
 
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
-  const { originalAddress } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal } = useModal()
   const { ccProfile, ccLoading } = useCcProfile(did)
-  const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
+  const { ensProfile, isInitialLoading: ensLoading } = useENS(
+    getAddressFromPkh(did) as `0x${string}`,
+  )
   const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   // const [scrollProgress, setScrollProgress] = useState(1)
   const { openNavigation } = useNCLayoutContext()
@@ -205,7 +207,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 flexWrap='no-wrap'
                 style={{ overflow: 'scroll', paddingLeft: 'var(--kai-size-sys-space-md)' }}
               >
-                <IdPlate iconURL={'/brand/vess.png'} id={originalAddress as string} />
+                <IdPlate iconURL={'/brand/vess.png'} id={getAddressFromPkh(did) as string} />
                 {ensProfile && <IdPlate iconURL={'/brand/ens.png'} id={ensProfile?.displayName} />}
                 {ccProfile && (
                   <IdPlate iconURL={'/brand/cyberconnect.png'} id={ccProfile?.displayName} />

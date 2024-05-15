@@ -31,23 +31,6 @@ export const useStickers = () => {
     },
     [setStickers],
   )
-  // const addSticker = useCallback(
-  //   (sticker: Partial<StickerType>) => {
-  //     setStickers((prev) => [
-  //       ...prev,
-  //       {
-  //         id: sticker.id || '',
-  //         imgUrl: sticker.imgUrl || '',
-  //         width: sticker.width || 0,
-  //         height: sticker.height || 0,
-  //         position: sticker.position || { x: 0, y: 0 },
-  //         rotation: sticker.rotation || 0,
-  //         scale: sticker.scale || 1,
-  //       },
-  //     ])
-  //   },
-  //   [setStickers],
-  // )
 
   return { stickers, setStickers, addSticker }
 }
