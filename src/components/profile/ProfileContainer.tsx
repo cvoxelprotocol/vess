@@ -240,18 +240,16 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 最新の証明書
               </Text>
               <CredList>
-                {(formatedCredentials && formatedCredentials.length) > 0 ? (
+                {formatedCredentials && formatedCredentials.length > 0 ? (
                   <>
                     {formatedCredentials.map((credential, index) => (
-                      <>
-                        <CredItem
-                          key={`${credential.id}-${index}`}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                      </>
+                      <CredItem
+                        key={`${credential.id}-${index}`}
+                        image={credential.image}
+                        name={credential.title}
+                        credId={credential.id}
+                        width={'100%'}
+                      />
                     ))}
                   </>
                 ) : (
