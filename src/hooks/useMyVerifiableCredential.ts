@@ -56,7 +56,7 @@ export const useMyVerifiableCredential = () => {
             eventIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
             endDate: item.endDate ? item.endDate : '',
-            sticker: item.sticker || null,
+            sticker: item.sticker && item.sticker.length > 0 ? item.sticker : undefined,
           }
           break
         case 'membership':
@@ -68,7 +68,7 @@ export const useMyVerifiableCredential = () => {
             membershipIcon: item.image,
             startDate: item.startDate ? item.startDate : '',
             endDate: item.endDate ? item.endDate : '',
-            sticker: item.sticker || null,
+            sticker: item.sticker && item.sticker.length > 0 ? item.sticker : undefined,
           }
           break
         case 'certificate':
@@ -78,7 +78,7 @@ export const useMyVerifiableCredential = () => {
             image: item.image || '',
             startDate: item.startDate ? item.startDate : '',
             endDate: item.endDate ? item.endDate : '',
-            sticker: item.sticker || null,
+            sticker: item.sticker && item.sticker.length > 0 ? item.sticker : undefined,
           }
           break
 
@@ -92,7 +92,7 @@ export const useMyVerifiableCredential = () => {
             endDate: item.endDate ? item.endDate : '',
             itemId: item.id,
             ceramicId: item.ceramicId || '',
-            sticker: item.sticker || null,
+            sticker: item.sticker && item.sticker.length > 0 ? item.sticker : undefined,
           }
           break
       }
