@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { FC, useEffect, useState, forwardRef } from 'react'
 import { Stage, Layer, Image, Transformer } from 'react-konva'
 import { useImage } from '@/hooks/useImage'
-import { selectedID, stickers as stickersAtom } from '@/jotai/ui'
+import { selectedID, stickers as stickersAtom, useAvatarSizeAtom } from '@/jotai/ui'
 
 const StickerImages = dynamic(() => import('@/components/avatar/CanvasSticker'), { ssr: false })
 
@@ -17,15 +17,15 @@ const _DroppableAvatar = forwardRef<any, DroppableAvatarProps>(({ baseAvatarImgU
   const { setNodeRef, node } = useDroppable({
     id: 'droppableAvatar',
   })
-  const [frameSize, setFrameSize] = useState({ width: 0, height: 0 })
   const { image } = useImage(`${baseAvatarImgUrl}`)
   const setSelectedID = useSetAtom(selectedID)
+  const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
 
   useEffect(() => {
     const updateSize = () => {
       if (node.current) {
         const { width, height } = node.current.getBoundingClientRect()
-        setFrameSize({ width, height })
+        setAvatarSize(width)
       }
     }
 
@@ -44,14 +44,14 @@ const _DroppableAvatar = forwardRef<any, DroppableAvatarProps>(({ baseAvatarImgU
   return (
     <>
       <DroppableFrame ref={setNodeRef}>
-        <Stage width={frameSize.width} height={frameSize.height} ref={stageRef}>
+        <Stage width={avatarSize} height={avatarSize} ref={stageRef}>
           <Layer>
             <Image
               id='sourcePhotoUrl'
               image={image}
               alt='aaa'
-              width={frameSize.width}
-              height={frameSize.height}
+              width={avatarSize}
+              height={avatarSize}
               onClick={deselect}
               onTap={deselect}
               onTouchEnd={deselect}
@@ -77,9 +77,9 @@ DroppableAvatar.displayName = 'DroppableAvatar'
 
 const DroppableFrame = styled.div`
   position: relative;
-  width: 100vw;
+  width: 100%;
   aspect-ratio: 1;
-  max-width: var(--kai-size-breakpoint-xs-max-width);
+
   border-radius: var(--kai-size-sys-round-lg);
   border: 1px solid var(--kai-color-sys-neutral-outline);
   overflow: hidden;

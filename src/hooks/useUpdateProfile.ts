@@ -21,6 +21,7 @@ export const useUpdateProfile = (did?: string) => {
         setIsUpdatingProfile(true)
         // ootimistic mutation
         await queryClient.cancelQueries(['vsUser', did])
+        await queryClient.cancelQueries(['avatars', did])
         const optimistic = {
           ...vsUser,
           avatar: variables.avatar || '',
@@ -48,6 +49,8 @@ export const useUpdateProfile = (did?: string) => {
           vessId: v.vessId || '',
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
+        queryClient.invalidateQueries(['avatars', did])
+        return { optimistic }
       },
       onError(error) {
         console.error('error', error)

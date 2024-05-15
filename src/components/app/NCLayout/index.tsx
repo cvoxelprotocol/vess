@@ -57,7 +57,7 @@ export const NCLayout: FC<Props> = ({
     <NCLayoutContext.Provider
       value={{ isNavigationOpen: isNavigationOpen, setIsNavigationOpen: setIsNavigationOpen }}
     >
-      <LayoutFrame {...breakpointProps}>
+      <LayoutFrame data-modal-open={isOpenSomeModal || undefined} {...breakpointProps}>
         <NavigationFrame
           data-nav-opened={(isNavigationOpen || matches.lg) && !isOpenSomeModal}
           {...breakpointProps}
@@ -66,7 +66,7 @@ export const NCLayout: FC<Props> = ({
         </NavigationFrame>
         <ContentFrame
           data-nav-opened={isNavigationOpen && !isOpenSomeModal}
-          data-modal-open={isOpenSomeModal}
+          data-modal-open={isOpenSomeModal || undefined}
           onClick={() => setIsNavigationOpen(false)}
           ref={attachToRef}
         >
@@ -91,6 +91,11 @@ const LayoutFrame = styled.div<{ contentWidth?: number }>`
   &[data-media-lg] {
     display: flex;
     justify-content: center;
+  }
+
+  &[data-modal-open] {
+    opacity: 0.4;
+    transform: scale(0.98);
   }
   /* md */
   /* @media (min-width: var(--kai-size-breakpoint-md-min-width)) {

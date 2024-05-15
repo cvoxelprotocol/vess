@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'kai-kit'
+import { Button, Skelton, Text } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
@@ -9,8 +9,6 @@ import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useStateRPath } from '@/jotai/ui'
-import { Skelton } from '@/kai/skelton'
-import { Text } from '@/kai/text/Text'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 
 export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {

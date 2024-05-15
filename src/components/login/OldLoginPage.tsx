@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, useKai } from 'kai-kit'
+import { Button, useKai, Text } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
@@ -9,7 +9,6 @@ import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useStateRPath } from '@/jotai/ui'
-import { Text } from '@/kai/text/Text'
 import { DidAuthService } from '@/lib/didAuth'
 
 export const OldLoginPage: FC = () => {
