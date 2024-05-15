@@ -150,8 +150,8 @@ dependencies:
     specifier: ^2.6.4
     version: 2.6.4(@types/react@18.0.27)(react@18.2.0)
   kai-kit:
-    specifier: 0.1.6-beta.9
-    version: registry.npmjs.org/kai-kit@0.1.6-beta.9(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.1.6-beta.10
+    version: registry.npmjs.org/kai-kit@0.1.6-beta.10(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
   konva:
     specifier: ^9.3.6
     version: 9.3.6
@@ -7444,7 +7444,7 @@ packages:
       '@sentry/types':
         optional: true
     dependencies:
-      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.23.9
+      '@babel/runtime': 7.23.9
       lodash.merge: 4.6.2
       loglevel: 1.9.1
     dev: false
@@ -7470,7 +7470,7 @@ packages:
     peerDependencies:
       '@babel/runtime': 7.x
     dependencies:
-      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.23.9
+      '@babel/runtime': 7.23.9
       '@toruslabs/eccrypto': 4.0.0
       '@toruslabs/http-helpers': 5.0.0(@babel/runtime@7.23.9)
       elliptic: 6.5.4
@@ -26316,11 +26316,11 @@ packages:
     engines: {'0': node >= 0.2.0}
     dev: false
 
-  registry.npmjs.org/kai-kit@0.1.6-beta.9(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-wr5ouXeaFds05Ql0aQlyWZLNkh0bEXWaYxmaPfp9wEYsF4UBHptXB54hEei58gENP4qsBxjKSXlYIfhApQU8lg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/kai-kit/-/kai-kit-0.1.6-beta.9.tgz}
-    id: registry.npmjs.org/kai-kit/0.1.6-beta.9
+  registry.npmjs.org/kai-kit@0.1.6-beta.10(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-M2XPwKlc1KQAUe5lJfJ4bWPlqd4gMSLOnYqNNfJ0vZGjpKBAgWcnEj7sdsZbw+NnWFKeC6lyVQwYb1UAcFwjPA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/kai-kit/-/kai-kit-0.1.6-beta.10.tgz}
+    id: registry.npmjs.org/kai-kit/0.1.6-beta.10
     name: kai-kit
-    version: 0.1.6-beta.9
+    version: 0.1.6-beta.10
     peerDependencies:
       '@emotion/react': ^11.11.1
       '@emotion/styled': ^11.11.0

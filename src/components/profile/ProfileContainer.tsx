@@ -34,6 +34,7 @@ type ProfileContainerProps = {
 }
 
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
+  const { did: myDid } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal } = useModal()
@@ -65,6 +66,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   }, [profileAvatar, vsUser?.avatar])
 
   const { image: avatarImage } = useImage(avatarImageUrl)
+
+  const isEditable = useMemo(() => {
+    return myDid === did
+  }, [did, myDid])
 
   const downloadAvatar = async () => {
     if (!avatarImage || !avatarImageUrl) return
@@ -132,19 +137,21 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               key={profileAvatar?.avatarUrl || vsUser?.avatar}
             />
           </Skelton>
-          <IconButton
-            variant='tonal'
-            color='subdominant'
-            size='md'
-            icon={<PiPaintBrushBroadDuotone size={24} />}
-            onPress={() => openModal()}
-            style={{
-              position: 'absolute',
-              bottom: 'var(--kai-size-sys-space-md)',
-              left: 'var(--kai-size-sys-space-md)',
-              zIndex: 10,
-            }}
-          />
+          {isEditable && (
+            <IconButton
+              variant='tonal'
+              color='subdominant'
+              size='md'
+              icon={<PiPaintBrushBroadDuotone size={24} />}
+              onPress={() => openModal()}
+              style={{
+                position: 'absolute',
+                bottom: 'var(--kai-size-sys-space-md)',
+                left: 'var(--kai-size-sys-space-md)',
+                zIndex: 10,
+              }}
+            />
+          )}
           <FlexVertical
             gap='var(--kai-size-sys-space-sm)'
             justifyContent='center'
@@ -189,13 +196,15 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   >
                     {vsUser?.name}
                   </Text>
-                  <IconButton
-                    icon={<PiPencil />}
-                    variant='text'
-                    color='neutral'
-                    size='xs'
-                    onPress={() => openModal('profileEdit')}
-                  />
+                  {isEditable && (
+                    <IconButton
+                      icon={<PiPencil />}
+                      variant='text'
+                      color='neutral'
+                      size='xs'
+                      onPress={() => openModal('profileEdit')}
+                    />
+                  )}
                 </FlexHorizontal>
                 <Text typo='body-md' color={'var(--kai-color-sys-on-layer)'} lineClamp={3}>
                   {vsUser?.description}
@@ -235,69 +244,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   <>
                     {formatedCredentials.map((credential) => (
                       <>
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
                         <CredItem
                           key={credential.id}
                           image={credential.image}

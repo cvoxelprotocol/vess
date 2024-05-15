@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
+import { Skelton } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect, useRef } from 'react'
 import { Button } from 'react-aria-components'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
-import { Skelton } from '@/kai/skelton'
 
 type Props = {
   image?: string

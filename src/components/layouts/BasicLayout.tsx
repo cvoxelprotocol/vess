@@ -64,7 +64,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
           </NCLayoutWrapper>
         </CenterLayout>
       </NavigationContextProvider>
-      <Modal name='pageTransitionOverlay' overlayOnly />
+      {/* <Modal name='pageTransitionOverlay' overlayOnly /> */}
     </>
   )
 }

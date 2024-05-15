@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import { useBreakpoint, useKai } from 'kai-kit'
+import { useBreakpoint, useKai, Text } from 'kai-kit'
 import React, { FC } from 'react'
 import type { ButtonProps } from 'react-aria-components'
 import { Button as RACButtton } from 'react-aria-components'
-import { Text } from '@/kai/text/Text'
 
 type MenuButtonProps = {
   startContent?: React.ReactNode

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
+import { Skelton } from 'kai-kit'
 import React, { FC } from 'react'
 import { Button } from 'react-aria-components'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { WithCeramicId, BaseCredential } from '@/@types/credential'
-import { Skelton } from '@/kai/skelton'
 
 export type EventItemProps = {
   item?: WithCeramicId<BaseCredential>
