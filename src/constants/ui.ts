@@ -16,7 +16,7 @@ export const NAVIGATION_LIST: NavigationItemType[] = [
     id: 'PROFILE',
     label: '',
     icon: 'PROFILE',
-    path: '/profile',
+    path: '/',
   },
   // {
   //   id: 'HOME',
