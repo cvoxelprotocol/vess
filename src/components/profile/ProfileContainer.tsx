@@ -10,7 +10,6 @@ import {
   useBreakpoint,
 } from 'kai-kit'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
-import { BsTwitterX } from 'react-icons/bs'
 import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
 import { useNCLayoutContext } from '../app/NCLayout'
@@ -29,8 +28,12 @@ import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { shareOnX } from '@/utils/share'
 
-export const ProfileContainer: FC = () => {
-  const { did, originalAddress } = useVESSAuthUser()
+type ProfileContainerProps = {
+  did: string
+}
+
+export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
+  const { originalAddress } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { openModal } = useModal()
