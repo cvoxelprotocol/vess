@@ -216,7 +216,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 flexWrap='no-wrap'
                 style={{ overflow: 'scroll', paddingLeft: 'var(--kai-size-sys-space-md)' }}
               >
-                <IdPlate iconURL={'/brand/vess.png'} id={getAddressFromPkh(did) as string} />
+                <IdPlate
+                  iconURL={'/brand/vess.png'}
+                  id={vsUser?.vessId || (getAddressFromPkh(did) as string)}
+                />
                 {ensProfile && <IdPlate iconURL={'/brand/ens.png'} id={ensProfile?.displayName} />}
                 {ccProfile && (
                   <IdPlate iconURL={'/brand/cyberconnect.png'} id={ccProfile?.displayName} />

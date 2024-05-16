@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { CredItem } from './CredItem'
 import { ProfileRack } from './ProfileRack'
 import { HCLayout } from '@/components/app/HCLayout'
