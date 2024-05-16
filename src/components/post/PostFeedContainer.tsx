@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import { FlexHorizontal, Skelton } from 'kai-kit'
-import { FC } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { Post } from '@/@types/user'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
+import { usePostsAtom } from '@/jotai/ui'
 
 type Props = {
   id?: string
@@ -11,6 +13,26 @@ type Props = {
 export const PostFeedContainer: FC<Props> = ({ id }) => {
   const { credItem, isInitialLoading } = useCredentialItem(id)
   console.log({ credItem })
+  const [posts, setPosts] = usePostsAtom()
+
+  useEffect(() => {
+    // subscribe to new posts
+    const eventSource = new EventSource('http://localhost:3001/v2/subscribe/post')
+    eventSource.onmessage = function (event) {
+      console.log({ event })
+      const newData = JSON.parse(event.data)
+      console.log('New data received:', newData)
+      setPosts((prev) => [...prev, newData.payload as Post])
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }, [])
+
+  const items = useMemo(() => {
+    return [...posts, ...(credItem?.post || [])] as Post[]
+  }, [credItem?.post, posts])
 
   return (
     <>
@@ -32,32 +54,17 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
             />
           )}
           <FlexHorizontal gap='var(--kai-size-ref-8)'>
-            {credItem?.post &&
-              credItem.post.length > 0 &&
-              credItem.post.map((post) => {
-                return (
-                  <ImageContainer
-                    key={post.id}
-                    src={post.image || ''}
-                    width='var(--kai-size-ref-112)'
-                    height='var(--kai-size-ref-112)'
-                    objectFit='contain'
-                  />
-                )
-              })}
-            {credItem?.post &&
-              credItem.post.length > 0 &&
-              credItem.post.map((post) => {
-                return (
-                  <ImageContainer
-                    key={post.id}
-                    src={post.image || ''}
-                    width='var(--kai-size-ref-112)'
-                    height='var(--kai-size-ref-112)'
-                    objectFit='contain'
-                  />
-                )
-              })}
+            {items.map((post) => {
+              return (
+                <ImageContainer
+                  key={post.id}
+                  src={post.image || ''}
+                  width='var(--kai-size-ref-112)'
+                  height='var(--kai-size-ref-112)'
+                  objectFit='contain'
+                />
+              )
+            })}
           </FlexHorizontal>
         </FlexVertical>
       </ReceiveCredentialFrame>
