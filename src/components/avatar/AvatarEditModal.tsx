@@ -10,21 +10,29 @@ import {
   Text,
   FlexHorizontal,
   IconButton,
+  useBreakpoint,
 } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { FC, useMemo, useCallback, useState, useRef, useEffect } from 'react'
 import { Button as RACButton } from 'react-aria-components'
-import { PiTrash, PiStickerDuotone, PiUserSquare, PiUserSwitch } from 'react-icons/pi'
+import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
 import { IconUploadButton } from '../home/IconUploadButton'
 import { vcImage } from './ImageCanvas'
-import { StickerType } from './StickersProvider'
+import { StickerListModal } from './StikerListModal'
+import { StickerType } from '@/@types/avatar'
 import { AddAvatarRequest, Avatar, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useFileUpload } from '@/hooks/useFileUpload'
+import { useStickers } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
-import { useIstransformerAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import {
+  useAvatarSizeAtom,
+  useIstransformerAtom,
+  useSelectedIDAtom,
+  useStickersAtom,
+} from '@/jotai/ui'
 import { dataURLtoFile } from '@/utils/objectUtil'
 
 const DroppableAvatar = dynamic(() => import('@/components/avatar/DroppableAvatar'), { ssr: false })
@@ -44,12 +52,15 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
+  const { matches, breakpointProps } = useBreakpoint()
 
   const stageRef = useRef<any>()
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const [isTransformer, setIsTransformer] = useIstransformerAtom()
   const { add } = useAvatar(did)
   const [isSaving, setIsSaving] = useState(false)
+  const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
+  const { addSticker } = useStickers()
 
   const stickerImages = useMemo(() => {
     console.log({ formatedCredentials })
@@ -102,23 +113,18 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event
-    setStickers((currentStickers) => {
-      if (over?.id !== 'droppableAvatar') {
-        return currentStickers
-      }
-      return [
-        ...currentStickers,
-        {
-          id: active.id,
-          imgUrl: active.data.current?.imageUrl,
-          position: {
-            x: (active.rect.current.translated?.left ?? 0) - over.rect.left,
-            y: (active.rect.current.translated?.top ?? 0) - over.rect.top,
-          },
-          width: active.data.current?.width,
-          height: active.data.current?.height,
-        },
-      ] as StickerType[]
+    if (over?.id !== 'droppableAvatar') {
+      return
+    }
+    addSticker({
+      id: active.id.toString(),
+      imgUrl: active.data.current?.imageUrl,
+      position: {
+        x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
+        y: ((active.rect.current.translated?.top ?? 0) - over.rect.top) / avatarSize,
+      },
+      width: active.data.current?.width / avatarSize,
+      height: active.data.current?.height / avatarSize,
     })
   }
 
@@ -144,15 +150,16 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
         child.children.map((grandChild) => grandChild.attrs),
       )
       const sourcePhoto = attrs.find((a: { id: string }) => a.id === 'sourcePhotoUrl')
-
-      const vcChildren = attrs.filter((a: { id: string }) => a.id !== 'sourcePhotoUrl')
-      const vcImages: vcImage[] = vcChildren.map((vc: { id: string }) => {
-        const imageUrl = stickers.find((si) => si.id === vc.id)?.imgUrl
-        if (!imageUrl) return null
+      const vcImages: vcImage[] = stickers.map((sticker) => {
         return {
-          ...vc,
-          id: vc.id,
-          url: imageUrl,
+          id: sticker.id,
+          url: sticker.imgUrl,
+          x: sticker.position.x,
+          y: sticker.position.y,
+          width: sticker.width,
+          height: sticker.height,
+          scale: sticker.scale,
+          rotation: sticker.rotation,
         }
       })
 
@@ -168,7 +175,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       }
       console.log('canvasJson:', canvasJson)
 
-      const dataURL = stageRef.current.toDataURL({ pixelRatio: 3 })
+      const dataURL = stageRef.current.toDataURL({ pixelRatio: 1000 / avatarSize })
       const file = dataURLtoFile(dataURL, 'vess-avatar.png')
       if (!file) {
         console.log('file is null')
@@ -222,14 +229,9 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     <>
       <ModalOverlay isCloseButton className={'dark'} overlayColor={'#000000F0'} onClose={onClose}>
         <DndContext onDragEnd={handleDragEnd}>
-          <ContentFrame>
-            <FlexVertical gap={'var(--kai-size-sys-space-md)'} justifyContent='space-between'>
-              <DroppableAvatar
-                baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
-                stageRef={stageRef}
-              />
-
-              <StickerTools>
+          <ContentFrame {...breakpointProps}>
+            <AvatarFrame {...breakpointProps}>
+              <StickerTools {...breakpointProps}>
                 <InstantTools data-visible={selectedID ? true : undefined}>
                   <IconButton
                     icon={<PiTrash size={28} />}
@@ -243,6 +245,14 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                     }}
                   />
                 </InstantTools>
+                {matches.lg ? null : (
+                  <IconButton
+                    variant='tonal'
+                    color='dominant'
+                    icon={<PiStickerDuotone size={32} />}
+                    onPress={() => openModal('stickerListModal')}
+                  />
+                )}
                 <IconUploadButton
                   onSelect={onSelect}
                   defaultIcon={
@@ -251,7 +261,12 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                   isUploading={status === 'uploading'}
                 />
               </StickerTools>
-            </FlexVertical>
+              <DroppableAvatar
+                baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
+                stageRef={stageRef}
+              />
+            </AvatarFrame>
+
             <FlexHorizontal gap={'var(--kai-size-sys-space-md)'} style={{ width: '100%' }}>
               <Button
                 color='neutral'
@@ -276,32 +291,36 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
               </Button>
             </FlexHorizontal>
           </ContentFrame>
-          <StickerList>
-            <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
-              <PiStickerDuotone color='var(--kai-color-sys-on-layer)' size={28} />
-              <Text typo='title-lg' color='var(--kai-color-sys-on-layer)'>
-                ステッカー
-              </Text>
-            </FlexHorizontal>
-            {stickerImages.length !== 0 ? (
-              <InnerFrame>
-                {stickerImages.map((sticker, index) => (
-                  <DraggableSticker
-                    key={`${sticker.id}-${index}`}
-                    id={sticker.id}
-                    imageUrl={sticker.url}
-                  />
-                ))}
-              </InnerFrame>
-            ) : (
-              <Text typo='body-md' color='var(--kai-color-sys-on-layer-minor)'>
-                ステッカーはまだありません
-              </Text>
-            )}
-          </StickerList>
+          {matches.lg ? (
+            <StickerList>
+              <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
+                <PiStickerDuotone color='var(--kai-color-sys-on-layer)' size={28} />
+                <Text typo='title-lg' color='var(--kai-color-sys-on-layer)'>
+                  ステッカー
+                </Text>
+              </FlexHorizontal>
+              {stickerImages.length !== 0 ? (
+                <InnerFrame>
+                  {stickerImages.map((sticker, index) => (
+                    <DraggableSticker
+                      key={`${sticker.id}-${index}`}
+                      id={sticker.id}
+                      imageUrl={sticker.url}
+                    />
+                  ))}
+                </InnerFrame>
+              ) : (
+                <Text typo='body-md' color='var(--kai-color-sys-on-layer-minor)'>
+                  ステッカーはまだありません
+                </Text>
+              )}
+            </StickerList>
+          ) : (
+            <></>
+          )}
         </DndContext>
       </ModalOverlay>
-      <Modal name='baseImage'>Base Image Here</Modal>
+      <StickerListModal name='stickerListModal' stickers={stickerImages} className={'dark'} />
     </>
   )
 }
@@ -311,9 +330,28 @@ const ContentFrame = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  width: 100vw;
   height: 100svh;
-  padding: var(--kai-size-sys-space-2xl);
+  max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
+  padding: var(--kai-size-sys-space-md);
+
+  &[data-media-md] {
+    padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
+  }
+`
+
+const AvatarFrame = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--kai-size-sys-space-md);
+  justify-content: start;
+  width: 100%;
+  height: 100%;
+
+  &[data-media-md] {
+    flex-direction: column-reverse;
+  }
 `
 
 const StickerButtonGroup = styled.div`
@@ -354,10 +392,14 @@ const StickerButton = styled(RACButton)`
 
 const StickerTools = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: var(--kai-size-sys-space-md);
   width: 100%;
+  justify-content: end;
+
+  &[data-media-lg] {
+    justify-content: space-between;
+  }
 `
 
 const InstantTools = styled.div`

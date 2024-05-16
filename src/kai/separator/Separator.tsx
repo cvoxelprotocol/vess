@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
+import { Text } from 'kai-kit'
 import React, { FC } from 'react'
 import { Separator as RACSeparator } from 'react-aria-components'
 import type { SeparatorProps as RACSeparatorProps } from 'react-aria-components'
-import { Text } from '../text/Text'
 import { ColorProps, SizeProps } from '@/constants/propType'
 
 export type SeparatorProps = {
