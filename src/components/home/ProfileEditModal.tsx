@@ -122,7 +122,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           width='100%'
           {...register('vessId', {
             required: false,
-            validate: async (value) => {
+            validate: (value) => {
               if (value !== '' && !/^[a-zA-Z0-9]{4,}$/.test(value || '')) {
                 return '半角英数字のみ、4文字以上で入力してください'
               }
@@ -131,7 +131,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           })}
           align='vertical'
           defaultValue={vsUser?.vessId || ''}
-          placeholder='your vess id'
+          placeholder='YourVESSID'
           isReadOnly={hasVESSId}
           description={
             hasVESSId
