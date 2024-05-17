@@ -1,4 +1,4 @@
-import { VSCredential } from './credential'
+import { VSCredential, VSUser } from './credential'
 
 export interface CreateUserInfo {
   email?: string

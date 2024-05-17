@@ -12,6 +12,7 @@ export type VESSUser = {
   name: string | null
   avatar?: string | null
   description?: string | null
+  vessId?: string | null
 }
 
 export type VESSUserInfo = {

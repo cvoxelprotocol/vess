@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
-import { Modal, useModal, Button, TextInput, TextArea, Text } from 'kai-kit'
+import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
 import React, { BaseSyntheticEvent, FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
-import { IconUploadButton } from './IconUploadButton'
 import { UpdateUserInfo } from '@/@types/user'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
@@ -42,15 +40,15 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
 
     try {
       //validate VESS ID
-      // if (!hasVESSId) {
-      //   const vessId = data.vessId
-      //   if (vessId) {
-      //     if (!(await isAvailableId(vessId))) {
-      //       setError('vessId', { message: `ID:${vessId}はすでに使われています。` })
-      //       return
-      //     }
-      //   }
-      // }
+      if (!hasVESSId) {
+        const vessId = data.vessId
+        if (vessId) {
+          if (!(await isAvailableId(vessId))) {
+            setError('vessId', { message: `ID:${vessId}はすでに使われています。` })
+            return
+          }
+        }
+      }
       const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
         name: data.name || vsUser?.name || '',
         avatar: icon || vsUser?.avatar || '',
@@ -125,26 +123,20 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           {...register('vessId', {
             required: false,
             validate: async (value) => {
-              if (value !== '' && !/^[a-zA-Z0-9:]{4,}$/.test(value || '')) {
-                return '半角英数字とコロンのみ、4文字以上で入力してください'
-              }
-              if (value !== '') {
-                const available = await isAvailableId(value)
-                if (!available) {
-                  return 'このIDはすでに使用されています'
-                }
+              if (value !== '' && !/^[a-zA-Z0-9]{4,}$/.test(value || '')) {
+                return '半角英数字のみ、4文字以上で入力してください'
               }
               return true
             },
           })}
           align='vertical'
           defaultValue={vsUser?.vessId || ''}
-          placeholder='your:vess:id'
+          placeholder='your vess id'
           isReadOnly={hasVESSId}
           description={
             hasVESSId
               ? '変更できません。'
-              : '一度設定すると変更できません。半角英数字とコロン(:)のみ、4文字以上で入力してください。'
+              : '一度設定すると変更できません。半角英数字のみ、4文字以上で入力してください。'
           }
           errorMessage={errors.vessId?.message}
         />

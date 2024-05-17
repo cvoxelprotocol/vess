@@ -4,38 +4,45 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { LoginPage } from '@/components/login/LoginPage'
-import { ProfileContainer } from '@/components/profile/ProfileContainer'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 
 const Home: NextPage = () => {
-  const { did, connection } = useVESSAuthUser()
+  const { did, connection, vessId } = useVESSAuthUser()
   const router = useRouter()
 
   useEffect(() => {
-    if (did) {
+    if (vessId) {
+      router.push(`/${vessId}`)
+    } else if (did) {
       router.push(`/did/${did}`)
     }
-  }, [did])
+  }, [did, vessId])
 
   if (connection === 'connecting') {
     return <></>
   }
 
-  if (did) {
-    return (
-      <>
-        <Meta />
-        <ProfileContainer did={did} />
-      </>
-    )
-  } else {
-    return (
-      <Wrapper>
-        <Meta pagePath={`https://app.vess.id/login`} />
-        <LoginPage />
-      </Wrapper>
-    )
-  }
+  // if (did ) {
+  //   return (
+  //     <>
+  //       <Meta />
+  //       <ProfileContainer did={did} />
+  //     </>
+  //   )
+  // } else {
+  //   return (
+  //     <Wrapper>
+  //       <Meta pagePath={`https://app.vess.id/login`} />
+  //       <LoginPage />
+  //     </Wrapper>
+  //   )
+  // }
+  return (
+    <Wrapper>
+      <Meta pagePath={`https://app.vess.id/login`} />
+      <LoginPage />
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.main`
