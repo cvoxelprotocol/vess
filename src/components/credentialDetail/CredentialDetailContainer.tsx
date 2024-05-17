@@ -205,8 +205,18 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   objectFit='contain'
                   alt='Organization Icon'
                 />
+                {/* <Button
+                  variant='text'
+                  style={{ padding: '0' }}
+                  // color='var(--kai-color-sys-on-layer)'
+                  color='neutral'
+                  onPress={() => router.push(`/did/${credential?.issuerDid}`)}
+                  size='sm'
+                >
+                  {issuer.name}
+                </Button> */}
                 <Text
-                  typo='body-lg'
+                  typo='body-md'
                   color='var(--kai-color-sys-on-layer)'
                   isLoading={isInitialLoading}
                 >
@@ -226,26 +236,59 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   objectFit='contain'
                   alt='Organization Icon'
                 />
-                <Text
-                  typo='body-lg'
-                  color='var(--kai-color-sys-on-layer)'
-                  isLoading={isInitialLoading}
+                <Button
+                  style={{ padding: '0' }}
+                  align='start'
+                  variant='text'
+                  // color='var(--kai-color-sys-on-layer)'
+                  color='neutral'
+                  onPress={() => router.push(`/did/${credential?.vc.credentialSubject.id}`)}
+                  size='sm'
                 >
                   {holderInfo.name}
-                </Text>
+                </Button>
               </FlexHorizontal>
             </InfoItemFrame>
+            {credential?.credentialType?.name === 'attendance' &&
+              credential?.vc.credentialSubject.startDate && (
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    開始日
+                  </Text>
+                  <Text
+                    typo='body-lg'
+                    color='var(--kai-color-sys-on-layer)'
+                    isLoading={isInitialLoading}
+                  >
+                    {formatDate(credential?.vc.credentialSubject.startDate)}
+                  </Text>
+                </InfoItemFrame>
+              )}
+            {credential?.credentialType?.name === 'attendance' &&
+              credential?.vc.credentialSubject.endDate && (
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    終了日
+                  </Text>
+                  <Text
+                    typo='body-lg'
+                    color='var(--kai-color-sys-on-layer)'
+                    isLoading={isInitialLoading}
+                  >
+                    {formatDate(credential?.vc.credentialSubject.endDate)}
+                  </Text>
+                </InfoItemFrame>
+              )}
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                有効開始日
+                発行日
               </Text>
               <Text
                 typo='body-lg'
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {formatDate(credential?.vc.issuanceDate) ||
-                  formatDate(credential?.vc.credentialSubject.startDate)}
+                {formatDate(credential?.vc.issuanceDate)}
               </Text>
             </InfoItemFrame>
             <InfoItemFrame>
@@ -257,9 +300,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 color='var(--kai-color-sys-on-layer)'
                 isLoading={isInitialLoading}
               >
-                {formatDate(credential?.vc.expirationDate) ||
-                  formatDate(credential?.vc.credentialSubject.endDate) ||
-                  '無期限'}
+                {formatDate(credential?.vc.expirationDate) || '無期限'}
               </Text>
             </InfoItemFrame>
             {otherSubjectProps.length > 0 && (
@@ -309,7 +350,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             </InfoItemFrame>
           </InfoItemsFrame>
           <ActionFrame>
-            {!!did && (
+            {/* {!!did && (
               <Button
                 variant='outlined'
                 color='subdominant'
@@ -319,7 +360,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               >
                 閉じる
               </Button>
-            )}
+            )} */}
             <Button
               variant='tonal'
               color='subdominant'
@@ -423,7 +464,7 @@ const ActionFrame = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: end;
   gap: var(--kai-size-sys-space-md);
   width: 100%;
   background: var(--kai-color-sys-layer-default);
