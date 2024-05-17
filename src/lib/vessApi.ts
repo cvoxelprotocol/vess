@@ -12,7 +12,9 @@ import {
   UpdateAvatarRequest,
   UpdateUserInfo,
   UserAuthInfo,
+  VSUserResponse,
 } from '@/@types/user'
+import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
 
 export const isAuthApi = (endpoint: string) => {
@@ -207,6 +209,54 @@ export const getVESSUserByDid = async (did?: string): Promise<VSUser> => {
     return resjson as VSUser
   } catch (error) {
     throw error
+  }
+}
+
+export const checkVESSId = async (vessId?: string): Promise<boolean> => {
+  if (!vessId) {
+    throw new Error('vessId is undefined')
+  }
+  try {
+    const res = await getVESSUserByVessId(vessId)
+    console.log('getVESSUserByVessId: ', res)
+    return !!res.user
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getVESSUserByVessId = async (
+  vessId?: string,
+  includeDetials: boolean = false,
+): Promise<VSUserResponse> => {
+  if (!vessId) {
+    throw new Error('vessId is undefined')
+  }
+  try {
+    let q = includeDetials ? `includeDetials=${includeDetials}` : undefined
+    const res = await baseVessApi('GET', '/users/vess', vessId, q)
+    const resjson = await res.json()
+    return resjson as VSUserResponse
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getVESSUserByVessIdForServerUseOnly = async (
+  vessId?: string,
+  includeDetials: boolean = false,
+): Promise<VSUserResponse | null> => {
+  try {
+    let q = includeDetials ? `includeDetials=${includeDetials}` : undefined
+    const res = await baseVessApi('GET', '/users/vess', vessId, q)
+    if (isGoodResponse(res.status)) {
+      const j = (await res.json()) as VSUserResponse
+      return JSON.parse(JSON.stringify(j))
+    }
+    return null
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }
 

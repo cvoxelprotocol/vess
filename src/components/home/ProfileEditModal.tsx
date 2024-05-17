@@ -1,13 +1,12 @@
 import styled from '@emotion/styled'
 import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
-import React, { BaseSyntheticEvent, FC } from 'react'
+import React, { BaseSyntheticEvent, FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
-import { IconUploadButton } from './IconUploadButton'
 import { UpdateUserInfo } from '@/@types/user'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
+import { checkVESSId } from '@/lib/vessApi'
 import { removeUndefined } from '@/utils/objectUtil'
 
 export type ProfileEditModalProps = {
@@ -22,7 +21,6 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
   const {
     handleSubmit,
     setError,
-    setValue,
     register,
     formState: { errors },
   } = useForm<UpdateUserInfo>({
@@ -30,25 +28,43 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       name: vsUser?.name || '',
       avatar: vsUser?.avatar || '',
       description: vsUser?.description || '',
+      vessId: vsUser?.vessId || '',
     },
+    reValidateMode: 'onChange',
   })
   const { closeModal } = useModal()
 
   const onClickSubmit = async (data: UpdateUserInfo, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
-    if (!icon) console.error('NO pfp')
-    // ToDo: Add ipfs url of VESS default profile image here
-    const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
-      name: data.name || vsUser?.name || '',
-      avatar: icon ? icon : data.avatar,
-      description: data.description || vsUser?.description || '',
-      did,
-    })
-    console.log({ content })
-    const res = await update(content)
-    if (res.status === 200) {
-      closeModal(name)
+
+    try {
+      //validate VESS ID
+      if (!hasVESSId) {
+        const vessId = data.vessId
+        if (vessId) {
+          if (!(await isAvailableId(vessId))) {
+            setError('vessId', { message: `ID:${vessId}はすでに使われています。` })
+            return
+          }
+        }
+      }
+      const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
+        name: data.name || vsUser?.name || '',
+        avatar: icon || vsUser?.avatar || '',
+        description: data.description || vsUser?.description || '',
+        did,
+        vessId: data.vessId || vsUser?.vessId || '',
+      })
+      const res = await update(content)
+      if (res.status === 200) {
+        closeModal(name)
+      } else {
+        setError('vessId', { message: `something went wrong...` })
+      }
+    } catch (error) {
+      console.error('error', error)
+      setError('vessId', { message: `something went wrong...` })
     }
   }
 
@@ -63,6 +79,20 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
     },
     [icon, uploadIcon],
   )
+
+  const hasVESSId = useMemo(() => !!vsUser?.vessId && vsUser?.vessId !== '', [vsUser?.vessId])
+  const isAvailableId = async (vessId?: string) => {
+    try {
+      console.log({ vessId })
+      if (!vessId) return false
+      const res = await checkVESSId(vessId)
+      console.log({ res })
+      return !res
+    } catch (error) {
+      console.error('error', error)
+      return false
+    }
+  }
 
   return (
     <Modal
@@ -87,14 +117,39 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
     >
       <Form id='profile-edit' onSubmit={handleSubmit(onClickSubmit)}>
         <TextInput
+          label='VESS ID'
+          labelWidth={'var(--kai-size-ref-96)'}
+          width='100%'
+          {...register('vessId', {
+            required: false,
+            validate: (value) => {
+              if (value !== '' && !/^[a-zA-Z0-9]{4,}$/.test(value || '')) {
+                return '半角英数字のみ、4文字以上で入力してください'
+              }
+              return true
+            },
+          })}
+          align='vertical'
+          defaultValue={vsUser?.vessId || ''}
+          placeholder='YourVESSID'
+          isReadOnly={hasVESSId}
+          description={
+            hasVESSId
+              ? '変更できません。'
+              : '一度設定すると変更できません。半角英数字のみ、4文字以上で入力してください。'
+          }
+          errorMessage={errors.vessId?.message}
+        />
+
+        <TextInput
           label='ニックネーム'
           align='vertical'
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
-          {...register('name', { required: true })}
+          {...register('name', { required: 'ニックネームは必須です' })}
           defaultValue={vsUser?.name || ''}
           placeholder='ニックネームを入力'
-          // align='vertical'
+          errorMessage={errors.name?.message}
         />
         <TextArea
           label='自己紹介文'
@@ -102,13 +157,10 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           defaultValue={vsUser?.description || ''}
-          {...register('description', { required: false })}
+          {...register('description')}
           placeholder='自己紹介文を入力'
-          // align='vertical'
+          errorMessage={errors.description?.message}
         />
-        {/* <Input control={control} label='名前' name='username' />
-        <MultiInput label={'自己紹介文'} name={`description`} control={control} />
-         */}
       </Form>
     </Modal>
   )
@@ -119,5 +171,5 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: var(--kai-size-sys-space-md);
-  padding: var(--kai-size-sys-space-none);
+  padding: var(--kai-size-sys-space-lg) var(--kai-size-sys-space-none);
 `
