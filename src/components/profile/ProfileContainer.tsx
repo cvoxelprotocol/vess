@@ -59,7 +59,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   }, [avatars, vsUser?.avatar])
 
   const avatarImageUrl = useMemo(() => {
-    return profileAvatar?.avatarUrl || vsUser?.avatar || 'default_profile.jpg'
+    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
   }, [profileAvatar, vsUser?.avatar])
 
   const { image: avatarImage } = useImage(avatarImageUrl)
