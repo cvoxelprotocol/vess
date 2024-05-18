@@ -31,7 +31,9 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
   }, [])
 
   const items = useMemo(() => {
-    return [...posts, ...(credItem?.post || [])] as Post[]
+    return [...posts, ...(credItem?.post || [])].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    )
   }, [credItem?.post, posts])
 
   return (
