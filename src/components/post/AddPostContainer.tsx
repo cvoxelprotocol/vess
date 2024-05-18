@@ -64,12 +64,20 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
 
   const stickerImages = useMemo(() => {
     console.log({ formatedCredentials })
-    return formatedCredentials.map((item) => {
-      return {
-        id: item.id,
-        url: item.sticker && item.sticker.length > 0 ? item.sticker[0] : item.image,
-      } as vcImage
-    })
+    return formatedCredentials
+      .filter((item) => {
+        return item.sticker && item.sticker.length > 0
+      })
+      .map((item) => {
+        const stickers = item.sticker as string[]
+        return stickers.map((s: string) => {
+          return {
+            id: item.id,
+            url: s,
+          } as vcImage
+        })
+      })
+      .flat()
   }, [formatedCredentials])
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -77,9 +85,11 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
     if (over?.id !== 'droppableAvatar') {
       return
     }
+    const imgUrl = active.data.current?.imageUrl as string
+    const credId = stickerImages.find((s) => s.url === imgUrl)?.id
     addSticker({
-      id: active.id.toString(),
-      imgUrl: active.data.current?.imageUrl,
+      id: credId || active.id.toString(),
+      imgUrl: imgUrl,
       position: {
         x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
         y: ((active.rect.current.translated?.top ?? 0) - over.rect.top) / avatarSize,
@@ -154,7 +164,14 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         if (!newUrl) {
           return
         }
-        const vcs = stickers.map((sticker) => sticker.id)
+        const vcs = [
+          ...new Set(
+            stickers.map((sticker) => {
+              return sticker.id.replace(/_sticker_.*$/, '')
+            }),
+          ),
+        ]
+        console.log({ vcs })
         const avatarRequest: AddAvatarRequest = {
           did: did || '',
           sourcePhotoUrl: icon,
@@ -215,8 +232,8 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         const postItem: AddPostRequest = {
           userId: vsUser?.id || '',
           credentialItemId: credItem.id,
-          image: image, //'https://usericonupload.s3.ap-northeast-1.amazonaws.com/27ccf90a-478b-4d7b-9eeb-697f3e0d08f1.png',
-          canvasId: canvasId, //'273486a0-a309-4e56-ace4-9c158fab0b9c',
+          image: image,
+          canvasId: canvasId,
         }
         const res = await addItem(postItem)
         if (res.status === 200) {
@@ -311,6 +328,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                     <DraggableSticker
                       key={`${sticker.id}-${index}`}
                       id={sticker.id}
+                      credId={sticker.id}
                       imageUrl={sticker.url}
                     />
                   ))}

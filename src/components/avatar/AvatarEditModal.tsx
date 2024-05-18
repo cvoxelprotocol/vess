@@ -129,7 +129,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     const credId = stickerImages.find((s) => s.url === imgUrl)?.id
     addSticker({
       id: (credId as string) || active.id.toString(),
-      imgUrl: active.data.current?.imageUrl,
+      imgUrl: imgUrl,
       position: {
         x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
         y: ((active.rect.current.translated?.top ?? 0) - over.rect.top) / avatarSize,

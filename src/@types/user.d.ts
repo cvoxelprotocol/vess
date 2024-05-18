@@ -4,16 +4,6 @@ export interface CreateUserInfo {
   email?: string
   did?: string
 }
-
-export type SocialLink = {
-  id: string
-  userId: string | null
-  organizationId: string | null
-  title: string
-  url: string
-  displayLink: string | null
-}
-
 export interface UpdateUserInfo {
   did: string
   name?: string
