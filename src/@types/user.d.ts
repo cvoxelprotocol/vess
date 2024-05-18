@@ -4,13 +4,13 @@ export interface CreateUserInfo {
   email?: string
   did?: string
 }
-
 export interface UpdateUserInfo {
   did: string
   name?: string
   avatar?: string
   description?: string
   vessId?: string
+  socialLinks?: (Partial<SocialLink> & { title: string; url: string })[]
 }
 
 export interface UserAuthInfo {
@@ -68,4 +68,34 @@ export type CanvasJson = {
 
 export type VSUserResponse = {
   user: VSUser | null
+}
+
+export type Post = {
+  id: string
+  userId: string
+  text: string | null
+  image: string | null
+  credentialItemId: string | null
+  credentialItem: VSCredentialItem | null
+  canvasId: string | null
+  canvas: Avatar | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type SocialLink = {
+  id: string
+  userId: string | null
+  organizationId: string | null
+  title: string
+  url: string
+  displayLink: string | null
+}
+
+export type AddPostRequest = {
+  userId: string
+  text?: string
+  image?: string
+  credentialItemId?: string
+  canvasId?: string
 }

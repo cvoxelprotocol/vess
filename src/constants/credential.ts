@@ -13,4 +13,5 @@ export const ReservedPropKeys = [
   'certificationName',
   'image',
   'id',
+  'sticker',
 ]

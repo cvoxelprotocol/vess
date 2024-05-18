@@ -3,6 +3,7 @@ import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
 import React, { BaseSyntheticEvent, FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { UpdateUserInfo } from '@/@types/user'
+import { X_URL } from '@/constants/common'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
@@ -14,6 +15,10 @@ export type ProfileEditModalProps = {
   name?: string
 }
 
+type UpdateUserInfoInput = UpdateUserInfo & {
+  xUserName?: string
+}
+
 export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const { vsUser } = useVESSUserProfile(did)
@@ -23,18 +28,21 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
     setError,
     register,
     formState: { errors },
-  } = useForm<UpdateUserInfo>({
+  } = useForm<UpdateUserInfoInput>({
     defaultValues: {
       name: vsUser?.name || '',
       avatar: vsUser?.avatar || '',
       description: vsUser?.description || '',
       vessId: vsUser?.vessId || '',
+      xUserName: vsUser?.socialLink?.some((s) => s.title === 'X')
+        ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
+        : '',
     },
     reValidateMode: 'onChange',
   })
   const { closeModal } = useModal()
 
-  const onClickSubmit = async (data: UpdateUserInfo, e?: BaseSyntheticEvent) => {
+  const onClickSubmit = async (data: UpdateUserInfoInput, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
 
@@ -49,12 +57,26 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           }
         }
       }
+      const xUserNameWithOutPrefix =
+        data.xUserName && data.xUserName?.includes('@')
+          ? data.xUserName.replace('@', '')
+          : data.xUserName
+      const xLink = xUserNameWithOutPrefix ? `${X_URL}${xUserNameWithOutPrefix}` : undefined
       const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
         name: data.name || vsUser?.name || '',
-        avatar: icon || vsUser?.avatar || '',
+        avatar: icon || undefined,
         description: data.description || vsUser?.description || '',
         did,
         vessId: data.vessId || vsUser?.vessId || '',
+        socialLinks: xLink
+          ? [
+              {
+                title: 'X',
+                url: xLink,
+                displayLink: `@${xUserNameWithOutPrefix}`,
+              },
+            ]
+          : undefined,
       })
       const res = await update(content)
       if (res.status === 200) {
@@ -160,6 +182,20 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           {...register('description')}
           placeholder='自己紹介文を入力'
           errorMessage={errors.description?.message}
+        />
+        <TextInput
+          label='X(Twitter)'
+          align='vertical'
+          labelWidth={'var(--kai-size-ref-96)'}
+          width='100%'
+          {...register('xUserName')}
+          defaultValue={
+            vsUser?.socialLink?.some((s) => s.title === 'X')
+              ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
+              : ''
+          }
+          placeholder='@vess_id'
+          errorMessage={errors.xUserName?.message}
         />
       </Form>
     </Modal>

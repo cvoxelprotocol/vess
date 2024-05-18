@@ -1,28 +1,21 @@
 import { DndContext } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import {
-  Button,
-  FlexVertical,
-  ModalOverlay,
-  Modal,
-  useModal,
-  Text,
-  FlexHorizontal,
-  IconButton,
-  useBreakpoint,
-} from 'kai-kit'
+import { Button, useModal, Text, FlexHorizontal, IconButton, useBreakpoint } from 'kai-kit'
 import dynamic from 'next/dynamic'
-import { FC, useMemo, useCallback, useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
+import { vcImage } from '../avatar/ImageCanvas'
+import { StickerListModal } from '../avatar/StikerListModal'
 import { IconUploadButton } from '../home/IconUploadButton'
-import { vcImage } from './ImageCanvas'
-import { StickerListModal } from './StikerListModal'
-import { StickerType } from '@/@types/avatar'
-import { AddAvatarRequest, Avatar, CanvasJson } from '@/@types/user'
+import { AddPostRequest, Post, AddAvatarRequest, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
+import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useFileUpload } from '@/hooks/useFileUpload'
+import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
+import { usePost } from '@/hooks/usePost'
 import { useStickers } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
@@ -31,6 +24,7 @@ import {
   useAvatarSizeAtom,
   useIstransformerAtom,
   useSelectedIDAtom,
+  useStateRPath,
   useStickersAtom,
 } from '@/jotai/ui'
 import { dataURLtoFile } from '@/utils/objectUtil'
@@ -41,13 +35,19 @@ const DraggableSticker = dynamic(() => import('@/components/avatar/DraggableStic
 })
 
 type Props = {
-  profileAvatar?: Avatar
+  id?: string
 }
-
-export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
+export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const { did } = useVESSAuthUser()
-  const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
-  const { avatars } = useAvatar(did)
+  const { vsUser } = useVESSUserProfile(did)
+  const router = useRouter()
+  const { credItem } = useCredentialItem(id)
+  const { addItem } = usePost()
+  const [rPath, setRpath] = useStateRPath()
+  const [receiveStatus, setReceiveStatus] = React.useState<
+    'default' | 'receiving' | 'success' | 'failed'
+  >('default')
+
   const { openModal, closeModal } = useModal()
   const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
   const [selectedID, setSelectedID] = useSelectedIDAtom()
@@ -80,55 +80,15 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       .flat()
   }, [formatedCredentials])
 
-  const baseImage = useMemo(() => {
-    return (icon ||
-      profileAvatar?.sourcePhotoUrl ||
-      profileAvatar?.canvasJson?.baseImage.url ||
-      profileAvatar?.avatarUrl ||
-      vsUser?.avatar) as string
-  }, [
-    icon,
-    profileAvatar?.sourcePhotoUrl,
-    profileAvatar?.canvasJson?.baseImage.url,
-    profileAvatar?.avatarUrl,
-    vsUser?.avatar,
-  ])
-
-  const currentStickers = useMemo(() => {
-    return (
-      profileAvatar?.canvasJson?.vcImages?.map((vci) => {
-        return {
-          id: vci.id,
-          imgUrl: vci.url,
-          position: {
-            x: vci.x,
-            y: vci.y,
-          },
-          width: vci.width,
-          height: vci.height,
-          rotation: vci.rotation,
-        } as StickerType
-      }) || []
-    )
-  }, [profileAvatar])
-
-  useEffect(() => {
-    console.log({ profileAvatar })
-    if (profileAvatar) {
-      setStickers(currentStickers)
-    }
-  }, [profileAvatar])
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event
     if (over?.id !== 'droppableAvatar') {
       return
     }
-    console.log({ active })
     const imgUrl = active.data.current?.imageUrl as string
     const credId = stickerImages.find((s) => s.url === imgUrl)?.id
     addSticker({
-      id: (credId as string) || active.id.toString(),
+      id: credId || active.id.toString(),
       imgUrl: imgUrl,
       position: {
         x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
@@ -140,9 +100,17 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   }
 
   const handleSave = () => {
+    if (!did) {
+      setRpath(router.asPath)
+      router.push(`/login`)
+      return
+    }
+
+    if (!icon) return
     setIsTransformer(false)
     setIsSaving(true)
 
+    // save image
     setTimeout(async () => {
       if (!stageRef.current) {
         console.log('stageRef.current is null')
@@ -174,48 +142,59 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
         }
       })
 
-      // baseImageがプロフィール画像でvcImgesがステッカー
       const canvasJson: CanvasJson = {
         stageWidth: stage.width,
         stageHeight: stage.height,
         baseImage: {
           ...sourcePhoto,
-          url: baseImage,
+          url: icon,
         },
         vcImages: vcImages,
       }
       console.log('canvasJson:', canvasJson)
 
-      const dataURL = stageRef.current.toDataURL({ pixelRatio: 1000 / avatarSize })
-      const file = dataURLtoFile(dataURL, 'vess-avatar.png')
-      if (!file) {
-        console.log('file is null')
-        return
+      try {
+        const dataURL = stageRef.current.toDataURL({ pixelRatio: 1000 / avatarSize })
+        const file = dataURLtoFile(dataURL, 'vess-avatar.png')
+        if (!file) {
+          console.log('file is null')
+          return
+        }
+        const newUrl = await uploadIcon(file)
+        if (!newUrl) {
+          return
+        }
+        const vcs = [
+          ...new Set(
+            stickers.map((sticker) => {
+              return sticker.id.replace(/_sticker_.*$/, '')
+            }),
+          ),
+        ]
+        console.log({ vcs })
+        const avatarRequest: AddAvatarRequest = {
+          did: did || '',
+          sourcePhotoUrl: icon,
+          canvasJson: canvasJson,
+          isProfilePhoto: false,
+          credentialIds: vcs,
+          avatarUrl: newUrl,
+        }
+        const res = await add(avatarRequest)
+        const resJson = await res.json()
+        console.log({ resJson })
+        const canvasId = resJson.canvasId
+
+        // save post
+        await handlePost(newUrl, canvasId)
+
+        setIsSaving(false)
+        onClose()
+      } catch (error) {
+        console.error(error)
+        setIsSaving(false)
+        onClose()
       }
-      const newUrl = await uploadIcon(file)
-      if (!newUrl) {
-        return
-      }
-      const vcs = [
-        ...new Set(
-          stickers.map((sticker) => {
-            return sticker.id.replace(/_sticker_.*$/, '')
-          }),
-        ),
-      ]
-      console.log({ vcs })
-      const avatarRequest: AddAvatarRequest = {
-        did: did || '',
-        sourcePhotoUrl:
-          icon || sourcePhoto?.url || profileAvatar?.sourcePhotoUrl || vsUser?.avatar || '',
-        canvasJson: canvasJson,
-        isProfilePhoto: true,
-        credentialIds: vcs,
-        avatarUrl: newUrl,
-      }
-      await add(avatarRequest)
-      setIsSaving(false)
-      onClose()
     }, 100) // 非表示状態を適用するために少し遅延を入れる
 
     setTimeout(() => {
@@ -227,7 +206,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   const onClose = () => {
     setIcon('')
     setSelectedID(undefined)
-    setStickers(currentStickers)
+    setStickers([])
     closeModal()
   }
 
@@ -243,12 +222,37 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     [icon, uploadIcon],
   )
 
-  console.log({ stickerImages })
-  console.log({ stickers })
+  useEffect(() => {
+    setReceiveStatus('default')
+  }, [])
+
+  const handlePost = async (image: string, canvasId: string) => {
+    try {
+      if (credItem) {
+        const postItem: AddPostRequest = {
+          userId: vsUser?.id || '',
+          credentialItemId: credItem.id,
+          image: image,
+          canvasId: canvasId,
+        }
+        const res = await addItem(postItem)
+        if (res.status === 200) {
+          const resJson = (await res.json()) as Post
+          console.log({ resJson })
+          if (resJson.id) {
+            setReceiveStatus('success')
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      setReceiveStatus('failed')
+    }
+  }
 
   return (
     <>
-      <ModalOverlay isCloseButton className={'dark'} overlayColor={'#000000F0'} onClose={onClose}>
+      <AddPostFrame>
         <DndContext onDragEnd={handleDragEnd}>
           <ContentFrame {...breakpointProps}>
             <AvatarFrame {...breakpointProps}>
@@ -276,14 +280,12 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                 )}
                 <IconUploadButton
                   onSelect={onSelect}
-                  defaultIcon={
-                    icon || profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
-                  }
+                  defaultIcon={icon || '/default_profile.jpg'}
                   isUploading={status === 'uploading'}
                 />
               </StickerTools>
               <DroppableAvatar
-                baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
+                baseAvatarImgUrl={icon ?? 'default_profile.jpg'}
                 stageRef={stageRef}
               />
             </AvatarFrame>
@@ -308,7 +310,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                   handleSave()
                 }}
               >
-                保存する
+                投稿する
               </Button>
             </FlexHorizontal>
           </ContentFrame>
@@ -325,7 +327,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                   {stickerImages.map((sticker, index) => (
                     <DraggableSticker
                       key={`${sticker.id}-${index}`}
-                      id={`${sticker.id}-${index}`}
+                      id={sticker.id}
                       credId={sticker.id}
                       imageUrl={sticker.url}
                     />
@@ -341,12 +343,23 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
             <></>
           )}
         </DndContext>
-      </ModalOverlay>
-      <StickerListModal name='stickerListModal' stickers={stickerImages} className={'dark'} />
+      </AddPostFrame>
+      <StickerListModal name='stickerListModal' stickers={stickerImages} />
     </>
   )
 }
 
+const AddPostFrame = styled.div`
+  position: fixed;
+  inset: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kai-size-ref-96);
+
+  padding: var(--kai-size-ref-24);
+`
 const ContentFrame = styled.div`
   display: flex;
   flex-direction: column;

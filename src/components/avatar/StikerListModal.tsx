@@ -4,14 +4,12 @@ import type { ModalProps } from 'kai-kit'
 import React, { FC } from 'react'
 import DraggableSticker from './DraggableSticker'
 import type { vcImage } from './ImageCanvas'
-import { useStickers } from '@/hooks/useStickers'
 
 export type StickerListModalProps = {
   stickers: vcImage[]
 } & ModalProps
 
 export const StickerListModal: FC<StickerListModalProps> = ({ stickers, ...modalProps }) => {
-  const { addSticker } = useStickers()
   const { closeModal } = useModal()
   return (
     <Modal
@@ -34,6 +32,7 @@ export const StickerListModal: FC<StickerListModalProps> = ({ stickers, ...modal
             key={`${sticker.id}-${index}`}
             id={sticker.id}
             imageUrl={sticker.url}
+            credId={sticker.id}
             onAddEnd={() => closeModal(modalProps.name ?? undefined)}
           />
         ))}

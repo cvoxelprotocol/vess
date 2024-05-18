@@ -49,23 +49,24 @@ export const useAvatar = (did?: string, canvasId?: string) => {
           return { optimistic }
         }
       },
-      onSuccess(data, v, _) {
-        console.log('update profile result: ', data)
+      onSuccess: async (data, v, _) => {
+        console.log('addAvatar result: ', data)
         if (data.status === 200) {
           closeLoading()
           setIsUpdatingAvatar(false)
+          if (v.isProfilePhoto) {
+            const optimistic = {
+              ...vsUser,
+              avatar: v.avatarUrl,
+            }
+            queryClient.setQueryData(['vsUser', did], () => optimistic)
+            queryClient.invalidateQueries(['avatars', did])
+          }
+          const resJson = await data.json()
+          return resJson
         } else {
           closeLoading()
           setIsUpdatingAvatar(false)
-        }
-        if (v.isProfilePhoto) {
-          const optimistic = {
-            ...vsUser,
-            avatar: v.avatarUrl,
-          }
-          queryClient.setQueryData(['vsUser', did], () => optimistic)
-          queryClient.invalidateQueries(['avatars', did])
-          return { optimistic }
         }
       },
       onError(error) {

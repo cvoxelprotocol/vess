@@ -18,6 +18,8 @@ import { AvatarEditModal } from '../avatar/AvatarEditModal'
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { IdPlate } from './IdPlate'
+import { SocialLink } from '@/@types/user'
+import { X_URL } from '@/constants/common'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
@@ -58,7 +60,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   }, [avatars, vsUser?.avatar])
 
   const avatarImageUrl = useMemo(() => {
-    return profileAvatar?.avatarUrl || vsUser?.avatar || 'default_profile.jpg'
+    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
   }, [profileAvatar, vsUser?.avatar])
 
   const { image: avatarImage } = useImage(avatarImageUrl)
@@ -66,6 +68,12 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const isEditable = useMemo(() => {
     return myDid === did
   }, [did, myDid])
+
+  const xLink = useMemo(() => {
+    return vsUser?.socialLink?.some((link) => link.title === 'X' && !!link.url && link.url !== '')
+      ? (vsUser?.socialLink?.find((link) => link.title === 'X') as SocialLink)
+      : undefined
+  }, [vsUser?.socialLink])
 
   const downloadAvatar = async () => {
     if (!avatarImage || !avatarImageUrl) return
@@ -205,6 +213,15 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   iconURL={'/brand/vess.png'}
                   id={vsUser?.vessId || (getAddressFromPkh(did) as string)}
                 />
+                {xLink && (
+                  <IdPlate
+                    iconURL={'/brand/x.png'}
+                    id={xLink.displayLink || `@${xLink.url.replace(X_URL, '')}`}
+                    onPress={() => {
+                      window.open(xLink.url, '_blank')
+                    }}
+                  />
+                )}
                 {ensProfile && <IdPlate iconURL={'/brand/ens.png'} id={ensProfile?.displayName} />}
                 {ccProfile && (
                   <IdPlate iconURL={'/brand/cyberconnect.png'} id={ccProfile?.displayName} />
@@ -228,18 +245,16 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 最新の証明
               </Text>
               <CredList>
-                {(formatedCredentials && formatedCredentials.length) > 0 ? (
+                {formatedCredentials && formatedCredentials.length > 0 ? (
                   <>
                     {formatedCredentials.map((credential, index) => (
-                      <>
-                        <CredItem
-                          key={`${credential.id}-${index}`}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                      </>
+                      <CredItem
+                        key={`${credential.id}-${index}`}
+                        image={credential.image}
+                        name={credential.title}
+                        credId={credential.id}
+                        width={'100%'}
+                      />
                     ))}
                   </>
                 ) : (
