@@ -1,6 +1,8 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { StickerType } from '@/@types/avatar'
 import { useStickersAtom } from '@/jotai/ui'
+
+export const STICKER_SURFIX = '_sticker_'
 
 export const useStickers = () => {
   const [stickers, setStickers] = useStickersAtom()
@@ -11,7 +13,7 @@ export const useStickers = () => {
         let newId = sticker.id || ''
         let suffix = 1
         while (existingIds.includes(newId)) {
-          newId = `${sticker.id}-${suffix}`
+          newId = `${sticker.id}${STICKER_SURFIX}${suffix}`
           suffix++
         }
         console.log('newid: ', newId)

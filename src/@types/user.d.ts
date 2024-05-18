@@ -5,12 +5,22 @@ export interface CreateUserInfo {
   did?: string
 }
 
+export type SocialLink = {
+  id: string
+  userId: string | null
+  organizationId: string | null
+  title: string
+  url: string
+  displayLink: string | null
+}
+
 export interface UpdateUserInfo {
   did: string
   name?: string
   avatar?: string
   description?: string
   vessId?: string
+  socialLinks?: (Partial<SocialLink> & { title: string; url: string })[]
 }
 
 export interface UserAuthInfo {

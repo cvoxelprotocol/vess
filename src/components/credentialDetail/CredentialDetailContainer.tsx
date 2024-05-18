@@ -181,6 +181,24 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             </Text>
           </div>
           <InfoItemsFrame ref={scrollRef}>
+            {credential?.vc.credentialSubject.sticker &&
+              credential?.vc.credentialSubject.sticker.length > 0 && (
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    ステッカー
+                  </Text>
+                  <FlexHorizontal gap='4px' justifyContent='center' alignItems='center'>
+                    {credential?.vc.credentialSubject.sticker.map((s: string) => (
+                      <ImageContainer
+                        key={s}
+                        src={s}
+                        width='var(--kai-size-ref-96)'
+                        objectFit='contain'
+                      />
+                    ))}
+                  </FlexHorizontal>
+                </InfoItemFrame>
+              )}
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 説明文

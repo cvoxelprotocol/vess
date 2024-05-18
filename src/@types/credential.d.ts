@@ -138,6 +138,7 @@ export type VSUser = {
   createdAt: Date
   updatedAt: Date
   profiles?: Profile[]
+  socialLink?: SocialLink[]
 }
 
 export type Profile = {
@@ -181,6 +182,7 @@ export type VSCredential = {
   credentialItemId: string
   holder: VSUser
   credentialType?: CredentialType | null
+  hideFromPublic?: boolean
 }
 
 type Tag = {
@@ -214,6 +216,7 @@ export type VSCredentialItemFromBuckup = {
   userId?: string | null
   user?: VSUser
   sticker?: Sticker[]
+  hideFromPublic?: boolean
 }
 
 export type Sticker = {
