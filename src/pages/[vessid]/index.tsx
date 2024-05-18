@@ -50,10 +50,11 @@ export const getStaticProps: GetStaticProps<Props, { vessid?: string }> = async 
 
 const Profile: NextPage<Props> = (props: Props) => {
   const title = props.user?.vessId || props.user?.name || 'Profile'
-  // const avatar =
-  //   props.user?.avatar ||
-  //   'https://usericonupload.s3.ap-northeast-1.amazonaws.com/19489bbf-68e0-4538-951c-5eeb9cd00ec6.png'
-  // const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${title}&avatar=${avatar}`
+  const avatar =
+    props.user?.avatar ||
+    'https://usericonupload.s3.ap-northeast-1.amazonaws.com/19489bbf-68e0-4538-951c-5eeb9cd00ec6.png'
+  const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${title}&avatar=${avatar}`
+  console.log('imageUrl', imageUrl)
 
   return (
     <>

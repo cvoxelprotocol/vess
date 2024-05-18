@@ -10,7 +10,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['ipfs.io', 'ipfs.infura.io', 'storage.googleapis.com', 'arweave.net'],
+    domains: ['ipfs.io', 'ipfs.infura.io', 'storage.googleapis.com', 'arweave.net', 'localhost'],
   },
   optimizeFonts: true,
 }

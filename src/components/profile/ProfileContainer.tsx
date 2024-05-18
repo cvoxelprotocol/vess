@@ -15,7 +15,6 @@ import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
 import { getAddressFromPkh } from 'vess-kit-web'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
-
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { IdPlate } from './IdPlate'
@@ -27,7 +26,7 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { shortenStr } from '@/utils/objectUtil'
-import { shareOnX } from '@/utils/share'
+import { shareOnX, shareLink } from '@/utils/share'
 
 type ProfileContainerProps = {
   did: string
@@ -155,19 +154,12 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               right: 'var(--kai-size-sys-space-md)',
             }}
           >
-            {/* <IconButton
-              variant='tonal'
-              color='dominant'
-              size='md'
-              icon={<BsTwitterX size={24} />}
-              onPress={() => Tweet()}
-            /> */}
             <IconButton
               variant='tonal'
               color='dominant'
               size='md'
               icon={<PiExport size={24} />}
-              onPress={() => downloadAvatar()}
+              onPress={() => shareLink(window.location.href)}
             />
           </FlexVertical>
         </ProfileTop>
