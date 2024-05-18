@@ -34,7 +34,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       avatar: vsUser?.avatar || '',
       description: vsUser?.description || '',
       vessId: vsUser?.vessId || '',
-      xUserName: vsUser?.socialLink?.find((s) => s.title === 'X').url
+      xUserName: vsUser?.socialLink?.some((s) => s.title === 'X')
         ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
         : '',
     },
@@ -188,7 +188,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           width='100%'
           {...register('xUserName')}
           defaultValue={
-            vsUser?.socialLink?.find((s) => s.title === 'X').url
+            vsUser?.socialLink?.some((s) => s.title === 'X')
               ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
               : ''
           }
