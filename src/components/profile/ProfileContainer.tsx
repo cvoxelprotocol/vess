@@ -71,7 +71,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   }, [did, myDid])
 
   const xLink = useMemo(() => {
-    return vsUser?.socialLink?.some((link) => link.title === 'X')
+    return vsUser?.socialLink?.some((link) => link.title === 'X' && !!link.url && link.url !== '')
       ? (vsUser?.socialLink?.find((link) => link.title === 'X') as SocialLink)
       : undefined
   }, [vsUser?.socialLink])
