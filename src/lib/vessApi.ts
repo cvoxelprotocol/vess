@@ -1,10 +1,20 @@
-import { VSCredentialItemFromBuckup, VSUser } from '@/@types/credential'
 import {
+  ICreateHolderContentsRequest,
+  IIssueCredentialItemByUserRequest,
+  VSCredentialItemFromBuckup,
+  VSUser,
+} from '@/@types/credential'
+import {
+  AddAvatarRequest,
+  Avatar,
   CreateUserInfo,
   CreateUserWithGoogleInfo,
+  UpdateAvatarRequest,
   UpdateUserInfo,
   UserAuthInfo,
+  VSUserResponse,
 } from '@/@types/user'
+import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
 
 export const isAuthApi = (endpoint: string) => {
@@ -18,11 +28,67 @@ export const isAuthApi = (endpoint: string) => {
 }
 
 export const isAuthProtectedApi = (endpoint: string) => {
-  return endpoint === '/users/info'
+  return (
+    endpoint === '/users/info' ||
+    endpoint === '/avatar/add' ||
+    endpoint === '/avatar/update' ||
+    endpoint === '/avatar/delete'
+  )
 }
 
 export const isLogout = (endpoint: string) => {
   return endpoint === '/auth/logout'
+}
+
+export const getAvatarList = async (did?: string): Promise<Avatar[]> => {
+  if (!did) {
+    throw new Error('did is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/avatar/did`, did)
+    const resjson = await res.json()
+    return resjson as Avatar[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getAvatar = async (canvasId?: string): Promise<Avatar | null> => {
+  if (!canvasId) {
+    throw new Error('canvasId is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/avatar/canvas`, canvasId)
+    const resjson = await res.json()
+    return resjson as Avatar | null
+  } catch (error) {
+    throw error
+  }
+}
+
+export const addAvatar = async (body: AddAvatarRequest): Promise<Response> => {
+  try {
+    console.log({ body })
+    return await baseVessApi('POST', '/avatar/add', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateAvatar = async (body: UpdateAvatarRequest): Promise<Response> => {
+  try {
+    return await baseVessApi('PUT', '/avatar/update', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteAvatar = async (canvasId: string): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/avatar/delete', undefined, undefined, { canvasId })
+  } catch (error) {
+    throw error
+  }
 }
 
 export const getCredential = async (id?: string): Promise<Response> => {
@@ -50,19 +116,71 @@ export const getCredentials = async (did?: string): Promise<Response> => {
 export const getCredentialItem = async (
   id?: string,
   showHolders: boolean = false,
+  userId?: string,
 ): Promise<VSCredentialItemFromBuckup> => {
   if (!id) {
     throw new Error('id is undefined')
   }
   try {
-    const res = await baseVessApi(
-      'GET',
-      '/v2/collection/items',
-      id,
-      showHolders ? 'showHolders=true' : undefined,
-    )
+    let q = userId ? `userId=${userId}` : ''
+    q = showHolders ? `${q}&showHolders=true` : q
+    const res = await baseVessApi('GET', '/v2/creditems/item', id, q)
     const resjson = await res.json()
     return resjson as VSCredentialItemFromBuckup
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getUserCredentialItem = async (
+  userId?: string,
+  showHolders: boolean = false,
+): Promise<VSCredentialItemFromBuckup[]> => {
+  if (!userId) {
+    throw new Error('userId is undefined')
+  }
+  try {
+    let q = userId ? `userId=${userId}` : ''
+    q = showHolders ? `${q}&showHolders=true` : q
+    const res = await baseVessApi('GET', '/v2/creditems/user/items', userId, q)
+    const resjson = await res.json()
+    return resjson as VSCredentialItemFromBuckup[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export const createCredentialItem = async (
+  body: IIssueCredentialItemByUserRequest,
+): Promise<Response> => {
+  console.log({ body })
+  try {
+    return await baseVessApi('POST', '/v2/creditems/user/items', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteCredentialItem = async (itemId: string): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/v2/creditems/user/items/delete', itemId)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const addHolderContent = async (body: ICreateHolderContentsRequest): Promise<Response> => {
+  const { itemId, ...rest } = body
+  try {
+    return await baseVessApi('POST', '/v2/creditems/user/items/content', itemId, undefined, rest)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteHolderContent = async (contentId: string): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/v2/creditems/user/items/content/delete', contentId)
   } catch (error) {
     throw error
   }
@@ -94,9 +212,65 @@ export const getVESSUserByDid = async (did?: string): Promise<VSUser> => {
   }
 }
 
+export const checkVESSId = async (vessId?: string): Promise<boolean> => {
+  if (!vessId) {
+    throw new Error('vessId is undefined')
+  }
+  try {
+    const res = await getVESSUserByVessId(vessId)
+    console.log('getVESSUserByVessId: ', res)
+    return !!res.user
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getVESSUserByVessId = async (
+  vessId?: string,
+  includeDetials: boolean = false,
+): Promise<VSUserResponse> => {
+  if (!vessId) {
+    throw new Error('vessId is undefined')
+  }
+  try {
+    let q = includeDetials ? `includeDetials=${includeDetials}` : undefined
+    const res = await baseVessApi('GET', '/users/vess', vessId, q)
+    const resjson = await res.json()
+    return resjson as VSUserResponse
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getVESSUserByVessIdForServerUseOnly = async (
+  vessId?: string,
+  includeDetials: boolean = false,
+): Promise<VSUserResponse | null> => {
+  try {
+    let q = includeDetials ? `includeDetials=${includeDetials}` : undefined
+    const res = await baseVessApi('GET', '/users/vess', vessId, q)
+    if (isGoodResponse(res.status)) {
+      const j = (await res.json()) as VSUserResponse
+      return JSON.parse(JSON.stringify(j))
+    }
+    return null
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
 export const issueVerifiableCredentials = async (body: any): Promise<Response> => {
   try {
     return await baseVessApi('POST', '/v2/credential/issue', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
+export const issueSocialVerifiableCredentials = async (body: any): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/v2/credential/social/issue', undefined, undefined, body)
   } catch (error) {
     throw error
   }

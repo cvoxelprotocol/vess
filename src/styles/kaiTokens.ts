@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Wed, 24 Jan 2024 12:57:34 GMT
+ * Generated on Sat, 27 Apr 2024 13:59:19 GMT
  */
 
 import { css } from '@emotion/react'
@@ -8,7 +8,9 @@ import { css } from '@emotion/react'
 export const kaiTokens = css`
   :root {
     box-sizing: border-box;
+    --kai-size-breakpoint-xs-max-width: 26.875rem;
     --kai-size-breakpoint-sm-max-width: 37.4375rem;
+    --kai-size-breakpoint-sm-min-width: 26.9375rem;
     --kai-size-breakpoint-md-max-width: 63.9375rem;
     --kai-size-breakpoint-md-min-width: 37.5rem;
     --kai-size-breakpoint-lg-max-width: 94.8125rem;
@@ -72,6 +74,14 @@ export const kaiTokens = css`
     --kai-size-sys-space-lg: 1.5rem;
     --kai-size-sys-space-xl: 2.5rem;
     --kai-size-sys-space-2xl: 4rem;
+    --kai-size-sys-widget-2xs: 1.5rem;
+    --kai-size-sys-widget-xs: 2rem;
+    --kai-size-sys-widget-sm: 2.5rem;
+    --kai-size-sys-widget-md: 3rem;
+    --kai-size-sys-widget-lg: 3.5rem;
+    --kai-size-sys-widget-xl: 4rem;
+    --kai-size-sys-widget-2xl: 5rem;
+    --kai-color-comp-button-background-filled: #000000;
     --kai-color-ref-dominant-0: #000000;
     --kai-color-ref-dominant-5: #180c1e;
     --kai-color-ref-dominant-8: #2a1735;
@@ -282,6 +292,7 @@ export const kaiTokens = css`
     --kai-color-ref-neutral-variant-100: #ffffff;
     --kai-color-ref-black: #000000;
     --kai-color-ref-white: #ffffff;
+    --kai-color-ref-transparent: #000000;
     --kai-motion-sys-easing-standard: cubic-bezier(0, 0.7, 0.3, 1);
     --kai-motion-sys-duration-fast: 100ms;
     --kai-motion-sys-duration-medium: 300ms;

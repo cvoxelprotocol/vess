@@ -1,5 +1,4 @@
 import {
-  useStateUploadedCID,
   useStateUploadedIconName,
   useStateUploadedIconUrl,
   useStateUploadStatus,
@@ -10,11 +9,10 @@ const TRIM_REGEXP = /\s+/g
 
 export const useFileUpload = () => {
   const [status, setStatus] = useStateUploadStatus()
-  const [cid, setCID] = useStateUploadedCID()
   const [icon, setIcon] = useStateUploadedIconUrl()
   const [name, setName] = useStateUploadedIconName()
 
-  const upload = async (files: File[]) => {
+  const upload = async (files: File[], dir: 'web3' | 's3' = 's3') => {
     setStatus('uploading')
     const formData = new FormData()
     files.forEach((file) => {
@@ -27,15 +25,26 @@ export const useFileUpload = () => {
     }
 
     try {
-      const res = await fetch('/api/web3StorageUploader', options)
-      const data = await res.json()
-      if (data.cid) {
-        setCID(data.cid)
-        setStatus('completed')
-        return data.cid as string
+      if (dir === 'web3') {
+        const res = await fetch('/api/web3StorageUploader', options)
+        const data = await res.json()
+        if (data.cid) {
+          setStatus('completed')
+          return data.cid as string
+        } else {
+          setStatus('failed')
+          return
+        }
       } else {
-        setStatus('failed')
-        return
+        const res = await fetch('/api/s3Uploader', options)
+        const data = await res.json()
+        if (data.url) {
+          setStatus('completed')
+          return data.url as string
+        } else {
+          setStatus('failed')
+          return
+        }
       }
     } catch (e) {
       console.error(e)
@@ -43,23 +52,28 @@ export const useFileUpload = () => {
     }
   }
 
-  const uploadIcon = async (icon: File) => {
+  const uploadIcon = async (icon: File, dir: 'web3' | 's3' = 's3') => {
     if (!icon) return
     setStatus('uploading')
-    const fileName = icon.name.replace(TRIM_REGEXP, '_')
-    const cid = await upload([icon])
-    setName(fileName)
-    setIcon(`https://${cid}${DWEB_LINK}`)
+    try {
+      const fileName = icon.name.replace(TRIM_REGEXP, '_')
+      const res = await upload([icon], dir)
+      const iconUrl = dir === 'web3' ? `https://${res}${DWEB_LINK}` : res
+      setName(fileName)
+      setIcon(iconUrl)
+      return iconUrl
+    } catch (error) {
+      console.error(error)
+      setStatus('failed')
+    }
   }
 
   const resetUploadStatus = () => {
-    setCID(undefined)
     setStatus(undefined)
   }
 
   return {
     status,
-    cid,
     resetUploadStatus,
     uploadIcon,
     setIcon,

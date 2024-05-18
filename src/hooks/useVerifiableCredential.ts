@@ -23,14 +23,37 @@ export const useVerifiableCredential = (id?: string) => {
   const credential = useMemo(() => {
     if (!verifiableCredential) return null
     const vc = JSON.parse(verifiableCredential.data.plainCredential)
+    let title = ''
+    let image = ''
+    if (verifiableCredential.data?.credentialType?.name === 'attendance') {
+      title = vc.credentialSubject.eventName
+      image = vc.credentialSubject.eventIcon
+    } else if (verifiableCredential.data?.credentialType?.name === 'membership') {
+      title = vc.credentialSubject.membershipName
+      image = vc.credentialSubject.membershipIcon
+    } else if (verifiableCredential.data?.credentialType?.name === 'certificate') {
+      title = vc.credentialSubject.certificationName
+      image = vc.credentialSubject.image
+    } else {
+      title = vc.credentialSubject.name || vc.credentialSubject.title
+      image = vc.credentialSubject.image || vc.credentialSubject.icon
+    }
     return {
       ...verifiableCredential.data,
       vc: vc,
+      title,
+      image,
     }
+  }, [verifiableCredential])
+
+  const holder = useMemo(() => {
+    if (!verifiableCredential) return null
+    return verifiableCredential.data.holder
   }, [verifiableCredential])
 
   return {
     credential,
+    holder,
     isInitialLoading,
   }
 }

@@ -302,6 +302,16 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               <Chip
                 variant='tonal'
                 color='neutral'
+                startContent={<PiPencil />}
+                onPress={() => router.push(`/avatar/d/${did}`)}
+                style={{ flex: 1 }}
+                isDisabled={isInitialLoading}
+              >
+                アバター
+              </Chip>
+              <Chip
+                variant='tonal'
+                color='neutral'
                 startContent={<PiShareFat />}
                 style={{ flex: 1 }}
                 isDisabled={isInitialLoading}
@@ -314,6 +324,22 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
               </Chip>
             </FlexHorizontal>
           )}
+          <FlexHorizontal
+            gap='var(--kai-size-sys-space-sm)'
+            width={matches.md ? 'auto' : '100%'}
+            style={{ maxWidth: 'var(--kai-size-ref-448)' }}
+          >
+            <Chip
+              variant='tonal'
+              color='neutral'
+              startContent={<PiPencil />}
+              onPress={() => router.push(`/creds/items/list`)}
+              style={{ flex: 1 }}
+              isDisabled={isInitialLoading}
+            >
+              ステッカー
+            </Chip>
+          </FlexHorizontal>
         </FlexVertical>
       </ProfileRackFrame>
       <ProfileEditModal name={'profileEdit'} did={did || ''} />

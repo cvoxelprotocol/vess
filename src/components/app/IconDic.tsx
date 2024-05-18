@@ -29,6 +29,10 @@ export const ICONS = {
     default: 'PiGearBold',
     filled: 'PiGearFill',
   },
+  USER: {
+    default: 'PiUserBold',
+    filled: 'PiUserFill',
+  },
 }
 
 /* Do NOT change below */
@@ -56,5 +60,8 @@ export const IconDic: FC<IconDicProps> = ({ icon, variant = 'default', ...props 
     case 'SETTING':
       if (variant === 'default') return <PiGearBold {...props} />
       else return <PiGearFill {...props} />
+    case 'USER':
+      if (variant === 'default') return <PiUserBold {...props} />
+      else return <PiUserFill {...props} />
   }
 }

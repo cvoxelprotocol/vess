@@ -1,6 +1,17 @@
+import { VSCredential, VSUser } from './credential'
+
 export interface CreateUserInfo {
   email?: string
   did?: string
+}
+
+export type SocialLink = {
+  id: string
+  userId: string | null
+  organizationId: string | null
+  title: string
+  url: string
+  displayLink: string | null
 }
 
 export interface UpdateUserInfo {
@@ -8,6 +19,8 @@ export interface UpdateUserInfo {
   name?: string
   avatar?: string
   description?: string
+  vessId?: string
+  socialLinks?: (Partial<SocialLink> & { title: string; url: string })[]
 }
 
 export interface UserAuthInfo {
@@ -19,4 +32,50 @@ export interface CreateUserWithGoogleInfo extends CreateUserInfo {
   providerUserId?: string
   accessToken?: string
   refreshToken?: string
+}
+
+export interface AddAvatarRequest {
+  did: string
+  sourcePhotoUrl: string
+  canvasJson: CanvasJson
+  isProfilePhoto: boolean
+  credentialIds: string[]
+  avatarUrl: string
+}
+
+export interface UpdateAvatarRequest {
+  canvasId: string
+  sourcePhotoUrl: string
+  canvasJson: CanvasJson
+  isProfilePhoto: boolean
+  credentialIds: string[]
+  avatarUrl: string
+}
+
+export type Avatar = {
+  id: string
+  userId: string
+  sourcePhotoUrl: string
+  avatarUrl: string
+  canvasJson: CanvasJson
+  isProfilePhoto: boolean
+  editDate: Date
+  canvasCredentials?: CanvasCredential[]
+}
+
+export type CanvasCredential = {
+  canvasId: string
+  credentialId: string
+  credential: VSCredential
+}
+
+export type CanvasJson = {
+  stageWidth: number
+  stageHeight: number
+  baseImage: vcImage
+  vcImages: vcImage[]
+}
+
+export type VSUserResponse = {
+  user: VSUser | null
 }

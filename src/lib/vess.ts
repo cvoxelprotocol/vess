@@ -41,9 +41,10 @@ export const autoVESSConnect = async () => {
 
       const res = await userAuth({ did: session.did.parent })
       const resJson = (await res.json()) as VSUser
-      const { name, avatar, description } = resJson
+      const { name, avatar, description, id, vessId } = resJson
       setVESSAuth({
         user: {
+          id,
           did: session.did.parent,
           account: address,
           originalAddress: address,
@@ -52,6 +53,7 @@ export const autoVESSConnect = async () => {
           name,
           avatar,
           description,
+          vessId,
         },
         connectionStatus: 'connected',
       })

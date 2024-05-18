@@ -21,7 +21,7 @@ export const useVerifiableCredentials = (did?: string) => {
     return (await res.json()) as CredentialsResponse
   }
 
-  const certificates = useMemo<WithCeramicId<BaseCredential>[]>(() => {
+  const formatedCredentials = useMemo<WithCeramicId<BaseCredential>[]>(() => {
     if (!CredentialsByHolder || CredentialsByHolder.data.length === 0) return []
     return CredentialsByHolder.data
       .map((item) => {
@@ -32,48 +32,34 @@ export const useVerifiableCredentials = (did?: string) => {
           credentialType: item.credentialType,
         }
       })
-      .filter(
-        (item) => item.credentialType.name === 'certificate' && !isExpired(item.expirationDate),
-      )
-  }, [CredentialsByHolder])
-
-  const attendances = useMemo<WithCeramicId<BaseCredential>[]>(() => {
-    if (!CredentialsByHolder || CredentialsByHolder.data.length === 0) return []
-    return CredentialsByHolder.data
       .map((item) => {
-        const plainCredential = JSON.parse(item.plainCredential)
+        let title = ''
+        let image = ''
+        if (item.credentialType?.name === 'attendance') {
+          title = item.credentialSubject.eventName
+          image = item.credentialSubject.eventIcon
+        } else if (item.credentialType?.name === 'membership') {
+          title = item.credentialSubject.membershipName
+          image = item.credentialSubject.membershipIcon
+        } else if (item.credentialType?.name === 'certificate') {
+          title = item.credentialSubject.certificationName
+          image = item.credentialSubject.image
+        } else {
+          title = item.credentialSubject.name || item.credentialSubject.title
+          image = item.credentialSubject.image || item.credentialSubject.icon
+        }
         return {
-          ...plainCredential,
-          ceramicId: item.ceramicId,
-          credentialType: item.credentialType,
+          ...item,
+          title,
+          image,
+          sticker: (item.credentialSubject?.sticker as string[]) || [],
         }
       })
-      .filter(
-        (item) => item.credentialType.name === 'attendance' && !isExpired(item.expirationDate),
-      )
-  }, [CredentialsByHolder])
-
-  const memberships = useMemo<WithCeramicId<BaseCredential>[]>(() => {
-    if (!CredentialsByHolder || CredentialsByHolder.data.length === 0) return []
-    return CredentialsByHolder.data
-      .map((item) => {
-        const plainCredential = JSON.parse(item.plainCredential)
-        return {
-          ...plainCredential,
-          ceramicId: item.ceramicId,
-          credentialType: item.credentialType,
-        }
-      })
-      .filter(
-        (item) => item.credentialType.name === 'membership' && !isExpired(item.expirationDate),
-      )
+      .filter((item) => !item.expirationDate || !isExpired(item.expirationDate))
   }, [CredentialsByHolder])
 
   return {
-    certificates,
-    memberships,
-    attendances,
-    CredentialsByHolder,
     isInitialLoading,
+    formatedCredentials,
   }
 }

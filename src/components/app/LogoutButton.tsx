@@ -24,7 +24,7 @@ const LogoutButton: FC = () => {
       endContent={<PiSignOutFill />}
       variant='tonal'
       width='100%'
-      color='dominant'
+      color='subdominant'
       onPress={logout}
       align='space-between'
     >

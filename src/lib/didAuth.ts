@@ -87,19 +87,23 @@ export class DidAuthService {
 
         if (res) {
           const resJson = (await res.json()) as VSUser
-          const { name, avatar, description } = resJson
+          const { name, avatar, description, id, vessId } = resJson
           this.setLoginState(
+            id,
             session.did.parent,
             getAddress(getAddressFromPkh(session.did.parent)),
             name,
             avatar,
             description,
+            vessId,
             'wallet',
           )
         } else {
           this.setLoginState(
+            '',
             session.did.parent,
             getAddress(getAddressFromPkh(session.did.parent)),
+            null,
             null,
             null,
             null,
@@ -248,17 +252,28 @@ export class DidAuthService {
 
         if (res) {
           const resJson = (await res.json()) as VSUser
-          const { name, avatar, description } = resJson
+          const { name, avatar, description, id, vessId } = resJson
           this.setLoginState(
+            id,
             session.did.parent,
             addresses[0],
             name,
             avatar,
             description,
+            vessId,
             user.typeOfLogin,
           )
         } else {
-          this.setLoginState(session.did.parent, addresses[0], null, null, null, user.typeOfLogin)
+          this.setLoginState(
+            '',
+            session.did.parent,
+            addresses[0],
+            null,
+            null,
+            null,
+            null,
+            user.typeOfLogin,
+          )
         }
       } else {
         this.clearState()
@@ -347,16 +362,19 @@ export class DidAuthService {
   }
 
   private setLoginState(
+    id: string,
     did: string,
     address: string,
     name: string | null,
     avatar: string | null,
     description: string | null,
+    vessId?: string | null,
     loginType?: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE,
   ): void {
     console.log('setVESSAuth called')
     setVESSAuth({
       user: {
+        id: id,
         did: did,
         account: address,
         originalAddress: address,
@@ -365,6 +383,7 @@ export class DidAuthService {
         name: name,
         avatar: avatar,
         description: description,
+        vessId: vessId,
       },
       connectionStatus: 'connected',
     })

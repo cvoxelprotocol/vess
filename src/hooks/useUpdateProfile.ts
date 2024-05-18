@@ -21,11 +21,13 @@ export const useUpdateProfile = (did?: string) => {
         setIsUpdatingProfile(true)
         // ootimistic mutation
         await queryClient.cancelQueries(['vsUser', did])
+        await queryClient.cancelQueries(['avatars', did])
         const optimistic = {
           ...vsUser,
           avatar: variables.avatar || '',
           name: variables.name || (!!did ? formatDID(did, 12) : ''),
           description: variables.description || '',
+          vessId: variables.vessId || '',
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
         return { optimistic }
@@ -44,8 +46,11 @@ export const useUpdateProfile = (did?: string) => {
           avatar: v.avatar || '',
           name: v.name || (!!did ? formatDID(did, 12) : ''),
           description: v.description || '',
+          vessId: v.vessId || '',
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
+        queryClient.invalidateQueries(['avatars', did])
+        return { optimistic }
       },
       onError(error) {
         console.error('error', error)

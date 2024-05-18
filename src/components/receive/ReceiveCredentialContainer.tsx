@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from 'kai-kit'
+import { Button, FlexHorizontal, Skelton, Text } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
@@ -9,8 +9,6 @@ import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useStateRPath } from '@/jotai/ui'
-import { Skelton } from '@/kai/skelton'
-import { Text } from '@/kai/text/Text'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 
 export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
@@ -68,10 +66,27 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
               objectFit='cover'
             />
           )}
-          <FlexVertical gap='4px' justifyContent='center' alignItems='center'>
+          <FlexVertical gap='24px' justifyContent='center' alignItems='center'>
             <Text as='h2' typo='headline-sm' color='var(--kai-color-sys-on-background)'>
               {credItem?.title}
             </Text>
+            {credItem?.sticker && (
+              <FlexVertical gap='12px' justifyContent='center' alignItems='center' padding='32px 0'>
+                <Text as='span' typo='title-lg' color='var(--kai-color-sys-secondary)'>
+                  Stickers
+                </Text>
+                <FlexHorizontal gap='4px' justifyContent='center' alignItems='center'>
+                  {credItem?.sticker.map((s, index) => (
+                    <ImageContainer
+                      key={s.id}
+                      src={s.image}
+                      width='var(--kai-size-ref-96)'
+                      objectFit='contain'
+                    />
+                  ))}
+                </FlexHorizontal>
+              </FlexVertical>
+            )}
             {receiveStatus === 'success' && (
               <Text
                 as='span'
@@ -164,7 +179,6 @@ const ReceiveCredentialFrame = styled.div`
   align-items: center;
   justify-content: center;
   gap: var(--kai-size-ref-96);
-
   padding: var(--kai-size-ref-24);
   background: var(--kai-color-sys-background);
 `

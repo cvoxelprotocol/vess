@@ -1,19 +1,20 @@
 import styled from '@emotion/styled'
+import { Skelton } from 'kai-kit'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect, useRef } from 'react'
 import { Button } from 'react-aria-components'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
-import { Skelton } from '@/kai/skelton'
 
 type Props = {
   image?: string
   name?: string
-  size?: string
   credId?: string
+  width?: string
+  height?: string
 }
 
-export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
+export const CredItem: FC<Props> = ({ image, name, credId, width, height }) => {
   const router = useRouter()
   const imgRef = useRef<HTMLImageElement>(null)
   const [isSquare, setIsSquare] = React.useState(false)
@@ -42,14 +43,19 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
       <Skelton
         variant='filled'
         isLoading={!image}
-        width='100%'
+        width={width}
         height='auto'
         aspectRatio='1.618 / 1'
         maskColor='var(--kai-color-sys-background)'
         radius='var(--kai-size-sys-round-md)'
         borderWidth='var(--kai-size-ref-2)'
       >
-        <CredItemFrame onPress={() => handleClick()} data-square={isSquare || undefined}>
+        <CredItemFrame
+          onPress={() => handleClick()}
+          data-square={isSquare || undefined}
+          width={width}
+          height={height}
+        >
           {isSquare ? (
             <CredImageFrame>
               <CredImageBackground src={image} ref={imgRef} />
@@ -60,8 +66,8 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
             <ImageContainer
               src={image || '/sample/event_sample.png'}
               alt={name || 'イベント参加証明画像'}
-              objectFit='cover'
-              width={size}
+              objectFit='contain'
+              width={'100%'}
               style={{ zIndex: 0 }}
               ref={imgRef}
             />
@@ -74,6 +80,36 @@ export const CredItem: FC<Props> = ({ image, name, size = '100%', credId }) => {
     </>
   )
 }
+const CredItemFrame = styled(Button)<{ width?: string; height?: string }>`
+  flex-shrink: 0;
+  border: none;
+  width: ${(props) => props.width ?? 'auto'};
+  height: ${(props) => props.height ?? 'auto'};
+  aspect-ratio: 1.618 / 1;
+  position: relative;
+  transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
+  transition-property: background, transform, opacity;
+  border-radius: var(--kai-size-sys-round-xs);
+  background: transparent;
+  padding: 0;
+  overflow: visible;
+
+  &[data-hovered] {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  &[data-focused] {
+    outline: none;
+  }
+  &[data-focus-visible] {
+    outline: var(--kai-size-ref-1) solid var(--kai-color-sys-dominant);
+    outline-offset: var(--kai-size-ref-2);
+  }
+  &[data-pressed] {
+    transform: scale(0.98);
+    opacity: var(--kai-opacity-sys-state-pressed);
+  }
+`
 
 const CredImageFrame = styled.div`
   position: relative;
@@ -122,33 +158,6 @@ const CredImage = styled.div<{ src: string }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-`
-
-const CredItemFrame = styled(Button)`
-  border: none;
-  position: relative;
-  transition: background var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
-  transition-property: background, transform, opacity;
-  border-radius: var(--kai-size-sys-round-xs);
-  background: transparent;
-  padding: 0;
-  overflow: visible;
-
-  &[data-hovered] {
-    transform: scale(1.02);
-    cursor: pointer;
-  }
-  &[data-focused] {
-    outline: none;
-  }
-  &[data-focus-visible] {
-    outline: var(--kai-size-ref-1) solid var(--kai-color-sys-dominant);
-    outline-offset: var(--kai-size-ref-2);
-  }
-  &[data-pressed] {
-    transform: scale(0.98);
-    opacity: var(--kai-opacity-sys-state-pressed);
-  }
 `
 
 const IconFrame = styled.div`

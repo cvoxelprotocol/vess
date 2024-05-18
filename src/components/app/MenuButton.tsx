@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import { useKai } from 'kai-kit'
+import { useBreakpoint, useKai, Text } from 'kai-kit'
 import React, { FC } from 'react'
 import type { ButtonProps } from 'react-aria-components'
 import { Button as RACButtton } from 'react-aria-components'
-import { Text } from '@/kai/text/Text'
 
 type MenuButtonProps = {
   startContent?: React.ReactNode
@@ -12,9 +11,9 @@ type MenuButtonProps = {
 
 export const MenuButton: FC<MenuButtonProps> = ({ startContent, children, ...props }) => {
   const { kai } = useKai()
-
+  const { matches, breakpointProps } = useBreakpoint()
   return (
-    <MenuButtonFrame {...props}>
+    <MenuButtonFrame isDisabled={matches.lg} {...props} {...breakpointProps}>
       <Text
         as='h3'
         typo='label-lg'

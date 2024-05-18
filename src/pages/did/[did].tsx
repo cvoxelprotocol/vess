@@ -4,8 +4,8 @@ import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
 import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-kit-web'
 import { DisplayProfile } from '@/@types'
-import { HomeContainer } from '@/components/home/HomeContainer'
 import { Meta } from '@/components/layouts/Meta'
+import { ProfileContainer } from '@/components/profile/ProfileContainer'
 
 export const maxDuration = 60
 
@@ -67,7 +67,7 @@ const Profile: NextPage<Props> = (props: Props) => {
         }
         pagePath={`https://app.vess.id/did/${props.did}`}
       />
-      <HomeContainer did={props.did} />
+      <ProfileContainer did={props.did} />
     </>
   )
 }

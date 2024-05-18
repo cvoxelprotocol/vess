@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { IconButton, TextInput, useKai } from 'kai-kit'
+import { IconButton, TextInput, useKai, Text } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { BaseSyntheticEvent, FC, useEffect, useState } from 'react'
@@ -14,7 +14,6 @@ import { LoginButton } from './LoginButton'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useStateRPath } from '@/jotai/ui'
 import { Separator } from '@/kai/separator'
-import { Text } from '@/kai/text/Text'
 import { DidAuthService } from '@/lib/didAuth'
 import { config } from '@/lib/wagmi'
 
@@ -25,7 +24,7 @@ export const LoginPage: FC = () => {
   const { kai } = useKai()
   const router = useRouter()
   const didAuthService = DidAuthService.getInstance()
-  const { did } = useVESSAuthUser()
+  const { did, vessId } = useVESSAuthUser()
   const [rPath, setRpath] = useStateRPath()
 
   // Avoid hydration error
@@ -36,18 +35,19 @@ export const LoginPage: FC = () => {
   }, [])
 
   useEffect(() => {
-    if (did) {
+    if (did || vessId) {
       if (rPath) {
         const returnUrl = rPath.startsWith('/') ? rPath : `/${rPath}`
         setRpath(null)
         router.push(returnUrl)
         return
       } else {
-        router.push(`/did/${did}`)
+        const path = vessId ? `/${vessId}` : `/did/${did}`
+        router.push(path)
         return
       }
     }
-  }, [did])
+  }, [did, vessId])
 
   const {
     handleSubmit,
