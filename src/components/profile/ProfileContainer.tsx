@@ -24,6 +24,7 @@ import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
+import { useShareLink } from '@/hooks/useShareLink'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
@@ -44,6 +45,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { formatedCredentials } = useVerifiableCredentials(did)
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
+  const { shareLink } = useShareLink(undefined)
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -215,8 +217,8 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 />
                 {xLink && (
                   <IdPlate
-                    iconURL={'/brand/x.png'}
-                    id={xLink.displayLink || `@${xLink.url.replace(X_URL, '')}`}
+                    iconURL={'/brand/x_filled.png'}
+                    id={xLink.displayLink || `${xLink.url.replace(X_URL, '')}`}
                     onPress={() => {
                       window.open(xLink.url, '_blank')
                     }}

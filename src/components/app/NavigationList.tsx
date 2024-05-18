@@ -23,7 +23,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
-  const { did } = useVESSAuthUser()
+  const { did, connection } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { setMode, currentMode } = useKai()
@@ -61,57 +61,61 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
           }}
           {...props}
         >
-          <NavigationItem
-            value='PROFILE'
-            onPress={() => {
-              closeNavigation()
-              router.push(`/did/${did}`)
-            }}
-          >
-            <NavigationIcon
-              src={profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'}
-            ></NavigationIcon>
-            <Text typo='label-lg' color='var(--kai-color-sys-on-surface)' lineClamp={1}>
-              {vsUser?.name || 'プロフィール'}
-            </Text>
-          </NavigationItem>
-          {NAVIGATION_LIST.filter((item) => item.id !== 'PROFILE').map((item) => {
-            return (
+          {connection === 'connected' && (
+            <>
               <NavigationItem
-                key={item.id}
-                value={item.id}
+                value='PROFILE'
                 onPress={() => {
                   closeNavigation()
-                  router.push(item.path)
+                  router.push(`/did/${did}`)
                 }}
               >
-                {({ isSelected }) => {
-                  return (
-                    <>
-                      {isSelected ? (
-                        <IconDic
-                          icon={item.id}
-                          variant={'filled'}
-                          size='20'
-                          color='var(--kai-color-sys-on-surface)'
-                        />
-                      ) : (
-                        <IconDic
-                          icon={item.id}
-                          variant={'default'}
-                          size='20'
-                          color='var(--kai-color-sys-on-surface)'
-                        />
-                      )}
-                      <Text typo='label-lg' color='var(--kai-color-sys-on-surface)'>
-                        {item.label}
-                      </Text>
-                    </>
-                  )
-                }}
+                <NavigationIcon
+                  src={profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'}
+                ></NavigationIcon>
+                <Text typo='label-lg' color='var(--kai-color-sys-on-surface)' lineClamp={1}>
+                  {vsUser?.name || 'プロフィール'}
+                </Text>
               </NavigationItem>
-            )
-          })}
+              {NAVIGATION_LIST.filter((item) => item.id !== 'PROFILE').map((item) => {
+                return (
+                  <NavigationItem
+                    key={item.id}
+                    value={item.id}
+                    onPress={() => {
+                      closeNavigation()
+                      router.push(item.path)
+                    }}
+                  >
+                    {({ isSelected }) => {
+                      return (
+                        <>
+                          {isSelected ? (
+                            <IconDic
+                              icon={item.id}
+                              variant={'filled'}
+                              size='20'
+                              color='var(--kai-color-sys-on-surface)'
+                            />
+                          ) : (
+                            <IconDic
+                              icon={item.id}
+                              variant={'default'}
+                              size='20'
+                              color='var(--kai-color-sys-on-surface)'
+                            />
+                          )}
+                          <Text typo='label-lg' color='var(--kai-color-sys-on-surface)'>
+                            {item.label}
+                          </Text>
+                        </>
+                      )
+                    }}
+                  </NavigationItem>
+                )
+              })}
+            </>
+          )}
         </NavigationItemGroup>
       </FlexVertical>
       <FlexVertical gap='var(--kai-size-sys-space-md)' width='100%'>
@@ -133,7 +137,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
             ダークモード
           </Text>
         </Switch>
-        <LogoutButton />
+        {connection === 'connected' && <LogoutButton />}
       </FlexVertical>
     </NavigationListFrame>
   )

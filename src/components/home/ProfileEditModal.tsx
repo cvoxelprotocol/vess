@@ -2,11 +2,13 @@ import styled from '@emotion/styled'
 import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
 import React, { BaseSyntheticEvent, FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { PiAtBold } from 'react-icons/pi'
 import { UpdateUserInfo } from '@/@types/user'
 import { X_URL } from '@/constants/common'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
+import { Separator } from '@/kai/separator'
 import { checkVESSId } from '@/lib/vessApi'
 import { removeUndefined } from '@/utils/objectUtil'
 
@@ -153,7 +155,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           })}
           align='vertical'
           defaultValue={vsUser?.vessId || ''}
-          placeholder='YourVESSID'
+          placeholder={vsUser?.vessId || 'YourVESSID'}
           isReadOnly={hasVESSId}
           description={
             hasVESSId
@@ -183,9 +185,11 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           placeholder='自己紹介文を入力'
           errorMessage={errors.description?.message}
         />
+        <Separator title='SNSリンク' titlePlacement='in-left'></Separator>
         <TextInput
-          label='X(Twitter)'
+          label='X (Twitter)'
           align='vertical'
+          inputStartContent={<PiAtBold size={20} color='var(--kai-color-sys-neutral-minor)' />}
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           {...register('xUserName')}
@@ -194,7 +198,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
               ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
               : ''
           }
-          placeholder='@vess_id'
+          placeholder='username'
           errorMessage={errors.xUserName?.message}
         />
       </Form>
