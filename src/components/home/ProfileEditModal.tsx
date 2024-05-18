@@ -61,20 +61,22 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         data.xUserName && data.xUserName?.includes('@')
           ? data.xUserName.replace('@', '')
           : data.xUserName
-      const xLink = xUserNameWithOutPrefix ? `${X_URL}${xUserNameWithOutPrefix}` : ''
+      const xLink = xUserNameWithOutPrefix ? `${X_URL}${xUserNameWithOutPrefix}` : undefined
       const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
         name: data.name || vsUser?.name || '',
         avatar: icon || undefined,
         description: data.description || vsUser?.description || '',
         did,
         vessId: data.vessId || vsUser?.vessId || '',
-        socialLinks: [
-          {
-            title: 'X',
-            url: xLink,
-            displayLink: `@${xUserNameWithOutPrefix}`,
-          },
-        ],
+        socialLinks: xLink
+          ? [
+              {
+                title: 'X',
+                url: xLink,
+                displayLink: `@${xUserNameWithOutPrefix}`,
+              },
+            ]
+          : undefined,
       })
       const res = await update(content)
       if (res.status === 200) {

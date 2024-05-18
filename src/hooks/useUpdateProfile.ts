@@ -28,6 +28,7 @@ export const useUpdateProfile = (did?: string) => {
           name: variables.name || (!!did ? formatDID(did, 12) : ''),
           description: variables.description || '',
           vessId: variables.vessId || '',
+          socialLinks: variables?.socialLinks || [],
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
         return { optimistic }
@@ -47,6 +48,7 @@ export const useUpdateProfile = (did?: string) => {
           name: v.name || (!!did ? formatDID(did, 12) : ''),
           description: v.description || '',
           vessId: v.vessId || '',
+          socialLinks: v?.socialLinks || [],
         }
         queryClient.setQueryData(['vsUser', did], () => optimistic)
         queryClient.invalidateQueries(['avatars', did])
