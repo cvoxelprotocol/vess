@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useMotionValueEvent, useScroll, motion, useTransform } from 'framer-motion'
+import { useScroll, motion, useTransform } from 'framer-motion'
 import {
   FlexHorizontal,
   IconButton,
@@ -9,7 +9,7 @@ import {
   FlexVertical,
   useBreakpoint,
 } from 'kai-kit'
-import { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
 import { getAddressFromPkh } from 'vess-kit-web'
@@ -19,14 +19,16 @@ import { AvatarEditModal } from '../avatar/AvatarEditModal'
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { IdPlate } from './IdPlate'
+import { SocialLink } from '@/@types/user'
+import { X_URL } from '@/constants/common'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
-import { useLensProfile } from '@/hooks/useLensProfile'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
+import { shortenStr } from '@/utils/objectUtil'
 import { shareOnX } from '@/utils/share'
 
 type ProfileContainerProps = {
@@ -36,20 +38,17 @@ type ProfileContainerProps = {
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { did: myDid } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
-  const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
+  const { avatars } = useAvatar(did)
   const { openModal } = useModal()
-  const { ccProfile, ccLoading } = useCcProfile(did)
-  const { ensProfile, isInitialLoading: ensLoading } = useENS(
-    getAddressFromPkh(did) as `0x${string}`,
-  )
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
-  // const [scrollProgress, setScrollProgress] = useState(1)
+  const { ccProfile } = useCcProfile(did)
+  const { ensProfile } = useENS(getAddressFromPkh(did) as `0x${string}`)
+  const { formatedCredentials } = useVerifiableCredentials(did)
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
-  const { scrollY, scrollYProgress } = useScroll({
+  const { scrollY } = useScroll({
     container: scrollRef,
   })
   const sProgressY = useTransform(() => Math.max(0, Math.min(1, 1 - scrollY.get() / 300)))
@@ -62,7 +61,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   }, [avatars, vsUser?.avatar])
 
   const avatarImageUrl = useMemo(() => {
-    return profileAvatar?.avatarUrl || vsUser?.avatar || 'default_profile.jpg'
+    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
   }, [profileAvatar, vsUser?.avatar])
 
   const { image: avatarImage } = useImage(avatarImageUrl)
@@ -70,6 +69,12 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const isEditable = useMemo(() => {
     return myDid === did
   }, [did, myDid])
+
+  const xLink = useMemo(() => {
+    return vsUser?.socialLink?.some((link) => link.title === 'X' && !!link.url && link.url !== '')
+      ? (vsUser?.socialLink?.find((link) => link.title === 'X') as SocialLink)
+      : undefined
+  }, [vsUser?.socialLink])
 
   const downloadAvatar = async () => {
     if (!avatarImage || !avatarImageUrl) return
@@ -126,11 +131,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               }}
             />
           )}
-          <Skelton
-            isLoading={!profileAvatar?.avatarUrl && !vsUser?.avatar}
-            width='100%'
-            aspectRatio='1'
-          >
+          <Skelton isLoading={isLoadingUser} width='100%' aspectRatio='1'>
             <ProfileImage
               src={avatarImageUrl}
               alt='プロフィール画像'
@@ -194,7 +195,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                     color={'var(--kai-color-sys-on-layer)'}
                     isLoading={isLoadingUser}
                   >
-                    {vsUser?.name}
+                    {vsUser?.name || shortenStr(did)}
                   </Text>
                   {isEditable && (
                     <IconButton
@@ -216,7 +217,19 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 flexWrap='no-wrap'
                 style={{ overflow: 'scroll', paddingLeft: 'var(--kai-size-sys-space-md)' }}
               >
-                <IdPlate iconURL={'/brand/vess.png'} id={getAddressFromPkh(did) as string} />
+                <IdPlate
+                  iconURL={'/brand/vess.png'}
+                  id={vsUser?.vessId || (getAddressFromPkh(did) as string)}
+                />
+                {xLink && (
+                  <IdPlate
+                    iconURL={'/brand/x.png'}
+                    id={xLink.displayLink || `@${xLink.url.replace(X_URL, '')}`}
+                    onPress={() => {
+                      window.open(xLink.url, '_blank')
+                    }}
+                  />
+                )}
                 {ensProfile && <IdPlate iconURL={'/brand/ens.png'} id={ensProfile?.displayName} />}
                 {ccProfile && (
                   <IdPlate iconURL={'/brand/cyberconnect.png'} id={ccProfile?.displayName} />
@@ -237,7 +250,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   flexShrink: 0,
                 }}
               >
-                最新の証明書
+                最新の証明
               </Text>
               <CredList>
                 {formatedCredentials && formatedCredentials.length > 0 ? (
@@ -254,7 +267,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   </>
                 ) : (
                   <Text typo='label-lg' color='var(--kai-color-sys-neutral)'>
-                    最新の証明書はありません
+                    最新の証明はありません
                   </Text>
                 )}
               </CredList>

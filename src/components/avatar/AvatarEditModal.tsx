@@ -64,12 +64,20 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
 
   const stickerImages = useMemo(() => {
     console.log({ formatedCredentials })
-    return formatedCredentials.map((item) => {
-      return {
-        id: item.id,
-        url: item.sticker && item.sticker.length > 0 ? item.sticker[0] : item.image,
-      } as vcImage
-    })
+    return formatedCredentials
+      .filter((item) => {
+        return item.sticker && item.sticker.length > 0
+      })
+      .map((item) => {
+        const stickers = item.sticker as string[]
+        return stickers.map((s: string) => {
+          return {
+            id: item.id,
+            url: s,
+          } as vcImage
+        })
+      })
+      .flat()
   }, [formatedCredentials])
 
   const baseImage = useMemo(() => {
@@ -116,8 +124,11 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     if (over?.id !== 'droppableAvatar') {
       return
     }
+    console.log({ active })
+    const imgUrl = active.data.current?.imageUrl as string
+    const credId = stickerImages.find((s) => s.url === imgUrl)?.id
     addSticker({
-      id: active.id.toString(),
+      id: (credId as string) || active.id.toString(),
       imgUrl: active.data.current?.imageUrl,
       position: {
         x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
@@ -185,7 +196,14 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       if (!newUrl) {
         return
       }
-      const vcs = stickers.map((sticker) => sticker.id)
+      const vcs = [
+        ...new Set(
+          stickers.map((sticker) => {
+            return sticker.id.replace(/_sticker_.*$/, '')
+          }),
+        ),
+      ]
+      console.log({ vcs })
       const avatarRequest: AddAvatarRequest = {
         did: did || '',
         sourcePhotoUrl:
@@ -224,6 +242,9 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     },
     [icon, uploadIcon],
   )
+
+  console.log({ stickerImages })
+  console.log({ stickers })
 
   return (
     <>
@@ -304,7 +325,8 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                   {stickerImages.map((sticker, index) => (
                     <DraggableSticker
                       key={`${sticker.id}-${index}`}
-                      id={sticker.id}
+                      id={`${sticker.id}-${index}`}
+                      credId={sticker.id}
                       imageUrl={sticker.url}
                     />
                   ))}

@@ -52,6 +52,7 @@ export const useVerifiableCredentials = (did?: string) => {
           ...item,
           title,
           image,
+          sticker: (item.credentialSubject?.sticker as string[]) || [],
         }
       })
       .filter((item) => !item.expirationDate || !isExpired(item.expirationDate))

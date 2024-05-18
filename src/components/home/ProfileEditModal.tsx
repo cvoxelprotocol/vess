@@ -2,9 +2,8 @@ import styled from '@emotion/styled'
 import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
 import React, { BaseSyntheticEvent, FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { FlexHorizontal } from '../ui-v1/Common/FlexHorizontal'
-import { IconUploadButton } from './IconUploadButton'
 import { UpdateUserInfo } from '@/@types/user'
+import { X_URL } from '@/constants/common'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
@@ -16,6 +15,10 @@ export type ProfileEditModalProps = {
   name?: string
 }
 
+type UpdateUserInfoInput = UpdateUserInfo & {
+  xUserName?: string
+}
+
 export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const { vsUser } = useVESSUserProfile(did)
@@ -23,20 +26,23 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
   const {
     handleSubmit,
     setError,
-
     register,
     formState: { errors },
-  } = useForm<UpdateUserInfo>({
+  } = useForm<UpdateUserInfoInput>({
     defaultValues: {
       name: vsUser?.name || '',
       avatar: vsUser?.avatar || '',
       description: vsUser?.description || '',
       vessId: vsUser?.vessId || '',
+      xUserName: vsUser?.socialLink?.some((s) => s.title === 'X')
+        ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
+        : '',
     },
+    reValidateMode: 'onChange',
   })
   const { closeModal } = useModal()
 
-  const onClickSubmit = async (data: UpdateUserInfo, e?: BaseSyntheticEvent) => {
+  const onClickSubmit = async (data: UpdateUserInfoInput, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
 
@@ -44,21 +50,33 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       //validate VESS ID
       if (!hasVESSId) {
         const vessId = data.vessId
-        if (!vessId) {
-          setError('vessId', { message: `you need VESS ID` })
-          return
-        }
-        if (!(await isAvailableId(vessId))) {
-          setError('vessId', { message: `@${vessId} is already in use` })
-          return
+        if (vessId) {
+          if (!(await isAvailableId(vessId))) {
+            setError('vessId', { message: `ID:${vessId}はすでに使われています。` })
+            return
+          }
         }
       }
+      const xUserNameWithOutPrefix =
+        data.xUserName && data.xUserName?.includes('@')
+          ? data.xUserName.replace('@', '')
+          : data.xUserName
+      const xLink = xUserNameWithOutPrefix ? `${X_URL}${xUserNameWithOutPrefix}` : undefined
       const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
         name: data.name || vsUser?.name || '',
-        avatar: icon || vsUser?.avatar || '',
+        avatar: icon || undefined,
         description: data.description || vsUser?.description || '',
         did,
         vessId: data.vessId || vsUser?.vessId || '',
+        socialLinks: xLink
+          ? [
+              {
+                title: 'X',
+                url: xLink,
+                displayLink: `@${xUserNameWithOutPrefix}`,
+              },
+            ]
+          : undefined,
       })
       const res = await update(content)
       if (res.status === 200) {
@@ -125,13 +143,26 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           {...register('vessId', {
-            required: 'VESS IDは必須です',
+            required: false,
+            validate: (value) => {
+              if (value !== '' && !/^[a-zA-Z0-9]{4,}$/.test(value || '')) {
+                return '半角英数字のみ、4文字以上で入力してください'
+              }
+              return true
+            },
           })}
+          align='vertical'
           defaultValue={vsUser?.vessId || ''}
-          placeholder='VESS IDは一度設定すると変更できません'
-          isDisabled={hasVESSId}
+          placeholder='YourVESSID'
+          isReadOnly={hasVESSId}
+          description={
+            hasVESSId
+              ? '変更できません。'
+              : '一度設定すると変更できません。半角英数字のみ、4文字以上で入力してください。'
+          }
           errorMessage={errors.vessId?.message}
         />
+
         <TextInput
           label='ニックネーム'
           align='vertical'
@@ -152,6 +183,20 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           placeholder='自己紹介文を入力'
           errorMessage={errors.description?.message}
         />
+        <TextInput
+          label='X(Twitter)'
+          align='vertical'
+          labelWidth={'var(--kai-size-ref-96)'}
+          width='100%'
+          {...register('xUserName')}
+          defaultValue={
+            vsUser?.socialLink?.some((s) => s.title === 'X')
+              ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
+              : ''
+          }
+          placeholder='@vess_id'
+          errorMessage={errors.xUserName?.message}
+        />
       </Form>
     </Modal>
   )
@@ -162,5 +207,5 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: var(--kai-size-sys-space-md);
-  padding: var(--kai-size-sys-space-none);
+  padding: var(--kai-size-sys-space-lg) var(--kai-size-sys-space-none);
 `

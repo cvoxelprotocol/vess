@@ -1,8 +1,17 @@
-import { VSCredential } from './credential'
+import { VSCredential, VSUser } from './credential'
 
 export interface CreateUserInfo {
   email?: string
   did?: string
+}
+
+export type SocialLink = {
+  id: string
+  userId: string | null
+  organizationId: string | null
+  title: string
+  url: string
+  displayLink: string | null
 }
 
 export interface UpdateUserInfo {
@@ -11,6 +20,7 @@ export interface UpdateUserInfo {
   avatar?: string
   description?: string
   vessId?: string
+  socialLinks?: (Partial<SocialLink> & { title: string; url: string })[]
 }
 
 export interface UserAuthInfo {

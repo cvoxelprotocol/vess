@@ -58,7 +58,7 @@ const Profile: NextPage<Props> = (props: Props) => {
   return (
     <>
       <Meta
-        pageTitle={`${title} | VESS`}
+        pageTitle={`${title}`}
         pageDescription={
           props.user?.description ||
           `This is ${props.user?.vessId || props.user?.name || 'awesome user'}'s profile page.`

@@ -9,11 +9,12 @@ import { useAvatarSizeAtom } from '@/jotai/ui'
 
 type DraggableStickerProps = {
   id: string
+  credId: string
   imageUrl: string
   onAddEnd?: () => void
 }
 
-const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl, onAddEnd }) => {
+const DraggableSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onAddEnd }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const [stickerSize, setStickerSize] = useState({ width: 0, height: 0 })
   const { addSticker } = useStickers()
@@ -61,7 +62,7 @@ const DraggableSticker: FC<DraggableStickerProps> = ({ id, imageUrl, onAddEnd })
     <StickerFrame
       onPress={() => {
         addSticker({
-          id: id,
+          id: credId,
           imgUrl: imageUrl,
           width: stickerSize.width / avatarSize,
           height: stickerSize.height / avatarSize,
