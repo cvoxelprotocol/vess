@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Text, Switch, useKai, FlexVertical } from 'kai-kit'
+import { Text, Switch, useKai, FlexVertical, Button } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useTheme } from 'next-themes'
@@ -7,6 +7,7 @@ import React, { FC, useEffect, useState } from 'react'
 import type { RadioProps, RadioGroupProps, PressEvent } from 'react-aria-components'
 import { Radio, RadioGroup, Button as RACButton } from 'react-aria-components'
 import { isMobile } from 'react-device-detect'
+import { PiSignIn } from 'react-icons/pi'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { IconDic } from './IconDic'
 import { useNCLayoutContext } from './NCLayout'
@@ -137,7 +138,21 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
             ダークモード
           </Text>
         </Switch>
-        {connection === 'connected' && <LogoutButton />}
+        {connection === 'connected' ? (
+          <LogoutButton />
+        ) : (
+          <Button
+            variant='tonal'
+            width='100%'
+            endContent={<PiSignIn />}
+            style={{ justifyContent: 'space-between' }}
+            onPress={() => {
+              router.push('/login')
+            }}
+          >
+            ログインする
+          </Button>
+        )}
       </FlexVertical>
     </NavigationListFrame>
   )

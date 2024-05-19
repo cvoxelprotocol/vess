@@ -35,6 +35,20 @@ const IdPlateFrame = styled(Button)`
   border: 1px solid var(--kai-color-sys-neutral-outline);
   padding: var(--kai-size-sys-space-2xs);
   padding-right: var(--kai-size-sys-space-sm);
+
+  &[data-hovered] {
+    cursor: pointer;
+  }
+
+  &[data-focused] {
+    /* border: none; */
+    outline: none;
+  }
+
+  &[data-focus-visible] {
+    outline-offset: -2px;
+    outline: 2cappx solid var(--kai-color-sys-dominant);
+  }
 `
 
 const IconImage = styled.img`

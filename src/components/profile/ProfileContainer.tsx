@@ -220,7 +220,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 {xLink && (
                   <IdPlate
                     iconURL={'/brand/x_filled.png'}
-                    id={xLink.displayLink || `${xLink.url.replace(X_URL, '')}`}
+                    id={xLink.displayLink || `@${xLink.url.replace(X_URL, '')}`}
                     onPress={() => {
                       window.open(xLink.url, '_blank')
                     }}

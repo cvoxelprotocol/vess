@@ -211,7 +211,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
           sourcePhoto?.url ||
           profileAvatar?.sourcePhotoUrl ||
           vsUser?.avatar ||
-          '/default_profile.jpg',
+          'https://app.vess.id/default_profile.jpg ',
         canvasJson: canvasJson,
         isProfilePhoto: true,
         credentialIds: vcs,
