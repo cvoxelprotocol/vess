@@ -29,7 +29,7 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { shortenStr } from '@/utils/objectUtil'
-import { shareOnX, shareLink } from '@/utils/share'
+import { shareOnX } from '@/utils/share'
 
 type ProfileContainerProps = {
   did: string
@@ -169,7 +169,9 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               color='dominant'
               size='md'
               icon={<PiExport size={24} />}
-              onPress={() => shareLink(window.location.href)}
+              onPress={() =>
+                shareLink(window.location.href, 'Check my own #DigitalIdentity with #vessid !')
+              }
             />
           </FlexVertical>
         </ProfileTop>

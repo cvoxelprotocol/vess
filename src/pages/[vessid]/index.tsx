@@ -65,7 +65,7 @@ const Profile: NextPage<Props> = (props: Props) => {
           `This is ${props.user?.vessId || props.user?.name || 'awesome user'}'s profile page.`
         }
         pagePath={`https://app.vess.id/${props.vessid}`}
-        // pageImg={imageUrl}
+        pageImg={imageUrl}
       />
       <ProfileContainer did={props.user?.did || ''} />
     </>

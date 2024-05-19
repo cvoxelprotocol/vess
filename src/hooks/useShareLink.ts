@@ -1,7 +1,6 @@
-import { url } from 'inspector'
 import { useSnackbar } from 'kai-kit'
 import type { SnackbarProps } from 'kai-kit'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 type UseShareLinkProps = {
   snackbarOptions?: Omit<SnackbarProps, 'text'>
@@ -14,17 +13,23 @@ export const useShareLink = (props: UseShareLinkProps | undefined) => {
     ...props,
   })
 
-  const shareLink = useCallback((url: string) => {
-    void (async () => {
-      if (navigator.share) {
-        await navigator.share({
-          url,
-        })
-      } else {
-        if (navigator.clipboard) {
-          await navigator.clipboard.writeText(url)
-          openSnackbar()
+  const shareLink = useCallback((url: string, text?: string) => {
+    ;(async () => {
+      try {
+        if (navigator.share) {
+          const data = {
+            text,
+            url,
+          }
+          await navigator.share(data)
+        } else {
+          if (navigator.clipboard) {
+            await navigator.clipboard.writeText(url)
+            openSnackbar()
+          }
         }
+      } catch (error) {
+        console.error(error)
       }
     })()
   }, [])
