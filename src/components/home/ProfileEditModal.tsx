@@ -70,7 +70,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
         description: data.description || vsUser?.description || '',
         did,
         vessId: data.vessId || vsUser?.vessId || '',
-        socialLinks: xLink
+        socialLink: xLink
           ? [
               {
                 title: 'X',

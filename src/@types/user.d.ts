@@ -10,7 +10,7 @@ export interface UpdateUserInfo {
   avatar?: string
   description?: string
   vessId?: string
-  socialLinks?: (Partial<SocialLink> & { title: string; url: string })[]
+  socialLink?: (Partial<SocialLink> & { title: string; url: string })[]
 }
 
 export interface UserAuthInfo {
