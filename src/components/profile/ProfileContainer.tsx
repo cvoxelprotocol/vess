@@ -215,7 +215,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               >
                 <IdPlate
                   iconURL={'/brand/vess.png'}
-                  id={vsUser?.vessId || (getAddressFromPkh(did) as string)}
+                  id={`@${vsUser?.vessId}` || (getAddressFromPkh(did) as string)}
                 />
                 {xLink && (
                   <IdPlate
