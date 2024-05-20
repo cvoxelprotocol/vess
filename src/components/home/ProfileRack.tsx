@@ -30,7 +30,7 @@ type ProfileRackProps = {
 }
 
 export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
-  const { originalAddress } = useVESSAuthUser()
+  const { originalAddress, vessId } = useVESSAuthUser()
   const { vsUser, isInitialLoading } = useVESSUserProfile(did)
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(
@@ -317,7 +317,10 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 isDisabled={isInitialLoading}
                 onPress={() => {
                   openProfileURLCopied()
-                  copy(`https://app.vess.id/did/${did}`)
+                  const url = vessId
+                    ? `https://app.vess.id/${vessId}`
+                    : `https://app.vess.id/did/${did}`
+                  copy(url)
                 }}
               >
                 共有する

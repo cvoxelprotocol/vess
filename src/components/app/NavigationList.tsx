@@ -24,7 +24,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
-  const { did, connection } = useVESSAuthUser()
+  const { did, connection, vessId } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { setMode, currentMode } = useKai()
@@ -68,7 +68,11 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
                 value='PROFILE'
                 onPress={() => {
                   closeNavigation()
-                  router.push(`/did/${did}`)
+                  if (vessId) {
+                    router.push(`/${vessId}`)
+                  } else {
+                    router.push(`/did/${did}`)
+                  }
                 }}
               >
                 <NavigationIcon

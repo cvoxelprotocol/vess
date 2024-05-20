@@ -54,9 +54,7 @@ const Profile: NextPage<Props> = (props: Props) => {
     props.user?.name || props.user?.vessId
       ? `@${props.user?.vessId}`
       : getAddressFromPkh(props.user?.did || '').slice(0, 10) || 'プロフィール'
-  const avatar =
-    props.user?.avatar ||
-    'https://usericonupload.s3.ap-northeast-1.amazonaws.com/19489bbf-68e0-4538-951c-5eeb9cd00ec6.png'
+  const avatar = props.user?.avatar || `${process.env.NEXT_PUBLIC_VESS_URL}/default_profile.jpg`
   const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${
     props.user?.vessId
       ? `@${props.user?.vessId}`

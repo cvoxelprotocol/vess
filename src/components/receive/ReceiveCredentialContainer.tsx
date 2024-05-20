@@ -12,7 +12,7 @@ import { useStateRPath } from '@/jotai/ui'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 
 export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
-  const { did } = useVESSAuthUser()
+  const { did, vessId } = useVESSAuthUser()
   const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
   const [rPath, setRpath] = useStateRPath()
@@ -125,7 +125,9 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                   variant='filled'
                   width='var(--kai-size-ref-240)'
                   onPress={() => {
-                    if (did) {
+                    if (vessId) {
+                      router.push(`/${vessId}`)
+                    } else {
                       return router.push(`/did/${did}`)
                     }
                   }}
@@ -154,8 +156,12 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                     round='md'
                     isDisabled={receiveStatus === 'receiving'}
                     onPress={() => {
-                      if (did) {
-                        router.push(`/did/${did}`)
+                      if (vessId) {
+                        router.push(`/${vessId}`)
+                      } else if (did) {
+                        return router.push(`/did/${did}`)
+                      } else {
+                        return router.push(`/`)
                       }
                     }}
                   >
