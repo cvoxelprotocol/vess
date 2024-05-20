@@ -11,7 +11,7 @@ import { DidAuthService } from '@/lib/didAuth'
 const Callback: NextPage = () => {
   const { kai } = useKai()
   const didAuthService = DidAuthService.getInstance()
-  const { did } = useVESSAuthUser()
+  const { did, vessId } = useVESSAuthUser()
   const [rPath, setRpath] = useStateRPath()
 
   useEffect(() => {
@@ -30,7 +30,11 @@ const Callback: NextPage = () => {
         router.push(returnUrl)
         return
       } else {
-        router.push(`/did/${did}`)
+        if (vessId) {
+          router.push(`/${vessId}`)
+        } else {
+          router.push(`/did/${did}`)
+        }
         return
       }
     }

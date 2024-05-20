@@ -12,10 +12,8 @@ import {
 import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
-import { getAddressFromPkh } from 'vess-kit-web'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
-
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { IdPlate } from './IdPlate'
@@ -25,9 +23,11 @@ import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
+import { useShareLink } from '@/hooks/useShareLink'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
+import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
 import { shareOnX } from '@/utils/share'
 
@@ -45,6 +45,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { formatedCredentials } = useVerifiableCredentials(did)
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
+  const { shareLink } = useShareLink(undefined)
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -58,10 +59,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
 
   const profileAvatar = useMemo(() => {
     return avatars?.find((avatar) => avatar.isProfilePhoto)
-  }, [avatars, vsUser?.avatar])
+  }, [avatars])
 
   const avatarImageUrl = useMemo(() => {
-    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
+    return vsUser?.avatar || profileAvatar?.avatarUrl || '/default_profile.jpg'
   }, [profileAvatar, vsUser?.avatar])
 
   const { image: avatarImage } = useImage(avatarImageUrl)
@@ -163,19 +164,14 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               right: 'var(--kai-size-sys-space-md)',
             }}
           >
-            {/* <IconButton
-              variant='tonal'
-              color='dominant'
-              size='md'
-              icon={<BsTwitterX size={24} />}
-              onPress={() => Tweet()}
-            /> */}
             <IconButton
               variant='tonal'
               color='dominant'
               size='md'
               icon={<PiExport size={24} />}
-              onPress={() => downloadAvatar()}
+              onPress={() =>
+                shareLink(window.location.href, 'Check my own #DigitalIdentity with #vessid !')
+              }
             />
           </FlexVertical>
         </ProfileTop>
@@ -219,11 +215,11 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               >
                 <IdPlate
                   iconURL={'/brand/vess.png'}
-                  id={vsUser?.vessId || (getAddressFromPkh(did) as string)}
+                  id={vsUser?.vessId ? `@${vsUser?.vessId}` : getAddressFromPkh(did)}
                 />
                 {xLink && (
                   <IdPlate
-                    iconURL={'/brand/x.png'}
+                    iconURL={'/brand/x_filled.png'}
                     id={xLink.displayLink || `@${xLink.url.replace(X_URL, '')}`}
                     onPress={() => {
                       window.open(xLink.url, '_blank')

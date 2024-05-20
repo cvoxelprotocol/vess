@@ -2,11 +2,12 @@ import styled from '@emotion/styled'
 import { Modal, useModal, Button, TextInput, TextArea } from 'kai-kit'
 import React, { BaseSyntheticEvent, FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { PiAtBold } from 'react-icons/pi'
 import { UpdateUserInfo } from '@/@types/user'
 import { X_URL } from '@/constants/common'
-import { useFileUpload } from '@/hooks/useFileUpload'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
+import { Separator } from '@/kai/separator'
 import { checkVESSId } from '@/lib/vessApi'
 import { removeUndefined } from '@/utils/objectUtil'
 
@@ -20,7 +21,6 @@ type UpdateUserInfoInput = UpdateUserInfo & {
 }
 
 export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
-  const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const { vsUser } = useVESSUserProfile(did)
   const { update, isUpdatingProfile } = useUpdateProfile(did)
   const {
@@ -64,11 +64,10 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       const xLink = xUserNameWithOutPrefix ? `${X_URL}${xUserNameWithOutPrefix}` : undefined
       const content: UpdateUserInfo = removeUndefined<UpdateUserInfo>({
         name: data.name || vsUser?.name || '',
-        avatar: icon || undefined,
         description: data.description || vsUser?.description || '',
         did,
         vessId: data.vessId || vsUser?.vessId || '',
-        socialLinks: xLink
+        socialLink: xLink
           ? [
               {
                 title: 'X',
@@ -89,18 +88,6 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
       setError('vessId', { message: `something went wrong...` })
     }
   }
-
-  const onSelect = React.useCallback(
-    async (files: FileList | null) => {
-      if (files !== null && files[0]) {
-        await uploadIcon(files[0])
-        const objectURL = URL.createObjectURL(files[0])
-        URL.revokeObjectURL(objectURL)
-        // setErrors('')
-      }
-    },
-    [icon, uploadIcon],
-  )
 
   const hasVESSId = useMemo(() => !!vsUser?.vessId && vsUser?.vessId !== '', [vsUser?.vessId])
   const isAvailableId = async (vessId?: string) => {
@@ -127,15 +114,12 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           type='submit'
           form='profile-edit'
           width='auto'
-          isDisabled={status === 'uploading' || isUpdatingProfile}
+          isDisabled={isUpdatingProfile}
         >
           保存
         </Button>
       }
-      disableClose={status === 'uploading' || isUpdatingProfile}
-      onClose={() => {
-        setIcon('')
-      }}
+      disableClose={isUpdatingProfile}
     >
       <Form id='profile-edit' onSubmit={handleSubmit(onClickSubmit)}>
         <TextInput
@@ -153,7 +137,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           })}
           align='vertical'
           defaultValue={vsUser?.vessId || ''}
-          placeholder='YourVESSID'
+          placeholder={vsUser?.vessId || 'YourVESSID'}
           isReadOnly={hasVESSId}
           description={
             hasVESSId
@@ -183,9 +167,11 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
           placeholder='自己紹介文を入力'
           errorMessage={errors.description?.message}
         />
+        <Separator title='SNSリンク' titlePlacement='in-left'></Separator>
         <TextInput
-          label='X(Twitter)'
+          label='X (Twitter)'
           align='vertical'
+          inputStartContent={<PiAtBold size={20} color='var(--kai-color-sys-neutral-minor)' />}
           labelWidth={'var(--kai-size-ref-96)'}
           width='100%'
           {...register('xUserName')}
@@ -194,7 +180,7 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
               ? vsUser?.socialLink?.find((s) => s.title === 'X').url.replace(X_URL, '')
               : ''
           }
-          placeholder='@vess_id'
+          placeholder='username'
           errorMessage={errors.xUserName?.message}
         />
       </Form>

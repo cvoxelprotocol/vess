@@ -207,7 +207,11 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       const avatarRequest: AddAvatarRequest = {
         did: did || '',
         sourcePhotoUrl:
-          icon || sourcePhoto?.url || profileAvatar?.sourcePhotoUrl || vsUser?.avatar || '',
+          icon ||
+          sourcePhoto?.url ||
+          profileAvatar?.sourcePhotoUrl ||
+          vsUser?.avatar ||
+          'https://app.vess.id/default_profile.jpg ',
         canvasJson: canvasJson,
         isProfilePhoto: true,
         credentialIds: vcs,
@@ -283,7 +287,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                 />
               </StickerTools>
               <DroppableAvatar
-                baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
+                baseAvatarImgUrl={baseImage ?? '/default_profile.jpg'}
                 stageRef={stageRef}
               />
             </AvatarFrame>

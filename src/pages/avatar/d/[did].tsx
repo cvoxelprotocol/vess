@@ -2,10 +2,10 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
-import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from 'vess-kit-web'
 import { DisplayProfile } from '@/@types'
 import { AvatarContainer } from '@/components/avatar/AvatarContainer'
 import { Meta } from '@/components/layouts/Meta'
+import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from '@/utils/did'
 
 export const maxDuration = 60
 

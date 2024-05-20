@@ -22,21 +22,6 @@ const Home: NextPage = () => {
     return <></>
   }
 
-  // if (did ) {
-  //   return (
-  //     <>
-  //       <Meta />
-  //       <ProfileContainer did={did} />
-  //     </>
-  //   )
-  // } else {
-  //   return (
-  //     <Wrapper>
-  //       <Meta pagePath={`https://app.vess.id/login`} />
-  //       <LoginPage />
-  //     </Wrapper>
-  //   )
-  // }
   return (
     <Wrapper>
       <Meta pagePath={`https://app.vess.id/login`} />
