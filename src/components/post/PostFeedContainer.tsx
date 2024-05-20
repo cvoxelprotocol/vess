@@ -36,9 +36,13 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
     )
   }, [credItem?.post, posts])
 
+  const jumpToDetailPost = (id: string) => {
+    window.open(`${process.env.NEXT_PUBLIC_VESS_URL}/post/detail/${id}`)
+  }
+
   return (
     <>
-      <ReceiveCredentialFrame className='dark'>
+      <PostFeedFrame className='dark'>
         <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-24)'>
           <Skelton
             width='var(--kai-size-ref-192)'
@@ -64,17 +68,18 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
                   width='var(--kai-size-ref-112)'
                   height='var(--kai-size-ref-112)'
                   objectFit='contain'
+                  onClick={() => jumpToDetailPost(post.id)}
                 />
               )
             })}
           </FlexHorizontal>
         </FlexVertical>
-      </ReceiveCredentialFrame>
+      </PostFeedFrame>
     </>
   )
 }
 
-const ReceiveCredentialFrame = styled.div`
+const PostFeedFrame = styled.div`
   position: fixed;
   inset: 0px;
   display: flex;

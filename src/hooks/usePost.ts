@@ -65,6 +65,7 @@ export const usePost = (id?: string) => {
       console.log('deleteItem: ', v)
       queryClient.invalidateQueries(['userCredentialItems', v.userId])
       queryClient.invalidateQueries(['credItem', v.credentialItemId])
+      queryClient.invalidateQueries(['fetchPost', v.postId])
       if (data.status === 200) {
         closeLoading()
       } else {
@@ -75,6 +76,7 @@ export const usePost = (id?: string) => {
       console.error('error', error)
       queryClient.invalidateQueries(['userCredentialItems', v.userId])
       queryClient.invalidateQueries(['credItem', v.credentialItemId])
+      queryClient.invalidateQueries(['fetchPost', v.postId])
       closeLoading()
     },
   })

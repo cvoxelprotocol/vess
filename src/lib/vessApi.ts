@@ -92,7 +92,7 @@ export const addPost = async (body: AddPostRequest): Promise<Response> => {
 
 export const deletePost = async (postId: string, userId: string): Promise<Response> => {
   try {
-    return await baseVessApi('PUT', '/v2/post/delete', postId, undefined, { userId })
+    return await baseVessApi('POST', '/v2/post/delete', postId, undefined, { userId })
   } catch (error) {
     throw error
   }
@@ -278,6 +278,19 @@ export const checkVESSId = async (vessId?: string): Promise<boolean> => {
     const res = await getVESSUserByVessId(vessId)
     console.log('getVESSUserByVessId: ', res)
     return !!res.user
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getVESSUserById = async (userId?: string): Promise<VSUser | null> => {
+  if (!userId) {
+    throw new Error('userId is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', '/users/id', userId)
+    const resjson = await res.json()
+    return resjson as VSUser
   } catch (error) {
     throw error
   }
