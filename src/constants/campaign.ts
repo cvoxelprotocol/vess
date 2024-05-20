@@ -1,0 +1,1 @@
+export const PIZZA_PARTY_CRED_ID = '558834fa-6002-4240-a5d4-a0ef26886c7f'
