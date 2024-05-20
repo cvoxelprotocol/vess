@@ -26,7 +26,6 @@
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ipld/car": "^5.2.6",
-    "@orbisclub/orbis-sdk": "^0.4.47",
     "@radix-ui/react-toast": "^1.1.2",
     "@supabase/supabase-js": "^2.21.0",
     "@tanstack/query-core": "^4.29.11",

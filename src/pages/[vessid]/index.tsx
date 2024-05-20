@@ -2,11 +2,11 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
-import { getAddressFromPkh } from 'vess-kit-web'
 import { VSUser } from '@/@types/credential'
 import { Meta } from '@/components/layouts/Meta'
 import { ProfileContainer } from '@/components/profile/ProfileContainer'
 import { getVESSUserByVessIdForServerUseOnly } from '@/lib/vessApi'
+import { getAddressFromPkh } from '@/utils/did'
 
 export const maxDuration = 60
 

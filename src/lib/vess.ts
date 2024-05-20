@@ -1,11 +1,12 @@
 import { type AuthResponse } from 'vess-kit-core'
-import { getAddressFromPkh, getVESSKit } from 'vess-kit-web'
+import { getAuthorizedSession, getVESSKit } from 'vess-kit-web'
 import { getAddress } from 'viem'
 import { initializeApolloForCompose } from './apolloForCompose'
 import { userAuth } from './vessApi'
 import { VSUser } from '@/@types/credential'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
+import { getAddressFromPkh } from '@/utils/did'
 
 const getVESSService = () => {
   return getVESSKit(!isProd())
@@ -24,6 +25,12 @@ export const disconnectVESSAuth = () => {
 
 export const autoVESSConnect = async () => {
   try {
+    // check if session is already authorized
+    const session = await getAuthorizedSession()
+    if (!session) {
+      return
+    }
+
     setVESSAuth({
       user: undefined,
       connectionStatus: 'connecting',

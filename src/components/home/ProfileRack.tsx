@@ -14,7 +14,6 @@ import {
 import router from 'next/router'
 import { FC, useMemo } from 'react'
 import { PiPencil, PiShareFat } from 'react-icons/pi'
-import { getAddressFromPkh } from 'vess-kit-web'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { ProfileEditModal } from './ProfileEditModal'
@@ -23,6 +22,7 @@ import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
+import { getAddressFromPkh } from '@/utils/did'
 
 type ProfileRackProps = {
   did: string

@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { formatDID } from 'vess-kit-web'
 import { useVESSLoading } from './useVESSLoading'
 import { useVESSUserProfile } from './useVESSUserProfile'
 import { UpdateUserInfo } from '@/@types/user'
-import { updateOrbisProfile } from '@/lib/OrbisUpdateHelper'
 import { updateUserProfile } from '@/lib/vessApi'
+import { formatDID } from '@/utils/did'
 
 export const useUpdateProfile = (did?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
@@ -65,16 +64,17 @@ export const useUpdateProfile = (did?: string) => {
 
   const updateProfile = async (params: UpdateUserInfo): Promise<Response> => {
     //update vess auth user
+    // const orbisPromise = updateOrbisProfile({
+    //   did: params.did,
+    //   content: {
+    //     username: params.name || '',
+    //     pfp: params.avatar || '',
+    //     description: params.description || '',
+    //   },
+    // })
+    // const res = await Promise.all([vessAuthPromise, orbisPromise])
     const vessAuthPromise = updateUserProfile(params)
-    const orbisPromise = updateOrbisProfile({
-      did: params.did,
-      content: {
-        username: params.name || '',
-        pfp: params.avatar || '',
-        description: params.description || '',
-      },
-    })
-    const res = await Promise.all([vessAuthPromise, orbisPromise])
+    const res = await Promise.all([vessAuthPromise])
     return res[0]
   }
 

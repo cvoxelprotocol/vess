@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FlexHorizontal, FlexVertical, Text } from 'kai-kit'
+import { FlexHorizontal, Text } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
@@ -31,7 +31,7 @@ export const AvatarContainer: FC<Props> = ({ did }) => {
   const { ensProfile, isInitialLoading: ensLoading } = useENS(
     getAddressFromPkh(did) as `0x${string}`,
   )
-  const { lensProfile, lensLoading } = useLensProfile(did)
+  const { lensProfile } = useLensProfile(did)
   const { formatedCredentials } = useVerifiableCredentials(did)
 
   const avatarUrl = useMemo(() => {

@@ -1,4 +1,4 @@
-import { isDIDstring, ETH_CHAIN_ID } from 'vess-kit-web'
+import { isDIDstring, ETH_CHAIN_ID } from '@/utils/did'
 export const removeUndefined = <T extends {}>(object: T): T => {
   return Object.fromEntries(Object.entries(object).filter(([_, v]) => v !== undefined)) as T
 }
