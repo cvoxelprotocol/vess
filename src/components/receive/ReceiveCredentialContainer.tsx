@@ -82,6 +82,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                       src={s.image}
                       width='var(--kai-size-ref-96)'
                       objectFit='contain'
+                      height='auto'
                     />
                   ))}
                 </FlexHorizontal>
