@@ -2,6 +2,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
+import { getAddressFromPkh } from 'vess-kit-web'
 import { VSUser } from '@/@types/credential'
 import { Meta } from '@/components/layouts/Meta'
 import { ProfileContainer } from '@/components/profile/ProfileContainer'
@@ -49,11 +50,20 @@ export const getStaticProps: GetStaticProps<Props, { vessid?: string }> = async 
 }
 
 const Profile: NextPage<Props> = (props: Props) => {
-  const title = props.user?.name || props.user?.vessId || 'Profile'
+  const title =
+    props.user?.name ||
+    props.user?.vessId ||
+    getAddressFromPkh(props.user?.did || '').slice(0, 10) ||
+    'プロフィール'
   const avatar =
     props.user?.avatar ||
     'https://usericonupload.s3.ap-northeast-1.amazonaws.com/19489bbf-68e0-4538-951c-5eeb9cd00ec6.png'
-  const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${title}&avatar=${avatar}`
+  const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${
+    props.user?.vessId ||
+    props.user?.name ||
+    getAddressFromPkh(props.user?.did || '').slice(0, 10) ||
+    'VESS'
+  }&avatar=${avatar}`
   console.log('imageUrl', imageUrl)
 
   return (
