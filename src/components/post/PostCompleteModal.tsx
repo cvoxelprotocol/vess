@@ -1,25 +1,29 @@
 import styled from '@emotion/styled'
 import { FlexVertical, ModalOverlay, useModal, useBreakpoint, useKai, Text } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
+import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { IdPlate } from '../profile/IdPlate'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Post } from '@/@types/user'
 import { useSelectedPostAtom } from '@/jotai/ui'
+import post from '@/pages/api/og/post'
 import { shareOnX } from '@/utils/share'
 
 type Props = {
   post?: Post
+  credId?: string
 } & ModalOverlayProps
 
-export const PostCompleteModal: FC<Props> = ({ post, ...props }) => {
+export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
   const { closeModal } = useModal()
   const { breakpointProps } = useBreakpoint()
-  const { kai } = useKai()
   const [_, setPost] = useSelectedPostAtom()
+  const router = useRouter()
 
   const onClose = () => {
     setPost(undefined)
+    router.push(`/creds/items/feed/${credId}`)
     closeModal()
   }
 
@@ -50,24 +54,32 @@ export const PostCompleteModal: FC<Props> = ({ post, ...props }) => {
           justifyContent='center'
         >
           <InnerFrame>
-            {post?.image && (
-              <ImageContainer src={post?.image} width='100%' height='auto' objectFit='contain' />
-            )}
-            <FlexVertical
-              padding={'var(--kai-size-sys-space-sm)'}
-              style={{
-                width: '100%',
-                height: 'auto',
-                borderRadius: 'var(--kai-size-sys-round-sm)',
-              }}
-              background={kai.color.sys.layerFarther}
-              alignItems='center'
-            >
-              <Text as='p' typo='label-md' color={kai.color.sys.onLayerMinor}>
-                画像を長押しで保存できます。
-              </Text>
+            <FlexVertical width='100%' gap='var(--kai-size-sys-space-sm)'>
+              {post?.image && (
+                <ImageContainer
+                  src={post?.image}
+                  width='100%'
+                  height='auto'
+                  objectFit='contain'
+                  style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
+                />
+              )}
+              <FlexVertical
+                padding={'var(--kai-size-sys-space-sm)'}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  borderRadius: 'var(--kai-size-sys-round-sm)',
+                }}
+                background={'var(--kai-color-sys-layer-farther)'}
+                alignItems='center'
+              >
+                <Text as='p' typo='label-md' color={'var(--kai-color-sys-on-layer-minor)'}>
+                  画像を長押しで保存できます。
+                </Text>
+              </FlexVertical>
             </FlexVertical>
-            <Text as='p' typo='title-lg' color={kai.color.sys.onLayer}>
+            <Text as='p' typo='title-lg' color={'var(--kai-color-sys-on-layer)'}>
               投稿が完了しました！
             </Text>
             <IdPlate iconURL={'/brand/x_filled.png'} id={'Xでシェアする'} onPress={() => Tweet()} />

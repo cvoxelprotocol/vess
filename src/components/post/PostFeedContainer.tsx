@@ -9,9 +9,11 @@ import { useNCLayoutContext } from '../app/NCLayout'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { PostDetailModal } from './PostDetailModal'
+import { PostImage } from './PostImage'
 import { Post } from '@/@types/user'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
-import { usePostsAtom, useSelectedPostAtom } from '@/jotai/ui'
+import { selectedPost, usePostsAtom, useSelectedPostAtom } from '@/jotai/ui'
+import post from '@/pages/api/og/post'
 
 type Props = {
   id?: string
@@ -22,6 +24,8 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
   const { setIsDefaultOpenOnDesktop, setIsFullContent, openNavigation } = useNCLayoutContext()
   const { matches, breakpointProps } = useBreakpoint()
   const tileGridRef = useRef<HTMLDivElement>(null)
+  const tileGridOuterRef = useRef<HTMLDivElement>(null)
+  const [tileGridHeight, setTileGridHeight] = useState(0)
   const [scrollHeight, setScrollHeight] = useState(0)
   const { openModal, closeModal } = useModal()
   const [selectedPost, setPost] = useSelectedPostAtom()
@@ -36,7 +40,6 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
       console.log('New data received:', newData)
       setPosts((prev) => [...prev, newData.payload as Post])
     }
-
     return () => {
       eventSource.close()
     }
@@ -62,13 +65,23 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
       setIsFullContent(false)
       setIsDefaultOpenOnDesktop(false)
     }
+    return () => {
+      setIsFullContent(false)
+      setIsDefaultOpenOnDesktop(true)
+    }
   }, [matches])
 
   useEffect(() => {
-    if (tileGridRef.current) {
+    if (tileGridRef.current && tileGridOuterRef.current) {
+      console.log(
+        'scrollHeight: ',
+        tileGridRef.current.scrollHeight,
+        tileGridOuterRef.current.offsetHeight,
+      )
+      setTileGridHeight(tileGridOuterRef.current.offsetHeight)
       setScrollHeight(tileGridRef.current.scrollHeight)
     }
-  }, [tileGridRef.current?.scrollHeight])
+  }, [tileGridRef.current?.scrollHeight, tileGridOuterRef.current?.offsetHeight])
 
   return (
     <>
@@ -78,7 +91,13 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
             icon={<PiListLight size={32} />}
             variant='outlined'
             color='neutral'
-            onPress={() => openNavigation()}
+            onPress={() => {
+              if (matches.lg) {
+                router.push('/')
+              } else {
+                openNavigation()
+              }
+            }}
           />
           {!matches.lg && (
             <Image
@@ -91,61 +110,58 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
           )}
         </HeaderFrame>
 
-        <TileGridFrame scrollHeight={scrollHeight / 2} ref={tileGridRef} {...breakpointProps}>
-          <TileFat />
-          <TileFat />
-          <TileTall />
-          <TileFat />
-          <TileFat />
-          <TileSquare />
-          <TileTall />
-          <TileTall />
-          <TileTall />
-          {matches.lg && (
-            <>
-              <TileFat />
-              <TileFat />
-              <TileTall />
-              <TileFat />
-              <TileFat />
-              <TileSquare />
-              <TileTall />
-              <TileTall />
-              <TileTall />
-            </>
-          )}
-        </TileGridFrame>
-        {/* <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-24)'>
-          <Skelton
-            width='var(--kai-size-ref-192)'
-            height='var(--kai-size-ref-192)'
-            radius='var(--kai-size-sys-round-full)'
-            className='dark'
-            isLoading={isInitialLoading}
-          ></Skelton>
-          {!isInitialLoading && credItem?.image && (
-            <ImageContainer
-              src={credItem?.image}
-              width='var(--kai-size-ref-192)'
-              // height='var(--kai-size-ref-192)'
-              objectFit='cover'
-            />
-          )}
-          <FlexHorizontal gap='var(--kai-size-ref-8)'>
+        <TileGridOuterFrame
+          scrollHeight={scrollHeight + 16}
+          // scrollTime={5}
+          scrollTime={(60 * 400) / scrollHeight}
+          ref={tileGridOuterRef}
+          data-enough-image={scrollHeight > tileGridHeight || undefined}
+          {...breakpointProps}
+        >
+          <TileGridFrame ref={tileGridRef} {...breakpointProps}>
             {items.map((post) => {
               return (
-                <ImageContainer
-                  key={post.id}
-                  src={post.image || ''}
-                  width='var(--kai-size-ref-112)'
-                  height='var(--kai-size-ref-112)'
-                  objectFit='contain'
-                  onClick={() => openPostDetail(post)}
-                />
+                <>
+                  <PostImage
+                    key={post.id}
+                    src={post.image || ''}
+                    onClick={() => openPostDetail(post)}
+                  />
+                </>
               )
             })}
-          </FlexHorizontal>
-        </FlexVertical> */}
+          </TileGridFrame>
+          {matches.lg && scrollHeight > tileGridHeight && (
+            <>
+              <TileGridFrame {...breakpointProps}>
+                {items.map((post) => {
+                  return (
+                    <>
+                      <PostImage
+                        key={post.id}
+                        src={post.image || ''}
+                        onClick={() => openPostDetail(post)}
+                      />
+                    </>
+                  )
+                })}
+              </TileGridFrame>
+              <TileGridFrame {...breakpointProps}>
+                {items.map((post) => {
+                  return (
+                    <>
+                      <PostImage
+                        key={post.id}
+                        src={post.image || ''}
+                        onClick={() => openPostDetail(post)}
+                      />
+                    </>
+                  )
+                })}
+              </TileGridFrame>
+            </>
+          )}
+        </TileGridOuterFrame>
         <RichLogoImg src='/brand/pizzaDAO_logo_rich.png' />
         <FooterFrame>
           {!matches.lg && (
@@ -195,12 +211,10 @@ const ScrollAnimation = (scrollHeight: number) => keyframes`
   100% { transform: translateY(-${scrollHeight}px); }
 `
 
-const TileGridFrame = styled.div<{ scrollHeight: number }>`
+const TileGridOuterFrame = styled.div<{ scrollHeight: number; scrollTime: number }>`
   grid-column: 2 / 3;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 108px;
-  /* grid-auto-flow: dense; */
+  display: flex;
+  flex-direction: column;
   gap: var(--kai-size-sys-space-md);
   width: 100%;
   height: 100svh;
@@ -209,8 +223,27 @@ const TileGridFrame = styled.div<{ scrollHeight: number }>`
 
   &[data-media-lg] {
     overflow: visible;
-    animation: ${({ scrollHeight }) => ScrollAnimation(scrollHeight)} 60s linear infinite;
-    padding: 0 var(--kai-size-sys-space-md);
+    padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
+    &[data-enough-image] {
+      animation: ${({ scrollHeight }) => ScrollAnimation(scrollHeight)}
+        ${({ scrollTime }) => scrollTime}s linear infinite;
+      padding: 0 var(--kai-size-sys-space-md);
+    }
+  }
+`
+
+const TileGridFrame = styled.div`
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 80px;
+  grid-auto-flow: dense;
+  gap: var(--kai-size-sys-space-md);
+  width: 100%;
+  overflow: scroll;
+
+  &[data-media-lg] {
+    grid-auto-rows: 108px;
   }
 `
 
@@ -246,25 +279,4 @@ const FooterFrame = styled.div`
   height: var(--kai-size-ref-64);
   padding: 0 var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
   z-index: var(--kai-z-index-sys-fixed-default);
-`
-
-const TileFat = styled.div`
-  grid-column: span 4;
-  grid-row: span 2;
-  border-radius: var(--kai-size-sys-round-md);
-  background-color: var(--kai-color-sys-neutral);
-`
-
-const TileTall = styled.div`
-  grid-column: span 2;
-  grid-row: span 3;
-  border-radius: var(--kai-size-sys-round-md);
-  background-color: var(--kai-color-sys-dominant);
-`
-
-const TileSquare = styled.div`
-  grid-column: span 2;
-  grid-row: span 2;
-  border-radius: var(--kai-size-sys-round-md);
-  background-color: var(--kai-color-sys-neutral);
 `

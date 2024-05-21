@@ -228,28 +228,33 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 )}
               </FlexHorizontal>
             </FlexVertical>
-            <FlexVertical
-              gap='var(--kai-size-sys-space-sm)'
-              width='100%'
-              style={{ overflowY: 'visible' }}
-            >
-              <Text
-                typo='title-md'
-                color='var(--kai-color-sys-on-layer)'
-                style={{
-                  padding: '0 var(--kai-size-sys-space-md)',
-                  flexShrink: 0,
-                }}
+            {formatedCredentials.filter((cred) => {
+              console.log('cred.id: ', cred.credentialType.id)
+              return cred.credentialSubject.eventId === `${PIZZA_PARTY_CRED_ID}`
+            }).length > 0 && (
+              <FlexVertical
+                gap='var(--kai-size-sys-space-sm)'
+                width='100%'
+                style={{ overflowY: 'visible' }}
               >
-                参加中のイベント
-              </Text>
-              <BannerList>
-                <Banner
-                  imgUrl='/banner/pizzaDAO2024.jpg'
-                  onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
-                />
-              </BannerList>
-            </FlexVertical>
+                <Text
+                  typo='title-md'
+                  color='var(--kai-color-sys-on-layer)'
+                  style={{
+                    padding: '0 var(--kai-size-sys-space-md)',
+                    flexShrink: 0,
+                  }}
+                >
+                  参加中のイベント
+                </Text>
+                <BannerList>
+                  <Banner
+                    imgUrl='/banner/pizzaDAO2024.jpg'
+                    onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
+                  />
+                </BannerList>
+              </FlexVertical>
+            )}
             <FlexVertical
               gap='var(--kai-size-sys-space-sm)'
               width='100%'

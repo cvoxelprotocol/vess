@@ -77,6 +77,7 @@ export const NCLayout: FC<Props> = ({
     } else {
       setIsDefaultOpenOnDesktop(true)
     }
+    console.log('isFullContent: ', isFullContent)
   }, [matches, isDefaultOpenOnDesktop, isFullContent])
 
   return (

@@ -10,6 +10,7 @@ import {
 } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
 import { FC, useMemo } from 'react'
+import { PiTrashBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Post } from '@/@types/user'
 import { usePost } from '@/hooks/usePost'
@@ -62,41 +63,56 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
         >
           <InnerFrame>
             {post?.image && (
-              <ImageContainer src={post?.image} width='100%' height='auto' objectFit='contain' />
-            )}
-            {vsUserById && (
-              <FlexHorizontal
+              <ImageContainer
+                src={post?.image}
                 width='100%'
-                alignItems='center'
-                justifyContent='center'
-                gap='var(--kai-size-ref-6)'
-              >
-                <ImageContainer
-                  src={vsUserById.avatar || 'default_profile.jpg'}
-                  width='var(--kai-size-ref-32)'
-                  height='var(--kai-size-ref-32)'
-                  objectFit='contain'
-                  borderRadius='var(--kai-size-sys-round-full)'
-                />
-                <Text typo='title-md' color='var(--kai-color-sys-on-layer)'>
-                  {`@${vsUserById?.name || 'Unknown'}`}
+                height='auto'
+                objectFit='contain'
+                style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
+              />
+            )}
+            <FlexVertical
+              gap='var(--kai-size-sys-space-xs)'
+              width='100%'
+              justifyContent='center'
+              alignItems='center'
+            >
+              {vsUserById && (
+                <FlexHorizontal
+                  width='100%'
+                  alignItems='center'
+                  justifyContent='center'
+                  gap='var(--kai-size-ref-6)'
+                >
+                  <ImageContainer
+                    src={vsUserById.avatar || 'default_profile.jpg'}
+                    width='var(--kai-size-ref-28)'
+                    height='var(--kai-size-ref-28)'
+                    objectFit='contain'
+                    borderRadius='var(--kai-size-sys-round-full)'
+                  />
+                  <Text typo='title-md' color='var(--kai-color-sys-on-layer)'>
+                    {`${`@${vsUserById.vessId}` || vsUserById?.name || 'Unknown'}`}
+                  </Text>
+                </FlexHorizontal>
+              )}
+              {post?.createdAt && (
+                <Text typo='label-lg' color='var(--kai-color-sys-neutral)' align='center'>
+                  {formatDateWithMinutes(post.createdAt.toLocaleString())}
                 </Text>
-              </FlexHorizontal>
-            )}
-            {post?.createdAt && (
-              <Text typo='label-md' color='var(--kai-color-sys-neutral)'>
-                {formatDateWithMinutes(post.createdAt.toLocaleString())}
-              </Text>
-            )}
+              )}
+            </FlexVertical>
             {isEditable && (
               <FlexVertical width='100%' alignItems='end' gap='var(--kai-size-ref-24)'>
                 <Button
                   color='error'
-                  variant='tonal'
+                  variant='outlined'
+                  size='sm'
                   style={{ flexGrow: 0 }}
                   onPress={() => deletePost()}
+                  startContent={<PiTrashBold />}
                 >
-                  Delete
+                  削除する
                 </Button>
               </FlexVertical>
             )}

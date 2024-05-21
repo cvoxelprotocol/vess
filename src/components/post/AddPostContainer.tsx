@@ -222,7 +222,6 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         await handlePost(newUrl, canvasId)
 
         setIsSaving(false)
-        onClose()
       } catch (error) {
         console.error(error)
         setIsSaving(false)
@@ -279,6 +278,9 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
           if (resPost.id) {
             setReceiveStatus('success')
             setPost(resPost)
+            setIcon('')
+            setSelectedID(undefined)
+            setStickers([])
             openModal('PostCompleteModal')
           }
         }
@@ -388,8 +390,13 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
           )}
         </DndContext>
       </AddPostFrame>
-      <PostStikerListModal name='stickerListModal' stickers={stickerImages} />
-      <PostCompleteModal name='PostCompleteModal' post={selectedPost} />
+      <PostStikerListModal name='stickerListModal' className={'dark'} stickers={stickerImages} />
+      <PostCompleteModal
+        name='PostCompleteModal'
+        className={'dark'}
+        post={selectedPost}
+        credId={id}
+      />
     </>
   )
 }

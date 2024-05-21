@@ -44,7 +44,7 @@ export const IconUploadButton: FC<IconUploadButtonProps> = ({
 
 const StyledButton = styled(Button)<{ defaultIcon: string }>`
   background-image: url(${({ defaultIcon }) => defaultIcon});
-  background-size: contain;
+  background-size: cover;
   aspect-ratio: 1;
   position: relative;
   transition: all 0.5s cubic-bezier(0, 0.7, 0.3, 1);
