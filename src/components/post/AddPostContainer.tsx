@@ -17,6 +17,7 @@ import { Button as RACButton } from 'react-aria-components'
 import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
 import { vcImage } from '../avatar/ImageCanvas'
 import { IconUploadButton } from '../home/IconUploadButton'
+import { PhotoUploadButton } from './PhotoUploadButton'
 import { PostCompleteModal } from './PostCompleteModal'
 import { PostStikerListModal } from './PostStikerListModal'
 import { AddPostRequest, Post, AddAvatarRequest, CanvasJson } from '@/@types/user'
@@ -325,10 +326,14 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   isUploading={status === 'uploading'}
                 />
               </StickerTools>
-              <DroppablePostImage
-                baseAvatarImgUrl={icon || '/default_profile.jpg'}
-                stageRef={stageRef}
-              />
+              {icon ? (
+                <DroppablePostImage
+                  baseAvatarImgUrl={icon || '/default_profile.jpg'}
+                  stageRef={stageRef}
+                />
+              ) : (
+                <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
+              )}
             </AvatarFrame>
 
             <FlexVertical
@@ -351,6 +356,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                 width='100%'
                 color='neutral'
                 variant='tonal'
+                isDisabled={isSaving}
                 style={{ flexGrow: 0 }}
                 onPress={() => {
                   onClose()
