@@ -5,8 +5,8 @@ import { FC, useMemo } from 'react'
 import { IdPlate } from '../profile/IdPlate'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Post } from '@/@types/user'
-import { useShareLink } from '@/hooks/useShareLink'
 import { useSelectedPostAtom } from '@/jotai/ui'
+import { shareOnX } from '@/utils/share'
 
 type Props = {
   post?: Post
@@ -17,7 +17,6 @@ export const PostCompleteModal: FC<Props> = ({ post, ...props }) => {
   const { breakpointProps } = useBreakpoint()
   const { kai } = useKai()
   const [_, setPost] = useSelectedPostAtom()
-  const { shareLink } = useShareLink(undefined)
 
   const onClose = () => {
     setPost(undefined)
@@ -28,6 +27,13 @@ export const PostCompleteModal: FC<Props> = ({ post, ...props }) => {
     if (!post) return ''
     return `https://app.vess.id/post/detial/${post?.id}`
   }, [post])
+
+  const Tweet = () => {
+    const textForPizza =
+      'Check my new #GlobalPizzaParty post on @vess_id ! \n #PizzaDao @BTCPizzaDayTYO @Pizza_DAO \n\n'
+    const intent = shareOnX(textForPizza, shareUrl)
+    window.open(intent, '_blank')
+  }
 
   return (
     <ModalOverlay
@@ -64,13 +70,7 @@ export const PostCompleteModal: FC<Props> = ({ post, ...props }) => {
             <Text as='p' typo='title-lg' color={kai.color.sys.onLayer}>
               投稿が完了しました！
             </Text>
-            <IdPlate
-              iconURL={'/brand/x_filled.png'}
-              id={'Xでシェアする'}
-              onPress={() => {
-                shareLink(shareUrl, 'Check my new post with #vessid !')
-              }}
-            />
+            <IdPlate iconURL={'/brand/x_filled.png'} id={'Xでシェアする'} onPress={() => Tweet()} />
           </InnerFrame>
         </FlexVertical>
       </ContentFrame>
