@@ -52,6 +52,7 @@
     "@web3auth/ethereum-provider": "^7.3.2",
     "@web3auth/no-modal": "^7.3.2",
     "@web3auth/openlogin-adapter": "^7.3.2",
+    "browser-image-compression": "^2.0.2",
     "color": "^4.2.3",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",

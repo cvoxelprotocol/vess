@@ -1,16 +1,24 @@
 import { DndContext } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import { Button, useModal, Text, FlexHorizontal, IconButton, useBreakpoint } from 'kai-kit'
+import {
+  Button,
+  useModal,
+  Text,
+  FlexHorizontal,
+  IconButton,
+  useBreakpoint,
+  FlexVertical,
+} from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
 import { vcImage } from '../avatar/ImageCanvas'
-import { StickerListModal } from '../avatar/StikerListModal'
 import { IconUploadButton } from '../home/IconUploadButton'
 import { PostCompleteModal } from './PostCompleteModal'
+import { PostStikerListModal } from './PostStikerListModal'
 import { AddPostRequest, Post, AddAvatarRequest, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
@@ -21,18 +29,21 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import {
-  useAvatarSizeAtom,
   useIstransformerAtom,
+  usePostImageSizeAtom,
   useSelectedIDAtom,
   useSelectedPostAtom,
   useStateRPath,
   useStickersAtom,
 } from '@/jotai/ui'
 import { isGoodResponse } from '@/utils/http'
+import { compressImage } from '@/utils/image'
 import { dataURLtoFile } from '@/utils/objectUtil'
 
-const DroppableAvatar = dynamic(() => import('@/components/avatar/DroppableAvatar'), { ssr: false })
-const DraggableSticker = dynamic(() => import('@/components/avatar/DraggableSticker'), {
+const DroppablePostImage = dynamic(() => import('@/components/post/DroppablePostImage'), {
+  ssr: false,
+})
+const DraggablePostSticker = dynamic(() => import('@/components/post/DraggablePostSticker'), {
   ssr: false,
 })
 
@@ -61,7 +72,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const [isTransformer, setIsTransformer] = useIstransformerAtom()
   const { add } = useAvatar(did)
   const [isSaving, setIsSaving] = useState(false)
-  const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
+  const [postImageSize, _] = usePostImageSizeAtom()
   const { addSticker } = useStickers()
   const [selectedPost, setPost] = useSelectedPostAtom()
 
@@ -113,11 +124,11 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
       id: credId || active.id.toString(),
       imgUrl: imgUrl,
       position: {
-        x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
-        y: ((active.rect.current.translated?.top ?? 0) - over.rect.top) / avatarSize,
+        x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / postImageSize.w,
+        y: ((active.rect.current.translated?.top ?? 0) - over.rect.top) / postImageSize.h,
       },
-      width: active.data.current?.width / avatarSize,
-      height: active.data.current?.height / avatarSize,
+      width: active.data.current?.width / postImageSize.w,
+      height: active.data.current?.height / postImageSize.h,
     })
   }
 
@@ -176,13 +187,14 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
       console.log('canvasJson:', canvasJson)
 
       try {
-        const dataURL = stageRef.current.toDataURL({ pixelRatio: 1000 / avatarSize })
-        const file = dataURLtoFile(dataURL, 'vess-avatar.png')
+        const dataURL = stageRef.current.toDataURL({ pixelRatio: 1000 / postImageSize.w })
+        const file = dataURLtoFile(dataURL, 'vess-avatar.jpg')
         if (!file) {
           console.log('file is null')
           return
         }
-        const newUrl = await uploadIcon(file)
+        const convertedFile = await compressImage(file)
+        const newUrl = await uploadIcon(convertedFile)
         if (!newUrl) {
           return
         }
@@ -228,16 +240,20 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
     setIcon('')
     setSelectedID(undefined)
     setStickers([])
-    closeModal()
+    router.back()
   }
 
   const onSelect = useCallback(
     async (files: FileList | null) => {
       if (files !== null && files[0]) {
-        await uploadIcon(files[0])
-        const objectURL = URL.createObjectURL(files[0])
-        URL.revokeObjectURL(objectURL)
-        // setErrors('')
+        try {
+          const convertedFile = await compressImage(files[0])
+          await uploadIcon(convertedFile)
+          const objectURL = URL.createObjectURL(files[0])
+          URL.revokeObjectURL(objectURL)
+        } catch (error) {
+          console.error(error)
+        }
       }
     },
     [icon, uploadIcon],
@@ -307,26 +323,20 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   isUploading={status === 'uploading'}
                 />
               </StickerTools>
-              <DroppableAvatar
+              <DroppablePostImage
                 baseAvatarImgUrl={icon ?? 'default_profile.jpg'}
                 stageRef={stageRef}
               />
             </AvatarFrame>
 
-            <FlexHorizontal gap={'var(--kai-size-sys-space-md)'} style={{ width: '100%' }}>
+            <FlexVertical
+              alignItems='center'
+              gap={'var(--kai-size-sys-space-md)'}
+              style={{ width: '100%' }}
+            >
               <Button
-                color='neutral'
-                variant='tonal'
-                style={{ flexGrow: 0 }}
-                onPress={() => {
-                  onClose()
-                  closeModal()
-                }}
-              >
-                キャンセル
-              </Button>
-              <Button
-                variant='tonal'
+                width='100%'
+                variant='filled'
                 style={{ flexGrow: 1 }}
                 isLoading={isSaving}
                 onPress={() => {
@@ -335,7 +345,18 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
               >
                 投稿する
               </Button>
-            </FlexHorizontal>
+              <Button
+                width='100%'
+                color='neutral'
+                variant='tonal'
+                style={{ flexGrow: 0 }}
+                onPress={() => {
+                  onClose()
+                }}
+              >
+                キャンセル
+              </Button>
+            </FlexVertical>
           </ContentFrame>
           {matches.lg ? (
             <StickerList>
@@ -348,7 +369,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
               {stickerImages.length !== 0 ? (
                 <InnerFrame>
                   {stickerImages.map((sticker, index) => (
-                    <DraggableSticker
+                    <DraggablePostSticker
                       key={`${sticker.id}-${index}`}
                       id={sticker.id}
                       credId={sticker.id}
@@ -367,7 +388,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
           )}
         </DndContext>
       </AddPostFrame>
-      <StickerListModal name='stickerListModal' stickers={stickerImages} />
+      <PostStikerListModal name='stickerListModal' stickers={stickerImages} />
       <PostCompleteModal name='PostCompleteModal' post={selectedPost} />
     </>
   )
