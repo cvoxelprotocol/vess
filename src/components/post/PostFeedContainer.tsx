@@ -1,9 +1,10 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { FlexHorizontal, IconButton, Skelton, useBreakpoint, useModal } from 'kai-kit'
+import { Button, IconButton, Skelton, useBreakpoint, useModal } from 'kai-kit'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
-import { PiListLight } from 'react-icons/pi'
+import { PiListLight, PiPlusBold } from 'react-icons/pi'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -24,6 +25,7 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
   const [scrollHeight, setScrollHeight] = useState(0)
   const { openModal, closeModal } = useModal()
   const [selectedPost, setPost] = useSelectedPostAtom()
+  const router = useRouter()
 
   useEffect(() => {
     // subscribe to new posts
@@ -78,15 +80,17 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
             color='neutral'
             onPress={() => openNavigation()}
           />
-          <Image
-            src='/brand/pizzaDAO_logo_white.png'
-            width={160}
-            height={28}
-            alt='pizzaDAO logo'
-            objectFit='contain'
-          />
+          {!matches.lg && (
+            <Image
+              src='/brand/pizzaDAO_logo_white.png'
+              width={160}
+              height={28}
+              alt='pizzaDAO logo'
+              objectFit='contain'
+            />
+          )}
         </HeaderFrame>
-        <FooterFrame></FooterFrame>
+
         <TileGridFrame scrollHeight={scrollHeight / 2} ref={tileGridRef} {...breakpointProps}>
           <TileFat />
           <TileFat />
@@ -143,6 +147,18 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
           </FlexHorizontal>
         </FlexVertical> */}
         <RichLogoImg src='/brand/pizzaDAO_logo_rich.png' />
+        <FooterFrame>
+          {!matches.lg && (
+            <Button
+              variant='filled'
+              color='dominant'
+              startContent={<PiPlusBold />}
+              onPress={() => router.push(`/creds/items/post/${id}`)}
+            >
+              投稿する
+            </Button>
+          )}
+        </FooterFrame>
       </PostFeedFrame>
       <PostDetailModal name='PostDetailModal' post={selectedPost} />
     </>
@@ -220,15 +236,15 @@ const FooterFrame = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  display: grid;
-  grid-template-columns: var(--kai-size-sys-space-2xl) 1fr var(--kai-size-sys-space-2xl);
-  place-items: center;
+  display: flex;
+  justify-content: end;
   background: linear-gradient(
     to bottom,
     rgb(from var(--kai-color-sys-black) r g b / 0),
-    var(--kai-color-sys-black)
+    rgb(from var(--kai-color-sys-black) r g b / 0.6)
   );
-  height: var(--kai-size-ref-96);
+  height: var(--kai-size-ref-64);
+  padding: 0 var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
   z-index: var(--kai-z-index-sys-fixed-default);
 `
 

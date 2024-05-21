@@ -75,7 +75,7 @@ export const NCLayout: FC<Props> = ({
         setIsNavigationOpen(false)
       }
     } else {
-      setIsDefaultOpenOnDesktop(false)
+      setIsDefaultOpenOnDesktop(true)
     }
   }, [matches, isDefaultOpenOnDesktop, isFullContent])
 

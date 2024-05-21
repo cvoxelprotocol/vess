@@ -291,7 +291,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
 
   return (
     <>
-      <AddPostFrame>
+      <AddPostFrame className='dark'>
         <DndContext onDragEnd={handleDragEnd}>
           <ContentFrame {...breakpointProps}>
             <AvatarFrame {...breakpointProps}>
@@ -324,14 +324,14 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                 />
               </StickerTools>
               <DroppablePostImage
-                baseAvatarImgUrl={icon ?? 'default_profile.jpg'}
+                baseAvatarImgUrl={icon || '/default_profile.jpg'}
                 stageRef={stageRef}
               />
             </AvatarFrame>
 
             <FlexVertical
               alignItems='center'
-              gap={'var(--kai-size-sys-space-md)'}
+              gap={'var(--kai-size-sys-space-sm)'}
               style={{ width: '100%' }}
             >
               <Button
@@ -402,8 +402,7 @@ const AddPostFrame = styled.div`
   align-items: center;
   justify-content: center;
   gap: var(--kai-size-ref-96);
-
-  padding: var(--kai-size-ref-24);
+  background: var(--kai-color-sys-background);
 `
 const ContentFrame = styled.div`
   display: flex;
