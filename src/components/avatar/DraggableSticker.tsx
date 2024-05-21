@@ -86,6 +86,7 @@ const DraggableSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onA
         }}
         data-dragging={isDragging || undefined}
         data-over={(over?.id === 'droppableAvatar' && isDragging) || undefined}
+        tabIndex={-1}
       />
     </StickerFrame>
   )
@@ -110,6 +111,7 @@ const StickerFrame = styled(Button)`
   aspect-ratio: 1;
   background: none;
   border: none;
+  border-radius: var(--kai-size-sys-round-md);
   padding: 0;
   transition: transform var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
 
@@ -119,6 +121,16 @@ const StickerFrame = styled(Button)`
 
   &[data-pressed] {
     transform: scale(0.98);
+  }
+
+  &[data-focused] {
+    border: none;
+    outline: none;
+  }
+
+  &[data-focus-visible] {
+    border: none;
+    outline: 1px solid var(--kai-color-sys-dominant);
   }
 `
 
@@ -156,6 +168,11 @@ const StickerImage = styled.img<{
 
   &[data-over] {
     animation: ${DroppingAnimation} var(--kai-motion-sys-duration-slow) infinite;
+  }
+
+  &:focus-visible {
+    border: none;
+    outline: none;
   }
 `
 

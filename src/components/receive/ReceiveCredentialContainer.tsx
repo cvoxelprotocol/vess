@@ -50,7 +50,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   return (
     <>
       <ReceiveCredentialFrame className='dark'>
-        <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-24)'>
+        <CredentialFrame>
           <Skelton
             width='var(--kai-size-ref-192)'
             height='var(--kai-size-ref-192)'
@@ -58,29 +58,43 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
             className='dark'
             isLoading={isInitialLoading}
           ></Skelton>
-          {!isInitialLoading && credItem?.image && (
-            <ImageContainer
-              src={credItem?.image}
-              width='var(--kai-size-ref-192)'
-              // height='var(--kai-size-ref-192)'
-              objectFit='cover'
-            />
-          )}
           <FlexVertical gap='24px' justifyContent='center' alignItems='center'>
-            <Text as='h2' typo='headline-sm' color='var(--kai-color-sys-on-background)'>
+            {!isInitialLoading && credItem?.image && (
+              <ImageContainer
+                src={credItem?.image}
+                width='var(--kai-size-ref-192)'
+                height='var(--kai-size-ref-192)'
+                objectFit='cover'
+              />
+            )}
+            <Text
+              as='h2'
+              typo='headline-sm'
+              align='center'
+              color='var(--kai-color-sys-on-background)'
+            >
               {credItem?.title}
             </Text>
             {credItem?.sticker && (
-              <FlexVertical gap='12px' justifyContent='center' alignItems='center' padding='32px 0'>
-                <Text as='span' typo='title-lg' color='var(--kai-color-sys-secondary)'>
-                  Stickers
+              <FlexVertical
+                gap='var(--kai-size-sys-space-md)'
+                justifyContent='center'
+                alignItems='center'
+                padding='32px 0'
+              >
+                <Text as='span' typo='title-md' color='var(--kai-color-sys-neutral)'>
+                  ステッカー
                 </Text>
-                <FlexHorizontal gap='4px' justifyContent='center' alignItems='center'>
+                <FlexHorizontal
+                  gap='var(--kai-size-sys-space-sm)'
+                  justifyContent='center'
+                  alignItems='center'
+                >
                   {credItem?.sticker.map((s, index) => (
                     <ImageContainer
                       key={s.id}
                       src={s.image}
-                      width='var(--kai-size-ref-96)'
+                      width='var(--kai-size-ref-80)'
                       objectFit='contain'
                       height='auto'
                     />
@@ -111,11 +125,11 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
               </Text>
             )}
           </FlexVertical>
-        </FlexVertical>
-        <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-8)'>
+        </CredentialFrame>
+        <ActionFrame>
           {!did ? (
             <>
-              <Button variant='filled' width='var(--kai-size-ref-240)' onPress={handleIssue}>
+              <Button variant='filled' width='100%' onPress={handleIssue}>
                 ログインして受け取る
               </Button>
             </>
@@ -124,7 +138,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
               {receiveStatus === 'success' && (
                 <Button
                   variant='filled'
-                  width='var(--kai-size-ref-240)'
+                  width='100%'
                   onPress={() => {
                     if (vessId) {
                       router.push(`/${vessId}`)
@@ -137,14 +151,14 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                 </Button>
               )}
               {receiveStatus === 'failed' && (
-                <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
+                <Button width='100%' onPress={handleIssue}>
                   もう一度試す
                 </Button>
               )}
               {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
                 <>
                   <Button
-                    width='var(--kai-size-ref-240)'
+                    width='100%'
                     onPress={handleIssue}
                     isLoading={receiveStatus === 'receiving'}
                     loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
@@ -155,6 +169,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                     variant='text'
                     size='sm'
                     round='md'
+                    width='100%'
                     isDisabled={receiveStatus === 'receiving'}
                     onPress={() => {
                       if (vessId) {
@@ -172,7 +187,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
               )}
             </>
           )}
-        </FlexVertical>
+        </ActionFrame>
       </ReceiveCredentialFrame>
     </>
   )
@@ -184,8 +199,40 @@ const ReceiveCredentialFrame = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   gap: var(--kai-size-ref-96);
   padding: var(--kai-size-ref-24);
   background: var(--kai-color-sys-background);
+`
+
+const CredentialFrame = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: var(--kai-size-sys-space-lg);
+  width: 100%;
+  padding: var(--kai-size-sys-space-md);
+  padding-top: var(--kai-size-ref-112);
+  padding-bottom: var(--kai-size-ref-320);
+  overflow: scroll;
+`
+
+const ActionFrame = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kai-size-sys-space-sm);
+  width: 100%;
+  padding: var(--kai-size-sys-space-md);
+  background: linear-gradient(to top, #000000ff, #00000000);
+
+  & > button {
+    max-width: var(--kai-size-ref-320);
+  }
 `
