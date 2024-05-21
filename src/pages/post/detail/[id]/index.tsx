@@ -65,18 +65,9 @@ export const getStaticProps: GetStaticProps<Props, { id?: string }> = async ({ p
 }
 
 const Profile: NextPage<Props> = (props: Props) => {
-  // const title =
-  //   props.user?.name || props.user?.vessId
-  //     ? `@${props.user?.vessId}`
-  //     : getAddressFromPkh(props.user?.did || '').slice(0, 10) || 'プロフィール'
-  // const avatar = props.user?.avatar || `${process.env.NEXT_PUBLIC_VESS_URL}/default_profile.jpg`
-  // const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${
-  //   props.user?.vessId
-  //     ? `@${props.user?.vessId}`
-  //     : props.user?.name
-  //     ? props.user?.name
-  //     : getAddressFromPkh(props.user?.did || '').slice(0, 10) || 'VESS'
-  // }&avatar=${avatar}`
+  const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/post?image=${
+    props.post?.image || `${process.env.NEXT_PUBLIC_VESS_URL}/og/test2.png`
+  }`
 
   return (
     <>
@@ -84,7 +75,7 @@ const Profile: NextPage<Props> = (props: Props) => {
         pageTitle={`Post on VESS`}
         pageDescription={`This is an awesome post on VESS`}
         pagePath={`https://app.vess.id/post/detail/${props.id}`}
-        pageImg={props.post?.image || `${process.env.NEXT_PUBLIC_VESS_URL}/default_profile.jpg`}
+        pageImg={imageUrl}
       />
       <PostDetailContainer id={props.id} />
     </>

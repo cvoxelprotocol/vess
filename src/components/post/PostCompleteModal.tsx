@@ -99,7 +99,7 @@ const InnerFrame = styled.div`
   height: auto;
   padding: 8px;
   gap: 16px;
-  border-radius: var(--kai-size-sys-round-sm);
+  border-radius: var(--kai-size-sys-round-lg);
   opacity: 0px;
   background: var(--kai-color-sys-layer-default);
   align-items: center;

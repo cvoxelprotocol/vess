@@ -65,6 +65,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const { addSticker } = useStickers()
   const [selectedPost, setPost] = useSelectedPostAtom()
 
+  //FIXME:DELETE
   // useEffect(() => {
   //   const samplePost: Post = {
   //     canvasId: '02b699a6-2eaf-4441-9299-f3bb800caef8',
