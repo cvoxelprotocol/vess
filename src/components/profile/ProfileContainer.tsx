@@ -32,7 +32,6 @@ import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
-import { shareOnX } from '@/utils/share'
 
 type ProfileContainerProps = {
   did: string
@@ -101,13 +100,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
         }
       })
     }
-  }
-
-  const Tweet = () => {
-    //Dont upload this to production!!
-    const currentUrl = window.location.href
-    const intent = shareOnX('hgeo', avatarImageUrl, currentUrl)
-    window.open(intent, '_blank')
   }
 
   return (

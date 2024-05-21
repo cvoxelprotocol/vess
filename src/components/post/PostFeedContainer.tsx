@@ -1,26 +1,29 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { FlexHorizontal, IconButton, Skelton, useBreakpoint } from 'kai-kit'
+import { FlexHorizontal, IconButton, Skelton, useBreakpoint, useModal } from 'kai-kit'
 import Image from 'next/image'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { PiListLight } from 'react-icons/pi'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { PostDetailModal } from './PostDetailModal'
 import { Post } from '@/@types/user'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
-import { usePostsAtom } from '@/jotai/ui'
+import { usePostsAtom, useSelectedPostAtom } from '@/jotai/ui'
+
 type Props = {
   id?: string
 }
 export const PostFeedContainer: FC<Props> = ({ id }) => {
   const { credItem, isInitialLoading } = useCredentialItem(id)
-  console.log({ credItem })
   const [posts, setPosts] = usePostsAtom()
   const { setIsDefaultOpenOnDesktop, setIsFullContent, openNavigation } = useNCLayoutContext()
   const { matches, breakpointProps } = useBreakpoint()
   const tileGridRef = useRef<HTMLDivElement>(null)
   const [scrollHeight, setScrollHeight] = useState(0)
+  const { openModal, closeModal } = useModal()
+  const [selectedPost, setPost] = useSelectedPostAtom()
 
   useEffect(() => {
     // subscribe to new posts
@@ -43,8 +46,10 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
     )
   }, [credItem?.post, posts])
 
-  const jumpToDetailPost = (id: string) => {
-    window.open(`${process.env.NEXT_PUBLIC_VESS_URL}/post/detail/${id}`)
+  const openPostDetail = (post: Post) => {
+    setPost(post)
+    openModal('PostDetailModal')
+    // window.open(`${process.env.NEXT_PUBLIC_VESS_URL}/post/detail/${id}`)
   }
 
   useEffect(() => {
@@ -131,7 +136,7 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
                   width='var(--kai-size-ref-112)'
                   height='var(--kai-size-ref-112)'
                   objectFit='contain'
-                  onClick={() => jumpToDetailPost(post.id)}
+                  onClick={() => openPostDetail(post)}
                 />
               )
             })}
@@ -139,6 +144,7 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
         </FlexVertical> */}
         <RichLogoImg src='/brand/pizzaDAO_logo_rich.png' />
       </PostFeedFrame>
+      <PostDetailModal name='PostDetailModal' post={selectedPost} />
     </>
   )
 }
