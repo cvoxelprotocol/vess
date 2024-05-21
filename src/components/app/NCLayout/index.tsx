@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Modal, useBreakpoint, useModal, useModalContext } from 'kai-kit'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { Button } from 'react-aria-components'
 
 type Props = {
@@ -13,8 +13,12 @@ type Props = {
 } & React.HTMLAttributes<HTMLDivElement>
 
 export const NCLayoutContext = React.createContext({
+  isDefaultOpenOnDesktop: true,
+  setIsDefaultOpenOnDesktop: (isOpen: boolean) => {},
   isNavigationOpen: false,
   setIsNavigationOpen: (isOpen: boolean) => {},
+  isFullContent: false,
+  setIsFullContent: (isFull: boolean) => {},
 })
 
 export const useNCLayoutContext = () => {
@@ -34,6 +38,10 @@ export const useNCLayoutContext = () => {
 
   return {
     isNavigationOpen: context.isNavigationOpen,
+    isDefaultOpenOnDesktop: context.isDefaultOpenOnDesktop,
+    setIsDefaultOpenOnDesktop: context.setIsDefaultOpenOnDesktop,
+    isFullContent: context.isFullContent,
+    setIsFullContent: context.setIsFullContent,
     openNavigation,
     closeNavigation,
     toggleNavigation,
@@ -49,29 +57,56 @@ export const NCLayout: FC<Props> = ({
   backgroundColor = 'transparent',
 }) => {
   const [isNavigationOpen, setIsNavigationOpen] = React.useState(false)
+  const [isDefaultOpenOnDesktop, setIsDefaultOpenOnDesktop] = React.useState(true)
+  const [isFullContent, setIsFullContent] = React.useState(false)
   const { isOpenSomeModal } = useModalContext()
   const { attachToRef } = useModal()
   const { matches, breakpointProps } = useBreakpoint()
 
+  useEffect(() => {
+    console.log('navigation state: ', isNavigationOpen)
+  }, [isNavigationOpen])
+
+  useEffect(() => {
+    if (matches.lg) {
+      if (isDefaultOpenOnDesktop) {
+        setIsNavigationOpen(true)
+      } else {
+        setIsNavigationOpen(false)
+      }
+    } else {
+      setIsDefaultOpenOnDesktop(false)
+    }
+  }, [matches, isDefaultOpenOnDesktop, isFullContent])
+
   return (
     <NCLayoutContext.Provider
-      value={{ isNavigationOpen: isNavigationOpen, setIsNavigationOpen: setIsNavigationOpen }}
+      value={{
+        isDefaultOpenOnDesktop,
+        setIsDefaultOpenOnDesktop,
+        isNavigationOpen,
+        setIsNavigationOpen,
+        isFullContent,
+        setIsFullContent,
+      }}
     >
       <LayoutFrame data-modal-open={isOpenSomeModal || undefined} {...breakpointProps}>
         <NavigationFrame
-          data-nav-opened={(isNavigationOpen || matches.lg) && !isOpenSomeModal}
+          data-nav-opened={isNavigationOpen && !isOpenSomeModal}
           {...breakpointProps}
         >
           {navigation}
         </NavigationFrame>
         <ContentFrame
-          data-nav-opened={isNavigationOpen && !isOpenSomeModal}
+          data-nav-opened={!matches.lg && isNavigationOpen && !isOpenSomeModal}
           data-modal-open={isOpenSomeModal || undefined}
-          onClick={() => setIsNavigationOpen(false)}
+          data-full-content={isFullContent || undefined}
+          {...breakpointProps}
+          // onClick={() => setIsNavigationOpen(false)}
           ref={attachToRef}
         >
           {children}
-          {isNavigationOpen && !isOpenSomeModal && (
+          {!matches.lg && isNavigationOpen && !isOpenSomeModal && (
             <CloseNaviOverlay onPress={() => setIsNavigationOpen(false)} />
           )}
         </ContentFrame>
@@ -126,6 +161,9 @@ const NavigationFrame = styled.div`
     left: 0;
     bottom: 0;
     width: var(--kai-size-ref-240);
+    &[data-nav-opened='false'] {
+      width: 0;
+    }
   }
 `
 
@@ -153,6 +191,12 @@ const ContentFrame = styled.div`
     opacity: 0.4;
     transform: scale(0.98);
   }
+  &[data-full-content] {
+    &[data-media-lg] {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
 `
 
 const CloseNaviOverlay = styled(Button)`
@@ -165,4 +209,5 @@ const CloseNaviOverlay = styled(Button)`
   opacity: 0;
   outline: none;
   border: none;
+  z-index: var(--kai-z-index-sys-overlay-default);
 `
