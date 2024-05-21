@@ -34,3 +34,6 @@ export const useAvatarSizeAtom = () => useAtom(avatarSize)
 
 export const posts = atom<Post[]>([])
 export const usePostsAtom = () => useAtom(posts)
+
+export const selectedPost = atom<Post | undefined>(undefined)
+export const useSelectedPostAtom = () => useAtom(selectedPost)

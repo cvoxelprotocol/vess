@@ -19,8 +19,6 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
   const { id: myId } = useVESSAuthUser()
   const { vsUserById } = useVESSUserProfile(undefined, post?.userId)
   const router = useRouter()
-  console.log({ post })
-  console.log({ vsUserById })
 
   const isEditable = useMemo(() => {
     return myId === post?.userId
@@ -54,13 +52,12 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
   }
 
   return (
-    <PostDetailContainerFrame>
-      <FlexVertical width='100%' alignItems='start' gap='var(--kai-size-ref-24)'>
+    <PostDetailContainerFrame className={'dark'}>
+      <InnerFrame>
         <Skelton
           width='var(--kai-size-ref-192)'
           height='var(--kai-size-ref-192)'
-          radius='var(--kai-size-sys-round-full)'
-          className='dark'
+          radius='var(--kai-size-sys-round-sm)'
           isLoading={isInitialLoading}
         ></Skelton>
         {!isInitialLoading && post?.image && (
@@ -98,7 +95,7 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
             Delete
           </Button>
         )}
-      </FlexVertical>
+      </InnerFrame>
     </PostDetailContainerFrame>
   )
 }
@@ -112,4 +109,17 @@ const PostDetailContainerFrame = styled.div`
   gap: var(--kai-size-ref-96);
   padding: var(--kai-size-ref-12);
   min-height: 100vh;
+  background: var(--kai-color-sys-on-subdominant);
+`
+const InnerFrame = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  gap: 16px;
+  border-radius: var(--kai-size-sys-round-sm);
+  opacity: 0px;
+  background: var(--kai-color-sys-layer-default);
+  align-items: start;
+  display: flex;
+  flex-direction: column;
 `
