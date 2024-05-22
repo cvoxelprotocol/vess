@@ -113,9 +113,6 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
               router.push(`/creds/receive/${credItem.id}`)
             }}
           >
-            <Text as='h2' typo='title-sm' align='center' color='var(--kai-color-sys-on-background)'>
-              利用しているクレデンシャル
-            </Text>
             {credItem?.image && (
               <ImageContainer
                 src={credItem?.image}

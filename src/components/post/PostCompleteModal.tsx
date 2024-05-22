@@ -28,7 +28,7 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
 
   const shareUrl = useMemo(() => {
     if (!post) return ''
-    return `${process.env.NEXT_PUBLIC_VESS_URL}/post/detial/${post?.id}`
+    return `${process.env.NEXT_PUBLIC_VESS_URL}/post/detail/${post?.id}`
   }, [post])
 
   const Tweet = () => {
