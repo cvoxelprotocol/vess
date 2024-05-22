@@ -175,6 +175,7 @@ const ContentFrame = styled.div`
   justify-content: space-between;
   width: 100vw;
   height: 100svh;
+  overflow-y: scroll;
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);

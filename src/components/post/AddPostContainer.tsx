@@ -76,6 +76,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const [postImageSize, _] = usePostImageSizeAtom()
   const { addSticker } = useStickers()
   const [selectedPost, setPost] = useSelectedPostAtom()
+  const [uploadError, setUploadError] = useState<any>()
 
   const hasCredential = useMemo(() => {
     return formatedCredentials.some((c) => c.credId === id)
@@ -210,6 +211,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         setIsSaving(false)
       } catch (error) {
         console.error(error)
+        setUploadError(error)
         setIsSaving(false)
         onClose()
       }
@@ -273,6 +275,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
       }
     } catch (error) {
       console.log(error)
+      setUploadError(error)
       setReceiveStatus('failed')
     }
   }
@@ -326,6 +329,11 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
               gap={'var(--kai-size-sys-space-sm)'}
               style={{ width: '100%' }}
             >
+              {uploadError && (
+                <Text typo='body-md' color='var(--kai-color-sys-error)'>
+                  {`画像のアップロードに失敗しました: ${uploadError}`}
+                </Text>
+              )}
               {hasCredential ? (
                 <Button
                   width='100%'
@@ -409,6 +417,8 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
 
 const AddPostFrame = styled.div`
   position: fixed;
+  overflow-y: scroll;
+  height: 100vh;
   inset: 0px;
   display: flex;
   flex-direction: column;
