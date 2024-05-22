@@ -77,3 +77,31 @@ export const loadImageWithoutCache = async (
 ): Promise<HTMLImageElement | undefined> => {
   return await loadImage(`${url}?rd=${new Date().getTime().toString()}`)
 }
+
+export const loadImageWithoutCacheWithMetadata = async (
+  url?: string,
+): Promise<ImageWithSize | undefined> => {
+  if (!url) return
+  try {
+    const image = await loadImage(`${url}?rd=${new Date().getTime().toString()}`)
+    return {
+      image,
+      width: image?.naturalWidth ?? 0,
+      height: image?.naturalHeight ?? 0,
+      aspectRatio: (image?.naturalWidth ?? 0) / (image?.naturalHeight ?? 0),
+    }
+  } catch (error) {
+    console.error('loadImageWithoutCacheWithMetadata error: ', error)
+    return
+  }
+}
+
+type ImageSize = {
+  width: number
+  height: number
+  aspectRatio: number
+}
+
+export type ImageWithSize = ImageSize & {
+  image: HTMLImageElement | undefined
+}

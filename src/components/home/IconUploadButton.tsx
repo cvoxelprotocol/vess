@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useKai } from 'kai-kit'
+import { Spinner, useKai } from 'kai-kit'
 import React, { FC } from 'react'
 import { FileTrigger, Button } from 'react-aria-components'
 import type { FileTriggerProps } from 'react-aria-components'
@@ -32,7 +32,7 @@ export const IconUploadButton: FC<IconUploadButtonProps> = ({
       >
         <OverlayIcon>
           {isUploading ? (
-            <CommonSpinner size='lg' color='var(--kai-color-sys-on-surface)' />
+            <Spinner size='24px' color='neutral' />
           ) : (
             <PiCameraPlusBold size={kai.size.ref[32]} color={'var(--kai-color-sys-on-surface)'} />
           )}
@@ -44,7 +44,7 @@ export const IconUploadButton: FC<IconUploadButtonProps> = ({
 
 const StyledButton = styled(Button)<{ defaultIcon: string }>`
   background-image: url(${({ defaultIcon }) => defaultIcon});
-  background-size: contain;
+  background-size: cover;
   aspect-ratio: 1;
   position: relative;
   transition: all 0.5s cubic-bezier(0, 0.7, 0.3, 1);
@@ -92,24 +92,6 @@ const OverlayIcon = styled.div`
   inset: 0;
   display: grid;
   place-content: center;
-  background: var(--kai-color-sys-surface-container-lowest);
-  opacity: 0.5;
-`
-const Spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-
-`
-const Spinner = styled.div`
-  background: transparent;
-  width: var(--kai-size-ref-32);
-  height: var(--kai-size-ref-32);
-  border: var(--kai-size-ref-2) solid var(--kai-color-sys-on-surface);
-  border-bottom: none;
-  border-radius: var(--kai-size-sys-round-full);
-  animation: ${Spin} 1s linear infinite;
+  background: var(--kai-color-sys-layer-farthest);
+  opacity: 0.7;
 `

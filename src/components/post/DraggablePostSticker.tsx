@@ -1,11 +1,10 @@
-// components/ImageCanvas.tsx
-import { useDraggable, DragOverlay } from '@dnd-kit/core'
+import { useDraggable } from '@dnd-kit/core'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { FC, useState, useRef, useEffect, useMemo } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Button } from 'react-aria-components'
 import { useStickers } from '@/hooks/useStickers'
-import { useAvatarSizeAtom } from '@/jotai/ui'
+import { usePostImageSizeAtom } from '@/jotai/ui'
 
 type DraggableStickerProps = {
   id: string
@@ -14,11 +13,11 @@ type DraggableStickerProps = {
   onAddEnd?: () => void
 }
 
-const DraggableSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onAddEnd }) => {
+const DraggablePostSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onAddEnd }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const [stickerSize, setStickerSize] = useState({ width: 0, height: 0 })
   const { addSticker } = useStickers()
-  const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
+  const [postImageSize, setPostImageSize] = usePostImageSizeAtom()
 
   const { attributes, listeners, setNodeRef, transform, isDragging, over, node } = useDraggable({
     id: id ?? imageUrl,
@@ -51,12 +50,7 @@ const DraggableSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onA
         })
       }
     }
-    // console.log('image size: ', imageSize)
   }, [imageSize])
-
-  // useEffect(() => {
-  //   console.log('sticker size: ', stickerSize)
-  // }, [stickerSize])
 
   return (
     <StickerFrame
@@ -64,11 +58,11 @@ const DraggableSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onA
         addSticker({
           id: credId,
           imgUrl: imageUrl,
-          width: stickerSize.width / avatarSize,
-          height: stickerSize.height / avatarSize,
+          width: stickerSize.width / postImageSize.w,
+          height: stickerSize.height / postImageSize.h,
           position: {
-            x: 0.5 - stickerSize.width / (2 * avatarSize),
-            y: 0.5 - stickerSize.height / (2 * avatarSize),
+            x: 0.5 - stickerSize.width / (2 * postImageSize.w),
+            y: 0.5 - stickerSize.height / (2 * postImageSize.h),
           },
         })
         onAddEnd?.()
@@ -187,4 +181,4 @@ const StickerUnderlay = styled.img`
   opacity: var(--kai-opacity-ref-40);
 `
 
-export default DraggableSticker
+export default DraggablePostSticker

@@ -15,7 +15,7 @@ export const CredItemListContainer: FC = () => {
   }, [userCredentialItems])
 
   const toIssueUrl = (id: string) => {
-    window.open(`http://localhost:3000/creds/receive/${id}`, '_blank')
+    window.open(`${process.env.NEXT_PUBLIC_VESS_URL}/creds/receive/${id}`, '_blank')
   }
 
   return (
@@ -57,7 +57,7 @@ export const CredItemListContainer: FC = () => {
                   width='var(--kai-size-ref-240)'
                   onPress={() => toIssueUrl(item.id)}
                 >
-                  {`発行URL: http://localhost:3000/creds/receive/${item.id}`}
+                  {`発行URL: ${process.env.NEXT_PUBLIC_VESS_URL}/creds/receive/${item.id}`}
                 </Button>
               </FlexVertical>
             )

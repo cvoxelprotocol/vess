@@ -187,16 +187,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                     ステッカー
                   </Text>
-                  <FlexHorizontal gap='4px' justifyContent='center' alignItems='center'>
+                  <StickerListFrame>
                     {credential?.vc.credentialSubject.sticker.map((s: string) => (
-                      <ImageContainer
-                        key={s}
-                        src={s}
-                        width='var(--kai-size-ref-96)'
-                        objectFit='contain'
-                      />
+                      <ImageContainer key={s} src={s} width='100%' objectFit='contain' />
                     ))}
-                  </FlexHorizontal>
+                  </StickerListFrame>
                 </InfoItemFrame>
               )}
             <InfoItemFrame>
@@ -456,6 +451,15 @@ const InfoItemFrame = styled.div`
   justify-content: start;
   gap: var(--kai-size-sys-space-xs);
   width: 100%;
+`
+
+const StickerListFrame = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--kai-size-sys-space-md);
+  width: 100%;
+  height: auto;
+  place-items: center;
 `
 
 const PlainCredFrame = styled.div`

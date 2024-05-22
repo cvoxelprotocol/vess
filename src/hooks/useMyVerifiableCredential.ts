@@ -146,6 +146,7 @@ export const useMyVerifiableCredential = () => {
       const vcs = resJson.data as saveCredentialToComposeDBResponse[]
       console.log({ vcs })
       queryClient.invalidateQueries(['credItem', item.id])
+      queryClient.invalidateQueries(['CredentialsByHolder', did])
       if (vcs && vcs.length > 0) {
         closeLoading()
         return true

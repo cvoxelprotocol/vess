@@ -30,6 +30,7 @@ export const useVerifiableCredentials = (did?: string) => {
           ...plainCredential,
           ceramicId: item.ceramicId,
           credentialType: item.credentialType,
+          credId: item.credentialItem?.id,
         }
       })
       .map((item) => {

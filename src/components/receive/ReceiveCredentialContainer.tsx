@@ -1,13 +1,16 @@
 import styled from '@emotion/styled'
 import { Button, FlexHorizontal, Skelton, Text } from 'kai-kit'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
+import { Banner } from '../app/Banner'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { PIZZA_PARTY_CRED_ID, isPizzaPartyCred } from '@/constants/campaign'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { useStateRPath } from '@/jotai/ui'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 
@@ -15,6 +18,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   const { did, vessId } = useVESSAuthUser()
   const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
+  const { formatedCredentials } = useVerifiableCredentials(did)
   const [rPath, setRpath] = useStateRPath()
   const { issue } = useMyVerifiableCredential()
   const [receiveStatus, setReceiveStatus] = React.useState<
@@ -47,133 +51,199 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
     }
   }
 
+  const alreadyReceived = useMemo(() => {
+    if (!formatedCredentials) return false
+    return formatedCredentials.some((c) => c.credId === id)
+  }, [formatedCredentials, id])
+
   return (
-    <>
-      <ReceiveCredentialFrame className='dark'>
-        <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-24)'>
-          <Skelton
-            width='var(--kai-size-ref-192)'
-            height='var(--kai-size-ref-192)'
-            radius='var(--kai-size-sys-round-full)'
-            className='dark'
-            isLoading={isInitialLoading}
-          ></Skelton>
+    <ReceiveCredentialFrame className='dark'>
+      <CredentialFrame>
+        <Skelton
+          width='var(--kai-size-ref-192)'
+          height='var(--kai-size-ref-192)'
+          radius='var(--kai-size-sys-round-full)'
+          className='dark'
+          isLoading={isInitialLoading}
+        ></Skelton>
+        <FlexVertical gap='24px' justifyContent='center' alignItems='center'>
           {!isInitialLoading && credItem?.image && (
             <ImageContainer
               src={credItem?.image}
               width='var(--kai-size-ref-192)'
-              // height='var(--kai-size-ref-192)'
-              objectFit='cover'
+              height='auto'
+              objectFit='contain'
             />
           )}
-          <FlexVertical gap='24px' justifyContent='center' alignItems='center'>
-            <Text as='h2' typo='headline-sm' color='var(--kai-color-sys-on-background)'>
-              {credItem?.title}
-            </Text>
-            {credItem?.sticker && (
-              <FlexVertical gap='12px' justifyContent='center' alignItems='center' padding='32px 0'>
-                <Text as='span' typo='title-lg' color='var(--kai-color-sys-secondary)'>
-                  Stickers
-                </Text>
-                <FlexHorizontal gap='4px' justifyContent='center' alignItems='center'>
-                  {credItem?.sticker.map((s, index) => (
-                    <ImageContainer
-                      key={s.id}
-                      src={s.image}
-                      width='var(--kai-size-ref-96)'
-                      objectFit='contain'
-                    />
-                  ))}
-                </FlexHorizontal>
-              </FlexVertical>
-            )}
-            {receiveStatus === 'success' && (
-              <Text
-                as='span'
-                typo='title-md'
-                align='center'
-                color='var(--kai-color-sys-secondary)'
-                startContent={<PiCheckCircleDuotone size='24px' />}
-              >
-                受け取りが完了しました
+          <Text
+            as='h2'
+            typo='headline-sm'
+            align='center'
+            color='var(--kai-color-sys-on-background)'
+          >
+            {credItem?.title}
+          </Text>
+          {credItem?.sticker && credItem?.sticker.length > 0 && (
+            <FlexVertical
+              gap='var(--kai-size-sys-space-md)'
+              justifyContent='center'
+              alignItems='center'
+              padding='32px 0'
+            >
+              <Text as='span' typo='title-md' color='var(--kai-color-sys-neutral)'>
+                ステッカー
               </Text>
+              <FlexHorizontal
+                gap='var(--kai-size-sys-space-sm)'
+                justifyContent='center'
+                alignItems='center'
+              >
+                {credItem?.sticker.map((s, index) => (
+                  <ImageContainer
+                    key={s.id}
+                    src={s.image}
+                    width='var(--kai-size-ref-80)'
+                    objectFit='contain'
+                    height='auto'
+                  />
+                ))}
+              </FlexHorizontal>
+            </FlexVertical>
+          )}
+          {receiveStatus === 'success' && (
+            <>
+              {/* DELETEME: */}
+              {id && isPizzaPartyCred(id) ? (
+                <></>
+              ) : (
+                <>
+                  <Text
+                    as='span'
+                    typo='title-md'
+                    align='center'
+                    color='var(--kai-color-sys-secondary)'
+                    startContent={<PiCheckCircleDuotone size='24px' />}
+                  >
+                    受け取りが完了しました！
+                  </Text>
+                </>
+              )}
+            </>
+          )}
+          {receiveStatus === 'failed' && (
+            <Text
+              as='span'
+              typo='title-md'
+              align='center'
+              color='var(--kai-color-sys-error)'
+              startContent={<PiWarningDuotone size='24px' />}
+            >
+              受け取りに失敗しました
+            </Text>
+          )}
+        </FlexVertical>
+      </CredentialFrame>
+      <ActionFrame>
+        {!did ? (
+          <>
+            <Button variant='filled' width='100%' onPress={handleIssue}>
+              ログインして受け取る
+            </Button>
+          </>
+        ) : (
+          <>
+            {receiveStatus === 'success' && (
+              <>
+                {id && isPizzaPartyCred(id) ? (
+                  <>
+                    <Text
+                      as='span'
+                      typo='title-md'
+                      align='center'
+                      color='var(--kai-color-sys-secondary)'
+                      startContent={<PiCheckCircleDuotone size='24px' />}
+                    >
+                      受け取りが完了しました！
+                      <br />
+                      キャンペーンへ参加しよう！
+                    </Text>
+                    {id && isPizzaPartyCred(id) && (
+                      <Banner
+                        imgUrl='/banner/pizzaDAO2024.jpg'
+                        onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
+                      />
+                    )}
+                    {/* DELETEME: */}
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant='filled'
+                      width='100%'
+                      onPress={() => {
+                        if (vessId) {
+                          router.push(`/${vessId}`)
+                        } else {
+                          return router.push(`/did/${did}`)
+                        }
+                      }}
+                    >
+                      ホームに戻る
+                    </Button>
+                  </>
+                )}
+              </>
             )}
             {receiveStatus === 'failed' && (
-              <Text
-                as='span'
-                typo='title-md'
-                align='center'
-                color='var(--kai-color-sys-error)'
-                startContent={<PiWarningDuotone size='24px' />}
-              >
-                受け取りに失敗しました
-              </Text>
-            )}
-          </FlexVertical>
-        </FlexVertical>
-        <FlexVertical width='100%' alignItems='center' gap='var(--kai-size-ref-8)'>
-          {!did ? (
-            <>
-              <Button variant='filled' width='var(--kai-size-ref-240)' onPress={handleIssue}>
-                ログインして受け取る
+              <Button width='100%' onPress={handleIssue}>
+                もう一度試す
               </Button>
-            </>
-          ) : (
-            <>
-              {receiveStatus === 'success' && (
-                <Button
-                  variant='filled'
-                  width='var(--kai-size-ref-240)'
-                  onPress={() => {
-                    if (vessId) {
-                      router.push(`/${vessId}`)
-                    } else {
-                      return router.push(`/did/${did}`)
-                    }
-                  }}
-                >
-                  ホームに戻る
-                </Button>
-              )}
-              {receiveStatus === 'failed' && (
-                <Button width='var(--kai-size-ref-240)' onPress={handleIssue}>
-                  もう一度試す
-                </Button>
-              )}
-              {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
-                <>
+            )}
+            {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
+              <>
+                {/* DELETEME: */}
+                {alreadyReceived && id && isPizzaPartyCred(id) ? (
+                  <>
+                    <Banner
+                      imgUrl='/banner/pizzaDAO2024.jpg'
+                      onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
+                    />
+                    {/* DELETEME: */}
+                  </>
+                ) : (
                   <Button
-                    width='var(--kai-size-ref-240)'
+                    width='100%'
                     onPress={handleIssue}
                     isLoading={receiveStatus === 'receiving'}
                     loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
                   >
                     受け取る
                   </Button>
-                  <Button
-                    variant='text'
-                    size='sm'
-                    round='md'
-                    isDisabled={receiveStatus === 'receiving'}
-                    onPress={() => {
-                      if (vessId) {
-                        router.push(`/${vessId}`)
-                      } else if (did) {
-                        return router.push(`/did/${did}`)
-                      } else {
-                        return router.push(`/`)
-                      }
-                    }}
-                  >
-                    受け取らずにホームへ
-                  </Button>
-                </>
-              )}
-            </>
-          )}
-        </FlexVertical>
-      </ReceiveCredentialFrame>
-    </>
+                )}
+                <Button
+                  variant='text'
+                  size='sm'
+                  round='md'
+                  width='100%'
+                  isDisabled={receiveStatus === 'receiving'}
+                  onPress={() => {
+                    if (vessId) {
+                      router.push(`/${vessId}`)
+                    } else if (did) {
+                      return router.push(`/did/${did}`)
+                    } else {
+                      return router.push(`/`)
+                    }
+                  }}
+                >
+                  ホームへ戻る
+                </Button>
+              </>
+            )}
+          </>
+        )}
+      </ActionFrame>
+    </ReceiveCredentialFrame>
   )
 }
 
@@ -183,8 +253,40 @@ const ReceiveCredentialFrame = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   gap: var(--kai-size-ref-96);
   padding: var(--kai-size-ref-24);
   background: var(--kai-color-sys-background);
+`
+
+const CredentialFrame = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: var(--kai-size-sys-space-lg);
+  width: 100%;
+  padding: var(--kai-size-sys-space-md);
+  padding-top: var(--kai-size-ref-112);
+  padding-bottom: var(--kai-size-ref-320);
+  overflow: scroll;
+`
+
+const ActionFrame = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kai-size-sys-space-sm);
+  width: 100%;
+  padding: var(--kai-size-sys-space-md);
+  background: linear-gradient(to top, #000000ff, #00000000);
+
+  & > button {
+    max-width: var(--kai-size-ref-320);
+  }
 `

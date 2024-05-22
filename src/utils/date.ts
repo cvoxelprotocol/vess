@@ -10,6 +10,11 @@ export const formatDate = (date?: string): string => {
   return format(parseISO(date), 'yyyy/MM/dd')
 }
 
+export const formatDateWithMinutes = (date?: string): string => {
+  if (!date) return ''
+  return format(parseISO(date), 'yyyy/MM/dd HH:mm')
+}
+
 export const convertTimestampToDateStr = (timestamp?: string): string => {
   if (!timestamp) return ''
   try {

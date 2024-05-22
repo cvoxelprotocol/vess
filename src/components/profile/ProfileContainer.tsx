@@ -9,15 +9,18 @@ import {
   FlexVertical,
   useBreakpoint,
 } from 'kai-kit'
+import { useRouter } from 'next/router'
 import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
+import { Banner } from '../app/Banner'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { IdPlate } from './IdPlate'
 import { SocialLink } from '@/@types/user'
+import { PIZZA_PARTY_CRED_ID } from '@/constants/campaign'
 import { X_URL } from '@/constants/common'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
@@ -29,7 +32,6 @@ import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
-import { shareOnX } from '@/utils/share'
 
 type ProfileContainerProps = {
   did: string
@@ -46,6 +48,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
   const { shareLink } = useShareLink(undefined)
+  const router = useRouter()
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -97,13 +100,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
         }
       })
     }
-  }
-
-  const Tweet = () => {
-    //Dont upload this to production!!
-    const currentUrl = window.location.href
-    const intent = shareOnX('hgeo', avatarImageUrl, currentUrl)
-    window.open(intent, '_blank')
   }
 
   return (
@@ -232,6 +228,32 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 )}
               </FlexHorizontal>
             </FlexVertical>
+            {formatedCredentials.some((cred) => {
+              return cred.credentialSubject.eventId === `${PIZZA_PARTY_CRED_ID}`
+            }) && (
+              <FlexVertical
+                gap='var(--kai-size-sys-space-sm)'
+                width='100%'
+                style={{ overflowY: 'visible' }}
+              >
+                <Text
+                  typo='title-md'
+                  color='var(--kai-color-sys-on-layer)'
+                  style={{
+                    padding: '0 var(--kai-size-sys-space-md)',
+                    flexShrink: 0,
+                  }}
+                >
+                  参加中のイベント
+                </Text>
+                <BannerList>
+                  <Banner
+                    imgUrl='/banner/pizzaDAO2024.jpg'
+                    onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
+                  />
+                </BannerList>
+              </FlexVertical>
+            )}
             <FlexVertical
               gap='var(--kai-size-sys-space-sm)'
               width='100%'
@@ -239,7 +261,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               style={{ flexGrow: 1, overflowY: 'hidden' }}
             >
               <Text
-                typo='title-lg'
+                typo='title-md'
                 color='var(--kai-color-sys-on-layer)'
                 style={{
                   padding: '0 var(--kai-size-sys-space-md)',
@@ -362,4 +384,14 @@ const CredList = styled.div`
   width: 100%;
   padding: 0 var(--kai-size-sys-space-md);
   overflow-y: scroll;
+`
+
+const BannerList = styled.div`
+  display: flex;
+  gap: var(--kai-size-sys-space-sm);
+  flex-wrap: nowrap;
+  width: 100%;
+  padding: 0 var(--kai-size-sys-space-md);
+  overflow-x: scroll;
+  overflow-y: visible;
 `

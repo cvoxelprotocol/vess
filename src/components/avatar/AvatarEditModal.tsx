@@ -247,9 +247,6 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     [icon, uploadIcon],
   )
 
-  console.log({ stickerImages })
-  console.log({ stickers })
-
   return (
     <>
       <ModalOverlay isCloseButton className={'dark'} overlayColor={'#000000F0'} onClose={onClose}>
