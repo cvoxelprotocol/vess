@@ -109,12 +109,12 @@ export const LoginPage: FC = () => {
                 />
               </>
             )}
-            <LoginButton
+            {/* <LoginButton
               iconSrc='/brand/walletconnect.png'
               onPress={() => handleLogin(config.connectors[0])}
               isDisabled={didAuthService.isConnecting}
               aria-label='Walletconnectでログイン'
-            />
+            /> */}
           </FlexHorizontal>
           <Separator title='または' titlePlacement='in-center' lineWeight='thick' />
           <Form id='email-login' onSubmit={handleSubmit(onClickSubmit)}>
