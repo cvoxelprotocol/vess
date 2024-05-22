@@ -37,6 +37,7 @@ import {
   useStateRPath,
   useStickersAtom,
 } from '@/jotai/ui'
+import { checkAndConvertImageType } from '@/utils/hexImage'
 import { isGoodResponse } from '@/utils/http'
 import { compressImage } from '@/utils/image'
 import { dataURLtoFile } from '@/utils/objectUtil'
@@ -234,7 +235,8 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
     async (files: FileList | null) => {
       if (files !== null && files[0]) {
         try {
-          const convertedFile = await compressImage(files[0])
+          const checkedFile = await checkAndConvertImageType(files[0])
+          const convertedFile = await compressImage(checkedFile)
           await uploadIcon(convertedFile)
           const objectURL = URL.createObjectURL(files[0])
           URL.revokeObjectURL(objectURL)

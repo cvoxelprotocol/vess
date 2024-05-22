@@ -62,6 +62,7 @@
     "formidable": "^3.5.0",
     "framer-motion": "^11.1.7",
     "graphql": "^16.6.0",
+    "heic2any": "^0.0.4",
     "iron-session": "^8.0.1",
     "jotai": "^2.6.4",
     "kai-kit": "0.1.6-beta.11",
