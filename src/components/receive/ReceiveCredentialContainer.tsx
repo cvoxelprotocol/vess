@@ -183,8 +183,10 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                       onPress={() => {
                         if (vessId) {
                           router.push(`/${vessId}`)
-                        } else {
+                        } else if (did) {
                           return router.push(`/did/${did}`)
+                        } else {
+                          return router.push(`/`)
                         }
                       }}
                     >
