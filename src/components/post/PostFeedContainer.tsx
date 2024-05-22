@@ -114,7 +114,7 @@ export const PostFeedContainer: FC<Props> = ({ id, feedOnly = false }) => {
         <TileGridOuterFrame
           scrollHeight={scrollHeight + 16}
           // scrollTime={5}
-          scrollTime={(60 * 400) / scrollHeight}
+          scrollTime={(20 * scrollHeight) / 400}
           ref={tileGridOuterRef}
           data-enough-image={scrollHeight > tileGridHeight || undefined}
           {...breakpointProps}
