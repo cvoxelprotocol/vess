@@ -109,6 +109,7 @@ const ContentFrame = styled.div`
 const InnerFrame = styled.div`
   width: 100%;
   height: auto;
+  margin-top: 16px;
   padding: 8px;
   gap: 16px;
   border-radius: var(--kai-size-sys-round-lg);
