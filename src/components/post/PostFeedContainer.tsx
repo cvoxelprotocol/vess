@@ -203,6 +203,7 @@ const RichLogoImg = styled.img`
   height: 100%;
   object-fit: contain;
   padding: var(--kai-size-sys-space-xl);
+  max-width: 320px;
 `
 
 const ScrollAnimation = (scrollHeight: number) => keyframes`
