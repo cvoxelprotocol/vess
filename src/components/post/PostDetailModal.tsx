@@ -122,7 +122,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
               <CredButton
                 onPress={() => {
                   onClose()
-                  router.push(`/creds/receive/${credItem.id}`)
+                  // router.push(`/creds/receive/${credItem.id}`)
                 }}
               >
                 {credItem.image && (

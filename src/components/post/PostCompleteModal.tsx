@@ -99,6 +99,7 @@ const ContentFrame = styled.div`
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);
+  z-index: -1;
 
   &[data-media-md] {
     padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
