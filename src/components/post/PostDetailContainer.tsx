@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
-import { Button, FlexHorizontal, Skelton, Text, FlexVertical } from 'kai-kit'
+import { Button, FlexHorizontal, Skelton, Text, FlexVertical, IconButton } from 'kai-kit'
 import router, { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
+import { Button as RACButton } from 'react-aria-components'
+import { PiTrashBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { usePost } from '@/hooks/usePost'
@@ -103,37 +105,35 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
           </Text>
         )}
         {credItem && (
-          <FlexVertical
-            padding='24px 0 0 0'
-            gap='var(--kai-size-sys-space-sm)'
-            width='100%'
-            justifyContent='center'
-            alignItems='center'
-            onClick={() => {
-              router.push(`/creds/receive/${credItem.id}`)
-            }}
-          >
-            {credItem?.image && (
+          <CredButton>
+            {credItem.image && (
               <ImageContainer
-                src={credItem?.image}
-                width='var(--kai-size-ref-192)'
+                src={credItem.image}
+                width='var(--kai-size-ref-32)'
                 height='auto'
                 objectFit='contain'
               />
             )}
-          </FlexVertical>
+            <Text color={'var(--kai-color-sys-on-layer)'} lineClamp={1}>
+              {credItem.title}
+            </Text>
+          </CredButton>
         )}
         {isEditable && (
-          <FlexVertical width='100%' alignItems='end' gap='var(--kai-size-ref-24)'>
-            <Button
-              color='error'
-              variant='tonal'
-              style={{ flexGrow: 0 }}
-              onPress={() => deletePost()}
-            >
-              Delete
-            </Button>
-          </FlexVertical>
+          <IconButton
+            color='error'
+            variant='tonal'
+            size='sm'
+            style={{
+              flexGrow: 0,
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              borderRadius: 'var(--kai-size-sys-round-sm)',
+            }}
+            onPress={() => deletePost()}
+            icon={<PiTrashBold />}
+          />
         )}
       </InnerFrame>
     </PostDetailContainerFrame>
@@ -162,4 +162,26 @@ const InnerFrame = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+`
+
+const CredButton = styled(RACButton)`
+  outline: none;
+  border: none;
+  display: flex;
+  gap: var(--kai-size-sys-space-sm);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--kai-color-sys-layer-farthest);
+  border-radius: var(--kai-size-sys-round-md);
+  padding: var(--kai-size-sys-space-sm) var(--kai-size-sys-space-md);
+
+  &[data-focused] {
+    outline: none;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--kai-color-sys-dominant);
+    outline-offset: 2px;
+  }
 `
