@@ -1,6 +1,8 @@
-import heic2any from 'heic2any'
-
 export const checkAndConvertImageType = async (file: File): Promise<File> => {
+  if (typeof window == 'undefined') {
+    return file
+  }
+  const heic2any = (await import('heic2any')).default
   console.log('checkAndConvertImageType | file.type:', file.type)
   if (file.type === 'image/heic') {
     try {
