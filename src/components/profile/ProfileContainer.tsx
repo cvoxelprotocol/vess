@@ -228,10 +228,9 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 )}
               </FlexHorizontal>
             </FlexVertical>
-            {formatedCredentials.filter((cred) => {
-              console.log('cred.id: ', cred.credentialType.id)
+            {formatedCredentials.some((cred) => {
               return cred.credentialSubject.eventId === `${PIZZA_PARTY_CRED_ID}`
-            }).length > 0 && (
+            }) && (
               <FlexVertical
                 gap='var(--kai-size-sys-space-sm)'
                 width='100%'

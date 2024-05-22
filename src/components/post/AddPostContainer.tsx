@@ -346,6 +346,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                 variant='filled'
                 style={{ flexGrow: 1 }}
                 isLoading={isSaving}
+                isDisabled={!icon || isSaving}
                 onPress={() => {
                   handleSave()
                 }}

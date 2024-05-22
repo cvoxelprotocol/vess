@@ -13,12 +13,12 @@ import { PostImage } from './PostImage'
 import { Post } from '@/@types/user'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { selectedPost, usePostsAtom, useSelectedPostAtom } from '@/jotai/ui'
-import post from '@/pages/api/og/post'
 
 type Props = {
   id?: string
+  feedOnly?: boolean
 }
-export const PostFeedContainer: FC<Props> = ({ id }) => {
+export const PostFeedContainer: FC<Props> = ({ id, feedOnly = false }) => {
   const { credItem, isInitialLoading } = useCredentialItem(id)
   const [posts, setPosts] = usePostsAtom()
   const { setIsDefaultOpenOnDesktop, setIsFullContent, openNavigation } = useNCLayoutContext()
@@ -33,7 +33,7 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
 
   useEffect(() => {
     // subscribe to new posts
-    const eventSource = new EventSource('http://localhost:3000/v2/subscribe/post')
+    const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_VESS_BACKEND}/v2/subscribe/post`)
     eventSource.onmessage = function (event) {
       console.log({ event })
       const newData = JSON.parse(event.data)
@@ -92,6 +92,7 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
             variant='outlined'
             color='neutral'
             onPress={() => {
+              if (feedOnly) return
               if (matches.lg) {
                 router.push('/')
               } else {
@@ -149,13 +150,11 @@ export const PostFeedContainer: FC<Props> = ({ id }) => {
               <TileGridFrame {...breakpointProps}>
                 {items.map((post) => {
                   return (
-                    <>
-                      <PostImage
-                        key={post.id}
-                        src={post.image || ''}
-                        onClick={() => openPostDetail(post)}
-                      />
-                    </>
+                    <PostImage
+                      key={post.id}
+                      src={post.image || ''}
+                      onClick={() => openPostDetail(post)}
+                    />
                   )
                 })}
               </TileGridFrame>
