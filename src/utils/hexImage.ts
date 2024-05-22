@@ -1,6 +1,6 @@
 export const checkAndConvertImageType = async (file: File): Promise<File> => {
   console.log('checkAndConvertImageType | file.type:', file.type)
-  if (file.type !== 'image/heic' && file.type !== 'image/heif') {
+  if (!file.type.includes('heic') && !file.type.includes('heif')) {
     return file
   }
   return new Promise((resolve, reject) => {
