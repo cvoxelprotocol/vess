@@ -419,7 +419,6 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
 
 const AddPostFrame = styled.div`
   position: fixed;
-  overflow-y: scroll;
   height: 100vh;
   inset: 0px;
   display: flex;
@@ -428,6 +427,7 @@ const AddPostFrame = styled.div`
   justify-content: center;
   gap: var(--kai-size-ref-96);
   background: var(--kai-color-sys-background);
+  overflow-y: scroll;
 `
 const ContentFrame = styled.div`
   display: flex;
@@ -439,6 +439,7 @@ const ContentFrame = styled.div`
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);
+  overflow-y: scroll;
 
   &[data-media-md] {
     padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);

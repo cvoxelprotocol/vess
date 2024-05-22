@@ -4,13 +4,14 @@ import {
   ModalOverlay,
   useModal,
   Text,
-  Button,
   FlexHorizontal,
   useBreakpoint,
+  IconButton,
 } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
+import { Button as RACButton } from 'react-aria-components'
 import { PiTrashBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Post } from '@/@types/user'
@@ -116,50 +117,42 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
                   {formatDateWithMinutes(post.createdAt.toLocaleString())}
                 </Text>
               )}
-              {credItem && (
-                <FlexVertical
-                  padding='24px 0 0 0'
-                  gap='var(--kai-size-sys-space-sm)'
-                  width='100%'
-                  justifyContent='center'
-                  alignItems='center'
-                  onClick={() => {
-                    onClose()
-                    router.push(`/creds/receive/${credItem.id}`)
-                  }}
-                >
-                  <Text
-                    as='h2'
-                    typo='title-sm'
-                    align='center'
-                    color='var(--kai-color-sys-on-background)'
-                  >
-                    利用しているクレデンシャル
-                  </Text>
-                  {credItem?.image && (
-                    <ImageContainer
-                      src={credItem?.image}
-                      width='var(--kai-size-ref-192)'
-                      height='auto'
-                      objectFit='contain'
-                    />
-                  )}
-                </FlexVertical>
-              )}
             </FlexVertical>
+            {credItem && (
+              <CredButton
+                onPress={() => {
+                  onClose()
+                  router.push(`/creds/receive/${credItem.id}`)
+                }}
+              >
+                {credItem.image && (
+                  <ImageContainer
+                    src={credItem.image}
+                    width='var(--kai-size-ref-32)'
+                    height='auto'
+                    objectFit='contain'
+                  />
+                )}
+                <Text color={'var(--kai-color-sys-on-layer)'} lineClamp={1}>
+                  {credItem.title}
+                </Text>
+              </CredButton>
+            )}
             {isEditable && (
-              <FlexVertical width='100%' alignItems='end' gap='var(--kai-size-ref-24)'>
-                <Button
-                  color='error'
-                  variant='outlined'
-                  size='sm'
-                  style={{ flexGrow: 0 }}
-                  onPress={() => deletePost()}
-                  startContent={<PiTrashBold />}
-                >
-                  削除する
-                </Button>
-              </FlexVertical>
+              <IconButton
+                color='error'
+                variant='tonal'
+                size='sm'
+                style={{
+                  flexGrow: 0,
+                  position: 'absolute',
+                  top: 16,
+                  right: 16,
+                  borderRadius: 'var(--kai-size-sys-round-sm)',
+                }}
+                onPress={() => deletePost()}
+                icon={<PiTrashBold />}
+              />
             )}
           </InnerFrame>
         </FlexVertical>
@@ -169,6 +162,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
 }
 
 const ContentFrame = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -179,12 +173,14 @@ const ContentFrame = styled.div`
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);
+  z-index: -1;
 
   &[data-media-md] {
     padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
   }
 `
 const InnerFrame = styled.div`
+  position: relative;
   width: 100%;
   height: auto;
   padding: 8px;
@@ -195,4 +191,26 @@ const InnerFrame = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+`
+
+const CredButton = styled(RACButton)`
+  outline: none;
+  border: none;
+  display: flex;
+  gap: var(--kai-size-sys-space-sm);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--kai-color-sys-layer-farthest);
+  border-radius: var(--kai-size-sys-round-md);
+  padding: var(--kai-size-sys-space-sm) var(--kai-size-sys-space-md);
+
+  &[data-focused] {
+    outline: none;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--kai-color-sys-dominant);
+    outline-offset: 2px;
+  }
 `
