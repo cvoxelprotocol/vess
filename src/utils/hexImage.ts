@@ -1,6 +1,10 @@
 export const checkAndConvertImageType = async (file: File): Promise<File> => {
   console.log('checkAndConvertImageType | file.type:', file.type)
-  if (!file.type.includes('heic') && !file.type.includes('heif')) {
+  // if (!file.type.includes('heic') && !file.type.includes('heif')) {
+  //   return file
+  // }
+  const ext = file?.name.split('.').pop()?.toLowerCase()
+  if (ext !== 'heic' && ext !== 'heif') {
     return file
   }
   return new Promise((resolve, reject) => {
@@ -20,7 +24,7 @@ export const checkAndConvertImageType = async (file: File): Promise<File> => {
           ctx.drawImage(img, 0, 0)
           canvas.toBlob((blob) => {
             if (blob) {
-              const newFile = new File([blob], `${file.name}.jpg`, {
+              const newFile = new File([blob], `${file.name}.jpeg`, {
                 type: 'image/jpeg',
                 lastModified: Date.now(),
               })
