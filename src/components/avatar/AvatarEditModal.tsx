@@ -129,7 +129,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     const credId = stickerImages.find((s) => s.url === imgUrl)?.id
     addSticker({
       id: (credId as string) || active.id.toString(),
-      imgUrl: active.data.current?.imageUrl,
+      imgUrl: imgUrl,
       position: {
         x: ((active.rect.current.translated?.left ?? 0) - over.rect.left) / avatarSize,
         y: ((active.rect.current.translated?.top ?? 0) - over.rect.top) / avatarSize,
@@ -207,7 +207,11 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       const avatarRequest: AddAvatarRequest = {
         did: did || '',
         sourcePhotoUrl:
-          icon || sourcePhoto?.url || profileAvatar?.sourcePhotoUrl || vsUser?.avatar || '',
+          icon ||
+          sourcePhoto?.url ||
+          profileAvatar?.sourcePhotoUrl ||
+          vsUser?.avatar ||
+          'https://app.vess.id/default_profile.jpg ',
         canvasJson: canvasJson,
         isProfilePhoto: true,
         credentialIds: vcs,
@@ -242,9 +246,6 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
     },
     [icon, uploadIcon],
   )
-
-  console.log({ stickerImages })
-  console.log({ stickers })
 
   return (
     <>
@@ -283,7 +284,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
                 />
               </StickerTools>
               <DroppableAvatar
-                baseAvatarImgUrl={baseImage ?? 'default_profile.jpg'}
+                baseAvatarImgUrl={baseImage ?? '/default_profile.jpg'}
                 stageRef={stageRef}
               />
             </AvatarFrame>

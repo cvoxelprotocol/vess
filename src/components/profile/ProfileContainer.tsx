@@ -9,27 +9,29 @@ import {
   FlexVertical,
   useBreakpoint,
 } from 'kai-kit'
+import { useRouter } from 'next/router'
 import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
 import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
-import { getAddressFromPkh } from 'vess-kit-web'
+import { Banner } from '../app/Banner'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
-
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
 import { IdPlate } from './IdPlate'
 import { SocialLink } from '@/@types/user'
+import { PIZZA_PARTY_CRED_ID } from '@/constants/campaign'
 import { X_URL } from '@/constants/common'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
+import { useShareLink } from '@/hooks/useShareLink'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
+import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
-import { shareOnX } from '@/utils/share'
 
 type ProfileContainerProps = {
   did: string
@@ -45,6 +47,8 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { formatedCredentials } = useVerifiableCredentials(did)
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
+  const { shareLink } = useShareLink(undefined)
+  const router = useRouter()
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -58,10 +62,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
 
   const profileAvatar = useMemo(() => {
     return avatars?.find((avatar) => avatar.isProfilePhoto)
-  }, [avatars, vsUser?.avatar])
+  }, [avatars])
 
   const avatarImageUrl = useMemo(() => {
-    return profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'
+    return vsUser?.avatar || profileAvatar?.avatarUrl || '/default_profile.jpg'
   }, [profileAvatar, vsUser?.avatar])
 
   const { image: avatarImage } = useImage(avatarImageUrl)
@@ -96,13 +100,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
         }
       })
     }
-  }
-
-  const Tweet = () => {
-    //Dont upload this to production!!
-    const currentUrl = window.location.href
-    const intent = shareOnX('hgeo', avatarImageUrl, currentUrl)
-    window.open(intent, '_blank')
   }
 
   return (
@@ -163,19 +160,14 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               right: 'var(--kai-size-sys-space-md)',
             }}
           >
-            {/* <IconButton
-              variant='tonal'
-              color='dominant'
-              size='md'
-              icon={<BsTwitterX size={24} />}
-              onPress={() => Tweet()}
-            /> */}
             <IconButton
               variant='tonal'
               color='dominant'
               size='md'
               icon={<PiExport size={24} />}
-              onPress={() => downloadAvatar()}
+              onPress={() =>
+                shareLink(window.location.href, 'Check my own #DigitalIdentity with #vessid !')
+              }
             />
           </FlexVertical>
         </ProfileTop>
@@ -219,11 +211,11 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               >
                 <IdPlate
                   iconURL={'/brand/vess.png'}
-                  id={vsUser?.vessId || (getAddressFromPkh(did) as string)}
+                  id={vsUser?.vessId ? `@${vsUser?.vessId}` : getAddressFromPkh(did)}
                 />
                 {xLink && (
                   <IdPlate
-                    iconURL={'/brand/x.png'}
+                    iconURL={'/brand/x_filled.png'}
                     id={xLink.displayLink || `@${xLink.url.replace(X_URL, '')}`}
                     onPress={() => {
                       window.open(xLink.url, '_blank')
@@ -236,6 +228,32 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 )}
               </FlexHorizontal>
             </FlexVertical>
+            {formatedCredentials.some((cred) => {
+              return cred.credentialSubject.eventId === `${PIZZA_PARTY_CRED_ID}`
+            }) && (
+              <FlexVertical
+                gap='var(--kai-size-sys-space-sm)'
+                width='100%'
+                style={{ overflowY: 'visible' }}
+              >
+                <Text
+                  typo='title-md'
+                  color='var(--kai-color-sys-on-layer)'
+                  style={{
+                    padding: '0 var(--kai-size-sys-space-md)',
+                    flexShrink: 0,
+                  }}
+                >
+                  参加中のイベント
+                </Text>
+                <BannerList>
+                  <Banner
+                    imgUrl='/banner/pizzaDAO2024.jpg'
+                    onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
+                  />
+                </BannerList>
+              </FlexVertical>
+            )}
             <FlexVertical
               gap='var(--kai-size-sys-space-sm)'
               width='100%'
@@ -243,7 +261,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               style={{ flexGrow: 1, overflowY: 'hidden' }}
             >
               <Text
-                typo='title-lg'
+                typo='title-md'
                 color='var(--kai-color-sys-on-layer)'
                 style={{
                   padding: '0 var(--kai-size-sys-space-md)',
@@ -253,18 +271,16 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 最新の証明
               </Text>
               <CredList>
-                {(formatedCredentials && formatedCredentials.length) > 0 ? (
+                {formatedCredentials && formatedCredentials.length > 0 ? (
                   <>
                     {formatedCredentials.map((credential, index) => (
-                      <>
-                        <CredItem
-                          key={`${credential.id}-${index}`}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
-                      </>
+                      <CredItem
+                        key={`${credential.id}-${index}`}
+                        image={credential.image}
+                        name={credential.title}
+                        credId={credential.id}
+                        width={'100%'}
+                      />
                     ))}
                   </>
                 ) : (
@@ -368,4 +384,14 @@ const CredList = styled.div`
   width: 100%;
   padding: 0 var(--kai-size-sys-space-md);
   overflow-y: scroll;
+`
+
+const BannerList = styled.div`
+  display: flex;
+  gap: var(--kai-size-sys-space-sm);
+  flex-wrap: nowrap;
+  width: 100%;
+  padding: 0 var(--kai-size-sys-space-md);
+  overflow-x: scroll;
+  overflow-y: visible;
 `

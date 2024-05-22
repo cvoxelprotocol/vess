@@ -1,34 +1,7 @@
 import { gql } from '@apollo/client'
-import { formatDID } from 'vess-kit-web'
-import { fetchOrbisProfile } from './OrbisHelper'
 import { initializeApollo } from './apollo'
 import { DisplayProfile } from '@/@types'
 import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
-
-export const fetchProfile = async (did: string): Promise<DisplayProfile> => {
-  try {
-    //orbis
-    const orbis = fetchOrbisProfile(did)
-    const cyber = getCCProfile(did)
-    // const lens = getLensProfile(did)
-
-    const res = await Promise.all([orbis, cyber])
-    const orbisProfile = res[0]
-    const ccProfile = res[1]
-    // const lensProfile = res[2]
-    return {
-      avatarSrc:
-        orbisProfile?.pfp && orbisProfile?.pfp !== ''
-          ? orbisProfile?.pfp
-          : ccProfile?.avatarSrc || '',
-      displayName:
-        orbisProfile?.username || ccProfile?.displayName || (!!did ? formatDID(did, 12) : ''),
-      bio: orbisProfile?.description || ccProfile?.bio || '',
-    }
-  } catch (error) {
-    throw error
-  }
-}
 
 const GET_PROFILE = gql`
   query getAddress($address: AddressEVM!) {

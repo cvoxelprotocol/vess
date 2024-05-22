@@ -1,4 +1,4 @@
-import { isDIDstring, ETH_CHAIN_ID } from 'vess-kit-web'
+import { isDIDstring, ETH_CHAIN_ID } from '@/utils/did'
 export const removeUndefined = <T extends {}>(object: T): T => {
   return Object.fromEntries(Object.entries(object).filter(([_, v]) => v !== undefined)) as T
 }
@@ -76,4 +76,32 @@ export const loadImageWithoutCache = async (
   url?: string,
 ): Promise<HTMLImageElement | undefined> => {
   return await loadImage(`${url}?rd=${new Date().getTime().toString()}`)
+}
+
+export const loadImageWithoutCacheWithMetadata = async (
+  url?: string,
+): Promise<ImageWithSize | undefined> => {
+  if (!url) return
+  try {
+    const image = await loadImage(`${url}?rd=${new Date().getTime().toString()}`)
+    return {
+      image,
+      width: image?.naturalWidth ?? 0,
+      height: image?.naturalHeight ?? 0,
+      aspectRatio: (image?.naturalWidth ?? 0) / (image?.naturalHeight ?? 0),
+    }
+  } catch (error) {
+    console.error('loadImageWithoutCacheWithMetadata error: ', error)
+    return
+  }
+}
+
+type ImageSize = {
+  width: number
+  height: number
+  aspectRatio: number
+}
+
+export type ImageWithSize = ImageSize & {
+  image: HTMLImageElement | undefined
 }

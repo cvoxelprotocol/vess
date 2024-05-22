@@ -15,7 +15,6 @@ import {
   OpenloginAdapter,
   LOGIN_PROVIDER,
 } from '@web3auth/openlogin-adapter'
-import { getAddressFromPkh } from 'vess-kit-web'
 import { createWalletClient, custom, getAddress } from 'viem'
 import { mainnet } from 'viem/chains'
 import { initializeApolloForCompose } from './apolloForCompose'
@@ -31,6 +30,7 @@ import { config } from './wagmi'
 import { VSUser } from '@/@types/credential'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
+import { getAddressFromPkh } from '@/utils/did'
 import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
 

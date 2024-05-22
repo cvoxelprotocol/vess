@@ -100,12 +100,14 @@ export const LoginPage: FC = () => {
               aria-label='Discordでログイン'
             />
             {!hideMetamask && (
-              <LoginButton
-                iconSrc='/brand/metamask.png'
-                onPress={() => handleLogin(config.connectors[1])}
-                isDisabled={didAuthService.isConnecting}
-                aria-label='Metamaskでログイン'
-              />
+              <>
+                <LoginButton
+                  iconSrc='/brand/metamask.png'
+                  onPress={() => handleLogin(config.connectors[1])}
+                  isDisabled={didAuthService.isConnecting}
+                  aria-label='Metamaskでログイン'
+                />
+              </>
             )}
             <LoginButton
               iconSrc='/brand/walletconnect.png'

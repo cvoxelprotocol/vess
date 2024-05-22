@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import { Text, Switch, useKai, FlexVertical } from 'kai-kit'
+import { Text, Switch, useKai, FlexVertical, Button } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useTheme } from 'next-themes'
 import React, { FC, useEffect, useState } from 'react'
 import type { RadioProps, RadioGroupProps, PressEvent } from 'react-aria-components'
 import { Radio, RadioGroup, Button as RACButton } from 'react-aria-components'
 import { isMobile } from 'react-device-detect'
+import { PiSignIn } from 'react-icons/pi'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 import { IconDic } from './IconDic'
 import { useNCLayoutContext } from './NCLayout'
@@ -23,7 +23,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
-  const { did } = useVESSAuthUser()
+  const { did, connection, vessId } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar, isInitialLoading: isLoadingAvatars } = useAvatar(did)
   const { setMode, currentMode } = useKai()
@@ -61,57 +61,65 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
           }}
           {...props}
         >
-          <NavigationItem
-            value='PROFILE'
-            onPress={() => {
-              closeNavigation()
-              router.push(`/did/${did}`)
-            }}
-          >
-            <NavigationIcon
-              src={profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'}
-            ></NavigationIcon>
-            <Text typo='label-lg' color='var(--kai-color-sys-on-surface)' lineClamp={1}>
-              {vsUser?.name || 'プロフィール'}
-            </Text>
-          </NavigationItem>
-          {NAVIGATION_LIST.filter((item) => item.id !== 'PROFILE').map((item) => {
-            return (
+          {connection === 'connected' && (
+            <>
               <NavigationItem
-                key={item.id}
-                value={item.id}
+                value='PROFILE'
                 onPress={() => {
                   closeNavigation()
-                  router.push(item.path)
+                  if (vessId) {
+                    router.push(`/${vessId}`)
+                  } else {
+                    router.push(`/did/${did}`)
+                  }
                 }}
               >
-                {({ isSelected }) => {
-                  return (
-                    <>
-                      {isSelected ? (
-                        <IconDic
-                          icon={item.id}
-                          variant={'filled'}
-                          size='20'
-                          color='var(--kai-color-sys-on-surface)'
-                        />
-                      ) : (
-                        <IconDic
-                          icon={item.id}
-                          variant={'default'}
-                          size='20'
-                          color='var(--kai-color-sys-on-surface)'
-                        />
-                      )}
-                      <Text typo='label-lg' color='var(--kai-color-sys-on-surface)'>
-                        {item.label}
-                      </Text>
-                    </>
-                  )
-                }}
+                <NavigationIcon
+                  src={profileAvatar?.avatarUrl || vsUser?.avatar || '/default_profile.jpg'}
+                ></NavigationIcon>
+                <Text typo='label-lg' color='var(--kai-color-sys-on-surface)' lineClamp={1}>
+                  {vsUser?.name || 'プロフィール'}
+                </Text>
               </NavigationItem>
-            )
-          })}
+              {NAVIGATION_LIST.filter((item) => item.id !== 'PROFILE').map((item) => {
+                return (
+                  <NavigationItem
+                    key={item.id}
+                    value={item.id}
+                    onPress={() => {
+                      closeNavigation()
+                      router.push(item.path)
+                    }}
+                  >
+                    {({ isSelected }) => {
+                      return (
+                        <>
+                          {isSelected ? (
+                            <IconDic
+                              icon={item.id}
+                              variant={'filled'}
+                              size='20'
+                              color='var(--kai-color-sys-on-surface)'
+                            />
+                          ) : (
+                            <IconDic
+                              icon={item.id}
+                              variant={'default'}
+                              size='20'
+                              color='var(--kai-color-sys-on-surface)'
+                            />
+                          )}
+                          <Text typo='label-lg' color='var(--kai-color-sys-on-surface)'>
+                            {item.label}
+                          </Text>
+                        </>
+                      )
+                    }}
+                  </NavigationItem>
+                )
+              })}
+            </>
+          )}
         </NavigationItemGroup>
       </FlexVertical>
       <FlexVertical gap='var(--kai-size-sys-space-md)' width='100%'>
@@ -133,7 +141,21 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
             ダークモード
           </Text>
         </Switch>
-        <LogoutButton />
+        {connection === 'connected' ? (
+          <LogoutButton />
+        ) : (
+          <Button
+            variant='tonal'
+            width='100%'
+            endContent={<PiSignIn />}
+            style={{ justifyContent: 'space-between' }}
+            onPress={() => {
+              router.push('/login')
+            }}
+          >
+            ログインする
+          </Button>
+        )}
       </FlexVertical>
     </NavigationListFrame>
   )

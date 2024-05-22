@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
-import { useModal, Modal, useKai, useBreakpoint } from 'kai-kit'
+import { useModal, useKai, useBreakpoint } from 'kai-kit'
 import { Router } from 'next/router'
 import { FC, useEffect } from 'react'
-import { getAuthorizedSession } from 'vess-kit-web'
 import { NCLayout } from '../app/NCLayout'
 import { NavigationContextProvider, NavigationList } from '../app/NavigationList'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
@@ -15,7 +14,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   const { showLoading, closeLoading } = useVESSLoading()
   const { did } = useVESSAuthUser()
   const { openModal, closeModal } = useModal()
-  const { setDarkMode, setLightMode } = useKai()
+  const { setLightMode } = useKai()
   const { breakpointProps } = useBreakpoint()
 
   useEffect(() => {
@@ -44,10 +43,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
   useEffect(() => {
     async function init() {
       if (!did) {
-        const session = await getAuthorizedSession()
-        if (session) {
-          await autoVESSConnect()
-        }
+        await autoVESSConnect()
       }
     }
     init()

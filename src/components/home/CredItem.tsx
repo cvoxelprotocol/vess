@@ -39,45 +39,43 @@ export const CredItem: FC<Props> = ({ image, name, credId, width, height }) => {
   }
 
   return (
-    <>
-      <Skelton
-        variant='filled'
-        isLoading={!image}
+    <Skelton
+      variant='filled'
+      isLoading={!image}
+      width={width}
+      height='auto'
+      aspectRatio='1.618 / 1'
+      maskColor='var(--kai-color-sys-background)'
+      radius='var(--kai-size-sys-round-md)'
+      borderWidth='var(--kai-size-ref-2)'
+    >
+      <CredItemFrame
+        onPress={() => handleClick()}
+        data-square={isSquare || undefined}
         width={width}
-        height='auto'
-        aspectRatio='1.618 / 1'
-        maskColor='var(--kai-color-sys-background)'
-        radius='var(--kai-size-sys-round-md)'
-        borderWidth='var(--kai-size-ref-2)'
+        height={height}
       >
-        <CredItemFrame
-          onPress={() => handleClick()}
-          data-square={isSquare || undefined}
-          width={width}
-          height={height}
-        >
-          {isSquare ? (
-            <CredImageFrame>
-              <CredImageBackground src={image} ref={imgRef} />
-              <CredImageOverlay />
-              <CredImage src={image || ''} />
-            </CredImageFrame>
-          ) : (
-            <ImageContainer
-              src={image || '/sample/event_sample.png'}
-              alt={name || 'イベント参加証明画像'}
-              objectFit='contain'
-              width={'100%'}
-              style={{ zIndex: 0 }}
-              ref={imgRef}
-            />
-          )}
-          <IconFrame>
-            <NextImageContainer src='/icon/verified_rich.png' width='32px' />
-          </IconFrame>
-        </CredItemFrame>
-      </Skelton>
-    </>
+        {isSquare ? (
+          <CredImageFrame>
+            <CredImageBackground src={image} ref={imgRef} />
+            <CredImageOverlay />
+            <CredImage src={image || ''} />
+          </CredImageFrame>
+        ) : (
+          <ImageContainer
+            src={image || '/sample/event_sample.png'}
+            alt={name || 'イベント参加証明画像'}
+            objectFit='contain'
+            width={'100%'}
+            style={{ zIndex: 0 }}
+            ref={imgRef}
+          />
+        )}
+        <IconFrame>
+          <NextImageContainer src='/icon/verified_rich.png' width='32px' />
+        </IconFrame>
+      </CredItemFrame>
+    </Skelton>
   )
 }
 const CredItemFrame = styled(Button)<{ width?: string; height?: string }>`

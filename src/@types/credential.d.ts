@@ -216,7 +216,7 @@ export type VSCredentialItemFromBuckup = {
   userId?: string | null
   user?: VSUser
   sticker?: Sticker[]
-  hideFromPublic?: boolean
+  post?: Post[]
 }
 
 export type Sticker = {
