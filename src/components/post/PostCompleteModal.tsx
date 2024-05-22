@@ -7,7 +7,6 @@ import { IdPlate } from '../profile/IdPlate'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Post } from '@/@types/user'
 import { useSelectedPostAtom } from '@/jotai/ui'
-import post from '@/pages/api/og/post'
 import { shareOnX } from '@/utils/share'
 
 type Props = {
@@ -24,7 +23,7 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
   const onClose = () => {
     setPost(undefined)
     router.push(`/creds/items/feed/${credId}`)
-    closeModal()
+    closeModal('PostCompleteModal')
   }
 
   const shareUrl = useMemo(() => {

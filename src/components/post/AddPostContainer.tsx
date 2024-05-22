@@ -77,24 +77,9 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const { addSticker } = useStickers()
   const [selectedPost, setPost] = useSelectedPostAtom()
 
-  //FIXME:DELETE
-  // useEffect(() => {
-  //   const samplePost: Post = {
-  //     canvasId: '02b699a6-2eaf-4441-9299-f3bb800caef8',
-  //     createdAt: new Date('2024-05-18T09:26:08.484Z'),
-  //     credentialItemId: '7bf452f0-3b2f-46d2-b4f7-ca4656b2b85a',
-  //     id: '45bb902e-7e09-4c08-b240-04acee050558',
-  //     image:
-  //       'https://usericonupload.s3.ap-northeast-1.amazonaws.com/3bd53b87-9685-4fab-8b84-b23d60695774.png',
-  //     text: null,
-  //     updatedAt: new Date('2024-05-18T09:26:08.484Z'),
-  //     userId: '76785b30-a6e4-4157-86b2-95e2eccfb3be',
-  //     credentialItem: null,
-  //     canvas: null,
-  //   }
-  //   setPost(samplePost)
-  //   openModal('PostCompleteModal')
-  // }, [])
+  const hasCredential = useMemo(() => {
+    return formatedCredentials.some((c) => c.credId === id)
+  }, [formatedCredentials, id])
 
   const stickerImages = useMemo(() => {
     console.log({ formatedCredentials })
@@ -341,18 +326,32 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
               gap={'var(--kai-size-sys-space-sm)'}
               style={{ width: '100%' }}
             >
-              <Button
-                width='100%'
-                variant='filled'
-                style={{ flexGrow: 1 }}
-                isLoading={isSaving}
-                isDisabled={!icon || isSaving}
-                onPress={() => {
-                  handleSave()
-                }}
-              >
-                投稿する
-              </Button>
+              {hasCredential ? (
+                <Button
+                  width='100%'
+                  variant='filled'
+                  style={{ flexGrow: 1 }}
+                  isLoading={isSaving}
+                  isDisabled={!icon || isSaving}
+                  onPress={() => {
+                    handleSave()
+                  }}
+                >
+                  投稿する
+                </Button>
+              ) : (
+                <Button
+                  width='100%'
+                  variant='filled'
+                  style={{ flexGrow: 1 }}
+                  onPress={() => {
+                    router.push(`/creds/receive/${id}`)
+                  }}
+                >
+                  クレデンシャルを取得する
+                </Button>
+              )}
+
               <Button
                 width='100%'
                 color='neutral'

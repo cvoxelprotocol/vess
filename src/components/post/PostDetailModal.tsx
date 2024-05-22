@@ -9,15 +9,18 @@ import {
   useBreakpoint,
 } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
+import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { PiTrashBold } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { Post } from '@/@types/user'
+import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { usePost } from '@/hooks/usePost'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useSelectedPostAtom } from '@/jotai/ui'
 import { formatDateWithMinutes } from '@/utils/date'
+import { shortenStr } from '@/utils/objectUtil'
 
 type Props = {
   post?: Post
@@ -30,8 +33,8 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const { id: myId } = useVESSAuthUser()
   const { vsUserById } = useVESSUserProfile(undefined, post?.userId)
   const { deleteItem } = usePost()
-
-  console.log({ post })
+  const router = useRouter()
+  const { credItem } = useCredentialItem(post?.credentialItemId || undefined)
 
   const deletePost = async () => {
     if (!post?.id || !post?.credentialItemId || !myId) return
@@ -44,7 +47,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
 
   const onClose = () => {
     setPost(undefined)
-    closeModal()
+    closeModal('PostDetailModal')
   }
 
   return (
@@ -83,16 +86,28 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
                   alignItems='center'
                   justifyContent='center'
                   gap='var(--kai-size-ref-6)'
+                  onClick={() => {
+                    onClose()
+                    if (vsUserById.vessId) {
+                      router.push(`/${vsUserById.vessId}`)
+                    } else {
+                      router.push(`/did/${vsUserById.did}`)
+                    }
+                  }}
                 >
                   <ImageContainer
-                    src={vsUserById.avatar || 'default_profile.jpg'}
+                    src={vsUserById.avatar || '/default_profile.jpg'}
                     width='var(--kai-size-ref-28)'
                     height='var(--kai-size-ref-28)'
                     objectFit='contain'
                     borderRadius='var(--kai-size-sys-round-full)'
                   />
                   <Text typo='title-md' color='var(--kai-color-sys-on-layer)'>
-                    {`${`@${vsUserById.vessId}` || vsUserById?.name || 'Unknown'}`}
+                    {`${
+                      vsUserById.vessId
+                        ? `@${vsUserById.vessId}`
+                        : vsUserById?.name ?? shortenStr(vsUserById.did || '', 14)
+                    }`}
                   </Text>
                 </FlexHorizontal>
               )}
@@ -100,6 +115,36 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
                 <Text typo='label-lg' color='var(--kai-color-sys-neutral)' align='center'>
                   {formatDateWithMinutes(post.createdAt.toLocaleString())}
                 </Text>
+              )}
+              {credItem && (
+                <FlexVertical
+                  padding='24px 0 0 0'
+                  gap='var(--kai-size-sys-space-sm)'
+                  width='100%'
+                  justifyContent='center'
+                  alignItems='center'
+                  onClick={() => {
+                    onClose()
+                    router.push(`/creds/receive/${credItem.id}`)
+                  }}
+                >
+                  <Text
+                    as='h2'
+                    typo='title-sm'
+                    align='center'
+                    color='var(--kai-color-sys-on-background)'
+                  >
+                    利用しているクレデンシャル
+                  </Text>
+                  {credItem?.image && (
+                    <ImageContainer
+                      src={credItem?.image}
+                      width='var(--kai-size-ref-192)'
+                      height='auto'
+                      objectFit='contain'
+                    />
+                  )}
+                </FlexVertical>
               )}
             </FlexVertical>
             {isEditable && (

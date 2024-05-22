@@ -55,8 +55,6 @@ const DraggablePostSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl,
   return (
     <StickerFrame
       onPress={() => {
-        console.log({ postImageSize })
-        console.log({ stickerSize })
         addSticker({
           id: credId,
           imgUrl: imageUrl,

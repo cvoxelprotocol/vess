@@ -17,7 +17,7 @@ const nextConfig = {
     return [
       {
         source: '/campaign/pizza2024/recieve',
-        destination: '/creds/receive/7bf452f0-3b2f-46d2-b4f7-ca4656b2b85a',
+        destination: '/creds/receive/54541374-c7c4-4c0e-abcc-b749ddbf03a7',
         permanent: true,
       },
     ]
