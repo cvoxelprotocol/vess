@@ -3,10 +3,11 @@ export const checkAndConvertImageType = async (file: File): Promise<File> => {
   // if (!file.type.includes('heic') && !file.type.includes('heif')) {
   //   return file
   // }
-  const ext = file?.name.split('.').pop()?.toLowerCase()
-  if (ext !== 'heic' && ext !== 'heif') {
-    return file
-  }
+  // const ext = file?.name.split('.').pop()?.toLowerCase()
+  // console.log('checkAndConvertImageType | ext:', ext)
+  // if (ext !== 'heic' && ext !== 'heif') {
+  //   return file
+  // }
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
 

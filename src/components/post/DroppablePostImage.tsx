@@ -41,7 +41,7 @@ const _DroppablePostImage = forwardRef<any, DroppableAvatarProps>(
       return () => {
         window.removeEventListener('resize', updateSize)
       }
-    }, [node])
+    }, [node, image])
 
     const deselect = () => {
       setSelectedID(undefined)
