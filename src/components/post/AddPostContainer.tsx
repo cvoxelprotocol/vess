@@ -14,10 +14,12 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button as RACButton } from 'react-aria-components'
+import { isMobile } from 'react-device-detect'
 import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
 import { vcImage } from '../avatar/ImageCanvas'
 import { IconUploadButton } from '../home/IconUploadButton'
 import { PhotoUploadButton } from './PhotoUploadButton'
+import { PhotoUploadButtonSP } from './PhotoUploadButtonSP'
 import { PostCompleteModal } from './PostCompleteModal'
 import { PostStikerListModal } from './PostStikerListModal'
 import { AddPostRequest, Post, AddAvatarRequest, CanvasJson } from '@/@types/user'
@@ -78,6 +80,11 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const { addSticker } = useStickers()
   const [selectedPost, setPost] = useSelectedPostAtom()
   const [uploadError, setUploadError] = useState<any>()
+  const [isMobileClient, setIsMobileClient] = useState(false)
+
+  useEffect(() => {
+    setIsMobileClient(isMobile)
+  }, [])
 
   const hasCredential = useMemo(() => {
     return formatedCredentials.some((c) => c.credId === id)
@@ -322,7 +329,13 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   stageRef={stageRef}
                 />
               ) : (
-                <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
+                <>
+                  {isMobileClient ? (
+                    <PhotoUploadButtonSP onSelect={onSelect} isUploading={status === 'uploading'} />
+                  ) : (
+                    <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
+                  )}
+                </>
               )}
             </AvatarFrame>
 
