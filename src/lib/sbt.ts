@@ -1,57 +1,57 @@
-import { ThirdwebSDK } from '@thirdweb-dev/sdk'
-import { CertVCWithSBT } from '@/interfaces/sbt'
-import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
+// import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+// import { CertVCWithSBT } from '@/interfaces/sbt'
+// import { getAddressFromPkhForWagmi } from '@/utils/objectUtil'
 
-// set SBT contract address
-const DOT_JP_CONTRACT = '0x868af4106aeFDf7EddC3DbF98B0ff1d21D0f3347'
+// // set SBT contract address
+// const DOT_JP_CONTRACT = '0x868af4106aeFDf7EddC3DbF98B0ff1d21D0f3347'
 
-export const fetchCertifications = async (did?: string) => {
-  const nfts = await fetchCertSBT(did)
-  if (!nfts) return []
-  return nfts.map((nft) => {
-    return { nft, contractAddress: DOT_JP_CONTRACT } as CertVCWithSBT
-  })
-}
+// export const fetchCertifications = async (did?: string) => {
+//   const nfts = await fetchCertSBT(did)
+//   if (!nfts) return []
+//   return nfts.map((nft) => {
+//     return { nft, contractAddress: DOT_JP_CONTRACT } as CertVCWithSBT
+//   })
+// }
 
-export const fetchCertification = async (
-  chain: string,
-  contractAddress: string,
-  tokenId: string,
-): Promise<CertVCWithSBT | null> => {
-  try {
-    // if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
-    //   return null
-    // }
-    const sdk = new ThirdwebSDK(chain)
-    const contract = await sdk.getContract(contractAddress)
-    const nft = await contract.erc721.get(tokenId)
-    const id = getCeramicIdFromSBT(nft)
-    if (!nft || !id) {
-      return null
-    }
-    return {
-      nft,
-      contractAddress: DOT_JP_CONTRACT,
-      ceramicId: id,
-    }
-  } catch (error) {
-    return null
-  }
-}
+// export const fetchCertification = async (
+//   chain: string,
+//   contractAddress: string,
+//   tokenId: string,
+// ): Promise<CertVCWithSBT | null> => {
+//   try {
+//     // if (contractAddress.toLowerCase() !== DOT_JP_CONTRACT.toLowerCase()) {
+//     //   return null
+//     // }
+//     const sdk = new ThirdwebSDK(chain)
+//     const contract = await sdk.getContract(contractAddress)
+//     const nft = await contract.erc721.get(tokenId)
+//     const id = getCeramicIdFromSBT(nft)
+//     if (!nft || !id) {
+//       return null
+//     }
+//     return {
+//       nft,
+//       contractAddress: DOT_JP_CONTRACT,
+//       ceramicId: id,
+//     }
+//   } catch (error) {
+//     return null
+//   }
+// }
 
-const fetchCertSBT = async (did?: string) => {
-  if (!did) return null
-  const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'polygon'
-  const sdk = new ThirdwebSDK(chain)
-  const contract = await sdk.getContract(DOT_JP_CONTRACT)
-  const nfts = await contract.erc721.getOwned(getAddressFromPkhForWagmi(did))
-  return nfts
-}
+// const fetchCertSBT = async (did?: string) => {
+//   if (!did) return null
+//   const chain = process.env.NEXT_PUBLIC_OPEASEA_CHAIN || 'polygon'
+//   const sdk = new ThirdwebSDK(chain)
+//   const contract = await sdk.getContract(DOT_JP_CONTRACT)
+//   const nfts = await contract.erc721.getOwned(getAddressFromPkhForWagmi(did))
+//   return nfts
+// }
 
-export const getCeramicIdFromSBT = (sbt: any): string | undefined => {
-  if (!(sbt && sbt.metadata?.attributes)) return
-  const ceramicIdObj = sbt.metadata?.attributes.find(
-    (a: { trait_type: string }) => a.trait_type === 'ceramicId',
-  )
-  return ceramicIdObj?.value || undefined
-}
+// export const getCeramicIdFromSBT = (sbt: any): string | undefined => {
+//   if (!(sbt && sbt.metadata?.attributes)) return
+//   const ceramicIdObj = sbt.metadata?.attributes.find(
+//     (a: { trait_type: string }) => a.trait_type === 'ceramicId',
+//   )
+//   return ceramicIdObj?.value || undefined
+// }
