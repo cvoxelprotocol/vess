@@ -164,14 +164,14 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                       startContent={<PiCheckCircleDuotone size='24px' />}
                     >
                       受け取りが完了しました！
-                      <br />
-                      キャンペーンへ参加しよう！
                     </Text>
                     {id && isPizzaPartyCred(id) && (
-                      <Banner
-                        imgUrl='/banner/pizzaDAO2024.jpg'
+                      <Button
+                        width='100%'
                         onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
-                      />
+                      >
+                        限定キャンペーンに参加する
+                      </Button>
                     )}
                     {/* DELETEME: */}
                   </>
@@ -206,6 +206,15 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                 {/* DELETEME: */}
                 {alreadyReceived && id && isPizzaPartyCred(id) ? (
                   <>
+                    <Text
+                      as='span'
+                      typo='title-sm'
+                      align='center'
+                      color='var(--kai-color-sys-secondary)'
+                      startContent={<PiCheckCircleDuotone size='24px' />}
+                    >
+                      下のバナーからキャンペーンへ参加しよう！
+                    </Text>
                     <Banner
                       imgUrl='/banner/pizzaDAO2024.jpg'
                       onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
