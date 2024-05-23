@@ -1,13 +1,4 @@
-export const checkAndConvertImageType = async (file: File): Promise<File> => {
-  console.log('checkAndConvertImageType | file.type:', file.type)
-  // if (!file.type.includes('heic') && !file.type.includes('heif')) {
-  //   return file
-  // }
-  const ext = file?.name.split('.').pop()?.toLowerCase()
-  console.log('checkAndConvertImageType | ext:', ext)
-  // if (ext !== 'heic' && ext !== 'heif') {
-  //   return file
-  // }
+export const checkAndConvertImageResolution = async (file: File): Promise<File> => {
   try {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -18,12 +9,27 @@ export const checkAndConvertImageType = async (file: File): Promise<File> => {
 
         img.onload = () => {
           const canvas = document.createElement('canvas')
-          canvas.width = img.width
-          canvas.height = img.height
           const ctx = canvas.getContext('2d')
 
           if (ctx) {
-            ctx.drawImage(img, 0, 0)
+            // Calculate maximum pixels to maintain 12 megapixels
+            const maxPixels = 12000000 // 12 megapixels
+            let targetWidth = img.width
+            let targetHeight = img.height
+
+            // Calculate the scaling factor to keep the image within 12 megapixels
+            const scalingFactor = Math.sqrt(maxPixels / (targetWidth * targetHeight))
+
+            // Apply the scaling factor if it is less than 1 (image is larger than 12 megapixels)
+            if (scalingFactor < 1) {
+              targetWidth = Math.floor(targetWidth * scalingFactor)
+              targetHeight = Math.floor(targetHeight * scalingFactor)
+            }
+
+            // Resize canvas to the target dimensions
+            canvas.width = targetWidth
+            canvas.height = targetHeight
+            ctx.drawImage(img, 0, 0, targetWidth, targetHeight)
             canvas.toBlob((blob) => {
               if (blob) {
                 const newFile = new File([blob], `${file.name}.jpeg`, {

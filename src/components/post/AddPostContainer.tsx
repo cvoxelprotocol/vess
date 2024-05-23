@@ -14,12 +14,10 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button as RACButton } from 'react-aria-components'
-import { isMobile } from 'react-device-detect'
 import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
 import { vcImage } from '../avatar/ImageCanvas'
 import { IconUploadButton } from '../home/IconUploadButton'
 import { PhotoUploadButton } from './PhotoUploadButton'
-import { PhotoUploadButtonSP } from './PhotoUploadButtonSP'
 import { PostCompleteModal } from './PostCompleteModal'
 import { PostStikerListModal } from './PostStikerListModal'
 import { AddPostRequest, Post, AddAvatarRequest, CanvasJson } from '@/@types/user'
@@ -39,7 +37,7 @@ import {
   useStateRPath,
   useStickersAtom,
 } from '@/jotai/ui'
-import { checkAndConvertImageType } from '@/utils/hexImage'
+import { checkAndConvertImageResolution } from '@/utils/hexImage'
 import { isGoodResponse } from '@/utils/http'
 import { compressImage } from '@/utils/image'
 import { dataURLtoFile } from '@/utils/objectUtil'
@@ -80,11 +78,6 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const { addSticker } = useStickers()
   const [selectedPost, setPost] = useSelectedPostAtom()
   const [uploadError, setUploadError] = useState<any>()
-  const [isMobileClient, setIsMobileClient] = useState(false)
-
-  useEffect(() => {
-    setIsMobileClient(isMobile)
-  }, [])
 
   const hasCredential = useMemo(() => {
     return formatedCredentials.some((c) => c.credId === id)
@@ -242,7 +235,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
     async (files: FileList | null) => {
       if (files !== null && files[0]) {
         try {
-          const checkedFile = await checkAndConvertImageType(files[0])
+          const checkedFile = await checkAndConvertImageResolution(files[0])
           const convertedFile = await compressImage(checkedFile)
           await uploadIcon(convertedFile)
           const objectURL = URL.createObjectURL(files[0])
@@ -329,13 +322,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   stageRef={stageRef}
                 />
               ) : (
-                <>
-                  {isMobileClient ? (
-                    <PhotoUploadButtonSP onSelect={onSelect} isUploading={status === 'uploading'} />
-                  ) : (
-                    <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
-                  )}
-                </>
+                <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
               )}
             </AvatarFrame>
 
