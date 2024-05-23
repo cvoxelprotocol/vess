@@ -246,7 +246,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                     flexShrink: 0,
                   }}
                 >
-                  参加中のイベント
+                  イベント
                 </Text>
                 <BannerList>
                   <Banner
