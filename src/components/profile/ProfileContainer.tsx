@@ -68,6 +68,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
     return vsUser?.avatar || profileAvatar?.avatarUrl || '/default_profile.jpg'
   }, [profileAvatar, vsUser?.avatar])
 
+  const hasCredential = useMemo(() => {
+    return formatedCredentials.some((c) => c.credId === PIZZA_PARTY_CRED_ID)
+  }, [formatedCredentials])
+
   const { image: avatarImage } = useImage(avatarImageUrl)
 
   const isEditable = useMemo(() => {
@@ -228,9 +232,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 )}
               </FlexHorizontal>
             </FlexVertical>
-            {formatedCredentials.some((cred) => {
-              return cred.credentialSubject.eventId === `${PIZZA_PARTY_CRED_ID}`
-            }) && (
+            {hasCredential && (
               <FlexVertical
                 gap='var(--kai-size-sys-space-sm)'
                 width='100%'

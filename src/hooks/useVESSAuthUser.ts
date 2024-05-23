@@ -17,5 +17,6 @@ export const useVESSAuthUser = () => {
     avatar: vessAuth?.user?.avatar,
     description: vessAuth?.user?.description,
     vessId: vessAuth?.user?.vessId,
+    connectionStatus: vessAuth?.connectionStatus,
   }
 }
