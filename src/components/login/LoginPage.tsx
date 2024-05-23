@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import type { Connector } from '@wagmi/core'
 import { IconButton, TextInput, useKai, Text } from 'kai-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -18,7 +19,7 @@ import { DidAuthService } from '@/lib/didAuth'
 import { config } from '@/lib/wagmi'
 
 type EmailLoginProps = {
-  email: string
+  email?: string
 }
 export const LoginPage: FC = () => {
   const { kai } = useKai()
@@ -52,11 +53,13 @@ export const LoginPage: FC = () => {
   const {
     handleSubmit,
     register,
+    setError,
     formState: { errors },
   } = useForm<EmailLoginProps>({
     defaultValues: {
       email: '',
     },
+    shouldFocusError: false,
   })
 
   const onClickSubmit = async (data: EmailLoginProps, e?: BaseSyntheticEvent) => {
@@ -64,13 +67,17 @@ export const LoginPage: FC = () => {
     e?.stopPropagation()
     try {
       const { email } = data
+      if (!email) {
+        setError('email', { message: 'メールアドレスを入力してください' })
+        return
+      }
       await didAuthService.loginWithEmail(email)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const handleLogin = async (connector?: any) => {
+  const handleLogin = async (connector?: Connector) => {
     try {
       const isSuccess = await didAuthService.loginWithWallet(connector)
       if (isSuccess) {
@@ -92,12 +99,14 @@ export const LoginPage: FC = () => {
               onPress={() => didAuthService.loginWithGoogle()}
               isDisabled={didAuthService.isConnecting}
               aria-label='Googleでログイン'
+              type='button'
             />
             <LoginButton
               iconSrc='/brand/discord.png'
               onPress={() => didAuthService.loginWithDiscord()}
               isDisabled={didAuthService.isConnecting}
               aria-label='Discordでログイン'
+              type='button'
             />
             {!hideMetamask && (
               <>
@@ -106,15 +115,17 @@ export const LoginPage: FC = () => {
                   onPress={() => handleLogin(config.connectors[1])}
                   isDisabled={didAuthService.isConnecting}
                   aria-label='Metamaskでログイン'
+                  type='button'
                 />
               </>
             )}
-            {/* <LoginButton
+            <LoginButton
               iconSrc='/brand/walletconnect.png'
               onPress={() => handleLogin(config.connectors[0])}
               isDisabled={didAuthService.isConnecting}
               aria-label='Walletconnectでログイン'
-            /> */}
+              type='button'
+            />
           </FlexHorizontal>
           <Separator title='または' titlePlacement='in-center' lineWeight='thick' />
           <Form id='email-login' onSubmit={handleSubmit(onClickSubmit)}>
@@ -124,10 +135,11 @@ export const LoginPage: FC = () => {
                 width='100%'
                 size='lg'
                 errorMessage={errors.email?.message}
-                {...register('email', { required: 'メールアドレスを入力してください' })}
+                {...register('email')}
                 placeholder='メールアドレス'
                 isLabel={false}
                 inputStartContent={<PiEnvelopeSimple size={20} />}
+                autoFocus={false}
               />
               <IconButton
                 icon={<PiArrowFatRightDuotone />}

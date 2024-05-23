@@ -1,5 +1,6 @@
 import { ComposeClient } from '@composedb/client'
 import { connect, disconnect } from '@wagmi/core'
+import type { Connector } from '@wagmi/core'
 import {
   ADAPTER_STATUS,
   CHAIN_NAMESPACES,
@@ -26,7 +27,7 @@ import {
   createUserWithGoogle,
   vessLogout,
 } from './vessApi'
-import { config } from './wagmi'
+import { clearWeb3ConnectorCache, config } from './wagmi'
 import { VSUser } from '@/@types/credential'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
@@ -65,15 +66,20 @@ export class DidAuthService {
 
   //===Wallet(wagmi)===
 
-  async loginWithWallet(connector?: any): Promise<boolean> {
+  async loginWithWallet(connector?: Connector): Promise<boolean> {
+    if (!connector) return false
     try {
       this.loadingState()
 
-      // connect vess sdk
-      const connectRes = await connect(config, { connector })
-      console.log({ connectRes })
+      const isAuthorized = await connector?.isAuthorized()
+      if (!isAuthorized) {
+        await connect(config, { connector })
+      }
       const provider = await connector?.getProvider()
-      const { session } = await connectVESSAuth(connectRes.accounts[0], provider)
+      const accounts = await connector?.getAccounts()
+
+      // connect vess sdk
+      const { session } = await connectVESSAuth(accounts[0], provider)
       console.log({ session })
       //save user info
       const res = await createUserOnlyWithDid({
@@ -84,38 +90,37 @@ export class DidAuthService {
       if (isLoginSucceeded) {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
-
-        if (res) {
-          const resJson = (await res.json()) as VSUser
-          const { name, avatar, description, id, vessId } = resJson
-          this.setLoginState(
-            id,
-            session.did.parent,
-            getAddress(getAddressFromPkh(session.did.parent)),
-            name,
-            avatar,
-            description,
-            vessId,
-            'wallet',
-          )
-        } else {
-          this.setLoginState(
-            '',
-            session.did.parent,
-            getAddress(getAddressFromPkh(session.did.parent)),
-            null,
-            null,
-            null,
-            null,
-            'wallet',
-          )
-        }
+        const resJson = (await res.json()) as VSUser
+        const { name, avatar, description, id, vessId } = resJson
+        this.setLoginState(
+          id,
+          session.did.parent,
+          getAddress(getAddressFromPkh(session.did.parent)),
+          name,
+          avatar,
+          description,
+          vessId,
+          'wallet',
+        )
+      } else {
+        this.setLoginState(
+          '',
+          session.did.parent,
+          getAddress(getAddressFromPkh(session.did.parent)),
+          null,
+          null,
+          null,
+          null,
+          'wallet',
+        )
       }
       return isLoginSucceeded
     } catch (error) {
       console.error(error)
-      this.clearState()
-
+      // this.clearState()
+      this.disConnectDID()
+      await connector.disconnect()
+      clearWeb3ConnectorCache()
       return false
     }
   }
@@ -404,17 +409,21 @@ export class DidAuthService {
   }
 
   async disConnectDID(): Promise<void> {
-    disconnectVESSAuth()
-    const vessAuth = getVESSAuth()
-    if (vessAuth?.user?.stateLoginType === 'wallet') {
-      disconnect(config)
+    try {
+      disconnectVESSAuth()
+      const vessAuth = getVESSAuth()
+      if (vessAuth?.user?.stateLoginType === 'wallet') {
+        disconnect(config)
+      }
+      if (this.web3auth && this.web3auth.connected) {
+        await this.web3auth.logout()
+      }
+      //remove session
+      await vessLogout()
+      this.clearState()
+    } catch (error) {
+      throw error
     }
-    if (this.web3auth && this.web3auth.connected) {
-      await this.web3auth.logout()
-    }
-    //remove session
-    await vessLogout()
-    this.clearState()
   }
   //===Common===
 }
