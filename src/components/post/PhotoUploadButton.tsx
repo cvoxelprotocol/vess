@@ -1,11 +1,9 @@
-import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Spinner, Text, useKai } from 'kai-kit'
+import { Spinner, Text } from 'kai-kit'
 import React, { FC } from 'react'
 import { FileTrigger, Button } from 'react-aria-components'
 import type { FileTriggerProps } from 'react-aria-components'
 import { PiCameraPlus } from 'react-icons/pi'
-import { CommonSpinner } from '../ui-v1/Loading/CommonSpinner'
 
 type IconUploadButtonProps = {
   size?: 'sm' | 'md' | 'lg'
@@ -20,7 +18,11 @@ export const PhotoUploadButton: FC<IconUploadButtonProps> = ({
   ...props
 }) => {
   return (
-    <FileTrigger acceptedFileTypes={['image/png', 'image/jpg']} allowsMultiple={false} {...props}>
+    <FileTrigger
+      acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml', 'image/heif', 'image/heic']}
+      allowsMultiple={false}
+      {...props}
+    >
       <StyledButton data-size={size} isDisabled={isDisabled || isUploading}>
         <>
           {isUploading ? (
