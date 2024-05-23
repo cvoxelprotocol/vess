@@ -19,7 +19,7 @@ export const PhotoUploadButton: FC<IconUploadButtonProps> = ({
 }) => {
   return (
     <FileTrigger
-      acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml', 'image/heif', 'image/heic']}
+      // acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml', 'image/heif', 'image/heic']}
       allowsMultiple={false}
       {...props}
     >
