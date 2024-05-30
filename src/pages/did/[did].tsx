@@ -3,9 +3,16 @@ import type { DehydratedState } from '@tanstack/react-query'
 import type { GetStaticProps } from 'next'
 import { NextPage } from 'next'
 import { DisplayProfile } from '@/@types'
+import { VSUser } from '@/@types/credential'
 import { Meta } from '@/components/layouts/Meta'
 import { ProfileContainer } from '@/components/profile/ProfileContainer'
-import { getPkhDIDFromAddress, isDIDstring, isEthereumAddress } from '@/utils/did'
+import { getVESSUserByDid } from '@/lib/vessApi'
+import {
+  getAddressFromPkh,
+  getPkhDIDFromAddress,
+  isDIDstring,
+  isEthereumAddress,
+} from '@/utils/did'
 
 export const maxDuration = 60
 
@@ -20,6 +27,7 @@ export type Props = {
   did: string
   DehydratedState?: DehydratedState
   profile: DisplayProfile | null
+  user: VSUser | null
 }
 
 const queryClient = new QueryClient()
@@ -35,7 +43,7 @@ export const getStaticProps: GetStaticProps<Props, { did?: string }> = async ({ 
   const did = params?.did
   if (did == null) {
     return {
-      props: { did: '', profile: null },
+      props: { did: '', profile: null, user: null },
       revalidate: 5,
     }
   }
@@ -50,22 +58,43 @@ export const getStaticProps: GetStaticProps<Props, { did?: string }> = async ({ 
       redirect: { destination: `/`, permanent: false },
     }
   }
-
+  const userResponse = await queryClient.fetchQuery(['vsUser', formatedDid], () =>
+    getVESSUserByDid(formatedDid),
+  )
   return {
-    props: { dehydratedState: dehydrate(queryClient), did: formatedDid, profile: null },
-    revalidate: 300,
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      did: formatedDid,
+      profile: null,
+      user: userResponse,
+    },
+    revalidate: 3000,
   }
 }
 
 const Profile: NextPage<Props> = (props: Props) => {
+  const title =
+    props.user?.name || props.user?.vessId
+      ? `@${props.user?.vessId}`
+      : getAddressFromPkh(props.user?.did || '').slice(0, 10) || 'プロフィール'
+  const avatar = props.user?.avatar || `${process.env.NEXT_PUBLIC_VESS_URL}/default_profile.jpg`
+  const imageUrl = `${process.env.NEXT_PUBLIC_VESS_URL}/api/og/avatar?title=${
+    props.user?.vessId
+      ? `@${props.user?.vessId}`
+      : props.user?.name
+      ? props.user?.name
+      : getAddressFromPkh(props.user?.did || '').slice(0, 10) || 'VESS'
+  }&avatar=${avatar}`
+
   return (
     <>
       <Meta
-        pageTitle={props.profile?.displayName}
+        pageTitle={title}
         pageDescription={
           props.profile?.bio || `This is ${props.profile?.displayName}'s profile page.`
         }
         pagePath={`https://app.vess.id/did/${props.did}`}
+        pageImg={imageUrl}
       />
       <ProfileContainer did={props.did} />
     </>
