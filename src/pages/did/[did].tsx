@@ -58,8 +58,9 @@ export const getStaticProps: GetStaticProps<Props, { did?: string }> = async ({ 
       redirect: { destination: `/`, permanent: false },
     }
   }
-  const userResponse = await getVESSUserByDid(formatedDid)
-
+  const userResponse = await queryClient.fetchQuery(['vsUser', formatedDid], () =>
+    getVESSUserByDid(formatedDid),
+  )
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
