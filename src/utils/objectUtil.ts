@@ -3,7 +3,7 @@ export const removeUndefined = <T extends {}>(object: T): T => {
   return Object.fromEntries(Object.entries(object).filter(([_, v]) => v !== undefined)) as T
 }
 
-export const removeUndefinedFromArray = <T>(arr: Array<T | undefined>): Array<T> => {
+export const removeUndefinedFromArray = <T>(arr: Array<T | undefined | null>): Array<T> => {
   return arr.filter((a) => a !== undefined) as Array<T>
 }
 

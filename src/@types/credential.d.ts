@@ -217,6 +217,19 @@ export type VSCredentialItemFromBuckup = {
   user?: VSUser
   sticker?: Sticker[]
   post?: Post[]
+  credentialsWithHolder?: CredentialWithHolder[]
+  holderContents?: HolderContent[]
+}
+
+export interface CredentialWithHolder extends VSCredential {
+  holder: VSUser | null
+}
+
+export type HolderContent = {
+  id: string
+  credentialItemId: string | null
+  type: string | null
+  content: string
 }
 
 export type Sticker = {

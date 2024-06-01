@@ -180,8 +180,8 @@ export const getCredentialItem = async (
     throw new Error('id is undefined')
   }
   try {
-    let q = userId ? `userId=${userId}` : ''
-    q = showHolders ? `${q}&showHolders=true` : q
+    let q = userId ? `userId=${userId}&` : ''
+    q = showHolders ? `${q}showHolders=true` : q
     const res = await baseVessApi('GET', '/v2/creditems/item', id, q)
     const resjson = await res.json()
     return resjson as VSCredentialItemFromBuckup

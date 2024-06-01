@@ -11,9 +11,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const endpoint = req.query.endpoint as string
     const method = req.method
     const slug = req.query.slug as string
-    const url = slug
+    const q = req.query.q as string
+    let url = slug
       ? `${process.env.NEXT_PUBLIC_VESS_BACKEND}${endpoint}/${slug}`
       : `${process.env.NEXT_PUBLIC_VESS_BACKEND}${endpoint}`
+    if (q) {
+      url = `${url}?${q}`
+    }
     console.log({ endpoint })
     console.log({ method })
     console.log({ url })
