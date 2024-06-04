@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { SetVisibleRequest } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
@@ -29,7 +30,7 @@ export type CredDetailProps = {
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useVESSAuthUser()
   const router = useRouter()
-  const { isInitialLoading, credential, holder } = useVerifiableCredential(id)
+  const { isInitialLoading, credential, holder, setVisible } = useVerifiableCredential(id)
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -59,6 +60,25 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       }
     })
   }, [credential])
+
+  //=== FIXME: temporary implementation ===
+  const isMine = useMemo(() => {
+    return did === credential?.holderDid
+  }, [did, credential])
+
+  const switchVisible = async () => {
+    if (!credential) return
+    try {
+      const param: SetVisibleRequest = {
+        credentialId: credential.id,
+        hideFromPublic: !credential.hideFromPublic,
+      }
+      await setVisible(param)
+    } catch (error) {
+      console.error
+    }
+  }
+  //=== FIXME: temporary implementation ===
 
   const verify = async (plainCred?: string) => {
     if (!plainCred) return
@@ -170,6 +190,20 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
           </Skelton>
         </CredImageFrame>
         <CredInfoFrame>
+          {/* === FIXME: temporary implementation === */}
+          <FlexHorizontal width='100%' gap='12px'>
+            <>
+              <Chip variant='tonal' color='dominant'>
+                {credential?.hideFromPublic ? '非公開中' : '公開中'}
+              </Chip>
+              {isMine && (
+                <Chip variant='tonal' color='subdominant' onPress={() => switchVisible()}>
+                  {credential?.hideFromPublic ? '公開する' : '非公開にする'}
+                </Chip>
+              )}
+            </>
+          </FlexHorizontal>
+          {/* === FIXME: temporary implementation === */}
           <div style={{ width: '100%', flex: 0 }}>
             <Text
               as='h2'
@@ -363,17 +397,6 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             </InfoItemFrame>
           </InfoItemsFrame>
           <ActionFrame>
-            {/* {!!did && (
-              <Button
-                variant='outlined'
-                color='subdominant'
-                startContent={<PiX />}
-                onPress={() => router.push(`/did/${did}`)}
-                size='sm'
-              >
-                閉じる
-              </Button>
-            )} */}
             <Button
               variant='tonal'
               color='subdominant'

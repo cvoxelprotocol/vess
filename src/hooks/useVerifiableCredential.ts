@@ -1,9 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { CredentialResponse } from '@/@types/credential'
-import { getCredential } from '@/lib/vessApi'
+import { useVESSAuthUser } from './useVESSAuthUser'
+import { useVESSLoading } from './useVESSLoading'
+import { CredentialResponse, SetVisibleRequest } from '@/@types/credential'
+import { getCredential, setVisibleVerifiableCredential } from '@/lib/vessApi'
 
 export const useVerifiableCredential = (id?: string) => {
+  const { showLoading, closeLoading } = useVESSLoading()
+  const queryClient = useQueryClient()
+  const { did } = useVESSAuthUser()
+
   const { data: verifiableCredential, isInitialLoading } = useQuery<CredentialResponse | null>(
     ['verifiableCredential', id],
     () => fetchCredential(id),
@@ -51,9 +57,28 @@ export const useVerifiableCredential = (id?: string) => {
     return verifiableCredential.data.holder
   }, [verifiableCredential])
 
+  const { mutateAsync: setVisible } = useMutation<Response, unknown, SetVisibleRequest>(
+    (param) => setVisibleVerifiableCredential(param),
+    {
+      onMutate: async () => {
+        showLoading()
+      },
+      onSuccess(data, v, _) {
+        queryClient.invalidateQueries(['verifiableCredential', v.credentialId])
+        queryClient.invalidateQueries(['CredentialsByHolder', did])
+        closeLoading()
+      },
+      onError(error) {
+        console.error('error', error)
+        closeLoading()
+      },
+    },
+  )
+
   return {
     credential,
     holder,
     isInitialLoading,
+    setVisible,
   }
 }
