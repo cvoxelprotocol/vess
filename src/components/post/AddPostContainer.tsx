@@ -25,7 +25,7 @@ import { useAvatar } from '@/hooks/useAvatar'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { usePost } from '@/hooks/usePost'
-import { useStickers } from '@/hooks/useStickers'
+import { removeStickerIdSurfix, useStickers } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
@@ -189,7 +189,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         const vcs = [
           ...new Set(
             stickers.map((sticker) => {
-              return sticker.id.replace(/_sticker_.*$/, '')
+              return removeStickerIdSurfix(sticker.id)
             }),
           ),
         ]

@@ -1,16 +1,10 @@
 import { KonvaEventObject } from 'konva/lib/Node'
-import { FC, memo, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { Transformer, Layer, Image } from 'react-konva'
 import { StickerType } from '@/@types/avatar'
 import { useImage } from '@/hooks/useImage'
 import { useStickers } from '@/hooks/useStickers'
-import {
-  isTransformer,
-  useAvatarSizeAtom,
-  useIstransformerAtom,
-  useSelectedIDAtom,
-  useStickersAtom,
-} from '@/jotai/ui'
+import { useAvatarSizeAtom, useIstransformerAtom, useSelectedIDAtom } from '@/jotai/ui'
 
 export type StickerImageProps = {
   isSelected?: boolean
@@ -165,7 +159,10 @@ export const StickerImage: FC<StickerImageProps> = ({
   )
 }
 
-const StickerImages: FC = () => {
+type Props = {
+  isEditable?: boolean
+}
+const StickerImages: FC<Props> = ({ isEditable = true }) => {
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const { stickers, setStickers } = useStickers()
 
@@ -199,6 +196,7 @@ const StickerImages: FC = () => {
           onRemove={() => removeSticker(index)}
           selectedId={selectedID}
           isSelected={selectedID === sticker.id}
+          isEditable={isEditable}
         />
       ))}
     </Layer>

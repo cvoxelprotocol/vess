@@ -9,6 +9,7 @@ import {
   FlexVertical,
   useBreakpoint,
 } from 'kai-kit'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
@@ -33,6 +34,10 @@ import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
 
+const AvatarForDisplay = dynamic(() => import('@/components/avatar/AvatarForDisplay'), {
+  ssr: false,
+})
+
 type ProfileContainerProps = {
   did: string
 }
@@ -49,6 +54,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { matches } = useBreakpoint()
   const { shareLink } = useShareLink(undefined)
   const router = useRouter()
+  const stageRef = useRef<any>()
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -133,11 +139,16 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
             />
           )}
           <Skelton isLoading={isLoadingUser} width='100%' aspectRatio='1'>
-            <ProfileImage
+            <AvatarForDisplay
+              profileAvatar={profileAvatar}
+              avatarImageUrl={avatarImageUrl}
+              stageRef={stageRef}
+            />
+            {/* <ProfileImage
               src={avatarImageUrl}
               alt='プロフィール画像'
               key={profileAvatar?.avatarUrl || vsUser?.avatar}
-            />
+            /> */}
           </Skelton>
           {isEditable && (
             <IconButton

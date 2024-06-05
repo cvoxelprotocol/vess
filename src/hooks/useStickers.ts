@@ -4,6 +4,10 @@ import { useStickersAtom } from '@/jotai/ui'
 
 export const STICKER_SURFIX = '_sticker_'
 
+export const removeStickerIdSurfix = (stickerId: string): string => {
+  return stickerId.replace(/_sticker_.*$/, '')
+}
+
 export const useStickers = () => {
   const [stickers, setStickers] = useStickersAtom()
   const addSticker = useCallback(

@@ -23,7 +23,7 @@ import { StickerType } from '@/@types/avatar'
 import { AddAvatarRequest, Avatar, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useFileUpload } from '@/hooks/useFileUpload'
-import { useStickers } from '@/hooks/useStickers'
+import { removeStickerIdSurfix, useStickers } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
@@ -199,7 +199,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       const vcs = [
         ...new Set(
           stickers.map((sticker) => {
-            return sticker.id.replace(/_sticker_.*$/, '')
+            return removeStickerIdSurfix(sticker.id)
           }),
         ),
       ]
