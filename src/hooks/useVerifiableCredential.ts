@@ -57,28 +57,41 @@ export const useVerifiableCredential = (id?: string) => {
     return verifiableCredential.data.holder
   }, [verifiableCredential])
 
-  const { mutateAsync: setVisible } = useMutation<Response, unknown, SetVisibleRequest>(
-    (param) => setVisibleVerifiableCredential(param),
-    {
-      onMutate: async () => {
-        showLoading()
-      },
-      onSuccess(data, v, _) {
-        queryClient.invalidateQueries(['verifiableCredential', v.credentialId])
-        queryClient.invalidateQueries(['CredentialsByHolder', did])
-        closeLoading()
-      },
-      onError(error) {
-        console.error('error', error)
-        closeLoading()
-      },
+  const { mutateAsync: setVisible, isLoading: isLoadingSetVisible } = useMutation<
+    Response,
+    unknown,
+    SetVisibleRequest
+  >((param) => setVisibleVerifiableCredential(param), {
+    onMutate: async (v) => {
+      if (verifiableCredential?.data) {
+        await queryClient.cancelQueries(['verifiableCredential', v.credentialId])
+        const optimistic: CredentialResponse = {
+          data: {
+            ...verifiableCredential.data,
+            hideFromPublic: v.hideFromPublic,
+          },
+        }
+        queryClient.setQueryData(['verifiableCredential', v.credentialId], () => optimistic)
+      }
+
+      showLoading()
     },
-  )
+    onSuccess(d, v, _) {
+      queryClient.invalidateQueries(['verifiableCredential', v.credentialId])
+      queryClient.invalidateQueries(['CredentialsByHolder', did])
+      closeLoading()
+    },
+    onError(error) {
+      console.error('error', error)
+      closeLoading()
+    },
+  })
 
   return {
     credential,
     holder,
     isInitialLoading,
     setVisible,
+    isLoadingSetVisible,
   }
 }

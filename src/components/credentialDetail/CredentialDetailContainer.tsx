@@ -9,6 +9,7 @@ import {
   Button,
   useSnackbar,
   Spinner,
+  Switch,
 } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
@@ -30,7 +31,8 @@ export type CredDetailProps = {
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useVESSAuthUser()
   const router = useRouter()
-  const { isInitialLoading, credential, holder, setVisible } = useVerifiableCredential(id)
+  const { isInitialLoading, credential, holder, setVisible, isLoadingSetVisible } =
+    useVerifiableCredential(id)
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -190,20 +192,6 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
           </Skelton>
         </CredImageFrame>
         <CredInfoFrame>
-          {/* === FIXME: temporary implementation === */}
-          <FlexHorizontal width='100%' gap='12px'>
-            <>
-              <Chip variant='tonal' color='dominant'>
-                {credential?.hideFromPublic ? '非公開中' : '公開中'}
-              </Chip>
-              {isMine && (
-                <Chip variant='tonal' color='subdominant' onPress={() => switchVisible()}>
-                  {credential?.hideFromPublic ? '公開する' : '非公開にする'}
-                </Chip>
-              )}
-            </>
-          </FlexHorizontal>
-          {/* === FIXME: temporary implementation === */}
           <div style={{ width: '100%', flex: 0 }}>
             <Text
               as='h2'
@@ -214,6 +202,18 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               {credential?.credentialItem?.title || ''}
             </Text>
           </div>
+          <FlexHorizontal width='100%' gap={`var(--kai-size-sys-space-xs)`}>
+            <>
+              <Switch
+                isSelected={!credential?.hideFromPublic}
+                onChange={() => switchVisible()}
+              ></Switch>
+              <Text typo='label-lg' color='var(--kai-color-sys-on-layer)'>
+                公開する
+              </Text>
+              {isLoadingSetVisible && <Spinner size='sm' color='neutral' />}
+            </>
+          </FlexHorizontal>
           <InfoItemsFrame ref={scrollRef}>
             {credential?.vc.credentialSubject.sticker &&
               credential?.vc.credentialSubject.sticker.length > 0 && (
