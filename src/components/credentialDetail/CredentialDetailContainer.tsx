@@ -9,27 +9,34 @@ import {
   Button,
   useSnackbar,
   Spinner,
+  Switch,
 } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { VSUser } from '@/@types/credential'
+import { SetVisibleRequest } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
+import { useCredentialItemWithHolder } from '@/hooks/useCredentialItemWithHolder'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { verifyCredential } from '@/lib/veramo'
 import { formatDate } from '@/utils/date'
+import { removeUndefinedFromArray } from '@/utils/objectUtil'
 
 export type CredDetailProps = {
   id?: string
 }
 
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
-  const { did } = useVESSAuthUser()
   const router = useRouter()
-  const { isInitialLoading, credential, holder } = useVerifiableCredential(id)
+  const { credItemWithHolder, isInitialLoading: isInitialLoadingCredItem } =
+    useCredentialItemWithHolder(credential?.credentialItem?.id)
+  const { isInitialLoading, credential, holder, setVisible, isLoadingSetVisible } =
+    useVerifiableCredential(id)
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -59,6 +66,25 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       }
     })
   }, [credential])
+
+  //=== FIXME: temporary implementation ===
+  const isMine = useMemo(() => {
+    return did === credential?.holderDid
+  }, [did, credential])
+
+  const switchVisible = async () => {
+    if (!credential) return
+    try {
+      const param: SetVisibleRequest = {
+        credentialId: credential.id,
+        hideFromPublic: !credential.hideFromPublic,
+      }
+      await setVisible(param)
+    } catch (error) {
+      console.error
+    }
+  }
+  //=== FIXME: temporary implementation ===
 
   const verify = async (plainCred?: string) => {
     if (!plainCred) return
@@ -106,6 +132,18 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       icon: holder.avatar || '/default_profile.jpg',
     }
   }, [holder, credential])
+
+  const otherHolders = useMemo(() => {
+    if (
+      !credItemWithHolder ||
+      !credItemWithHolder.credentialsWithHolder ||
+      credItemWithHolder.credentialsWithHolder.length === 0
+    )
+      return []
+    return removeUndefinedFromArray<VSUser>(
+      credItemWithHolder.credentialsWithHolder.map((ch) => ch.holder),
+    )
+  }, [credItemWithHolder])
 
   return (
     <>
@@ -180,6 +218,18 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               {credential?.credentialItem?.title || ''}
             </Text>
           </div>
+          <FlexHorizontal width='100%' gap={`var(--kai-size-sys-space-xs)`}>
+            <>
+              <Switch
+                isSelected={!credential?.hideFromPublic}
+                onChange={() => switchVisible()}
+              ></Switch>
+              <Text typo='label-lg' color='var(--kai-color-sys-on-layer)'>
+                公開する
+              </Text>
+              {isLoadingSetVisible && <Spinner size='sm' color='neutral' />}
+            </>
+          </FlexHorizontal>
           <InfoItemsFrame ref={scrollRef}>
             {credential?.vc.credentialSubject.sticker &&
               credential?.vc.credentialSubject.sticker.length > 0 && (
@@ -335,7 +385,27 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 ))}
               </>
             )}
+            {/* FIXME */}
             <InfoItemFrame>
+              {otherHolders && otherHolders.length > 0 && (
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    他の所有者
+                  </Text>
+                  <StickerListFrame>
+                    {otherHolders.map((holder: VSUser, index) => (
+                      <ImageContainer
+                        key={`${holder.id}-${index}`}
+                        src={holder.avatar || 'https://app.vess.id/default_profile.jpg '}
+                        width='100%'
+                        objectFit='contain'
+                        style={{ borderRadius: '50%' }}
+                      />
+                    ))}
+                  </StickerListFrame>
+                </InfoItemFrame>
+              )}
+              {/* FIXME */}
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 元データ(JSON)
               </Text>
@@ -363,17 +433,6 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             </InfoItemFrame>
           </InfoItemsFrame>
           <ActionFrame>
-            {/* {!!did && (
-              <Button
-                variant='outlined'
-                color='subdominant'
-                startContent={<PiX />}
-                onPress={() => router.push(`/did/${did}`)}
-                size='sm'
-              >
-                閉じる
-              </Button>
-            )} */}
             <Button
               variant='tonal'
               color='subdominant'

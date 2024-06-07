@@ -63,7 +63,6 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   const { addSticker } = useStickers()
 
   const stickerImages = useMemo(() => {
-    console.log({ formatedCredentials })
     return formatedCredentials
       .filter((item) => {
         return item.sticker && item.sticker.length > 0
@@ -107,6 +106,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
           width: vci.width,
           height: vci.height,
           rotation: vci.rotation,
+          scale: vci.scale,
         } as StickerType
       }) || []
     )

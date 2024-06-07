@@ -84,7 +84,6 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   }, [formatedCredentials, id])
 
   const stickerImages = useMemo(() => {
-    console.log({ formatedCredentials })
     return formatedCredentials
       .filter((item) => {
         return item.sticker && item.sticker.length > 0
@@ -389,7 +388,7 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   {stickerImages.map((sticker, index) => (
                     <DraggablePostSticker
                       key={`${sticker.id}-${index}`}
-                      id={sticker.id}
+                      id={`${sticker.id}-${index}`}
                       credId={sticker.id}
                       imageUrl={sticker.url}
                     />
