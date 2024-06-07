@@ -220,7 +220,10 @@ export const StickerImage: FC<StickerImageProps> = ({
   )
 }
 
-const StickerImages: FC = () => {
+type Props = {
+  isEditable?: boolean
+}
+const StickerImages: FC<Props> = ({ isEditable = true }) => {
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const { stickers, setStickers } = useStickers()
 
@@ -254,6 +257,7 @@ const StickerImages: FC = () => {
           onRemove={() => removeSticker(index)}
           selectedId={selectedID}
           isSelected={selectedID === sticker.id}
+          isEditable={isEditable}
         />
       ))}
     </Layer>

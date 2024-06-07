@@ -31,6 +31,8 @@ export const isTransformer = atom<boolean>(true)
 export const useIstransformerAtom = () => useAtom(isTransformer)
 export const avatarSize = atom<number>(100)
 export const useAvatarSizeAtom = () => useAtom(avatarSize)
+export const displayAvatarSize = atom<number>(100)
+export const useAvatarForDisplaySizeAtom = () => useAtom(displayAvatarSize)
 
 export const posts = atom<Post[]>([])
 export const usePostsAtom = () => useAtom(posts)
