@@ -51,6 +51,7 @@ export const useAvatar = (did?: string, canvasId?: string) => {
       },
       onSuccess: async (data, v, _) => {
         console.log('addAvatar result: ', data)
+        queryClient.invalidateQueries(['avatars', did])
         if (data.status === 200) {
           closeLoading()
           setIsUpdatingAvatar(false)
@@ -60,7 +61,6 @@ export const useAvatar = (did?: string, canvasId?: string) => {
               avatar: v.avatarUrl,
             }
             queryClient.setQueryData(['vsUser', did], () => optimistic)
-            queryClient.invalidateQueries(['avatars', did])
           }
           const resJson = await data.json()
           return resJson
