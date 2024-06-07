@@ -15,8 +15,7 @@ import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
-import { VSUser } from '@/@types/credential'
-import { SetVisibleRequest } from '@/@types/credential'
+import { VSUser, SetVisibleRequest } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
 import { useCredentialItemWithHolder } from '@/hooks/useCredentialItemWithHolder'
 import useScrollCondition from '@/hooks/useScrollCondition'
@@ -32,11 +31,12 @@ export type CredDetailProps = {
 }
 
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
+  const { did } = useVESSAuthUser()
   const router = useRouter()
-  const { credItemWithHolder, isInitialLoading: isInitialLoadingCredItem } =
-    useCredentialItemWithHolder(credential?.credentialItem?.id)
   const { isInitialLoading, credential, holder, setVisible, isLoadingSetVisible } =
     useVerifiableCredential(id)
+  const { credItemWithHolder, isInitialLoading: isInitialLoadingCredItem } =
+    useCredentialItemWithHolder(credential?.credentialItem?.id)
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -141,7 +141,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
     )
       return []
     return removeUndefinedFromArray<VSUser>(
-      credItemWithHolder.credentialsWithHolder.map((ch) => ch.holder),
+      credItemWithHolder.credentialsWithHolder.map((ch) => ch.holder).filter((h) => h?.did !== did),
     )
   }, [credItemWithHolder])
 
