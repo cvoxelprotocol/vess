@@ -140,8 +140,6 @@ const DroppableFrame = styled.div`
   width: 100%;
   aspect-ratio: 1;
 
-  border-radius: var(--kai-size-sys-round-lg);
-  border: 1px solid var(--kai-color-sys-neutral-outline);
   overflow: hidden;
 `
 
