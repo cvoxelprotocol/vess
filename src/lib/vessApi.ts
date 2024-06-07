@@ -1,6 +1,7 @@
 import {
   ICreateHolderContentsRequest,
   IIssueCredentialItemByUserRequest,
+  SetVisibleRequest,
   VSCredentialItemFromBuckup,
   VSUser,
 } from '@/@types/credential'
@@ -19,27 +20,19 @@ import {
 import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
 
-export const isAuthApi = (endpoint: string) => {
-  return (
-    endpoint === '/users/auth' ||
-    endpoint === '/users/did' ||
-    endpoint === '/users/email' ||
-    endpoint === '/users/google' ||
-    endpoint === '/users/discord'
-  )
+export const isLogout = (endpoint: string) => {
+  return endpoint === '/auth/logout'
 }
 
-export const isAuthProtectedApi = (endpoint: string) => {
+// return error if it is not authorized
+export const isAuthRequiredApi = (endpoint: string) => {
   return (
     endpoint === '/users/info' ||
     endpoint === '/avatar/add' ||
     endpoint === '/avatar/update' ||
-    endpoint === '/avatar/delete'
+    endpoint === '/avatar/delete' ||
+    endpoint === '/v2/credential/visible'
   )
-}
-
-export const isLogout = (endpoint: string) => {
-  return endpoint === '/auth/logout'
 }
 
 export const getPostByCredItem = async (credItemId?: string): Promise<Post[] | null> => {
@@ -339,6 +332,16 @@ export const issueVerifiableCredentials = async (body: any): Promise<Response> =
   }
 }
 
+export const setVisibleVerifiableCredential = async (
+  body: SetVisibleRequest,
+): Promise<Response> => {
+  try {
+    return await baseVessApi('POST', '/v2/credential/visible', undefined, undefined, body)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const issueSocialVerifiableCredentials = async (body: any): Promise<Response> => {
   try {
     return await baseVessApi('POST', '/v2/credential/social/issue', undefined, undefined, body)
@@ -412,14 +415,9 @@ const baseVessApi = async (
 ): Promise<Response> => {
   try {
     let baseUrl = getCurrentDomain() || process.env.NEXT_PUBLIC_VESS_URL
-    let url =
-      isAuthApi(endpoint) && method === 'POST'
-        ? `${baseUrl}/api/auth/login?endpoint=${endpoint}&slug=${slug || ''}`
-        : isAuthProtectedApi(endpoint)
-        ? `${baseUrl}/api/auth/profile?endpoint=${endpoint}&slug=${slug || ''}`
-        : isLogout(endpoint)
-        ? `${baseUrl}/api/auth/logout`
-        : `${baseUrl}/api/vessApi?endpoint=${endpoint}&slug=${slug || ''}`
+    let url = isLogout(endpoint)
+      ? `${baseUrl}/api/auth/logout`
+      : `${baseUrl}/api/vessApi?endpoint=${endpoint}&slug=${slug || ''}`
 
     if (query) {
       url = url + `&q=${encodeURIComponent(query)}`

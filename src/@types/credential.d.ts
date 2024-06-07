@@ -47,6 +47,7 @@ export type CredentialStruct = {
   credentialItem?: VSCredentialItem
   organization?: WorkspaceType
   user?: VSUser
+  hideFromPublic?: boolean
 }
 
 export type CredentialWithHolderUser = CredentialStruct & {
@@ -252,4 +253,9 @@ export interface ICreateHolderContentsRequest {
   itemId: string
   userId: string
   holderContentsData: any[]
+}
+
+export interface SetVisibleRequest {
+  credentialId: string
+  hideFromPublic: boolean
 }
