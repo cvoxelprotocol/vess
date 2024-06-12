@@ -12,17 +12,25 @@ import {
 } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Button as RACButton } from 'react-aria-components'
+import React, {
+  BaseSyntheticEvent,
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { useForm } from 'react-hook-form'
 import { PiTrash, PiStickerDuotone } from 'react-icons/pi'
 import { vcImage } from '../avatar/ImageCanvas'
 import { IconUploadButton } from '../home/IconUploadButton'
 import { PhotoUploadButton } from './PhotoUploadButton'
 import { PostCompleteModal } from './PostCompleteModal'
+import { PostFrame } from './PostFrame'
 import { PostStikerListModal } from './PostStikerListModal'
 import { AddPostRequest, Post, AddAvatarRequest, CanvasJson } from '@/@types/user'
 import { useAvatar } from '@/hooks/useAvatar'
-import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { usePost } from '@/hooks/usePost'
 import { removeStickerIdSurfix, useStickers } from '@/hooks/useStickers'
@@ -37,6 +45,8 @@ import {
   useStateRPath,
   useStickersAtom,
 } from '@/jotai/ui'
+import { formatDate } from '@/utils/date'
+import { getAddressFromPkh } from '@/utils/did'
 import { checkAndConvertImageResolution } from '@/utils/hexImage'
 import { isGoodResponse } from '@/utils/http'
 import { compressImage } from '@/utils/image'
@@ -49,14 +59,14 @@ const DraggablePostSticker = dynamic(() => import('@/components/post/DraggablePo
   ssr: false,
 })
 
-type Props = {
-  id?: string
+type Input = {
+  comment?: string
 }
-export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
+
+export const AddPostContainer: FC = () => {
   const { did } = useVESSAuthUser()
   const { vsUser } = useVESSUserProfile(did)
   const router = useRouter()
-  const { credItem } = useCredentialItem(id)
   const { addItem } = usePost()
   const [rPath, setRpath] = useStateRPath()
   const [receiveStatus, setReceiveStatus] = React.useState<
@@ -79,9 +89,31 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   const [selectedPost, setPost] = useSelectedPostAtom()
   const [uploadError, setUploadError] = useState<any>()
 
-  const hasCredential = useMemo(() => {
-    return formatedCredentials.some((c) => c.credId === id)
-  }, [formatedCredentials, id])
+  const {
+    handleSubmit,
+    setError,
+    register,
+    formState: { errors },
+  } = useForm<Input>({
+    defaultValues: {
+      comment: '',
+    },
+    reValidateMode: 'onChange',
+  })
+
+  const userIcon = useMemo(() => {
+    return vsUser?.avatar || '/default_profile.jpg'
+  }, [vsUser])
+
+  const userName = useMemo(() => {
+    return vsUser?.vessId
+      ? `@${vsUser?.vessId}`
+      : vsUser?.name || getAddressFromPkh(vsUser?.did || '')
+  }, [vsUser])
+
+  const today = useMemo(() => {
+    return formatDate(new Date().toISOString())
+  }, [])
 
   const stickerImages = useMemo(() => {
     return formatedCredentials
@@ -119,7 +151,17 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
     })
   }
 
-  const handleSave = () => {
+  const getCredItemIds = (ids: string[]) => {
+    return [...new Set(formatedCredentials.filter((c) => ids.includes(c.id)).map((c) => c.credId))]
+  }
+
+  const onClickSubmit = async (data: Input, e?: BaseSyntheticEvent) => {
+    e?.preventDefault()
+    e?.stopPropagation()
+    await handleSave(data.comment)
+  }
+
+  const handleSave = async (comment?: string) => {
     if (!did) {
       setRpath(router.asPath)
       router.push(`/login`)
@@ -206,7 +248,11 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         const canvasId = resJson.canvasId
 
         // save post
-        await handlePost(newUrl, canvasId)
+        const credItemIds = getCredItemIds(vcs)
+        console.log({ credItemIds })
+        console.log({ comment })
+        console.log({ resJson })
+        await handlePost(newUrl, canvasId, credItemIds, comment)
 
         setIsSaving(false)
       } catch (error) {
@@ -221,6 +267,50 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
       // Transformerを再表示
       setIsTransformer(true)
     }, 500)
+  }
+
+  const handlePost = async (
+    image: string,
+    canvasId: string,
+    credItemIds: string[],
+    comment?: string,
+  ) => {
+    try {
+      if (credItemIds.length === 0) {
+        setUploadError('credItemIds is empty')
+        setReceiveStatus('failed')
+        return
+      }
+
+      const addItemPromises = credItemIds.map(async (credItemId) => {
+        const postItem: AddPostRequest = {
+          userId: vsUser?.id || '',
+          credentialItemId: credItemId,
+          image: image,
+          canvasId: canvasId,
+          text: comment,
+        }
+        return addItem(postItem)
+      })
+      const resArr = await Promise.all(addItemPromises)
+      const res = resArr[0]
+      if (isGoodResponse(res.status)) {
+        const resJson = await res.json()
+        const resPost = resJson.data as Post
+        if (resPost.id) {
+          setReceiveStatus('success')
+          setPost(resPost)
+          setIcon('')
+          setSelectedID(undefined)
+          setStickers([])
+          openModal('PostCompleteModal')
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      setUploadError(error)
+      setReceiveStatus('failed')
+    }
   }
 
   const onClose = () => {
@@ -250,36 +340,6 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
   useEffect(() => {
     setReceiveStatus('default')
   }, [])
-
-  const handlePost = async (image: string, canvasId: string) => {
-    try {
-      if (credItem) {
-        const postItem: AddPostRequest = {
-          userId: vsUser?.id || '',
-          credentialItemId: credItem.id,
-          image: image,
-          canvasId: canvasId,
-        }
-        const res = await addItem(postItem)
-        if (isGoodResponse(res.status)) {
-          const resJson = await res.json()
-          const resPost = resJson.data as Post
-          if (resPost.id) {
-            setReceiveStatus('success')
-            setPost(resPost)
-            setIcon('')
-            setSelectedID(undefined)
-            setStickers([])
-            openModal('PostCompleteModal')
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error)
-      setUploadError(error)
-      setReceiveStatus('failed')
-    }
-  }
 
   return (
     <>
@@ -315,14 +375,19 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   isUploading={status === 'uploading'}
                 />
               </StickerTools>
-              {icon ? (
-                <DroppablePostImage
-                  baseAvatarImgUrl={icon || '/default_profile.jpg'}
-                  stageRef={stageRef}
-                />
-              ) : (
-                <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
-              )}
+              <PostFrame userIcon={userIcon} userId={userName} date={today}>
+                {icon ? (
+                  <DroppablePostImage
+                    baseAvatarImgUrl={icon || '/default_profile.jpg'}
+                    stageRef={stageRef}
+                  />
+                ) : (
+                  <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
+                )}
+                <Form id='add-post' onSubmit={handleSubmit(onClickSubmit)}>
+                  <TextArea {...register('comment')} placeholder='コメントを入力' rows={3} />
+                </Form>
+              </PostFrame>
             </AvatarFrame>
 
             <FlexVertical
@@ -335,44 +400,29 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
                   {`画像のアップロードに失敗しました: ${uploadError}`}
                 </Text>
               )}
-              {hasCredential ? (
+              <FlexHorizontal gap='var(--kai-size-sys-space-xs)' style={{ width: '100%' }}>
                 <Button
-                  width='100%'
+                  color='neutral'
+                  variant='tonal'
+                  isDisabled={isSaving}
+                  style={{ flexGrow: 0 }}
+                  onPress={() => {
+                    onClose()
+                  }}
+                >
+                  キャンセル
+                </Button>
+                <Button
                   variant='filled'
                   style={{ flexGrow: 1 }}
                   isLoading={isSaving}
                   isDisabled={!icon || isSaving}
-                  onPress={() => {
-                    handleSave()
-                  }}
+                  type='submit'
+                  form='add-post'
                 >
                   投稿する
                 </Button>
-              ) : (
-                <Button
-                  width='100%'
-                  variant='filled'
-                  style={{ flexGrow: 1 }}
-                  onPress={() => {
-                    router.push(`/creds/receive/${id}`)
-                  }}
-                >
-                  クレデンシャルを取得する
-                </Button>
-              )}
-
-              <Button
-                width='100%'
-                color='neutral'
-                variant='tonal'
-                isDisabled={isSaving}
-                style={{ flexGrow: 0 }}
-                onPress={() => {
-                  onClose()
-                }}
-              >
-                キャンセル
-              </Button>
+              </FlexHorizontal>
             </FlexVertical>
           </ContentFrame>
           {matches.lg ? (
@@ -410,7 +460,8 @@ export const AddCredItemPostContainer: FC<Props> = ({ id }) => {
         name='PostCompleteModal'
         className={'dark'}
         post={selectedPost}
-        credId={id}
+        userIcon={userIcon}
+        userName={userName}
       />
     </>
   )
@@ -470,30 +521,6 @@ const StickerButtonGroup = styled.div`
   box-sizing: content-box;
 `
 
-const StickerButton = styled(RACButton)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  background-color: var(--kai-color-sys-layer-farther);
-  border: none;
-  transition: background var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
-  &[data-hovered] {
-    background-color: var(--kai-color-sys-layer-default);
-    cursor: pointer;
-  }
-
-  &[data-focused] {
-    outline: none;
-    border: none;
-  }
-
-  &[data-focus-visible] {
-    outline: none;
-    border: none;
-  }
-`
-
 const StickerTools = styled.div`
   display: flex;
   align-items: center;
@@ -537,4 +564,26 @@ const InnerFrame = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--kai-size-sys-space-md);
+`
+
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%);
+`
+
+const TextArea = styled.textarea`
+  width: 100%;
+  background: linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%);
+  color: var(--neutral-neutral-minor, #837778);
+  border: none;
+
+  /* Kai-typography/en/body/medium */
+  font-family: 'Noto Sans';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: 0.1px;
 `

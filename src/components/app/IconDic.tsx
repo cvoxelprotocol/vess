@@ -33,6 +33,10 @@ export const ICONS = {
     default: 'PiUserBold',
     filled: 'PiUserFill',
   },
+  FEED: {
+    default: 'PiPersonBold',
+    filled: 'PiPersonFill',
+  },
 }
 
 /* Do NOT change below */
@@ -63,5 +67,8 @@ export const IconDic: FC<IconDicProps> = ({ icon, variant = 'default', ...props 
     case 'USER':
       if (variant === 'default') return <PiUserBold {...props} />
       else return <PiUserFill {...props} />
+    case 'FEED':
+      if (variant === 'default') return <PiPersonBold {...props} />
+      else return <PiPersonFill {...props} />
   }
 }

@@ -1,10 +1,12 @@
 import { NextPage } from 'next'
 import { Meta } from '@/components/layouts/Meta'
+import { AddPostContainer } from '@/components/post/AddPostContainer'
 
 const AddPostItem: NextPage = () => {
   return (
     <>
-      <Meta pageTitle='新規発行' />
+      <Meta pageTitle='Add Post' />
+      <AddPostContainer />
     </>
   )
 }

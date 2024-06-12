@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
-import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
+import { PiPaintBrushBroadDuotone, PiExport, PiPencil, PiCameraPlus } from 'react-icons/pi'
 import { Banner } from '../app/Banner'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
@@ -308,6 +308,23 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
       </ProfileFrame>
       <AvatarEditModal profileAvatar={profileAvatar} />
       <ProfileEditModal name={'profileEdit'} did={did || ''} />
+      {isEditable && (
+        <IconButton
+          icon={<PiCameraPlus size={32} />}
+          color='dominant'
+          variant='outlined'
+          onPress={() => router.push('/post/add')}
+          size='md'
+          style={{
+            position: 'fixed',
+            bottom: 'var(--kai-size-sys-space-md)',
+            right: 'var(--kai-size-sys-space-md)',
+            zIndex: 10,
+            background:
+              'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
+          }}
+        />
+      )}
     </>
   )
 }

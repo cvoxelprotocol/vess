@@ -12,6 +12,8 @@ import {
   CreateUserInfo,
   CreateUserWithGoogleInfo,
   Post,
+  PostFeed,
+  PostWithUser,
   UpdateAvatarRequest,
   UpdateUserInfo,
   UserAuthInfo,
@@ -48,6 +50,19 @@ export const getPostByCredItem = async (credItemId?: string): Promise<Post[] | n
   }
 }
 
+export const getPostFeedByDID = async (did?: string): Promise<PostFeed[] | null> => {
+  if (!did) {
+    throw new Error('did is undefined')
+  }
+  try {
+    const res = await baseVessApi('GET', `/v2/post/feed/did`, did)
+    const resjson = await res.json()
+    return resjson?.data as PostFeed[] | null
+  } catch (error) {
+    throw error
+  }
+}
+
 export const getPostByUser = async (userId?: string): Promise<Post[] | null> => {
   if (!userId) {
     throw new Error('userId is undefined')
@@ -61,14 +76,14 @@ export const getPostByUser = async (userId?: string): Promise<Post[] | null> => 
   }
 }
 
-export const getPostById = async (id?: string): Promise<Post | null> => {
+export const getPostById = async (id?: string): Promise<PostWithUser | null> => {
   if (!id) {
     throw new Error('id is undefined')
   }
   try {
     const res = await baseVessApi('GET', `/v2/post/item`, id)
     const resjson = await res.json()
-    return resjson?.data as Post | null
+    return resjson?.data as PostWithUser | null
   } catch (error) {
     throw error
   }

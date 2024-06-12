@@ -1,7 +1,7 @@
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { StickerType } from '@/@types/avatar'
-import { Post } from '@/@types/user'
+import { Post, PostWithUser } from '@/@types/user'
 export const themeMode = atomWithStorage<'light' | 'dark'>('vessThemeMode', 'light')
 
 export const useStateThemeMode = () => useAtom(themeMode)
@@ -34,7 +34,7 @@ export const useAvatarSizeAtom = () => useAtom(avatarSize)
 export const displayAvatarSize = atom<number>(100)
 export const useAvatarForDisplaySizeAtom = () => useAtom(displayAvatarSize)
 
-export const posts = atom<Post[]>([])
+export const posts = atom<PostWithUser[]>([])
 export const usePostsAtom = () => useAtom(posts)
 
 export const selectedPost = atom<Post | undefined>(undefined)

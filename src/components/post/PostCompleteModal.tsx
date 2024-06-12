@@ -1,17 +1,21 @@
 import styled from '@emotion/styled'
-import { FlexVertical, ModalOverlay, useModal, useBreakpoint, useKai, Text } from 'kai-kit'
+import { FlexVertical, ModalOverlay, useModal, useBreakpoint, Text, Button } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { IdPlate } from '../profile/IdPlate'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { PostFrame } from './PostFrame'
 import { Post } from '@/@types/user'
 import { useSelectedPostAtom } from '@/jotai/ui'
+import { formatDateWithMinutes } from '@/utils/date'
 import { shareOnX } from '@/utils/share'
 
 type Props = {
   post?: Post
   credId?: string
+  userIcon?: string
+  userName?: string
 } & ModalOverlayProps
 
 export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
@@ -22,7 +26,9 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
 
   const onClose = () => {
     setPost(undefined)
-    router.push(`/creds/items/feed/${credId}`)
+    if (credId) {
+      router.push(`/creds/items/feed/${credId}`)
+    }
     closeModal('PostCompleteModal')
   }
 
@@ -54,15 +60,29 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
         >
           <InnerFrame>
             <FlexVertical width='100%' gap='var(--kai-size-sys-space-sm)'>
-              {post?.image && (
-                <ImageContainer
-                  src={post?.image}
-                  width='100%'
-                  height='auto'
-                  objectFit='contain'
-                  style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
-                />
-              )}
+              <PostFrame
+                userIcon={props.userIcon || '/default_profile.jpg'}
+                userId={props.userName || ''}
+                date={formatDateWithMinutes(post?.createdAt.toLocaleString())}
+              >
+                {post?.image && (
+                  <ImageContainer
+                    src={post?.image}
+                    width='100%'
+                    height='auto'
+                    objectFit='contain'
+                    style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
+                  />
+                )}
+                <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
+                  {post?.text}
+                </Text>
+              </PostFrame>
+              <FlexVertical width='100%' gap='var(--kai-size-sys-space-sm)' alignItems='center'>
+                <Text as='p' typo='title-lg' color={'var(--kai-color-sys-on-layer)'}>
+                  投稿が完了しました！
+                </Text>
+              </FlexVertical>
               <FlexVertical
                 padding={'var(--kai-size-sys-space-sm)'}
                 style={{
@@ -78,10 +98,17 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
                 </Text>
               </FlexVertical>
             </FlexVertical>
-            <Text as='p' typo='title-lg' color={'var(--kai-color-sys-on-layer)'}>
-              投稿が完了しました！
-            </Text>
             <IdPlate iconURL={'/brand/x_filled.png'} id={'Xでシェアする'} onPress={() => Tweet()} />
+            <Button
+              color='neutral'
+              variant='tonal'
+              width='100%'
+              onPress={() => {
+                onClose()
+              }}
+            >
+              閉じる
+            </Button>
           </InnerFrame>
         </FlexVertical>
       </ContentFrame>
@@ -114,7 +141,6 @@ const InnerFrame = styled.div`
   gap: 16px;
   border-radius: var(--kai-size-sys-round-lg);
   opacity: 0px;
-  background: var(--kai-color-sys-layer-default);
   align-items: center;
   display: flex;
   flex-direction: column;

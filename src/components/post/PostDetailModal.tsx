@@ -4,27 +4,29 @@ import {
   ModalOverlay,
   useModal,
   Text,
-  FlexHorizontal,
   useBreakpoint,
   IconButton,
+  Spinner,
 } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrashBold } from 'react-icons/pi'
+import { getAddressFromPkh } from 'vess-kit-web'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
-import { Post } from '@/@types/user'
-import { useCredentialItem } from '@/hooks/useCredentialItem'
+import { CredListItem } from './CredListItem'
+import { PostFrame } from './PostFrame'
+import { PostWithUser } from '@/@types/user'
 import { usePost } from '@/hooks/usePost'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useSelectedPostAtom } from '@/jotai/ui'
-import { formatDateWithMinutes } from '@/utils/date'
-import { shortenStr } from '@/utils/objectUtil'
+import { formatDate } from '@/utils/date'
+import { removeUndefinedFromArray } from '@/utils/objectUtil'
 
 type Props = {
-  post?: Post
+  post?: PostWithUser
 } & ModalOverlayProps
 
 export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
@@ -32,10 +34,20 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const { breakpointProps } = useBreakpoint()
   const [_, setPost] = useSelectedPostAtom()
   const { id: myId } = useVESSAuthUser()
-  const { vsUserById } = useVESSUserProfile(undefined, post?.userId)
-  const { deleteItem } = usePost()
+
+  const { deleteItem, post: detailedPost, isInitialLoading } = usePost(post?.id)
   const router = useRouter()
-  const { credItem } = useCredentialItem(post?.credentialItemId || undefined)
+
+  const incluedCredItems = useMemo(() => {
+    if (
+      !detailedPost?.canvas?.canvasCredentials ||
+      detailedPost?.canvas?.canvasCredentials?.length === 0
+    )
+      return
+    return removeUndefinedFromArray(
+      detailedPost?.canvas?.canvasCredentials?.map((cred) => cred.credential.credentialItem),
+    )
+  }, [detailedPost])
 
   const deletePost = async () => {
     if (!post?.id || !post?.credentialItemId || !myId) return
@@ -65,7 +77,15 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
           style={{ width: '100%', height: '100%' }}
           justifyContent='center'
         >
-          <InnerFrame>
+          <PostFrame
+            userIcon={post?.user?.avatar || '/default_profile.jpg'}
+            userId={
+              post?.user?.vessId
+                ? `@${post?.user?.vessId}`
+                : post?.user?.name || getAddressFromPkh(post?.user?.did || '')
+            }
+            date={formatDate(post?.createdAt.toLocaleString())}
+          >
             {post?.image && (
               <ImageContainer
                 src={post?.image}
@@ -75,86 +95,44 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
                 style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
               />
             )}
-            <FlexVertical
-              gap='var(--kai-size-sys-space-xs)'
-              width='100%'
-              justifyContent='center'
-              alignItems='center'
-            >
-              {vsUserById && (
-                <FlexHorizontal
-                  width='100%'
-                  alignItems='center'
-                  justifyContent='center'
-                  gap='var(--kai-size-ref-6)'
+            <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
+              {post?.text}
+            </Text>
+          </PostFrame>
+          <Text as='p' typo='label-lg' color={'var(--kai-color-sys-on-layer-minor)'}>
+            含まれている証明
+          </Text>
+          {isInitialLoading && <Spinner />}
+          {incluedCredItems &&
+            incluedCredItems.map((credItem) => {
+              return (
+                <CredListItem
+                  key={credItem.id}
+                  title={credItem.title}
+                  icon={credItem.image || ''}
                   onClick={() => {
+                    console.log(' credItem.id', credItem.id)
                     onClose()
-                    if (vsUserById.vessId) {
-                      router.push(`/${vsUserById.vessId}`)
-                    } else {
-                      router.push(`/did/${vsUserById.did}`)
-                    }
                   }}
-                >
-                  <ImageContainer
-                    src={vsUserById.avatar || '/default_profile.jpg'}
-                    width='var(--kai-size-ref-28)'
-                    height='var(--kai-size-ref-28)'
-                    objectFit='contain'
-                    borderRadius='var(--kai-size-sys-round-full)'
-                  />
-                  <Text typo='title-md' color='var(--kai-color-sys-on-layer)'>
-                    {`${
-                      vsUserById.vessId
-                        ? `@${vsUserById.vessId}`
-                        : vsUserById?.name ?? shortenStr(vsUserById.did || '', 14)
-                    }`}
-                  </Text>
-                </FlexHorizontal>
-              )}
-              {post?.createdAt && (
-                <Text typo='label-lg' color='var(--kai-color-sys-neutral)' align='center'>
-                  {formatDateWithMinutes(post.createdAt.toLocaleString())}
-                </Text>
-              )}
-            </FlexVertical>
-            {credItem && (
-              <CredButton
-                onPress={() => {
-                  onClose()
-                  // router.push(`/creds/receive/${credItem.id}`)
-                }}
-              >
-                {credItem.image && (
-                  <ImageContainer
-                    src={credItem.image}
-                    width='var(--kai-size-ref-32)'
-                    height='auto'
-                    objectFit='contain'
-                  />
-                )}
-                <Text color={'var(--kai-color-sys-on-layer)'} lineClamp={1}>
-                  {credItem.title}
-                </Text>
-              </CredButton>
-            )}
-            {isEditable && (
-              <IconButton
-                color='error'
-                variant='tonal'
-                size='sm'
-                style={{
-                  flexGrow: 0,
-                  position: 'absolute',
-                  top: 16,
-                  right: 16,
-                  borderRadius: 'var(--kai-size-sys-round-sm)',
-                }}
-                onPress={() => deletePost()}
-                icon={<PiTrashBold />}
-              />
-            )}
-          </InnerFrame>
+                ></CredListItem>
+              )
+            })}
+          {isEditable && (
+            <IconButton
+              color='error'
+              variant='tonal'
+              size='sm'
+              style={{
+                flexGrow: 0,
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                borderRadius: 'var(--kai-size-sys-round-sm)',
+              }}
+              onPress={() => deletePost()}
+              icon={<PiTrashBold />}
+            />
+          )}
         </FlexVertical>
       </ContentFrame>
     </ModalOverlay>
@@ -173,7 +151,7 @@ const ContentFrame = styled.div`
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);
-  z-index: -1;
+  z-index: 10;
 
   &[data-media-md] {
     padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
