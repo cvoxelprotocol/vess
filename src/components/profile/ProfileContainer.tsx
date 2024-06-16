@@ -28,6 +28,7 @@ import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
 import { useShareLink } from '@/hooks/useShareLink'
+import { removeStickerIdSurfix } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
@@ -112,6 +113,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
     }
   }
 
+  const jumpToVcDetail = (id: string) => {
+    router.push(`/creds/detail/${removeStickerIdSurfix(id)}`)
+  }
+
   return (
     <>
       <ProfileFrame>
@@ -143,6 +148,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               profileAvatar={profileAvatar}
               avatarImageUrl={avatarImageUrl}
               stageRef={stageRef}
+              onSelectSticker={jumpToVcDetail}
             />
             {/* <ProfileImage
               src={avatarImageUrl}

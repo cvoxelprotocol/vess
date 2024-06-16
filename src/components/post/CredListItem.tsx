@@ -8,6 +8,7 @@ type Props = {
   title: string
   issuerName?: string
   issuerIcon?: string
+  isSelected?: boolean
 } & React.HTMLAttributes<HTMLDivElement>
 
 export const CredListItem: FC<Props> = ({ icon, title, issuerIcon, issuerName, ...props }) => {
@@ -36,14 +37,20 @@ export const CredListItem: FC<Props> = ({ icon, title, issuerIcon, issuerName, .
   )
 }
 
-const Frame = styled.div`
+const Frame = styled.div<{ isSelected?: boolean }>`
   display: flex;
   padding: 16px;
   width: 100%;
   align-items: center;
   gap: 8px;
   border-radius: 16px;
-  border: 1px solid var(--neutral-neutral-outline-minor, #271e1f);
-  background: var(--layer-layer-default, #261c2d);
+  border: ${(props) =>
+    props.isSelected
+      ? '1px solid var(--subdominant-subdominant, #D992BC)'
+      : '1px solid var(--neutral-neutral-outline-minor, #271E1F)'};
+  background: ${(props) =>
+    props.isSelected
+      ? 'var(--subdominant-subdominant-backing, #4B203B)'
+      : 'var(--layer-layer-default, #261c2d)'};
   z-index: 10;
 `

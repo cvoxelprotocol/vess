@@ -7,10 +7,12 @@ import {
   useBreakpoint,
   IconButton,
   Spinner,
+  Skelton,
 } from 'kai-kit'
 import type { ModalOverlayProps } from 'kai-kit'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useRef } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiTrashBold } from 'react-icons/pi'
 import { getAddressFromPkh } from 'vess-kit-web'
@@ -19,11 +21,15 @@ import { CredListItem } from './CredListItem'
 import { PostFrame } from './PostFrame'
 import { PostWithUser } from '@/@types/user'
 import { usePost } from '@/hooks/usePost'
+import { removeStickerIdSurfix } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
-import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
-import { useSelectedPostAtom } from '@/jotai/ui'
+import { useSelectedIDAtom, useSelectedPostAtom } from '@/jotai/ui'
 import { formatDate } from '@/utils/date'
 import { removeUndefinedFromArray } from '@/utils/objectUtil'
+
+const AvatarForDisplay = dynamic(() => import('@/components/avatar/AvatarForDisplay'), {
+  ssr: false,
+})
 
 type Props = {
   post?: PostWithUser
@@ -34,9 +40,10 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const { breakpointProps } = useBreakpoint()
   const [_, setPost] = useSelectedPostAtom()
   const { id: myId } = useVESSAuthUser()
-
+  const [selectedID, setSelectedID] = useSelectedIDAtom()
   const { deleteItem, post: detailedPost, isInitialLoading } = usePost(post?.id)
   const router = useRouter()
+  const stageRef = useRef<any>()
 
   const incluedCredItems = useMemo(() => {
     if (
@@ -49,6 +56,13 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
     )
   }, [detailedPost])
 
+  const selectedCredItemId = useMemo(() => {
+    if (!selectedID) return
+    return detailedPost?.canvas?.canvasCredentials?.find(
+      (cred) => cred.credential.id === removeStickerIdSurfix(selectedID),
+    )?.credential.credentialItem?.id
+  }, [incluedCredItems, selectedID])
+
   const deletePost = async () => {
     if (!post?.id || !post?.credentialItemId || !myId) return
     await deleteItem({ postId: post.id, userId: myId, credentialItemId: post.credentialItemId })
@@ -60,6 +74,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
 
   const onClose = () => {
     setPost(undefined)
+    setSelectedID(undefined)
     closeModal('PostDetailModal')
   }
 
@@ -86,14 +101,20 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
             }
             date={formatDate(post?.createdAt.toLocaleString())}
           >
-            {post?.image && (
-              <ImageContainer
-                src={post?.image}
-                width='100%'
-                height='auto'
-                objectFit='contain'
-                style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
-              />
+            {detailedPost?.canvas ? (
+              <AvatarForDisplay profileAvatar={detailedPost?.canvas} stageRef={stageRef} />
+            ) : (
+              <>
+                {post?.image && (
+                  <ImageContainer
+                    src={post?.image}
+                    width='100%'
+                    height='auto'
+                    objectFit='contain'
+                    style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
+                  />
+                )}
+              </>
             )}
             <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
               {post?.text}
@@ -114,6 +135,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
                     console.log(' credItem.id', credItem.id)
                     onClose()
                   }}
+                  isSelected={credItem.id === selectedCredItemId}
                 ></CredListItem>
               )
             })}

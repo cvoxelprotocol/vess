@@ -41,6 +41,7 @@ export const PostFrame: FC<Props> = ({ children, date, userIcon, userId, ...prop
 }
 
 const ContentFrame = styled.div`
+  width: 100%;
   display: flex;
   padding: 16px 16px 12px 16px;
   flex-direction: column;
