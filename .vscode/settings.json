@@ -12,5 +12,8 @@
     "**/*.less",
     "**/*.ts",
     "node_modules/kai-kit/src/tokens/build/css/kai-tokens.css"
-  ]
+  ],
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }
