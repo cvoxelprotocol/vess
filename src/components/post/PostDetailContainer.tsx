@@ -129,6 +129,7 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
             incluedCredItems.map((credItem) => {
               return (
                 <CredListItem
+                  className='dark'
                   key={credItem.id}
                   title={credItem.title}
                   icon={credItem.image || ''}

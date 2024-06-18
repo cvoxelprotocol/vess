@@ -128,6 +128,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
             incluedCredItems.map((credItem) => {
               return (
                 <CredListItem
+                  className='dark'
                   key={credItem.id}
                   title={credItem.title}
                   icon={credItem.image || ''}
