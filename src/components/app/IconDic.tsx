@@ -9,6 +9,8 @@ import {
   PiGearFill,
   PiPersonBold,
   PiPersonFill,
+  PiFilmStripBold,
+  PiFilmStripFill,
 } from 'react-icons/pi'
 
 /* Change ONLY THIS OBJECT to add new icon */
@@ -68,7 +70,7 @@ export const IconDic: FC<IconDicProps> = ({ icon, variant = 'default', ...props 
       if (variant === 'default') return <PiUserBold {...props} />
       else return <PiUserFill {...props} />
     case 'FEED':
-      if (variant === 'default') return <PiPersonBold {...props} />
-      else return <PiPersonFill {...props} />
+      if (variant === 'default') return <PiFilmStripBold {...props} />
+      else return <PiFilmStripFill {...props} />
   }
 }

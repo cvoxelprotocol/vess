@@ -311,26 +311,26 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
             </FlexVertical>
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
+        {isEditable && (
+          <IconButton
+            icon={<PiCameraPlus size={32} />}
+            color='dominant'
+            variant='outlined'
+            onPress={() => router.push('/post/add')}
+            size='md'
+            style={{
+              position: 'fixed',
+              bottom: 'var(--kai-size-sys-space-md)',
+              right: 'var(--kai-size-sys-space-md)',
+              zIndex: 'var(--kai-z-index-sys-layer-default)',
+              background:
+                'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
+            }}
+          />
+        )}
       </ProfileFrame>
       <AvatarEditModal profileAvatar={profileAvatar} />
       <ProfileEditModal name={'profileEdit'} did={did || ''} />
-      {isEditable && (
-        <IconButton
-          icon={<PiCameraPlus size={32} />}
-          color='dominant'
-          variant='outlined'
-          onPress={() => router.push('/post/add')}
-          size='md'
-          style={{
-            position: 'fixed',
-            bottom: 'var(--kai-size-sys-space-md)',
-            right: 'var(--kai-size-sys-space-md)',
-            zIndex: 10,
-            background:
-              'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
-          }}
-        />
-      )}
     </>
   )
 }

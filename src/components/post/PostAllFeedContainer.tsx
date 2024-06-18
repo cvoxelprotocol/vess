@@ -1,6 +1,9 @@
 import styled from '@emotion/styled'
-import { FlexVertical, Text, useBreakpoint, useModal } from 'kai-kit'
+import { FlexVertical, IconButton, Text, useBreakpoint, useModal } from 'kai-kit'
+import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo } from 'react'
+import { Button as RACButton } from 'react-aria-components'
+import { PiCameraPlus } from 'react-icons/pi'
 import { HCLayout } from '../app/HCLayout'
 import { DefaultHeader } from '../app/Header'
 import { useNCLayoutContext } from '../app/NCLayout'
@@ -23,6 +26,7 @@ export const PostAllFeedContainer: FC = () => {
   const { openModal, closeModal } = useModal()
   const [selectedPost, setPost] = useSelectedPostAtom()
   const [selectedPostFeed, setPostFeed] = useSelectedPostFeedAtom()
+  const router = useRouter()
 
   const openPostDetail = (post: Post) => {
     setPost(post)
@@ -41,29 +45,18 @@ export const PostAllFeedContainer: FC = () => {
     return postFeed?.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
   }, [postFeed])
 
-  useEffect(() => {
-    if (matches.lg) {
-      setIsFullContent(true)
-      setIsDefaultOpenOnDesktop(false)
-    } else {
-      setIsFullContent(false)
-      setIsDefaultOpenOnDesktop(false)
-    }
-    return () => {
-      setIsFullContent(false)
-      setIsDefaultOpenOnDesktop(true)
-    }
-  }, [matches])
-
   return (
     <>
       <HCLayout header={<DefaultHeader />}>
         <PostFeedFrame {...breakpointProps}>
           <HeaderFrame>
-            <CredIconFrame isSelected={!selectedPostFeed} onClick={() => setPostFeed(undefined)}>
-              <CredIcon isSelected={!selectedPostFeed}>
-                <Text as='h1' typo='body-md' color='var(--kai-color-sys-neutral-major)'>
-                  全て
+            <CredIconFrame
+              data-selected={!selectedPostFeed || undefined}
+              onPress={() => setPostFeed(undefined)}
+            >
+              <CredIcon data-selected={!selectedPostFeed || undefined}>
+                <Text as='h1' typo='label-md' color='var(--kai-color-sys-on-layer)'>
+                  すべて
                 </Text>
               </CredIcon>
             </CredIconFrame>
@@ -72,11 +65,11 @@ export const PostAllFeedContainer: FC = () => {
               uniqueCredItems.map((credItem) => {
                 return (
                   <CredIconFrame
-                    isSelected={selectedPostFeed?.id === credItem.id}
+                    data-selected={selectedPostFeed?.id === credItem.id || undefined}
                     key={credItem?.id}
-                    onClick={() => setPostFeed(credItem)}
+                    onPress={() => setPostFeed(credItem)}
                   >
-                    <CredIcon isSelected={selectedPostFeed?.id === credItem.id}>
+                    <CredIcon data-selected={selectedPostFeed?.id === credItem.id || undefined}>
                       <ImageContainer
                         src={credItem?.image || credItem?.icon || '/default_profile.jpg'}
                         width='100%'
@@ -137,6 +130,21 @@ export const PostAllFeedContainer: FC = () => {
                 )
               })}
           </FlexVertical>
+          <IconButton
+            icon={<PiCameraPlus size={32} />}
+            color='dominant'
+            variant='outlined'
+            onPress={() => router.push('/post/add')}
+            size='md'
+            style={{
+              position: 'fixed',
+              bottom: 'var(--kai-size-sys-space-md)',
+              right: 'var(--kai-size-sys-space-md)',
+              zIndex: 'var(--kai-z-index-sys-layer-default)',
+              background:
+                'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
+            }}
+          />
         </PostFeedFrame>
       </HCLayout>
       <PostDetailModal name='PostDetailModal' post={selectedPost} />
@@ -152,7 +160,7 @@ const PostFeedFrame = styled.main`
 `
 
 const HeaderFrame = styled.div`
-  width: 100vw;
+  width: 100%;
   display: flex;
   padding: 16px;
   gap: 4px;
@@ -164,25 +172,39 @@ const HeaderFrame = styled.div`
   overflow-x: scroll;
 `
 
-const CredIconFrame = styled.div<{ isSelected: boolean }>`
+const CredIconFrame = styled(RACButton)`
+  appearance: none;
+  border: none;
+  outline: nene;
   display: flex;
   width: 64px;
   height: 64px;
   padding: 4px 0px;
   align-items: flex-start;
   gap: 8px;
-  border-top: ${(props) =>
-    !props.isSelected
-      ? '2px solid var(--kai-color-sys-dominant-outline)'
-      : '2px solid var(--kai-color-sys-subdominant)'};
+  transition: border var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+  border-top: 2px solid var(--kai-color-sys-dominant-outline);
+  border-bottom: 2px solid var(--kai-color-sys-dominant-outline);
 
-  border-bottom: ${(props) =>
-    !props.isSelected
-      ? '2px solid var(--kai-color-sys-dominant-outline)'
-      : '2px solid var(--kai-color-sys-subdominant)'};
+  &[data-selected] {
+    border-top: 2px solid var(--kai-color-sys-subdominant);
+    border-bottom: 2px solid var(--kai-color-sys-subdominant);
+  }
+
+  &[data-hoverd] {
+  }
+
+  &[data-focused] {
+    outline: none;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--kai-color-sys-dominant);
+    outline-offset: 2px;
+  }
 `
 
-const CredIcon = styled.div<{ isSelected: boolean }>`
+const CredIcon = styled.div`
   display: flex;
   padding: 4px;
   width: 60px;
@@ -193,8 +215,14 @@ const CredIcon = styled.div<{ isSelected: boolean }>`
   flex: 1 0 0;
   align-self: stretch;
   border-radius: 4px;
-  background: ${(props) =>
-    props.isSelected
-      ? 'var(--kai-color-sys-subdominant-backing)'
-      : 'var(--kai-color-sys-layer-default)'};
+  background: var(--kai-color-sys-layer-default);
+  transition: background var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+
+  &:hover {
+    background: var(--kai-color-sys-layer-nearer);
+    cursor: pointer;
+  }
+  &[data-selected] {
+    background: var(--kai-color-sys-subdominant-backing);
+  }
 `

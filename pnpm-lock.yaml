@@ -153,8 +153,8 @@ dependencies:
     specifier: ^2.6.4
     version: 2.6.4(@types/react@18.0.27)(react@18.2.0)
   kai-kit:
-    specifier: 0.1.6-beta.11
-    version: 0.1.6-beta.11(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.1.6-beta.12
+    version: 0.1.6-beta.12(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
   konva:
     specifier: ^9.3.6
     version: 9.3.6
@@ -16269,8 +16269,8 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
-  /kai-kit@0.1.6-beta.11(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-q17TG0fOT8sSpXFb4X4fJQ9o4vAfO377rPiZRWfkA0MrUpVBmbtiuQ8jeXlVTbiWrPYHDipQfz9BD0NlCQFRQg==}
+  /kai-kit@0.1.6-beta.12(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Wvwt2J6/IjRNd9Gtgw+Xlb0xN36xie6lOP/PO+HFcyDeNFHg7kEgJistXfc2SM2IH1u0DinR/WuU0EkwRuuCPA==}
     peerDependencies:
       '@emotion/react': ^11.11.1
       '@emotion/styled': ^11.11.0
