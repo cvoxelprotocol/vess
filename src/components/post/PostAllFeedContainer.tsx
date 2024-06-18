@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { FlexVertical, Text, useBreakpoint, useModal } from 'kai-kit'
 import { FC, useEffect, useMemo } from 'react'
+import { HCLayout } from '../app/HCLayout'
+import { DefaultHeader } from '../app/Header'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { CredListItem } from './CredListItem'
@@ -55,106 +57,102 @@ export const PostAllFeedContainer: FC = () => {
 
   return (
     <>
-      <PostFeedFrame className='dark' {...breakpointProps}>
-        <HeaderFrame>
-          <CredIconFrame isSelected={!selectedPostFeed} onClick={() => setPostFeed(undefined)}>
-            <CredIcon isSelected={!selectedPostFeed}>
-              <Text as='h1' typo='body-md' color='var(--kai-color-sys-neutral-major)'>
-                全て
-              </Text>
-            </CredIcon>
-          </CredIconFrame>
-          {uniqueCredItems &&
-            uniqueCredItems.length > 0 &&
-            uniqueCredItems.map((credItem) => {
-              return (
-                <CredIconFrame
-                  isSelected={selectedPostFeed?.id === credItem.id}
-                  key={credItem?.id}
-                  onClick={() => setPostFeed(credItem)}
-                >
-                  <CredIcon isSelected={selectedPostFeed?.id === credItem.id}>
-                    <ImageContainer
-                      src={credItem?.icon || credItem?.image || '/default_profile.jpg'}
-                      width='100%'
-                      height='100%'
-                      objectFit='contain'
-                    />
-                  </CredIcon>
-                </CredIconFrame>
-              )
-            })}
-        </HeaderFrame>
-        {selectedPostFeed && (
+      <HCLayout header={<DefaultHeader />}>
+        <PostFeedFrame {...breakpointProps}>
+          <HeaderFrame>
+            <CredIconFrame isSelected={!selectedPostFeed} onClick={() => setPostFeed(undefined)}>
+              <CredIcon isSelected={!selectedPostFeed}>
+                <Text as='h1' typo='body-md' color='var(--kai-color-sys-neutral-major)'>
+                  全て
+                </Text>
+              </CredIcon>
+            </CredIconFrame>
+            {uniqueCredItems &&
+              uniqueCredItems.length > 0 &&
+              uniqueCredItems.map((credItem) => {
+                return (
+                  <CredIconFrame
+                    isSelected={selectedPostFeed?.id === credItem.id}
+                    key={credItem?.id}
+                    onClick={() => setPostFeed(credItem)}
+                  >
+                    <CredIcon isSelected={selectedPostFeed?.id === credItem.id}>
+                      <ImageContainer
+                        src={credItem?.image || credItem?.icon || '/default_profile.jpg'}
+                        width='100%'
+                        height='100%'
+                        objectFit='contain'
+                      />
+                    </CredIcon>
+                  </CredIconFrame>
+                )
+              })}
+          </HeaderFrame>
+          {selectedPostFeed && (
+            <FlexVertical
+              width='100%'
+              gap='var(--kai-size-sys-space-sm)'
+              padding='var(--kai-size-sys-space-md)'
+            >
+              <CredListItem
+                key={selectedPostFeed.id}
+                title={selectedPostFeed.title}
+                icon={selectedPostFeed.image || selectedPostFeed.icon || ''}
+              ></CredListItem>
+            </FlexVertical>
+          )}
+
           <FlexVertical
             width='100%'
             gap='var(--kai-size-sys-space-sm)'
             padding='var(--kai-size-sys-space-md)'
           >
-            <CredListItem
-              key={selectedPostFeed.id}
-              title={selectedPostFeed.title}
-              icon={selectedPostFeed.image || selectedPostFeed.icon || ''}
-            ></CredListItem>
+            {allItems.length > 0 &&
+              allItems.map((post) => {
+                return (
+                  <PostFrame
+                    key={post.id}
+                    userIcon={post.user?.avatar || '/default_profile.jpg'}
+                    userId={
+                      post.user?.vessId
+                        ? `@${post.user?.vessId}`
+                        : post.user?.name || getAddressFromPkh(post.user?.did || '')
+                    }
+                    date={formatDate(post?.createdAt.toLocaleString())}
+                    onClick={() => openPostDetail(post)}
+                  >
+                    {post?.image && (
+                      <ImageContainer
+                        src={post?.image}
+                        width='100%'
+                        height='auto'
+                        objectFit='contain'
+                        style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
+                      />
+                    )}
+                    <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
+                      {post?.text}
+                    </Text>
+                  </PostFrame>
+                )
+              })}
           </FlexVertical>
-        )}
-
-        <FlexVertical
-          width='100%'
-          gap='var(--kai-size-sys-space-sm)'
-          padding='var(--kai-size-sys-space-md)'
-        >
-          {allItems.length > 0 &&
-            allItems.map((post) => {
-              return (
-                <PostFrame
-                  key={post.id}
-                  userIcon={post.user?.avatar || '/default_profile.jpg'}
-                  userId={
-                    post.user?.vessId
-                      ? `@${post.user?.vessId}`
-                      : post.user?.name || getAddressFromPkh(post.user?.did || '')
-                  }
-                  date={formatDate(post?.createdAt.toLocaleString())}
-                  onClick={() => openPostDetail(post)}
-                >
-                  {post?.image && (
-                    <ImageContainer
-                      src={post?.image}
-                      width='100%'
-                      height='auto'
-                      objectFit='contain'
-                      style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
-                    />
-                  )}
-                  <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
-                    {post?.text}
-                  </Text>
-                </PostFrame>
-              )
-            })}
-        </FlexVertical>
-      </PostFeedFrame>
+        </PostFeedFrame>
+      </HCLayout>
       <PostDetailModal name='PostDetailModal' post={selectedPost} />
     </>
   )
 }
 
-const PostFeedFrame = styled.div`
+const PostFeedFrame = styled.main`
   position: relative;
   width: 100%;
   height: 100svh;
   overflow-y: scroll;
-
-  &[data-media-lg] {
-    display: grid;
-    grid-template-columns: 1fr var(--kai-size-ref-512) 1fr;
-    place-items: center;
-    gap: var(--kai-size-space-md);
-  }
 `
 
 const HeaderFrame = styled.div`
+  width: 100vw;
   display: flex;
   padding: 16px;
   gap: 4px;
@@ -175,13 +173,13 @@ const CredIconFrame = styled.div<{ isSelected: boolean }>`
   gap: 8px;
   border-top: ${(props) =>
     !props.isSelected
-      ? '2px solid var(--dominant-dominant-outline, #cd8df2)'
-      : '2px solid var(--subdominant-subdominant, #993E79)'};
+      ? '2px solid var(--kai-color-sys-dominant-outline)'
+      : '2px solid var(--kai-color-sys-subdominant)'};
 
   border-bottom: ${(props) =>
     !props.isSelected
-      ? '2px solid var(--dominant-dominant-outline, #cd8df2)'
-      : '2px solid var(--subdominant-subdominant, #993E79)'};
+      ? '2px solid var(--kai-color-sys-dominant-outline)'
+      : '2px solid var(--kai-color-sys-subdominant)'};
 `
 
 const CredIcon = styled.div<{ isSelected: boolean }>`
@@ -197,6 +195,6 @@ const CredIcon = styled.div<{ isSelected: boolean }>`
   border-radius: 4px;
   background: ${(props) =>
     props.isSelected
-      ? 'var(--subdominant-subdominant-backing, #F6D4E7)'
-      : 'var(--layer-layer-default, #F2E9F7)'};
+      ? 'var(--kai-color-sys-subdominant-backing)'
+      : 'var(--kai-color-sys-layer-default)'};
 `

@@ -46,11 +46,11 @@ const Frame = styled.div<{ isSelected?: boolean }>`
   border-radius: 16px;
   border: ${(props) =>
     props.isSelected
-      ? '1px solid var(--subdominant-subdominant, #D992BC)'
-      : '1px solid var(--neutral-neutral-outline-minor, #271E1F)'};
+      ? '1px solid var(--kai-color-sys-subdominant)'
+      : '1px solid var(--kai-color-sys-neutral-outline-minor)'};
   background: ${(props) =>
     props.isSelected
-      ? 'var(--subdominant-subdominant-backing, #4B203B)'
-      : 'var(--layer-layer-default, #261c2d)'};
+      ? 'var(--kai-color-sys-subdominant-backing)'
+      : 'var(--kai-color-sys-layer-default)'};
   z-index: 10;
 `

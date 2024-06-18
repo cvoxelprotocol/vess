@@ -32,7 +32,7 @@ export const NAVIGATION_LIST: NavigationItemType[] = [
   },
   {
     id: 'FEED',
-    label: 'FEED',
+    label: 'フィード',
     icon: 'IDENTITY',
     path: '/post/feed/all',
   },
