@@ -38,9 +38,8 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
   }, [post])
 
   const Tweet = () => {
-    const textForPizza =
-      'Check my new #GlobalPizzaParty post on @vess_id ! \n #PizzaDao @BTCPizzaDayTYO @Pizza_DAO \n\n'
-    const intent = shareOnX(textForPizza, shareUrl)
+    const text = 'Check my new post on @vess_id ! \n #vess #myidentity #vc \n\n'
+    const intent = shareOnX(text, shareUrl)
     window.open(intent, '_blank')
   }
 
