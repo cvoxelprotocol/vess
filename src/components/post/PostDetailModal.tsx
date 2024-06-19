@@ -134,7 +134,6 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
                   icon={credItem.image || ''}
                   onClick={() => {
                     console.log(' credItem.id', credItem.id)
-                    onClose()
                   }}
                   isSelected={credItem.id === selectedCredItemId}
                 ></CredListItem>

@@ -36,10 +36,25 @@ export const PostAllFeedContainer: FC = () => {
 
   const allItems = useMemo(() => {
     if (!selectedPostFeed) {
-      return postFeed?.flatMap((feed) => feed.post) || []
+      //FIXME: should improve performance
+      return (
+        postFeed
+          ?.flatMap((feed) => feed.post)
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .filter((v, i, a) => a.findIndex((t) => t.image === v.image) === i) ||
+        [] ||
+        []
+      )
     }
-    return postFeed?.find((p) => p.id === selectedPostFeed.id)?.post || []
+    return (
+      postFeed
+        ?.find((p) => p.id === selectedPostFeed.id)
+        ?.post.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) ||
+      []
+    )
   }, [postFeed, selectedPostFeed])
+
+  console.log({ allItems })
 
   const uniqueCredItems = useMemo(() => {
     return postFeed?.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
@@ -160,7 +175,7 @@ const PostFeedFrame = styled.main`
 `
 
 const HeaderFrame = styled.div`
-  width: 100%;
+  width: 100vw;
   display: flex;
   padding: 16px;
   gap: 4px;
