@@ -175,7 +175,7 @@ const PostFeedFrame = styled.main`
 `
 
 const HeaderFrame = styled.div`
-  width: 100vw;
+  width: 100%;
   display: flex;
   padding: 16px;
   gap: 4px;
