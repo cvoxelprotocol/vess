@@ -18,6 +18,7 @@ import { useCredentialItem } from '@/hooks/useCredentialItem'
 import useScrollCondition from '@/hooks/useScrollCondition'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
+// import { Tab, TabList, TabPanel, Tabs } from '@/components/home/tab'
 
 export type CredDetailProps = {
   id?: string
@@ -161,6 +162,7 @@ const CredImageFrame = styled.div`
   padding: var(--kai-size-sys-space-xl) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
 `
 
+// background: var(--kai-color-sys-layer-default);
 const CredInfoFrame = styled.div`
   grid-row: 2 / 3;
   grid-column: 1 / 2;
@@ -172,7 +174,6 @@ const CredInfoFrame = styled.div`
   width: 100%;
   height: auto;
   padding: var(--kai-size-sys-space-lg) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
-  background: var(--kai-color-sys-layer-default);
   border-radius: var(--kai-size-sys-round-lg) var(--kai-size-sys-round-lg) 0 0;
   border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
   border-bottom: none;

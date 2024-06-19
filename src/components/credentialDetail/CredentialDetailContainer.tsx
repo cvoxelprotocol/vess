@@ -10,6 +10,10 @@ import {
   useSnackbar,
   Spinner,
   Switch,
+  // Tabs,
+  // Tab,
+  // TabList,
+  // TabPanel
 } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
@@ -25,10 +29,34 @@ import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { verifyCredential } from '@/lib/veramo'
 import { formatDate } from '@/utils/date'
 import { removeUndefinedFromArray } from '@/utils/objectUtil'
+import { Tab, TabList, TabPanel, Tabs } from '@/components/home/tab'
 
 export type CredDetailProps = {
   id?: string
 }
+
+const people = [
+  {
+    name: 'Leslie Alexander',
+    role: '@leslie_alexander',
+    imageUrl: 'https://randomuser.me/api/portraits/women/77.jpg',
+  },
+  {
+    name: 'Alice Smith',
+    role: '@alice_smith',
+    imageUrl:
+      'https://randomuser.me/api/portraits/women/15.jpg',
+  },
+  {
+    name: 'Fuji Taro',
+    role: '@fujiman',
+    imageUrl:
+      'https://randomuser.me/api/portraits/men/15.jpg',
+  },
+
+]
+
+
 
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { did } = useVESSAuthUser()
@@ -176,8 +204,8 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   verified === 'verified'
                     ? 'success'
                     : verified === 'verifying'
-                    ? 'neutral'
-                    : 'error'
+                      ? 'neutral'
+                      : 'error'
                 }
                 startContent={
                   verified === 'verified' ? (
@@ -192,8 +220,8 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 {verified === 'verified'
                   ? 'この証明は有効です'
                   : verified === 'verifying'
-                  ? '検証中'
-                  : 'この証明は無効です'}
+                    ? '検証中'
+                    : 'この証明は無効です'}
               </Chip>
 
               <IconButton
@@ -230,45 +258,53 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               {isLoadingSetVisible && <Spinner size='sm' color='neutral' />}
             </>
           </FlexHorizontal>
-          <InfoItemsFrame ref={scrollRef}>
-            {credential?.vc.credentialSubject.sticker &&
-              credential?.vc.credentialSubject.sticker.length > 0 && (
+          <Tabs
+            defaultSelectedKey={'詳細'}
+          >
+            <TabList style={{ flex: 0 }}>
+              <Tab id='詳細'>詳細</Tab>
+              <Tab id='所有者'>所有者</Tab>
+            </TabList>
+            <TabPanel id='詳細' style={{}}>
+              <InfoItemsFrame ref={scrollRef}>
+                {credential?.vc.credentialSubject.sticker &&
+                  credential?.vc.credentialSubject.sticker.length > 0 && (
+                    <InfoItemFrame>
+                      <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                        ステッカー
+                      </Text>
+                      <StickerListFrame>
+                        {credential?.vc.credentialSubject.sticker.map((s: string) => (
+                          <ImageContainer key={s} src={s} width='100%' objectFit='contain' />
+                        ))}
+                      </StickerListFrame>
+                    </InfoItemFrame>
+                  )}
                 <InfoItemFrame>
                   <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                    ステッカー
+                    説明文
                   </Text>
-                  <StickerListFrame>
-                    {credential?.vc.credentialSubject.sticker.map((s: string) => (
-                      <ImageContainer key={s} src={s} width='100%' objectFit='contain' />
-                    ))}
-                  </StickerListFrame>
+                  <Text
+                    typo='body-lg'
+                    color='var(--kai-color-sys-on-layer)'
+                    isLoading={isInitialLoading}
+                  >
+                    {credential?.credentialItem?.description || '説明文はありません。'}
+                  </Text>
                 </InfoItemFrame>
-              )}
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                説明文
-              </Text>
-              <Text
-                typo='body-lg'
-                color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
-              >
-                {credential?.credentialItem?.description || '説明文はありません。'}
-              </Text>
-            </InfoItemFrame>
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                発行者
-              </Text>
-              <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
-                <ImageContainer
-                  src={issuer.icon}
-                  width='20px'
-                  height='20px'
-                  objectFit='contain'
-                  alt='Organization Icon'
-                />
-                {/* <Button
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    発行者
+                  </Text>
+                  <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
+                    <ImageContainer
+                      src={issuer.icon}
+                      width='20px'
+                      height='20px'
+                      objectFit='contain'
+                      alt='Organization Icon'
+                    />
+                    {/* <Button
                   variant='text'
                   style={{ padding: '0' }}
                   // color='var(--kai-color-sys-on-layer)'
@@ -278,182 +314,205 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 >
                   {issuer.name}
                 </Button> */}
-                <Text
-                  typo='body-md'
-                  color='var(--kai-color-sys-on-layer)'
-                  isLoading={isInitialLoading}
-                >
-                  {issuer.name}
-                </Text>
-              </FlexHorizontal>
-            </InfoItemFrame>
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                所有者
-              </Text>
-              <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
-                <ImageContainer
-                  src={holderInfo.icon}
-                  width='20px'
-                  height='20px'
-                  objectFit='contain'
-                  alt='Organization Icon'
-                />
-                <Button
-                  style={{ padding: '0' }}
-                  align='start'
-                  variant='text'
-                  // color='var(--kai-color-sys-on-layer)'
-                  color='neutral'
-                  onPress={() => router.push(`/did/${credential?.vc.credentialSubject.id}`)}
-                  size='sm'
-                >
-                  {holderInfo.name}
-                </Button>
-              </FlexHorizontal>
-            </InfoItemFrame>
-            {credential?.credentialType?.name === 'attendance' &&
-              credential?.vc.credentialSubject.startDate && (
+                    <Text
+                      typo='body-md'
+                      color='var(--kai-color-sys-on-layer)'
+                      isLoading={isInitialLoading}
+                    >
+                      {issuer.name}
+                    </Text>
+                  </FlexHorizontal>
+                </InfoItemFrame>
                 <InfoItemFrame>
                   <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                    開始日
+                    所有者
+                  </Text>
+                  <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
+                    <ImageContainer
+                      src={holderInfo.icon}
+                      width='20px'
+                      height='20px'
+                      objectFit='contain'
+                      alt='Organization Icon'
+                    />
+                    <Button
+                      style={{ padding: '0' }}
+                      align='start'
+                      variant='text'
+                      // color='var(--kai-color-sys-on-layer)'
+                      color='neutral'
+                      onPress={() => router.push(`/did/${credential?.vc.credentialSubject.id}`)}
+                      size='sm'
+                    >
+                      {holderInfo.name}
+                    </Button>
+                  </FlexHorizontal>
+                </InfoItemFrame>
+                {credential?.credentialType?.name === 'attendance' &&
+                  credential?.vc.credentialSubject.startDate && (
+                    <InfoItemFrame>
+                      <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                        開始日
+                      </Text>
+                      <Text
+                        typo='body-lg'
+                        color='var(--kai-color-sys-on-layer)'
+                        isLoading={isInitialLoading}
+                      >
+                        {formatDate(credential?.vc.credentialSubject.startDate)}
+                      </Text>
+                    </InfoItemFrame>
+                  )}
+                {credential?.credentialType?.name === 'attendance' &&
+                  credential?.vc.credentialSubject.endDate && (
+                    <InfoItemFrame>
+                      <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                        終了日
+                      </Text>
+                      <Text
+                        typo='body-lg'
+                        color='var(--kai-color-sys-on-layer)'
+                        isLoading={isInitialLoading}
+                      >
+                        {formatDate(credential?.vc.credentialSubject.endDate)}
+                      </Text>
+                    </InfoItemFrame>
+                  )}
+                <InfoItemFrame>
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    発行日
                   </Text>
                   <Text
                     typo='body-lg'
                     color='var(--kai-color-sys-on-layer)'
                     isLoading={isInitialLoading}
                   >
-                    {formatDate(credential?.vc.credentialSubject.startDate)}
+                    {formatDate(credential?.vc.issuanceDate)}
                   </Text>
                 </InfoItemFrame>
-              )}
-            {credential?.credentialType?.name === 'attendance' &&
-              credential?.vc.credentialSubject.endDate && (
                 <InfoItemFrame>
                   <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                    終了日
+                    有効期限日
                   </Text>
                   <Text
                     typo='body-lg'
                     color='var(--kai-color-sys-on-layer)'
                     isLoading={isInitialLoading}
                   >
-                    {formatDate(credential?.vc.credentialSubject.endDate)}
+                    {formatDate(credential?.vc.expirationDate) || '無期限'}
                   </Text>
                 </InfoItemFrame>
-              )}
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                発行日
-              </Text>
-              <Text
-                typo='body-lg'
-                color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
-              >
-                {formatDate(credential?.vc.issuanceDate)}
-              </Text>
-            </InfoItemFrame>
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                有効期限日
-              </Text>
-              <Text
-                typo='body-lg'
-                color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
-              >
-                {formatDate(credential?.vc.expirationDate) || '無期限'}
-              </Text>
-            </InfoItemFrame>
-            {otherSubjectProps.length > 0 && (
-              <>
-                <InfoItemFrame>
-                  <Text typo='title-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                    その他の項目
-                  </Text>
-                </InfoItemFrame>
-                {otherSubjectProps.map((prop, index) => (
-                  <InfoItemFrame key={index}>
-                    <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                      {prop.key}
-                    </Text>
-                    <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
-                      {prop.value}
-                    </Text>
-                  </InfoItemFrame>
-                ))}
-              </>
-            )}
-            {/* FIXME */}
-            <InfoItemFrame>
-              {otherHolders && otherHolders.length > 0 && (
-                <InfoItemFrame>
-                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                    他の所有者
-                  </Text>
-                  <StickerListFrame>
-                    {otherHolders.map((holder: VSUser, index) => (
-                      <ImageContainer
-                        key={`${holder.id}-${index}`}
-                        src={holder.avatar || 'https://app.vess.id/default_profile.jpg '}
-                        width='100%'
-                        objectFit='contain'
-                        style={{ borderRadius: '50%' }}
-                      />
+                {otherSubjectProps.length > 0 && (
+                  <>
+                    <InfoItemFrame>
+                      <Text typo='title-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                        その他の項目
+                      </Text>
+                    </InfoItemFrame>
+                    {otherSubjectProps.map((prop, index) => (
+                      <InfoItemFrame key={index}>
+                        <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                          {prop.key}
+                        </Text>
+                        <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
+                          {prop.value}
+                        </Text>
+                      </InfoItemFrame>
                     ))}
-                  </StickerListFrame>
+                  </>
+                )}
+                {/* FIXME */}
+                <InfoItemFrame>
+                  {otherHolders && otherHolders.length > 0 && (
+                    <InfoItemFrame>
+                      <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                        他の所有者
+                      </Text>
+                      <StickerListFrame>
+                        {otherHolders.map((holder: VSUser, index) => (
+                          <ImageContainer
+                            key={`${holder.id}-${index}`}
+                            src={holder.avatar || 'https://app.vess.id/default_profile.jpg '}
+                            width='100%'
+                            objectFit='contain'
+                            style={{ borderRadius: '50%' }}
+                          />
+                        ))}
+                      </StickerListFrame>
+                    </InfoItemFrame>
+                  )}
+                  {/* FIXME */}
+                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                    元データ(JSON)
+                  </Text>
+                  <PlainCredFrame>
+                    <Chip
+                      variant='tonal'
+                      startContent={<PiCopyBold />}
+                      color='subdominant'
+                      onPress={() => {
+                        openSnackbar()
+                        copy(JSON.stringify(JSON.parse(credential?.plainCredential || '{}'), null, 2))
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: 'var(--kai-size-sys-space-sm)',
+                        right: 'var(--kai-size-sys-space-sm)',
+                      }}
+                    >
+                      コピー
+                    </Chip>
+                    <JsonFrame>
+                      {JSON.stringify(JSON.parse(credential?.plainCredential || '{}'), null, 2)}
+                    </JsonFrame>
+                  </PlainCredFrame>
                 </InfoItemFrame>
-              )}
-              {/* FIXME */}
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                元データ(JSON)
-              </Text>
-              <PlainCredFrame>
-                <Chip
+              </InfoItemsFrame>
+              <ActionFrame>
+                <Button
                   variant='tonal'
-                  startContent={<PiCopyBold />}
                   color='subdominant'
                   onPress={() => {
-                    openSnackbar()
-                    copy(JSON.stringify(JSON.parse(credential?.plainCredential || '{}'), null, 2))
+                    openURLCopied()
+                    copy(`https://app.vess.id/creds/detail/${id}`)
                   }}
-                  style={{
-                    position: 'absolute',
-                    top: 'var(--kai-size-sys-space-sm)',
-                    right: 'var(--kai-size-sys-space-sm)',
-                  }}
+                  size='sm'
                 >
-                  コピー
-                </Chip>
-                <JsonFrame>
-                  {JSON.stringify(JSON.parse(credential?.plainCredential || '{}'), null, 2)}
-                </JsonFrame>
-              </PlainCredFrame>
-            </InfoItemFrame>
-          </InfoItemsFrame>
-          <ActionFrame>
-            <Button
-              variant='tonal'
-              color='subdominant'
-              onPress={() => {
-                openURLCopied()
-                copy(`https://app.vess.id/creds/detail/${id}`)
-              }}
-              size='sm'
-            >
-              URLをコピー
-            </Button>
-          </ActionFrame>
+                  URLをコピー
+                </Button>
+              </ActionFrame>
+
+            </TabPanel>
+            <TabPanel id='所有者' style={{ width: '100%' }} >
+              <Container>
+                <Grid>
+                  <List>
+                    {people.map((person) => (
+                      <li key={person.name}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingLeft: '16px', paddingRight: '16px', paddingTop: '4px', paddingBottom: '4px' }}>
+                          <Image src={person.imageUrl} alt="" />
+                          <div>
+                            <Name>{person.name}</Name>
+                            <Role>{person.role}</Role>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </List>
+                </Grid>
+              </Container>
+            </TabPanel>
+          </Tabs>
+
         </CredInfoFrame>
-      </CredDetailFrame>
+      </CredDetailFrame >
     </>
   )
 }
 
+// height: 100svh;
 const CredDetailFrame = styled.div`
   width: 100%;
-  height: 100svh;
   display: grid;
   grid-template-rows: 360px minmax(0, 1fr);
   transition: all var(--kai-motion-sys-duration-slow) var(--kai-motion-sys-easing-standard);
@@ -474,6 +533,7 @@ const CredImageFrame = styled.div`
   padding: var(--kai-size-sys-space-xl) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
 `
 
+// background: var(--kai-color-sys-layer-default);
 const CredInfoFrame = styled.div`
   grid-row: 2 / 3;
   grid-column: 1 / 2;
@@ -485,7 +545,6 @@ const CredInfoFrame = styled.div`
   width: 100%;
   height: auto;
   padding: var(--kai-size-sys-space-lg) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
-  background: var(--kai-color-sys-layer-default);
   border-radius: var(--kai-size-sys-round-lg) var(--kai-size-sys-round-lg) 0 0;
   border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
   border-bottom: none;
@@ -541,6 +600,7 @@ const JsonFrame = styled.pre`
   color: var(--kai-color-sys-on-layer-minor);
 `
 
+// background: var(--kai-color-sys-layer-default);
 const ActionFrame = styled.div`
   display: flex;
   flex-direction: row;
@@ -548,5 +608,44 @@ const ActionFrame = styled.div`
   justify-content: end;
   gap: var(--kai-size-sys-space-md);
   width: 100%;
-  background: var(--kai-color-sys-layer-default);
 `
+const Container = styled.div`
+  padding-bottom: 16px;
+  width: 100%
+`;
+
+const Grid = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+`;
+
+const List = styled.ul`
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  margin: 0;
+  padding: 0;
+`;
+
+const Image = styled.img`
+  width: 64px;
+  height: 64px;
+  border-radius: 10%;
+`;
+
+const Name = styled.h3`
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 28px;
+  color: #333;
+`;
+
+const Role = styled.p`
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #4b5563;
+`;

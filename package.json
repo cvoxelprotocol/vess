@@ -64,7 +64,7 @@
     "hammerjs": "^2.0.8",
     "iron-session": "^8.0.1",
     "jotai": "^2.6.4",
-    "kai-kit": "0.1.6-beta.11",
+    "kai-kit": "0.1.7",
     "konva": "^9.3.6",
     "modern-css-reset": "^1.4.0",
     "next": "^13.5.6",

@@ -34,6 +34,8 @@ import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
+// import { Tabs, Tab, TabList } from 'react-aria-components'
+
 
 const AvatarForDisplay = dynamic(() => import('@/components/avatar/AvatarForDisplay'), {
   ssr: false,
@@ -56,6 +58,8 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { shareLink } = useShareLink(undefined)
   const router = useRouter()
   const stageRef = useRef<any>()
+  // const id = router.query.id as string
+  console.log(formatedCredentials)
 
   // for Scroll Animation
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -117,6 +121,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
     router.push(`/creds/detail/${removeStickerIdSurfix(id)}`)
   }
 
+  console.log('this is formatted credentials', formatedCredentials)
   return (
     <>
       <ProfileFrame>
@@ -310,27 +315,29 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               </CredList>
             </FlexVertical>
           </ProfileInfoFrame>
-        </ProfileInfoOuterFrame>
-      </ProfileFrame>
+        </ProfileInfoOuterFrame >
+      </ProfileFrame >
       <AvatarEditModal profileAvatar={profileAvatar} />
       <ProfileEditModal name={'profileEdit'} did={did || ''} />
-      {isEditable && (
-        <IconButton
-          icon={<PiCameraPlus size={32} />}
-          color='dominant'
-          variant='outlined'
-          onPress={() => router.push('/post/add')}
-          size='md'
-          style={{
-            position: 'fixed',
-            bottom: 'var(--kai-size-sys-space-md)',
-            right: 'var(--kai-size-sys-space-md)',
-            zIndex: 10,
-            background:
-              'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
-          }}
-        />
-      )}
+      {
+        isEditable && (
+          <IconButton
+            icon={<PiCameraPlus size={32} />}
+            color='dominant'
+            variant='outlined'
+            onPress={() => router.push('/post/add')}
+            size='md'
+            style={{
+              position: 'fixed',
+              bottom: 'var(--kai-size-sys-space-md)',
+              right: 'var(--kai-size-sys-space-md)',
+              zIndex: 10,
+              background:
+                'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
+            }}
+          />
+        )
+      }
     </>
   )
 }
