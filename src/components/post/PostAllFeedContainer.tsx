@@ -175,6 +175,8 @@ export const PostAllFeedContainer: FC = () => {
               borderRadius: '8px',
               background: 'var(--kai-color-sys-subdominant)',
               border: '1px solid var(--kai-color-sys-subdominant-outline-minor)',
+              boxShadow:
+                '18px 30px 10px 0px rgba(153, 62, 121, 0.01), 12px 19px 9px 0px rgba(153, 62, 121, 0.05), 6px 11px 8px 0px rgba(153, 62, 121, 0.15), 3px 5px 6px 0px rgba(153, 62, 121, 0.26), 1px 1px 3px 0px rgba(153, 62, 121, 0.30)',
             }}
           />
         </PostFeedFrame>
