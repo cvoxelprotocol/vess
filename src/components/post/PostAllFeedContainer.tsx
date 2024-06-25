@@ -64,7 +64,7 @@ export const PostAllFeedContainer: FC = () => {
     <>
       <HCLayout header={<DefaultHeader />}>
         <PostFeedFrame {...breakpointProps}>
-          <HeaderFrame>
+          <HeaderFrame {...breakpointProps}>
             <CredIconFrame
               data-selected={!selectedPostFeed || undefined}
               onPress={() => setPostFeed(undefined)}
@@ -96,25 +96,24 @@ export const PostAllFeedContainer: FC = () => {
                 )
               })}
           </HeaderFrame>
-          {selectedPostFeed && (
-            <FlexVertical
-              width='100%'
-              gap='var(--kai-size-sys-space-sm)'
-              padding='var(--kai-size-sys-space-md)'
-            >
+
+          <FlexVertical
+            width='100%'
+            gap='var(--kai-size-sys-space-sm)'
+            padding='0 var(--kai-size-sys-space-md) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md)'
+            style={{
+              flexGrow: 1,
+              overflowY: 'scroll',
+              flexWrap: 'nowrap',
+            }}
+          >
+            {selectedPostFeed && (
               <CredListItem
                 key={selectedPostFeed.id}
                 title={selectedPostFeed.title}
                 icon={selectedPostFeed.image || selectedPostFeed.icon || ''}
               ></CredListItem>
-            </FlexVertical>
-          )}
-
-          <FlexVertical
-            width='100%'
-            gap='var(--kai-size-sys-space-sm)'
-            padding='var(--kai-size-sys-space-md)'
-          >
+            )}
             {allItems.length > 0 &&
               allItems.map((post) => {
                 return (
@@ -129,18 +128,20 @@ export const PostAllFeedContainer: FC = () => {
                     date={formatDate(post?.createdAt.toLocaleString())}
                     onClick={() => openPostDetail(post)}
                   >
-                    {post?.image && (
-                      <ImageContainer
-                        src={post?.image}
-                        width='100%'
-                        height='auto'
-                        objectFit='contain'
-                        style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
-                      />
-                    )}
-                    <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
-                      {post?.text}
-                    </Text>
+                    <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent'>
+                      {post?.image && (
+                        <ImageContainer
+                          src={post?.image}
+                          width='100%'
+                          height='auto'
+                          objectFit='contain'
+                          style={{ borderRadius: 'var(--kai-size-sys-round-none)' }}
+                        />
+                      )}
+                      <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
+                        {post?.text}
+                      </Text>
+                    </FlexVertical>
                   </PostFrame>
                 )
               })}
@@ -148,7 +149,7 @@ export const PostAllFeedContainer: FC = () => {
           <IconButton
             icon={<PiCameraPlus size={32} />}
             color='dominant'
-            variant='outlined'
+            variant='filled'
             onPress={() => router.push('/post/add')}
             size='md'
             style={{
@@ -156,8 +157,9 @@ export const PostAllFeedContainer: FC = () => {
               bottom: 'var(--kai-size-sys-space-md)',
               right: 'var(--kai-size-sys-space-md)',
               zIndex: 'var(--kai-z-index-sys-layer-default)',
-              background:
-                'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
+              borderRadius: '8px',
+              background: 'var(--kai-color-sys-subdominant)',
+              border: '1px solid var(--kai-color-sys-subdominant-outline-minor)',
             }}
           />
         </PostFeedFrame>
@@ -170,14 +172,17 @@ export const PostAllFeedContainer: FC = () => {
 const PostFeedFrame = styled.main`
   position: relative;
   width: 100%;
-  height: 100svh;
-  overflow-y: scroll;
+  height: calc(100svh - 80px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 `
 
 const HeaderFrame = styled.div`
-  width: 100%;
+  flex-shrink: 0;
+  width: 100vw;
   display: flex;
-  padding: 16px;
+  padding: var(--kai-size-sys-space-md);
   gap: 4px;
   place-items: center;
   align-items: flex-start;
@@ -185,12 +190,17 @@ const HeaderFrame = styled.div`
   z-index: var(--kai-z-index-sys-fixed-default);
   align-self: stretch;
   overflow-x: scroll;
+
+  &[data-media-md] {
+    width: var(--kai-size-breakpoint-xs-max-width);
+  }
 `
 
 const CredIconFrame = styled(RACButton)`
   appearance: none;
   border: none;
   outline: nene;
+  background: transparent;
   display: flex;
   width: 64px;
   height: 64px;

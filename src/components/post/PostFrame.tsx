@@ -12,13 +12,9 @@ type Props = {
 
 export const PostFrame: FC<Props> = ({ children, date, userIcon, userId, ...props }) => {
   return (
-    <ContentFrame {...props}>
+    <ContentFrame {...props} className='light'>
       {children}
-      <FlexHorizontal
-        width='100%'
-        justifyContent='space-between'
-        background='linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%)'
-      >
+      <FlexHorizontal width='100%' justifyContent='space-between' background='transparent'>
         <FlexHorizontal gap='4px'>
           <ImageContainer
             src={userIcon || '/default_profile.jpg'}
@@ -46,7 +42,7 @@ const ContentFrame = styled.div`
   padding: 16px 16px 12px 16px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 27px;
+  gap: var(--kai-size-sys-space-lg);
   border-radius: 12px;
   background: linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%);
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 0px 0px var(--layer-shadow, #6d6163);

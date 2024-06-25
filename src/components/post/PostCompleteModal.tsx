@@ -26,9 +26,7 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
 
   const onClose = () => {
     setPost(undefined)
-    if (credId) {
-      router.push(`/creds/items/feed/${credId}`)
-    }
+    router.push(`/post/feed/all`)
     closeModal('PostCompleteModal')
   }
 

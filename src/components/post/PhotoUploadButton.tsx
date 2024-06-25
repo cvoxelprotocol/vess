@@ -30,8 +30,8 @@ export const PhotoUploadButton: FC<IconUploadButtonProps> = ({
               <Spinner size='80px' />
             ) : (
               <>
-                <PiImageSquare size={16} color='var(--kai-color-sys-on-dominant-backing)' />
-                <Text typo='label-lg' color='var(--kai-color-sys-on-dominant-backing)'>
+                <PiImageSquare size={16} color='var(--kai-color-sys-on-dominant)' />
+                <Text typo='label-lg' color='var(--kai-color-sys-on-dominant)'>
                   写真をアップロード
                 </Text>
               </>
@@ -74,11 +74,17 @@ const PhotoFrame = styled.div`
 `
 
 const StyledButton = styled(Button)`
-  border-radius: var(--button-button-round, 16px);
-  border: 1px solid var(--button-button-outline-tonal, #502964);
-  background: var(--button-button-background-tonal, #412152);
+  border: none;
+  border-radius: 16px;
+  background: var(--kai-color-sys-dominant);
   display: flex;
-  padding: 20px;
+  height: 48px;
+  padding: 0 var(--kai-size-sys-space-md);
   align-items: center;
   gap: 4px;
+  transition: transform var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+  &[data-hovered] {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
 `

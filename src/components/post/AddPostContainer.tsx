@@ -376,6 +376,11 @@ export const AddPostContainer: FC = () => {
                 />
               </StickerTools>
               <PostFrame userIcon={userIcon} userId={userName} date={today}>
+                {/* <FlexVertical
+                  gap='var(--kai-size-sys-space-sm)'
+                  width='100%'
+                  background='transparent'
+                > */}
                 {icon ? (
                   <DroppablePostImage
                     baseAvatarImgUrl={icon || '/default_profile.jpg'}
@@ -387,6 +392,7 @@ export const AddPostContainer: FC = () => {
                 <Form id='add-post' onSubmit={handleSubmit(onClickSubmit)}>
                   <TextArea {...register('comment')} placeholder='コメントを入力' rows={3} />
                 </Form>
+                {/* </FlexVertical> */}
               </PostFrame>
             </AvatarFrame>
 
@@ -570,20 +576,27 @@ const Form = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%);
+  background: transparent;
 `
-
 const TextArea = styled.textarea`
   width: 100%;
-  background: linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%);
-  color: var(--neutral-neutral-minor, #837778);
+  background: transparent;
+  color: var(--kai-color-sys-on-layer);
   border: none;
+  resize: none;
 
-  /* Kai-typography/en/body/medium */
-  font-family: 'Noto Sans';
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px; /* 142.857% */
-  letter-spacing: 0.1px;
+  &::placeholder {
+    color: var(--kai-color-sys-neutral-minor);
+  }
+
+  font-family: var(--kai-typo-ref-font-family-base);
+  font-size: var(--kai-typo-sys-body-md-font-size);
+  font-weight: var(--kai-typo-sys-body-md-font-weight);
+  line-height: var(--kai-typo-sys-body-md-line-height);
+  letter-spacing: var(--kai-typo-sys-body-md-letter-spacing);
+
+  &:focus {
+    outline: none;
+    caret-color: skyblue;
+  }
 `

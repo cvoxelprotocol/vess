@@ -14,7 +14,12 @@ type Props = {
 export const CredListItem: FC<Props> = ({ icon, title, issuerIcon, issuerName, ...props }) => {
   return (
     <Frame onClick={props.onClick} {...props}>
-      <ImageContainer src={icon} width='var(--kai-size-ref-48)' height='auto' objectFit='contain' />
+      <ImageContainer
+        src={icon}
+        width='var(--kai-size-ref-48)'
+        height='var(--kai-size-ref-48)'
+        objectFit='contain'
+      />
       <FlexVertical>
         <Text typo='title-md' color={'var(--kai-color-sys-on-layer)'} lineClamp={1}>
           {title}
@@ -39,7 +44,7 @@ export const CredListItem: FC<Props> = ({ icon, title, issuerIcon, issuerName, .
 
 const Frame = styled.div<{ isSelected?: boolean }>`
   display: flex;
-  padding: 16px;
+  padding: 8px;
   width: 100%;
   align-items: center;
   gap: 8px;

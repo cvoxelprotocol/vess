@@ -101,44 +101,53 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
             }
             date={formatDate(post?.createdAt.toLocaleString())}
           >
-            {detailedPost?.canvas ? (
-              <AvatarForDisplay profileAvatar={detailedPost?.canvas} stageRef={stageRef} />
-            ) : (
-              <>
-                {post?.image && (
-                  <ImageContainer
-                    src={post?.image}
-                    width='100%'
-                    height='auto'
-                    objectFit='contain'
-                    style={{ borderRadius: 'var(--kai-size-sys-round-md)' }}
-                  />
-                )}
-              </>
-            )}
-            <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
-              {post?.text}
-            </Text>
+            <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent'>
+              {detailedPost?.canvas ? (
+                <AvatarForDisplay profileAvatar={detailedPost?.canvas} stageRef={stageRef} />
+              ) : (
+                <>
+                  {post?.image && (
+                    <ImageContainer
+                      src={post?.image}
+                      width='100%'
+                      height='auto'
+                      objectFit='contain'
+                      style={{ borderRadius: 'var(--kai-size-sys-round-none)' }}
+                    />
+                  )}
+                </>
+              )}
+              <Text as='p' typo='body-md' color={'var(--kai-color-sys-on-layer)'}>
+                {post?.text}
+              </Text>
+            </FlexVertical>
           </PostFrame>
-          <Text as='p' typo='label-lg' color={'var(--kai-color-sys-on-layer-minor)'}>
-            含まれている証明
-          </Text>
-          {isInitialLoading && <Spinner />}
-          {incluedCredItems &&
-            incluedCredItems.map((credItem) => {
-              return (
-                <CredListItem
-                  className='dark'
-                  key={credItem.id}
-                  title={credItem.title}
-                  icon={credItem.image || ''}
-                  onClick={() => {
-                    console.log(' credItem.id', credItem.id)
-                  }}
-                  isSelected={credItem.id === selectedCredItemId}
-                ></CredListItem>
-              )
-            })}
+          <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent' width='100%'>
+            <Text
+              as='p'
+              typo='label-lg'
+              color={'var(--kai-color-sys-on-layer-minor)'}
+              style={{ marginLeft: '4px' }}
+            >
+              含まれている証明
+            </Text>
+            {isInitialLoading && <Spinner />}
+            {incluedCredItems &&
+              incluedCredItems.map((credItem) => {
+                return (
+                  <CredListItem
+                    className='dark'
+                    key={credItem.id}
+                    title={credItem.title}
+                    icon={credItem.image || ''}
+                    onClick={() => {
+                      console.log(' credItem.id', credItem.id)
+                    }}
+                    isSelected={credItem.id === selectedCredItemId}
+                  ></CredListItem>
+                )
+              })}
+          </FlexVertical>
           {isEditable && (
             <IconButton
               color='error'
