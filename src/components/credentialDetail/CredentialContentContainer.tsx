@@ -1,33 +1,16 @@
 import styled from '@emotion/styled'
-import copy from 'copy-to-clipboard'
-import {
-  Text,
-  Chip,
-  FlexHorizontal,
-  IconButton,
-  Skelton,
-  Button,
-  useSnackbar,
-  Spinner,
-} from 'kai-kit'
-import { useRouter } from 'next/router'
-import { FC, useEffect, useMemo, useRef } from 'react'
-import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
+import { Text, FlexHorizontal, Skelton, useSnackbar } from 'kai-kit'
+import { FC, useMemo, useRef } from 'react'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import useScrollCondition from '@/hooks/useScrollCondition'
-import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
-import { useStateVcVerifiedStatus } from '@/jotai/ui'
 
 export type CredDetailProps = {
   id?: string
 }
 
 export const CredentialContentContainer: FC<CredDetailProps> = ({ id }) => {
-  const { did } = useVESSAuthUser()
-  const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
-  const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
     text: '元データ(JSON)をコピーしました。',
@@ -38,8 +21,6 @@ export const CredentialContentContainer: FC<CredDetailProps> = ({ id }) => {
   })
   const scrollRef = useRef<HTMLDivElement>(null)
   const { scrollInfo } = useScrollCondition(scrollRef)
-
-  console.log({ credItem })
 
   const issuer = useMemo(() => {
     if (!credItem) return { name: 'Unknown', icon: '/default_profile.jpg' }

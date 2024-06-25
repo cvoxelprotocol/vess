@@ -14,7 +14,9 @@ export const vessLoadingModal = atom<boolean>(false)
 
 export const useStateVESSLoadingModal = () => useAtom(vessLoadingModal)
 
-export const vcVerifiedStatus = atom<'verified' | 'failed' | 'verifying' | 'idle'>('idle')
+export const vcVerifiedStatus = atom<'verified' | 'failed' | 'verifying' | 'idle' | 'expired'>(
+  'idle',
+)
 
 export const useStateVcVerifiedStatus = () => useAtom(vcVerifiedStatus)
 
