@@ -12,7 +12,7 @@ type Props = {
 
 export const PostFrame: FC<Props> = ({ children, date, userIcon, userId, ...props }) => {
   return (
-    <ContentFrame {...props} className='light'>
+    <ContentFrame {...props} className='light' data-pressable={props.onClick ? 'true' : undefined}>
       {children}
       <FlexHorizontal width='100%' justifyContent='space-between' background='transparent'>
         <FlexHorizontal gap='4px'>
@@ -46,4 +46,10 @@ const ContentFrame = styled.div`
   border-radius: 12px;
   background: linear-gradient(150deg, #fff 72.15%, #e9e9e9 105.4%);
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 0px 0px var(--layer-shadow, #6d6163);
+  transition: transform var(--kai-motion-sys-duration-fast) var(--kai-motion-sys-easing-standard);
+
+  &[data-pressable='true']:hover {
+    transform: scale(1.01);
+    cursor: pointer;
+  }
 `
