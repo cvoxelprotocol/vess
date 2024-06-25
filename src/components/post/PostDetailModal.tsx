@@ -101,7 +101,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
             }
             date={formatDate(post?.createdAt.toLocaleString())}
           >
-            <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent'>
+            <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent' width='100%'>
               {detailedPost?.canvas ? (
                 <AvatarForDisplay profileAvatar={detailedPost?.canvas} stageRef={stageRef} />
               ) : (

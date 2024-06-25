@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
-import { FlexVertical, IconButton, Text, useBreakpoint, useModal } from 'kai-kit'
+import { FlexVertical, IconButton, Skelton, Text, useBreakpoint, useModal } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo } from 'react'
 import { Button as RACButton } from 'react-aria-components'
-import { PiCameraPlus } from 'react-icons/pi'
+import { PiCameraPlus, PiFilmStrip } from 'react-icons/pi'
+import EmptyView from '../app/EmptyView'
 import { HCLayout } from '../app/HCLayout'
 import { DefaultHeader } from '../app/Header'
 import { useNCLayoutContext } from '../app/NCLayout'
@@ -20,7 +21,7 @@ import { getAddressFromPkh } from '@/utils/did'
 
 export const PostAllFeedContainer: FC = () => {
   const { did, connectionStatus } = useVESSAuthUser()
-  const { postFeed } = usePostFeed(did)
+  const { postFeed, isInitialLoading } = usePostFeed(did)
   const { setIsDefaultOpenOnDesktop, setIsFullContent, openNavigation } = useNCLayoutContext()
   const { matches, breakpointProps } = useBreakpoint()
   const { openModal, closeModal } = useModal()
@@ -114,37 +115,51 @@ export const PostAllFeedContainer: FC = () => {
                 icon={selectedPostFeed.image || selectedPostFeed.icon || ''}
               ></CredListItem>
             )}
-            {allItems.length > 0 &&
-              allItems.map((post) => {
-                return (
-                  <PostFrame
-                    key={post.id}
-                    userIcon={post.user?.avatar || '/default_profile.jpg'}
-                    userId={
-                      post.user?.vessId
-                        ? `@${post.user?.vessId}`
-                        : post.user?.name || getAddressFromPkh(post.user?.did || '')
-                    }
-                    date={formatDate(post?.createdAt.toLocaleString())}
-                    onClick={() => openPostDetail(post)}
-                  >
-                    <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent'>
-                      {post?.image && (
-                        <ImageContainer
-                          src={post?.image}
-                          width='100%'
-                          height='auto'
-                          objectFit='contain'
-                          style={{ borderRadius: 'var(--kai-size-sys-round-none)' }}
-                        />
-                      )}
-                      <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
-                        {post?.text}
-                      </Text>
-                    </FlexVertical>
-                  </PostFrame>
-                )
-              })}
+            <Skelton isLoading={isInitialLoading} width='100%' height='600px'>
+              {allItems.length > 0 ? (
+                allItems.map((post) => {
+                  return (
+                    <PostFrame
+                      key={post.id}
+                      userIcon={post.user?.avatar || '/default_profile.jpg'}
+                      userId={
+                        post.user?.vessId
+                          ? `@${post.user?.vessId}`
+                          : post.user?.name || getAddressFromPkh(post.user?.did || '')
+                      }
+                      date={formatDate(post?.createdAt.toLocaleString())}
+                      onClick={() => openPostDetail(post)}
+                    >
+                      <FlexVertical gap='var(--kai-size-sys-space-sm)' background='transparent'>
+                        {post?.image && (
+                          <ImageContainer
+                            src={post?.image}
+                            width='100%'
+                            height='auto'
+                            objectFit='contain'
+                            style={{ borderRadius: 'var(--kai-size-sys-round-none)' }}
+                          />
+                        )}
+                        <Text as='p' typo='body-md' color={'var(--kai-color-sys-neutral-minor)'}>
+                          {post?.text}
+                        </Text>
+                      </FlexVertical>
+                    </PostFrame>
+                  )
+                })
+              ) : (
+                <EmptyView
+                  icon={<PiFilmStrip />}
+                  title='投稿がまだありません'
+                  description='最初の投稿を作成して思い出を残しましょう！'
+                  isButton
+                  buttonOptions={{
+                    onPress: () => router.push('/post/add'),
+                    children: '投稿する',
+                  }}
+                />
+              )}
+            </Skelton>
           </FlexVertical>
           <IconButton
             icon={<PiCameraPlus size={32} />}

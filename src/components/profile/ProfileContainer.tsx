@@ -315,7 +315,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
           <IconButton
             icon={<PiCameraPlus size={32} />}
             color='dominant'
-            variant='outlined'
+            variant='filled'
             onPress={() => router.push('/post/add')}
             size='md'
             style={{
@@ -323,8 +323,9 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               bottom: 'var(--kai-size-sys-space-md)',
               right: 'var(--kai-size-sys-space-md)',
               zIndex: 'var(--kai-z-index-sys-layer-default)',
-              background:
-                'linear-gradient(135deg, rgba(253, 149, 255, 0.3) 0%, rgba(174, 0, 157, 0.3) 100%)',
+              borderRadius: '8px',
+              background: 'var(--kai-color-sys-subdominant)',
+              border: '1px solid var(--kai-color-sys-subdominant-outline-minor)',
             }}
           />
         )}
