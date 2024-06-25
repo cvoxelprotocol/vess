@@ -1,7 +1,7 @@
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { StickerType } from '@/@types/avatar'
-import { Post } from '@/@types/user'
+import { Post, PostFeed, PostWithUser } from '@/@types/user'
 export const themeMode = atomWithStorage<'light' | 'dark'>('vessThemeMode', 'light')
 
 export const useStateThemeMode = () => useAtom(themeMode)
@@ -14,7 +14,9 @@ export const vessLoadingModal = atom<boolean>(false)
 
 export const useStateVESSLoadingModal = () => useAtom(vessLoadingModal)
 
-export const vcVerifiedStatus = atom<'verified' | 'failed' | 'verifying' | 'idle'>('idle')
+export const vcVerifiedStatus = atom<'verified' | 'failed' | 'verifying' | 'idle' | 'expired'>(
+  'idle',
+)
 
 export const useStateVcVerifiedStatus = () => useAtom(vcVerifiedStatus)
 
@@ -34,11 +36,14 @@ export const useAvatarSizeAtom = () => useAtom(avatarSize)
 export const displayAvatarSize = atom<number>(100)
 export const useAvatarForDisplaySizeAtom = () => useAtom(displayAvatarSize)
 
-export const posts = atom<Post[]>([])
+export const posts = atom<PostWithUser[]>([])
 export const usePostsAtom = () => useAtom(posts)
 
 export const selectedPost = atom<Post | undefined>(undefined)
 export const useSelectedPostAtom = () => useAtom(selectedPost)
+
+export const selectedPostFeed = atom<PostFeed | undefined>(undefined)
+export const useSelectedPostFeedAtom = () => useAtom(selectedPostFeed)
 
 export const postImageSize = atom<{ w: number; h: number }>({ w: 100, h: 100 })
 export const usePostImageSizeAtom = () => useAtom(postImageSize)

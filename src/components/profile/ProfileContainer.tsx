@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC, useMemo, useRef } from 'react'
 import { FiMenu } from 'react-icons/fi'
-import { PiPaintBrushBroadDuotone, PiExport, PiPencil } from 'react-icons/pi'
+import { PiPaintBrushBroadDuotone, PiExport, PiPencil, PiCameraPlus } from 'react-icons/pi'
 import { Banner } from '../app/Banner'
 import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
@@ -28,6 +28,7 @@ import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
 import { useShareLink } from '@/hooks/useShareLink'
+import { removeStickerIdSurfix } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
@@ -112,6 +113,10 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
     }
   }
 
+  const jumpToVcDetail = (id: string) => {
+    router.push(`/creds/detail/${removeStickerIdSurfix(id)}`)
+  }
+
   return (
     <>
       <ProfileFrame>
@@ -143,6 +148,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               profileAvatar={profileAvatar}
               avatarImageUrl={avatarImageUrl}
               stageRef={stageRef}
+              onSelectSticker={jumpToVcDetail}
             />
             {/* <ProfileImage
               src={avatarImageUrl}
@@ -305,6 +311,26 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
             </FlexVertical>
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
+        {isEditable && (
+          <IconButton
+            icon={<PiCameraPlus size={32} />}
+            color='dominant'
+            variant='filled'
+            onPress={() => router.push('/post/add')}
+            size='md'
+            style={{
+              position: 'fixed',
+              bottom: 'var(--kai-size-sys-space-md)',
+              right: 'var(--kai-size-sys-space-md)',
+              zIndex: 'var(--kai-z-index-sys-fixed-default)',
+              borderRadius: '8px',
+              background: 'var(--kai-color-sys-subdominant)',
+              border: '1px solid var(--kai-color-sys-subdominant-outline-minor)',
+              boxShadow:
+                '18px 30px 10px 0px rgba(153, 62, 121, 0.01), 12px 19px 9px 0px rgba(153, 62, 121, 0.05), 6px 11px 8px 0px rgba(153, 62, 121, 0.15), 3px 5px 6px 0px rgba(153, 62, 121, 0.26), 1px 1px 3px 0px rgba(153, 62, 121, 0.30)',
+            }}
+          />
+        )}
       </ProfileFrame>
       <AvatarEditModal profileAvatar={profileAvatar} />
       <ProfileEditModal name={'profileEdit'} did={did || ''} />

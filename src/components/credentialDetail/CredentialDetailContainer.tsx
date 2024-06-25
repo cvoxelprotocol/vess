@@ -23,7 +23,7 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredential } from '@/hooks/useVerifiableCredential'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { verifyCredential } from '@/lib/veramo'
-import { formatDate } from '@/utils/date'
+import { formatDate, isExpired } from '@/utils/date'
 import { removeUndefinedFromArray } from '@/utils/objectUtil'
 
 export type CredDetailProps = {
@@ -89,6 +89,12 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const verify = async (plainCred?: string) => {
     if (!plainCred) return
     setVerified('verifying')
+    const vc = JSON.parse(plainCred)
+    const exp = isExpired(vc.expirationDate as string | undefined)
+    if (exp) {
+      setVerified('expired')
+      return
+    }
     const result = await verifyCredential(plainCred)
     setTimeout(() => {
       if (result.verified === true) {
@@ -193,6 +199,8 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   ? 'この証明は有効です'
                   : verified === 'verifying'
                   ? '検証中'
+                  : verified === 'expired'
+                  ? 'この証明は期限切れです'
                   : 'この証明は無効です'}
               </Chip>
 

@@ -6,8 +6,7 @@ import { Stage, Layer, Image } from 'react-konva'
 import { StickerType } from '@/@types/avatar'
 import { Avatar } from '@/@types/user'
 import { useImage } from '@/hooks/useImage'
-import { removeStickerIdSurfix } from '@/hooks/useStickers'
-import { useAvatarForDisplaySizeAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import { usePostImageSizeAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
 
 const CanvasStickerForDisplay = dynamic(
   () => import('@/components/avatar/CanvasStickerForDisplay'),
@@ -17,10 +16,11 @@ const CanvasStickerForDisplay = dynamic(
 type AvatarForDisplayProps = {
   profileAvatar?: Avatar
   avatarImageUrl?: string
+  onSelectSticker?: (id: string) => void
 }
 
 const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
-  ({ profileAvatar, avatarImageUrl }, stageRef) => {
+  ({ profileAvatar, avatarImageUrl, onSelectSticker }, stageRef) => {
     const [stickers, setStickers] = useStickersAtom()
     const [selectedID, setSelectedID] = useSelectedIDAtom()
     const frameRef = useRef<any>()
@@ -36,14 +36,15 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
       profileAvatar?.avatarUrl,
       avatarImageUrl,
     ])
-    const { image } = useImage(baseImage)
-    const [avatarSize, setAvatarSize] = useAvatarForDisplaySizeAtom()
+    const { imageWithSize: image } = useImage(baseImage)
+    const [postImageSize, setPostImageSize] = usePostImageSizeAtom()
 
     useEffect(() => {
       const updateSize = () => {
         if (frameRef.current) {
-          const { width } = frameRef.current.getBoundingClientRect()
-          setAvatarSize(width)
+          const { width, height } = frameRef.current.getBoundingClientRect()
+          console.log('width: ', width, 'height: ', height, 'aspectRatio: ', image?.aspectRatio)
+          setPostImageSize({ w: width, h: width / (image?.aspectRatio ?? 1) })
         }
       }
 
@@ -53,7 +54,7 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
       return () => {
         window.removeEventListener('resize', updateSize)
       }
-    }, [frameRef])
+    }, [frameRef, image])
 
     const currentStickers = useMemo(() => {
       return (
@@ -79,20 +80,16 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
       }
     }, [profileAvatar])
 
-    const jumpToVcDetail = (id: string) => {
-      router.push(`/creds/detail/${removeStickerIdSurfix(id)}`)
-    }
-
     return (
       <DroppableFrame ref={frameRef}>
-        <Stage width={avatarSize} height={avatarSize} ref={stageRef}>
+        <Stage width={postImageSize.w} height={postImageSize.h} ref={stageRef}>
           <Layer>
             <Image
               id='sourcePhotoUrl'
-              image={image}
+              image={image?.image}
               alt='aaa'
-              width={avatarSize}
-              height={avatarSize}
+              width={postImageSize.w}
+              height={postImageSize.h}
               draggable={false}
             />
           </Layer>
@@ -104,7 +101,9 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
                 onSelect={() => {
                   console.log({ sticker })
                   setSelectedID(sticker.id)
-                  jumpToVcDetail(sticker.id)
+                  if (onSelectSticker) {
+                    onSelectSticker(sticker.id)
+                  }
                 }}
                 selectedId={selectedID}
                 isSelected={selectedID === sticker.id}
@@ -138,8 +137,6 @@ AvatarForDisplay.displayName = 'AvatarForDisplay'
 const DroppableFrame = styled.div`
   position: relative;
   width: 100%;
-  aspect-ratio: 1;
-
   overflow: hidden;
 `
 

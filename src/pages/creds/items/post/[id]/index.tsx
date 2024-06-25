@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Meta } from '@/components/layouts/Meta'
-import { AddCredItemPostContainer } from '@/components/post/AddPostContainer'
+import { AddPostContainer } from '@/components/post/AddPostContainer'
 
 const AddPostPage: NextPage = () => {
   const router = useRouter()
@@ -9,7 +9,7 @@ const AddPostPage: NextPage = () => {
   return (
     <>
       <Meta pageTitle='Add Post' />
-      <AddCredItemPostContainer id={id} />
+      <AddPostContainer />
     </>
   )
 }
