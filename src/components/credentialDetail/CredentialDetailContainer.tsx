@@ -307,7 +307,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               </Text> */}
               <FlexHorizontal
                 gap='var(--kai-size-sys-space-sm)'
-                style={{ paddingTop: 'var(--kai-size-sys-space-md)' }}
+                style={{ paddingTop: 'var(--kai-size-sys-space-md)', paddingBottom: 'var(--kai-size-sys-space-lg)' }}
               >
                 <ImageContainer
                   src={issuer.icon}
@@ -316,24 +316,50 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   objectFit='contain'
                   alt='Organization Icon'
                 />
-                {/* <Button
+                <Button
                   variant='text'
-                  style={{ padding: '0' }}
+                  style={{ padding: 'var(--kai-size-sys-space-md)' }}
                   // color='var(--kai-color-sys-on-layer)'
                   color='neutral'
                   onPress={() => router.push(`/did/${credential?.issuerDid}`)}
                   size='sm'
                 >
                   {issuer.name}
-                </Button> */}
-                <Text
+                </Button>
+                {/* <Text
                   typo='body-md'
                   color='var(--kai-color-sys-on-layer)'
                   isLoading={isInitialLoading}
                 >
                   {issuer.name}
-                </Text>
+                </Text> */}
               </FlexHorizontal>
+              <InfoItemFrame>
+                <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                  所有者
+                </Text>
+                <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
+                  <ImageContainer
+                    src={holderInfo.icon}
+                    width='20px'
+                    height='20px'
+                    objectFit='contain'
+                    alt='Organization Icon'
+
+                  />
+                  <Button
+                    style={{ paddingLeft: 'var(--kai-size-sys-round-md)', paddingRight: 'var(--kai-size-sys-round-md)' }}
+                    align='start'
+                    variant='text'
+                    // color='var(--kai-color-sys-on-layer)'
+                    color='neutral'
+                    onPress={() => router.push(`/did/${credential?.vc.credentialSubject.id}`)}
+                    size='sm'
+                  >
+                    {holderInfo.name}
+                  </Button>
+                </FlexHorizontal>
+              </InfoItemFrame>
             </InfoItemFrame>
           </FlexHorizontal>
           <Tabs
@@ -376,7 +402,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   </Text>
                 </InfoItemFrame>
 
-                <InfoItemFrame>
+                {/* <InfoItemFrame>
                   <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                     所有者
                   </Text>
@@ -401,7 +427,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                       {holderInfo.name}
                     </Button>
                   </FlexHorizontal>
-                </InfoItemFrame>
+                </InfoItemFrame> */}
                 {credential?.credentialType?.name === 'attendance' &&
                   credential?.vc.credentialSubject.startDate && (
                     <InfoItemFrame>
