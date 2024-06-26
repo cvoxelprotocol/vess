@@ -14,11 +14,11 @@ type Props = {
 
 export const NCLayoutContext = React.createContext({
   isDefaultOpenOnDesktop: true,
-  setIsDefaultOpenOnDesktop: (isOpen: boolean) => {},
+  setIsDefaultOpenOnDesktop: (isOpen: boolean) => { },
   isNavigationOpen: false,
-  setIsNavigationOpen: (isOpen: boolean) => {},
+  setIsNavigationOpen: (isOpen: boolean) => { },
   isFullContent: false,
-  setIsFullContent: (isFull: boolean) => {},
+  setIsFullContent: (isFull: boolean) => { },
 })
 
 export const useNCLayoutContext = () => {
@@ -119,6 +119,7 @@ const LayoutFrame = styled.div<{ contentWidth?: number }>`
   position: relative;
   display: grid;
   height: 100svh;
+  width: 100%;
   grid-template-columns: min-content min-content;
   background: var(--kai-color-sys-background);
   width: 100%;
@@ -167,16 +168,17 @@ const NavigationFrame = styled.div`
   }
 `
 
+// grid-column: 2 / 3;
+// grid-row: 1 / 2;
 const ContentFrame = styled.div`
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
-  position: relative;
-  width: 100vw;
-  max-width: var(--kai-size-breakpoint-xs-max-width);
-  height: 100svh;
+overflow-y: scroll;
+position: relative;
+width: 75vw;
+max-width: var(--kai-size-breakpoint-xl-max-width);
+  height: 100%;
+  max-height: var)(--kai-size-breakpoint-lg-max-height);
   transition: all var(--kai-motion-sys-duration-medium) var(--kai-motion-sys-easing-standard);
   transition-property: opacity, transform;
-  overflow-y: scroll;
 
   &[data-nav-opened='true'] {
     opacity: 0.4;

@@ -345,8 +345,8 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
 const ProfileFrame = styled.div`
   position: relative;
   height: 100svh;
-  overflow: scroll;
-`
+  `
+// overflow: scroll;
 const ProfileTop = styled(motion.div)`
   position: absolute;
   top: 0;
@@ -371,8 +371,8 @@ const ProfileInfoOuterFrame = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100svh;
-  overflow: scroll;
-`
+  `
+// overflow: scroll;
 
 const DummyBox = styled.div`
   position: relative;

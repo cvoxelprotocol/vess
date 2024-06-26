@@ -163,6 +163,8 @@ const CredImageFrame = styled.div`
 `
 
 // background: var(--kai-color-sys-layer-default);
+// border-radius: var(--kai-size-sys-round-lg) var(--kai-size-sys-round-lg) 0 0;
+// border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
 const CredInfoFrame = styled.div`
   grid-row: 2 / 3;
   grid-column: 1 / 2;
@@ -174,9 +176,8 @@ const CredInfoFrame = styled.div`
   width: 100%;
   height: auto;
   padding: var(--kai-size-sys-space-lg) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
-  border-radius: var(--kai-size-sys-round-lg) var(--kai-size-sys-round-lg) 0 0;
-  border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
   border-bottom: none;
+  border: none;
   overflow: visible;
   z-index: var(--kai-z-index-sys-overlay-default);
 `

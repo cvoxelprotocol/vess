@@ -16,8 +16,8 @@ import {
   // TabPanel
 } from 'kai-kit'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useMemo, useRef } from 'react'
-import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning, PiArrowFatLinesLeft } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { VSUser, SetVisibleRequest } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
@@ -59,6 +59,13 @@ const people = [
 
 
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
+
+  const [isCreditVisible, setIsCreditVisible] = useState(false)
+
+  useEffect(() => {
+    console.log("isQRCodeVisible changed:", isCreditVisible);
+  }, [isCreditVisible]);
+
   const { did } = useVESSAuthUser()
   const router = useRouter()
   const { isInitialLoading, credential, holder, setVisible, isLoadingSetVisible } =
@@ -188,15 +195,20 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             height='auto'
             aspectRatio='1.618 / 1'
           >
-            <ImageContainer
-              src={vcImage}
-              width='100%'
-              height='fit-content'
-              objectFit='contain'
-              maxWidth='400px'
-              maxHeight='240px'
-              style={{ flex: '0 0 auto' }}
-            />
+            {isCreditVisible &&
+              <img src="/qr/vess-qr.png" width="250px" height="250px" />
+            }
+            {!isCreditVisible &&
+              <ImageContainer
+                src={vcImage}
+                width='100%'
+                height='fit-content'
+                objectFit='contain'
+                maxWidth='400px'
+                maxHeight='240px'
+                style={{ flex: '0 0 auto' }}
+              />}
+            {/* ImageContainer is the credit card details */}
             <FlexHorizontal gap='var(--kai-size-sys-space-sm)'>
               <Chip
                 variant='tonal'
@@ -232,6 +244,38 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 round='sm'
                 onPress={() => verify(credential?.plainCredential)}
               />
+              {isCreditVisible &&
+                <div>
+                  <IconButton
+                    size='xs'
+                    icon={<ImageContainer
+                      src={vcImage}
+                      width='100px'
+                      height="50px"
+                      maxWidth='100%'
+                      maxHeight='100%'
+                    />}
+                    color='neutral'
+                    variant='tonal'
+                    round='sm'
+                    onPress={() => setIsCreditVisible(false)}
+                  />
+                </div>
+              }
+              {!isCreditVisible &&
+                <div>
+                  <IconButton
+                    size='xs'
+                    icon={<img src='/qr/vess-qr.png' width="100%" height="100%" />}
+                    color='neutral'
+                    variant='tonal'
+                    round='sm'
+                    onPress={() => setIsCreditVisible(true)}
+                  // isDisabled={PiArrowFatLinesLeft}
+                  />
+
+                </div>
+              }
             </FlexHorizontal>
           </Skelton>
         </CredImageFrame>
@@ -257,6 +301,40 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               </Text>
               {isLoadingSetVisible && <Spinner size='sm' color='neutral' />}
             </>
+            <InfoItemFrame>
+              {/* <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)' style={{ paddingTop: '10px' }}>
+                発行者
+              </Text> */}
+              <FlexHorizontal
+                gap='var(--kai-size-sys-space-sm)'
+                style={{ paddingTop: 'var(--kai-size-sys-space-md)' }}
+              >
+                <ImageContainer
+                  src={issuer.icon}
+                  width='20px'
+                  height='20px'
+                  objectFit='contain'
+                  alt='Organization Icon'
+                />
+                {/* <Button
+                  variant='text'
+                  style={{ padding: '0' }}
+                  // color='var(--kai-color-sys-on-layer)'
+                  color='neutral'
+                  onPress={() => router.push(`/did/${credential?.issuerDid}`)}
+                  size='sm'
+                >
+                  {issuer.name}
+                </Button> */}
+                <Text
+                  typo='body-md'
+                  color='var(--kai-color-sys-on-layer)'
+                  isLoading={isInitialLoading}
+                >
+                  {issuer.name}
+                </Text>
+              </FlexHorizontal>
+            </InfoItemFrame>
           </FlexHorizontal>
           <Tabs
             defaultSelectedKey={'詳細'}
@@ -286,43 +364,18 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   </Text>
                   <Text
                     typo='body-lg'
-                    color='var(--kai-color-sys-on-layer)'
+                    // color='var(--kai-color-sys-on-layer)'
                     isLoading={isInitialLoading}
+                    style={{
+                      background: 'var(--kai-color-sys-layer-default)',
+                      borderRadius: 'var(--kai-size-sys-round-md)',
+                      padding: 'var(--kai-size-sys-space-md)  ',
+                    }}
                   >
                     {credential?.credentialItem?.description || '説明文はありません。'}
                   </Text>
                 </InfoItemFrame>
-                <InfoItemFrame>
-                  <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                    発行者
-                  </Text>
-                  <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
-                    <ImageContainer
-                      src={issuer.icon}
-                      width='20px'
-                      height='20px'
-                      objectFit='contain'
-                      alt='Organization Icon'
-                    />
-                    {/* <Button
-                  variant='text'
-                  style={{ padding: '0' }}
-                  // color='var(--kai-color-sys-on-layer)'
-                  color='neutral'
-                  onPress={() => router.push(`/did/${credential?.issuerDid}`)}
-                  size='sm'
-                >
-                  {issuer.name}
-                </Button> */}
-                    <Text
-                      typo='body-md'
-                      color='var(--kai-color-sys-on-layer)'
-                      isLoading={isInitialLoading}
-                    >
-                      {issuer.name}
-                    </Text>
-                  </FlexHorizontal>
-                </InfoItemFrame>
+
                 <InfoItemFrame>
                   <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                     所有者
@@ -334,9 +387,10 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                       height='20px'
                       objectFit='contain'
                       alt='Organization Icon'
+
                     />
                     <Button
-                      style={{ padding: '0' }}
+                      style={{ paddingLeft: 'var(--kai-size-sys-round-md)', paddingRight: 'var(--kai-size-sys-round-md)' }}
                       align='start'
                       variant='text'
                       // color='var(--kai-color-sys-on-layer)'
@@ -373,6 +427,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                         typo='body-lg'
                         color='var(--kai-color-sys-on-layer)'
                         isLoading={isInitialLoading}
+                        style={{
+                          background: 'var(--kai-color-sys-layer-default)',
+                          borderRadius: 'var(--kai-size-sys-round-md)',
+                          padding: 'var(--kai-size-sys-space-md)  ',
+                        }}
                       >
                         {formatDate(credential?.vc.credentialSubject.endDate)}
                       </Text>
@@ -386,6 +445,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                     typo='body-lg'
                     color='var(--kai-color-sys-on-layer)'
                     isLoading={isInitialLoading}
+                    style={{
+                      background: 'var(--kai-color-sys-layer-default)',
+                      borderRadius: 'var(--kai-size-sys-round-md)',
+                      padding: 'var(--kai-size-sys-space-md)',
+                    }}
                   >
                     {formatDate(credential?.vc.issuanceDate)}
                   </Text>
@@ -398,6 +462,11 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                     typo='body-lg'
                     color='var(--kai-color-sys-on-layer)'
                     isLoading={isInitialLoading}
+                    style={{
+                      background: 'var(--kai-color-sys-layer-default)',
+                      borderRadius: 'var(--kai-size-sys-round-md)',
+                      padding: 'var(--kai-size-sys-space-md)  ',
+                    }}
                   >
                     {formatDate(credential?.vc.expirationDate) || '無期限'}
                   </Text>
@@ -504,7 +573,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
             </TabPanel>
           </Tabs>
 
-        </CredInfoFrame>
+        </CredInfoFrame >
       </CredDetailFrame >
     </>
   )
@@ -530,10 +599,11 @@ const CredImageFrame = styled.div`
   justify-content: start;
   gap: var(--kai-size-sys-space-md);
   width: 100%;
-  padding: var(--kai-size-sys-space-xl) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
+  padding: var(--kai-size-sys-space-xl) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
 `
 
 // background: var(--kai-color-sys-layer-default);
+// border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
 const CredInfoFrame = styled.div`
   grid-row: 2 / 3;
   grid-column: 1 / 2;
@@ -545,8 +615,6 @@ const CredInfoFrame = styled.div`
   width: 100%;
   height: auto;
   padding: var(--kai-size-sys-space-lg) var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
-  border-radius: var(--kai-size-sys-round-lg) var(--kai-size-sys-round-lg) 0 0;
-  border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
   border-bottom: none;
   overflow: visible;
   z-index: var(--kai-z-index-sys-overlay-default);
@@ -580,14 +648,16 @@ const StickerListFrame = styled.div`
   place-items: center;
 `
 
+// background: var(--kai-color-sys-layer-farthest);
+// borderRadius: 'var(--kai-size-sys-round-lg) var(--kai-size-sys-round-lg) 0 0;'
+// border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
 const PlainCredFrame = styled.div`
   position: relative;
   width: 100%;
   height: auto;
   padding: var(--kai-size-sys-space-md);
-  background: var(--kai-color-sys-layer-farthest);
+  background: var(--kai-color-sys-layer-default);
   border-radius: var(--kai-size-sys-round-md);
-  border: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
 `
 const JsonFrame = styled.pre`
   width: 100%;
