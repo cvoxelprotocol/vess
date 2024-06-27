@@ -252,29 +252,35 @@ export const deleteHolderContent = async (contentId: string): Promise<Response> 
   }
 }
 
-export const getVESSUserByEmail = async (email?: string): Promise<VSUser> => {
+export const getVESSUserByEmail = async (email?: string): Promise<VSUser | null> => {
   if (!email) {
     throw new Error('email is undefined')
   }
   try {
     const res = await baseVessApi('GET', '/users/email', email)
-    const resjson = await res.json()
-    return resjson as VSUser
+    const resjson = (await res.json()) as VSUserResponse
+    return resjson.user
   } catch (error) {
     throw error
   }
 }
 
-export const getVESSUserByDid = async (did?: string): Promise<VSUser> => {
+export const getVESSUserByDid = async (did?: string): Promise<VSUser | null> => {
   if (!did) {
     throw new Error('did is undefined')
   }
   try {
     const res = await baseVessApi('GET', '/users/did', did)
-    const resjson = await res.json()
-    return resjson as VSUser
+    try {
+      const resjson = await res.json()
+      return resjson as VSUser
+    } catch (error) {
+      console.error(error)
+      return null
+    }
   } catch (error) {
-    throw error
+    console.error(error)
+    return null
   }
 }
 
@@ -297,8 +303,8 @@ export const getVESSUserById = async (userId?: string): Promise<VSUser | null> =
   }
   try {
     const res = await baseVessApi('GET', '/users/id', userId)
-    const resjson = await res.json()
-    return resjson as VSUser
+    const resjson = (await res.json()) as VSUserResponse
+    return resjson.user
   } catch (error) {
     throw error
   }
