@@ -56,6 +56,12 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
       }
     }, [frameRef, image])
 
+    const onTapSticker = async (sticker: StickerType) => {
+      setSelectedID(sticker.id)
+      if (!onSelectSticker) return
+      onSelectSticker(sticker.id)
+    }
+
     const currentStickers = useMemo(() => {
       return (
         profileAvatar?.canvasJson?.vcImages?.map((vci) => {
@@ -98,13 +104,7 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
               <CanvasStickerForDisplay
                 key={`${sticker.id}-${index}`}
                 {...sticker}
-                onSelect={() => {
-                  console.log({ sticker })
-                  setSelectedID(sticker.id)
-                  if (onSelectSticker) {
-                    onSelectSticker(sticker.id)
-                  }
-                }}
+                onSelect={() => onTapSticker(sticker)}
                 selectedId={selectedID}
                 isSelected={selectedID === sticker.id}
               />
@@ -122,12 +122,14 @@ const AvatarForDisplay = ({
   stageRef,
   profileAvatar,
   avatarImageUrl,
+  onSelectSticker,
 }: AvatarForDisplayProps & { stageRef: React.RefObject<any> }) => {
   return (
     <_AvatarForDisplay
       ref={stageRef}
       profileAvatar={profileAvatar}
       avatarImageUrl={avatarImageUrl}
+      onSelectSticker={onSelectSticker}
     />
   )
 }
