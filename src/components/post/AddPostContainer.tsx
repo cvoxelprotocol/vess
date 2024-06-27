@@ -390,7 +390,7 @@ export const AddPostContainer: FC = () => {
                   <PhotoUploadButton onSelect={onSelect} isUploading={status === 'uploading'} />
                 )}
                 <Form id='add-post' onSubmit={handleSubmit(onClickSubmit)}>
-                  <TextArea {...register('comment')} placeholder='コメントを入力' rows={3} />
+                  <TextArea {...register('comment')} placeholder='コメントを入力' rows={2} />
                 </Form>
                 {/* </FlexVertical> */}
               </PostFrame>
@@ -475,13 +475,13 @@ export const AddPostContainer: FC = () => {
 
 const AddPostFrame = styled.div`
   position: fixed;
-  height: 100vh;
+  height: 100svh;
   inset: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--kai-size-ref-96);
+
   background: var(--kai-color-sys-background);
   overflow-y: scroll;
 `
@@ -489,7 +489,7 @@ const ContentFrame = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100vw;
   height: 100svh;
   max-width: var(--kai-size-breakpoint-xs-max-width);
@@ -498,17 +498,18 @@ const ContentFrame = styled.div`
   overflow-y: scroll;
 
   &[data-media-md] {
-    padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
+    padding: var(--kai-size-sys-space-md) var(--kai-size-sys-space-md);
+    gap: var(--kai-size-sys-space-xl);
   }
 `
 
 const AvatarFrame = styled.div`
   display: flex;
+  flex: 0;
   flex-direction: column;
   gap: var(--kai-size-sys-space-md);
   justify-content: start;
   width: 100%;
-  height: 100%;
 
   &[data-media-md] {
     flex-direction: column-reverse;

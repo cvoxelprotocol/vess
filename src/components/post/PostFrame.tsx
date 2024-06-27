@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { FlexHorizontal, Text } from 'kai-kit'
 import React, { FC } from 'react'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { shortenStr } from '@/utils/objectUtil'
 
 type Props = {
   children: React.ReactNode
@@ -14,8 +15,14 @@ export const PostFrame: FC<Props> = ({ children, date, userIcon, userId, ...prop
   return (
     <ContentFrame {...props} className='light' data-pressable={props.onClick ? 'true' : undefined}>
       {children}
-      <FlexHorizontal width='100%' justifyContent='space-between' background='transparent'>
-        <FlexHorizontal gap='4px'>
+      <FlexHorizontal
+        width='100%'
+        justifyContent='space-between'
+        background='transparent'
+        flexWrap='nowrap'
+        gap='8px'
+      >
+        <FlexHorizontal gap='4px' flexWrap='nowrap'>
           <ImageContainer
             src={userIcon || '/default_profile.jpg'}
             width='20px'
@@ -24,11 +31,11 @@ export const PostFrame: FC<Props> = ({ children, date, userIcon, userId, ...prop
             alt='User Icon'
             borderRadius='4px'
           />
-          <Text typo='body-md' color='var(--kai-color-sys-neutral)'>
+          <Text typo='body-md' color='var(--kai-color-sys-neutral)' lineClamp={1}>
             {userId}
           </Text>
         </FlexHorizontal>
-        <Text typo='body-md' color='var(--kai-color-sys-neutral)'>
+        <Text typo='body-md' color='var(--kai-color-sys-neutral)' style={{ flexShrink: 0 }}>
           {date}
         </Text>
       </FlexHorizontal>
@@ -37,6 +44,7 @@ export const PostFrame: FC<Props> = ({ children, date, userIcon, userId, ...prop
 }
 
 const ContentFrame = styled.div`
+  flex-shrink: 0;
   width: 100%;
   display: flex;
   padding: 16px 16px 12px 16px;
