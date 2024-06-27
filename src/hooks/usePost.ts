@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useVESSLoading } from './useVESSLoading'
-import { AddPostRequest, Post } from '@/@types/user'
+import { AddPostRequest, PostWithUser } from '@/@types/user'
 import { addPost, deletePost, getPostById } from '@/lib/vessApi'
 
 export const usePost = (id?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
   const queryClient = useQueryClient()
 
-  const { data: post, isInitialLoading } = useQuery<Post | null>(
+  const { data: post, isInitialLoading } = useQuery<PostWithUser | null>(
     ['fetchPost', id],
     () => fetchPost(id),
     {

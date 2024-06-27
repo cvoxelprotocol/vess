@@ -143,6 +143,9 @@ dependencies:
   graphql:
     specifier: ^16.6.0
     version: 16.6.0
+  hammerjs:
+    specifier: ^2.0.8
+    version: 2.0.8
   iron-session:
     specifier: ^8.0.1
     version: 8.0.1
@@ -150,8 +153,8 @@ dependencies:
     specifier: ^2.6.4
     version: 2.6.4(@types/react@18.0.27)(react@18.2.0)
   kai-kit:
-    specifier: 0.1.6-beta.11
-    version: 0.1.6-beta.11(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.1.6-beta.12
+    version: 0.1.6-beta.12(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0)
   konva:
     specifier: ^9.3.6
     version: 9.3.6
@@ -256,6 +259,9 @@ devDependencies:
   '@types/gtag.js':
     specifier: ^0.0.12
     version: 0.0.12
+  '@types/hammerjs':
+    specifier: ^2.0.45
+    version: 2.0.45
   '@types/node':
     specifier: ^18.11.18
     version: 18.11.18
@@ -9253,6 +9259,10 @@ packages:
     resolution: {integrity: sha512-YQV9bUsemkzG81Ea295/nF/5GijnD2Af7QhEofh7xu+kvCN6RdodgNwwGWXB5GMI3NoyvQo0odNctoH/qLMIpg==}
     dev: true
 
+  /@types/hammerjs@2.0.45:
+    resolution: {integrity: sha512-qkcUlZmX6c4J8q45taBKTL3p+LbITgyx7qhlPYOdOHZB7B31K0mXbP5YA7i7SgDeEGuI9MnumiKPEMrxg8j3KQ==}
+    dev: true
+
   /@types/har-format@1.2.15:
     resolution: {integrity: sha512-RpQH4rXLuvTXKR0zqHq3go0RVXYv/YVqv4TnPH95VbwUxZdQlK1EtcMvQvMpDngHbt13Csh9Z4qT9AbkiQH5BA==}
     dev: false
@@ -14646,6 +14656,7 @@ packages:
 
   /glob@6.0.4:
     resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==}
+    deprecated: Glob versions prior to v9 are no longer supported
     requiresBuild: true
     dependencies:
       inflight: 1.0.6
@@ -14658,6 +14669,7 @@ packages:
 
   /glob@7.1.6:
     resolution: {integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -14882,6 +14894,11 @@ packages:
       unenv: 1.9.0
     transitivePeerDependencies:
       - uWebSockets.js
+    dev: false
+
+  /hammerjs@2.0.8:
+    resolution: {integrity: sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ==}
+    engines: {node: '>=0.8.0'}
     dev: false
 
   /har-schema@2.0.0:
@@ -16252,8 +16269,8 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
-  /kai-kit@0.1.6-beta.11(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-q17TG0fOT8sSpXFb4X4fJQ9o4vAfO377rPiZRWfkA0MrUpVBmbtiuQ8jeXlVTbiWrPYHDipQfz9BD0NlCQFRQg==}
+  /kai-kit@0.1.6-beta.12(@emotion/react@11.10.5)(@emotion/styled@11.10.5)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Wvwt2J6/IjRNd9Gtgw+Xlb0xN36xie6lOP/PO+HFcyDeNFHg7kEgJistXfc2SM2IH1u0DinR/WuU0EkwRuuCPA==}
     peerDependencies:
       '@emotion/react': ^11.11.1
       '@emotion/styled': ^11.11.0
@@ -19360,6 +19377,7 @@ packages:
 
   /rimraf@2.4.5:
     resolution: {integrity: sha512-J5xnxTyqaiw06JjMftq7L9ouA448dw/E7dKghkP9WpKNuwmARNNg+Gk8/u5ryb9N/Yo2+z3MCwuqFK/+qPOPfQ==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     requiresBuild: true
     dependencies:
@@ -19369,6 +19387,7 @@ packages:
 
   /rimraf@2.6.3:
     resolution: {integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     dependencies:
       glob: 7.2.3
@@ -19376,6 +19395,7 @@ packages:
 
   /rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     dependencies:
       glob: 7.2.3
@@ -19430,6 +19450,7 @@ packages:
 
   /rpc-websockets@7.11.0:
     resolution: {integrity: sha512-IkLYjayPv6Io8C/TdCL5gwgzd1hFz2vmBZrjMw/SPEXo51ETOhnzgS4Qy5GWi2JQN7HKHa66J3+2mv0fgNh/7w==}
+    deprecated: deprecate 7.11.0
     dependencies:
       eventemitter3: 4.0.7
       uuid: 8.3.2

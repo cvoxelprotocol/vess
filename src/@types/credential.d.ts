@@ -47,6 +47,7 @@ export type CredentialStruct = {
   credentialItem?: VSCredentialItem
   organization?: WorkspaceType
   user?: VSUser
+  hideFromPublic?: boolean
 }
 
 export type CredentialWithHolderUser = CredentialStruct & {
@@ -217,6 +218,19 @@ export type VSCredentialItemFromBuckup = {
   user?: VSUser
   sticker?: Sticker[]
   post?: Post[]
+  credentialsWithHolder?: CredentialWithHolder[]
+  holderContents?: HolderContent[]
+}
+
+export interface CredentialWithHolder extends VSCredential {
+  holder: VSUser | null
+}
+
+export type HolderContent = {
+  id: string
+  credentialItemId: string | null
+  type: string | null
+  content: string
 }
 
 export type Sticker = {
@@ -252,4 +266,9 @@ export interface ICreateHolderContentsRequest {
   itemId: string
   userId: string
   holderContentsData: any[]
+}
+
+export interface SetVisibleRequest {
+  credentialId: string
+  hideFromPublic: boolean
 }

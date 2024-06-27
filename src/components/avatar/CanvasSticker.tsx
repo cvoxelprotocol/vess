@@ -1,16 +1,13 @@
+import Hammer from 'hammerjs'
+import Konva from 'konva'
 import { KonvaEventObject } from 'konva/lib/Node'
-import { FC, memo, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Transformer, Layer, Image } from 'react-konva'
 import { StickerType } from '@/@types/avatar'
 import { useImage } from '@/hooks/useImage'
 import { useStickers } from '@/hooks/useStickers'
-import {
-  isTransformer,
-  useAvatarSizeAtom,
-  useIstransformerAtom,
-  useSelectedIDAtom,
-  useStickersAtom,
-} from '@/jotai/ui'
+import { useAvatarSizeAtom, useIstransformerAtom, useSelectedIDAtom } from '@/jotai/ui'
 
 export type StickerImageProps = {
   isSelected?: boolean
@@ -43,6 +40,23 @@ export const StickerImage: FC<StickerImageProps> = ({
   const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
   const [selectedID, setSelectedID] = useSelectedIDAtom()
 
+  // Avoid hydration error
+  const [isMobileClient, setIsMobileClient] = useState(false)
+  useEffect(() => {
+    setIsMobileClient(isMobile)
+  }, [])
+
+  const [imageAttrs, setImageAttrs] = useState<Konva.NodeConfig>({
+    x: position.x * avatarSize,
+    y: position.y * avatarSize,
+    width: width * avatarSize,
+    height: height * avatarSize,
+    scaleX: scale,
+    scaleY: scale,
+    rotation: rotation,
+    draggable: isEditable,
+  })
+
   useEffect(() => {
     if (isSelected && transformerRef.current) {
       // トランスフォーマーを選択した画像に適用
@@ -51,7 +65,68 @@ export const StickerImage: FC<StickerImageProps> = ({
     }
   }, [isSelected])
 
-  // TODO: Stage外にいったStickerを自動削除する処理
+  useEffect(() => {
+    const node = imageRef.current
+    if (!node) return
+
+    const hammertime = new Hammer(node as any)
+
+    hammertime.get('rotate').set({ enable: true })
+
+    let oldRotation = 0
+    let startScale = 1
+
+    hammertime.on('press', () => {
+      console.log('press')
+    })
+
+    hammertime.on('touchend', () => {
+      console.log('touchend')
+    })
+
+    hammertime.on('rotatestart', (ev) => {
+      oldRotation = ev.rotation
+      startScale = node.scaleX()
+      node.stopDrag()
+      setImageAttrs((prev) => ({
+        ...prev,
+        draggable: false,
+      }))
+    })
+
+    hammertime.on('rotate', (ev) => {
+      const delta = oldRotation - ev.rotation
+      setImageAttrs((prev) => ({
+        ...prev,
+        rotation: (prev.rotation ?? 0) - delta,
+        scaleX: startScale * ev.scale,
+        scaleY: startScale * ev.scale,
+      }))
+      oldRotation = ev.rotation
+    })
+
+    hammertime.on('rotateend rotatecancel', (ev) => {
+      setImageAttrs((prev) => ({
+        ...prev,
+        draggable: true,
+      }))
+      onUpdate?.({
+        position: {
+          x: node?.x() / avatarSize,
+          y: node?.y() / avatarSize,
+        },
+        width: node?.width() / avatarSize,
+        height: node?.height() / avatarSize,
+        rotation: node?.rotation(),
+        scale: startScale * ev.scale,
+      })
+    })
+
+    return () => {
+      hammertime.destroy()
+    }
+  }, [])
+
   const onTransform = (e: KonvaEventObject<Event>) => {
     // 更新されたプロパティ (位置、サイズ、回転) を保存または使用する
     const node = imageRef.current
@@ -87,7 +162,6 @@ export const StickerImage: FC<StickerImageProps> = ({
 
   const onDragEnd = (e: KonvaEventObject<Event>) => {
     const node = imageRef.current
-    const { x, y } = node.position()
     if (
       node.getClientRect().x < -node.getClientRect().width ||
       node.getClientRect().y < -node.getClientRect().height ||
@@ -103,27 +177,15 @@ export const StickerImage: FC<StickerImageProps> = ({
           x: node?.x() / avatarSize,
           y: node?.y() / avatarSize,
         },
+        width: node?.width() / avatarSize,
+        height: node?.height() / avatarSize,
+        rotation: node?.rotation(),
       })
     }
   }
 
   if (!isEditable) {
-    return (
-      <Image
-        ref={imageRef}
-        id={id}
-        image={image}
-        alt='ステッカー画像'
-        width={width * avatarSize}
-        height={height * avatarSize}
-        scaleX={scale}
-        scaleY={scale}
-        rotation={rotation}
-        x={position.x * avatarSize}
-        y={position.y * avatarSize}
-        draggable={isEditable}
-      />
-    )
+    return <Image ref={imageRef} id={id} image={image} alt='ステッカー画像' {...imageAttrs} />
   }
   return (
     <>
@@ -132,21 +194,14 @@ export const StickerImage: FC<StickerImageProps> = ({
         id={id}
         image={image}
         alt='aaa'
-        width={width * avatarSize}
-        height={height * avatarSize}
-        scaleX={scale}
-        scaleY={scale}
-        rotation={rotation}
-        x={position.x * avatarSize}
-        y={position.y * avatarSize}
-        draggable={true}
+        {...imageAttrs}
         onClick={onSelect}
         onTap={onSelect}
         onTouchEnd={onSelect}
         onDragEnd={onDragEnd}
         onTransformEnd={onTransform}
       />
-      {isSelected && isTransformer && (
+      {isSelected && isTransformer && !isMobileClient && (
         <Transformer
           ref={transformerRef}
           rotateEnabled
@@ -165,7 +220,10 @@ export const StickerImage: FC<StickerImageProps> = ({
   )
 }
 
-const StickerImages: FC = () => {
+type Props = {
+  isEditable?: boolean
+}
+const StickerImages: FC<Props> = ({ isEditable = true }) => {
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const { stickers, setStickers } = useStickers()
 
@@ -199,6 +257,7 @@ const StickerImages: FC = () => {
           onRemove={() => removeSticker(index)}
           selectedId={selectedID}
           isSelected={selectedID === sticker.id}
+          isEditable={isEditable}
         />
       ))}
     </Layer>

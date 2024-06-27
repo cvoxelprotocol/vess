@@ -1,4 +1,4 @@
-import { VSCredential, VSUser } from './credential'
+import { VSCredential, VSCredentialItem, VSUser } from './credential'
 
 export interface CreateUserInfo {
   email?: string
@@ -56,7 +56,11 @@ export type Avatar = {
 export type CanvasCredential = {
   canvasId: string
   credentialId: string
-  credential: VSCredential
+  credential: VSCredentialWithItem
+}
+
+export type VSCredentialWithItem = VSCredential & {
+  credentialItem?: VSCredentialItem
 }
 
 export type CanvasJson = {
@@ -81,6 +85,12 @@ export type Post = {
   canvas: Avatar | null
   createdAt: Date
   updatedAt: Date
+}
+
+export type PostWithUser = Post & { user?: VSUser }
+
+export type PostFeed = VSCredentialItem & {
+  post: PostWithUser[]
 }
 
 export type SocialLink = {
