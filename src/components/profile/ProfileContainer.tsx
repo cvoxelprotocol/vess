@@ -91,27 +91,27 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
       : undefined
   }, [vsUser?.socialLink])
 
-  const downloadAvatar = async () => {
-    if (!avatarImage || !avatarImageUrl) return
-    const ext = avatarImageUrl.split('.').pop()
-    const canvas = document.createElement('canvas')
-    canvas.width = avatarImage.naturalWidth
-    canvas.height = avatarImage.naturalHeight
-    const context = canvas.getContext('2d')
-    if (context) {
-      context.drawImage(avatarImage, 0, 0)
-      const a = document.createElement('a')
-      canvas.toBlob((blob: Blob | null) => {
-        if (blob) {
-          a.href = URL.createObjectURL(blob)
-          a.download = `vess-avatar.${ext}`
-          document.body.appendChild(a)
-          a.click()
-          document.body.removeChild(a)
-        }
-      })
-    }
-  }
+  // const downloadAvatar = async () => {
+  //   if (!avatarImage || !avatarImageUrl) return
+  //   const ext = avatarImageUrl.split('.').pop()
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = avatarImage.naturalWidth
+  //   canvas.height = avatarImage.naturalHeight
+  //   const context = canvas.getContext('2d')
+  //   if (context) {
+  //     context.drawImage(avatarImage, 0, 0)
+  //     const a = document.createElement('a')
+  //     canvas.toBlob((blob: Blob | null) => {
+  //       if (blob) {
+  //         a.href = URL.createObjectURL(blob)
+  //         a.download = `vess-avatar.${ext}`
+  //         document.body.appendChild(a)
+  //         a.click()
+  //         document.body.removeChild(a)
+  //       }
+  //     })
+  //   }
+  // }
 
   const jumpToVcDetail = (id: string) => {
     router.push(`/creds/detail/${removeStickerIdSurfix(id)}`)
