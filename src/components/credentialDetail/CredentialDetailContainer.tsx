@@ -226,18 +226,21 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               {credential?.credentialItem?.title || ''}
             </Text>
           </div>
-          <FlexHorizontal width='100%' gap={`var(--kai-size-sys-space-xs)`}>
-            <>
-              <Switch
-                isSelected={!credential?.hideFromPublic}
-                onChange={() => switchVisible()}
-              ></Switch>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer)'>
-                公開する
-              </Text>
-              {isLoadingSetVisible && <Spinner size='sm' color='neutral' />}
-            </>
-          </FlexHorizontal>
+          {isMine && (
+            <FlexHorizontal width='100%' gap={`var(--kai-size-sys-space-xs)`}>
+              <>
+                <Switch
+                  isSelected={!credential?.hideFromPublic}
+                  onChange={() => switchVisible()}
+                ></Switch>
+                <Text typo='label-lg' color='var(--kai-color-sys-on-layer)'>
+                  公開する
+                </Text>
+                {isLoadingSetVisible && <Spinner size='sm' color='neutral' />}
+              </>
+            </FlexHorizontal>
+          )}
+
           <InfoItemsFrame ref={scrollRef}>
             {credential?.vc.credentialSubject.sticker &&
               credential?.vc.credentialSubject.sticker.length > 0 && (
