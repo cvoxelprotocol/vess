@@ -300,20 +300,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                             credId={credential.id}
                             width={'100%'}
                           />
-                          <CredItem
-                            key={`${credential.id}-${index}`}
-                            image={credential.image}
-                            name={credential.title}
-                            credId={credential.id}
-                            width={'100%'}
-                          />
-                          <CredItem
-                            key={`${credential.id}-${index}`}
-                            image={credential.image}
-                            name={credential.title}
-                            credId={credential.id}
-                            width={'100%'}
-                          />
                         </>
                       ))}
                     </>
