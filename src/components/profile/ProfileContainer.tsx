@@ -244,7 +244,8 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
             <FlexVertical
               gap='var(--kai-size-sys-space-lg)'
               width='100%'
-              // style={{ overflowY: 'scroll' }}
+              flexWrap='nowrap'
+              style={{ overflowY: 'scroll' }}
             >
               {hasCredential && (
                 <FlexVertical
@@ -291,13 +292,29 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   {formatedCredentials && formatedCredentials.length > 0 ? (
                     <>
                       {formatedCredentials.map((credential, index) => (
-                        <CredItem
-                          key={`${credential.id}-${index}`}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                          width={'100%'}
-                        />
+                        <>
+                          <CredItem
+                            key={`${credential.id}-${index}`}
+                            image={credential.image}
+                            name={credential.title}
+                            credId={credential.id}
+                            width={'100%'}
+                          />
+                          <CredItem
+                            key={`${credential.id}-${index}`}
+                            image={credential.image}
+                            name={credential.title}
+                            credId={credential.id}
+                            width={'100%'}
+                          />
+                          <CredItem
+                            key={`${credential.id}-${index}`}
+                            image={credential.image}
+                            name={credential.title}
+                            credId={credential.id}
+                            width={'100%'}
+                          />
+                        </>
                       ))}
                     </>
                   ) : (
