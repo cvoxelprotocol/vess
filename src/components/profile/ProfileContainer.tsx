@@ -46,7 +46,7 @@ type ProfileContainerProps = {
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { did: myDid } = useVESSAuthUser()
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
-  const { avatars } = useAvatar(did)
+  const { profileAvatar } = useAvatar(did)
   const { openModal } = useModal()
   const { ccProfile } = useCcProfile(did)
   const { ensProfile } = useENS(getAddressFromPkh(did) as `0x${string}`)
@@ -66,10 +66,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const borderRadius = useTransform(sProgressY, [0, 1], [24, 0])
   const opacity = useTransform(sProgressY, [0, 1], [0.4, 1])
   const scale = useTransform(sProgressY, [0, 1], [0.95, 1])
-
-  const profileAvatar = useMemo(() => {
-    return avatars?.find((avatar) => avatar.isProfilePhoto)
-  }, [avatars])
 
   const avatarImageUrl = useMemo(() => {
     return vsUser?.avatar || profileAvatar?.avatarUrl || '/default_profile.jpg'
@@ -248,7 +244,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
             <FlexVertical
               gap='var(--kai-size-sys-space-lg)'
               width='100%'
-              style={{ overflowY: 'scroll' }}
+              // style={{ overflowY: 'scroll' }}
             >
               {hasCredential && (
                 <FlexVertical
