@@ -89,7 +89,7 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
     return (
       <DroppableFrame ref={frameRef}>
         <Stage width={postImageSize.w} height={postImageSize.h} ref={stageRef}>
-          <Layer>
+          <Layer listening={false}>
             <Image
               id='sourcePhotoUrl'
               image={image?.image}
@@ -99,7 +99,7 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
               draggable={false}
             />
           </Layer>
-          <Layer>
+          <Layer listening={false}>
             {stickers.map((sticker, index) => (
               <CanvasStickerForDisplay
                 key={`${sticker.id}-${index}`}

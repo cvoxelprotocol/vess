@@ -207,6 +207,12 @@ const HeaderFrame = styled.div`
   z-index: var(--kai-z-index-sys-fixed-default);
   align-self: stretch;
   overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 
   &[data-media-md] {
     width: var(--kai-size-breakpoint-xs-max-width);

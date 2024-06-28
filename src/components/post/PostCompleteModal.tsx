@@ -48,6 +48,7 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
       overlayColor={'#000000F0'}
       onClose={onClose}
       {...props}
+      style={{ alignItems: 'flex-start', overflowY: 'scroll' }}
     >
       <ContentFrame {...breakpointProps}>
         <FlexVertical
@@ -87,26 +88,26 @@ export const PostCompleteModal: FC<Props> = ({ post, credId, ...props }) => {
                   height: 'auto',
                   borderRadius: 'var(--kai-size-sys-round-sm)',
                 }}
-                background={'var(--kai-color-sys-layer-farther)'}
+                background={'var(--kai-color-sys-layer-default)'}
                 alignItems='center'
               >
-                <Text as='p' typo='label-md' color={'var(--kai-color-sys-on-layer-minor)'}>
+                <Text as='p' typo='label-md' color={'var(--kai-color-sys-on-layer)'}>
                   画像を長押しで保存できます。
                 </Text>
               </FlexVertical>
             </FlexVertical>
             <IdPlate iconURL={'/brand/x_filled.png'} id={'Xでシェアする'} onPress={() => Tweet()} />
-            <Button
-              color='neutral'
-              variant='tonal'
-              width='100%'
-              onPress={() => {
-                onClose()
-              }}
-            >
-              閉じる
-            </Button>
           </InnerFrame>
+          <Button
+            color='neutral'
+            variant='tonal'
+            width='100%'
+            onPress={() => {
+              onClose()
+            }}
+          >
+            閉じる
+          </Button>
         </FlexVertical>
       </ContentFrame>
     </ModalOverlay>
@@ -117,13 +118,14 @@ const ContentFrame = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  width: 100vw;
-  height: 100svh;
+  justify-content: flex-start;
+  width: 100%;
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);
-  z-index: -1;
+  padding-top: var(--kai-size-sys-space-2xl);
+  overflow-y: scroll;
+  z-index: 10;
 
   &[data-media-md] {
     padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
@@ -132,8 +134,6 @@ const ContentFrame = styled.div`
 
 const InnerFrame = styled.div`
   width: 100%;
-  height: auto;
-  margin-top: 16px;
   padding: 8px;
   gap: 16px;
   border-radius: var(--kai-size-sys-round-lg);

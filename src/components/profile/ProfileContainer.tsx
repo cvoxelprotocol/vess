@@ -202,6 +202,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   justifyContent='start'
                   width='100%'
                   gap='var(--kai-size-sys-space-xs)'
+                  flexWrap='nowrap'
                 >
                   <Text
                     typo='headline-sm'
@@ -224,12 +225,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   {vsUser?.description}
                 </Text>
               </BasicProfileFrame>
-              <FlexHorizontal
-                gap='var(--kai-size-sys-space-xs)'
-                width='100%'
-                flexWrap='no-wrap'
-                style={{ overflow: 'scroll', paddingLeft: 'var(--kai-size-sys-space-md)' }}
-              >
+              <ScrollableFlexHorizontal>
                 <IdPlate
                   iconURL={'/brand/vess.png'}
                   id={vsUser?.vessId ? `@${vsUser?.vessId}` : getAddressFromPkh(did)}
@@ -247,13 +243,43 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                 {ccProfile && (
                   <IdPlate iconURL={'/brand/cyberconnect.png'} id={ccProfile?.displayName} />
                 )}
-              </FlexHorizontal>
+              </ScrollableFlexHorizontal>
             </FlexVertical>
-            {hasCredential && (
+            <FlexVertical
+              gap='var(--kai-size-sys-space-lg)'
+              width='100%'
+              style={{ overflowY: 'scroll' }}
+            >
+              {hasCredential && (
+                <FlexVertical
+                  gap='var(--kai-size-sys-space-sm)'
+                  width='100%'
+                  style={{ overflowY: 'visible' }}
+                >
+                  <Text
+                    typo='title-md'
+                    color='var(--kai-color-sys-on-layer)'
+                    style={{
+                      padding: '0 var(--kai-size-sys-space-md)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    イベント
+                  </Text>
+                  <BannerList>
+                    <Banner
+                      imgUrl='/banner/pizzaDAO2024.jpg'
+                      onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
+                    />
+                  </BannerList>
+                </FlexVertical>
+              )}
               <FlexVertical
                 gap='var(--kai-size-sys-space-sm)'
                 width='100%'
-                style={{ overflowY: 'visible' }}
+                padding='0 0 var(--kai-size-sys-space-lg) 0'
+                flexWrap='nowrap'
+                style={{ flexGrow: 1, overflowY: 'visible' }}
               >
                 <Text
                   typo='title-md'
@@ -263,51 +289,28 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                     flexShrink: 0,
                   }}
                 >
-                  イベント
+                  最新の証明
                 </Text>
-                <BannerList>
-                  <Banner
-                    imgUrl='/banner/pizzaDAO2024.jpg'
-                    onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
-                  />
-                </BannerList>
+                <CredList>
+                  {formatedCredentials && formatedCredentials.length > 0 ? (
+                    <>
+                      {formatedCredentials.map((credential, index) => (
+                        <CredItem
+                          key={`${credential.id}-${index}`}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                          width={'100%'}
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    <Text typo='label-lg' color='var(--kai-color-sys-neutral)'>
+                      最新の証明はありません
+                    </Text>
+                  )}
+                </CredList>
               </FlexVertical>
-            )}
-            <FlexVertical
-              gap='var(--kai-size-sys-space-sm)'
-              width='100%'
-              flexWrap='nowrap'
-              style={{ flexGrow: 1, overflowY: 'hidden' }}
-            >
-              <Text
-                typo='title-md'
-                color='var(--kai-color-sys-on-layer)'
-                style={{
-                  padding: '0 var(--kai-size-sys-space-md)',
-                  flexShrink: 0,
-                }}
-              >
-                最新の証明
-              </Text>
-              <CredList>
-                {formatedCredentials && formatedCredentials.length > 0 ? (
-                  <>
-                    {formatedCredentials.map((credential, index) => (
-                      <CredItem
-                        key={`${credential.id}-${index}`}
-                        image={credential.image}
-                        name={credential.title}
-                        credId={credential.id}
-                        width={'100%'}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <Text typo='label-lg' color='var(--kai-color-sys-neutral)'>
-                    最新の証明はありません
-                  </Text>
-                )}
-              </CredList>
             </FlexVertical>
           </ProfileInfoFrame>
         </ProfileInfoOuterFrame>
@@ -368,6 +371,11 @@ const ProfileInfoOuterFrame = styled.div`
   width: 100%;
   height: 100svh;
   overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 `
 
 const DummyBox = styled.div`
@@ -392,6 +400,7 @@ const ProfileInfoFrame = styled.div`
   background: var(--kai-color-sys-layer-default);
   border-top: var(--kai-size-ref-1) solid var(--kai-color-sys-neutral-outline);
   z-index: 10;
+  overflow: hidden;
 `
 const ScrollIndicator = styled.div`
   position: absolute;
@@ -422,7 +431,6 @@ const CredList = styled.div`
   column-gap: var(--kai-size-sys-space-sm);
   width: 100%;
   padding: 0 var(--kai-size-sys-space-md);
-  overflow-y: scroll;
 `
 
 const BannerList = styled.div`
@@ -433,4 +441,18 @@ const BannerList = styled.div`
   padding: 0 var(--kai-size-sys-space-md);
   overflow-x: scroll;
   overflow-y: visible;
+`
+
+const ScrollableFlexHorizontal = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow: scroll;
+  gap: var(--kai-size-sys-space-xs);
+  padding-left: var(--kai-size-sys-space-md);
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 `

@@ -85,6 +85,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
       overlayColor={'#000000F0'}
       onClose={onClose}
       {...props}
+      style={{ alignItems: 'flex-start', overflowY: 'scroll' }}
     >
       <ContentFrame {...breakpointProps}>
         <FlexVertical
@@ -175,51 +176,17 @@ const ContentFrame = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
   width: 100vw;
-  height: 100svh;
   overflow-y: scroll;
   max-width: var(--kai-size-breakpoint-xs-max-width);
   gap: var(--kai-size-sys-space-md);
   padding: var(--kai-size-sys-space-md);
+  padding-top: var(--kai-size-sys-space-2xl);
   z-index: 10;
 
   &[data-media-md] {
     padding: var(--kai-size-sys-space-2xl) var(--kai-size-sys-space-md);
-  }
-`
-const InnerFrame = styled.div`
-  position: relative;
-  width: 100%;
-  height: auto;
-  padding: 8px;
-  gap: 16px;
-  border-radius: var(--kai-size-sys-round-lg);
-  opacity: 0px;
-  background: var(--kai-color-sys-layer-default);
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-`
-
-const CredButton = styled(RACButton)`
-  outline: none;
-  border: none;
-  display: flex;
-  gap: var(--kai-size-sys-space-sm);
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  background: var(--kai-color-sys-layer-farthest);
-  border-radius: var(--kai-size-sys-round-md);
-  padding: var(--kai-size-sys-space-sm) var(--kai-size-sys-space-md);
-
-  &[data-focused] {
-    outline: none;
-  }
-
-  &[data-focus-visible] {
-    outline: 2px solid var(--kai-color-sys-dominant);
-    outline-offset: 2px;
   }
 `
