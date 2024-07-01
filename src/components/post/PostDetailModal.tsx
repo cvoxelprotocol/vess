@@ -13,7 +13,6 @@ import type { ModalOverlayProps } from 'kai-kit'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { FC, useMemo, useRef } from 'react'
-import { Button as RACButton } from 'react-aria-components'
 import { PiTrashBold } from 'react-icons/pi'
 import { getAddressFromPkh } from 'vess-kit-web'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -23,7 +22,7 @@ import { PostWithUser } from '@/@types/user'
 import { usePost } from '@/hooks/usePost'
 import { removeStickerIdSurfix } from '@/hooks/useStickers'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
-import { useSelectedIDAtom, useSelectedPostAtom } from '@/jotai/ui'
+import { useSelectedIDAtom, useSelectedPostAtom, useStickersAtom } from '@/jotai/ui'
 import { formatDate } from '@/utils/date'
 import { removeUndefinedFromArray } from '@/utils/objectUtil'
 
@@ -44,6 +43,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const { deleteItem, post: detailedPost, isInitialLoading } = usePost(post?.id)
   const router = useRouter()
   const stageRef = useRef<any>()
+  const [stickers, setStickers] = useStickersAtom()
 
   const incluedCredItems = useMemo(() => {
     if (
@@ -75,6 +75,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const onClose = () => {
     setPost(undefined)
     setSelectedID(undefined)
+    setStickers([])
     closeModal('PostDetailModal')
   }
 
