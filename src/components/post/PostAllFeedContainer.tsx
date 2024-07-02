@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FlexVertical, IconButton, Skelton, Text, useBreakpoint, useModal } from 'kai-kit'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { Button as RACButton } from 'react-aria-components'
 import { PiCameraPlus, PiFilmStrip } from 'react-icons/pi'
 import EmptyView from '../app/EmptyView'
@@ -15,13 +15,15 @@ import { PostFrame } from './PostFrame'
 import { Post } from '@/@types/user'
 import { usePostFeed } from '@/hooks/usePostFeed'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { useSelectedPostAtom, useSelectedPostFeedAtom } from '@/jotai/ui'
 import { formatDate } from '@/utils/date'
 import { getAddressFromPkh } from '@/utils/did'
 
 export const PostAllFeedContainer: FC = () => {
-  const { did, connectionStatus } = useVESSAuthUser()
+  const { did } = useVESSAuthUser()
   const { postFeed, isInitialLoading } = usePostFeed(did)
+  const { formatedCredentials } = useVerifiableCredentials(did)
   const { setIsDefaultOpenOnDesktop, setIsFullContent, openNavigation } = useNCLayoutContext()
   const { matches, breakpointProps } = useBreakpoint()
   const { openModal, closeModal } = useModal()
@@ -60,6 +62,11 @@ export const PostAllFeedContainer: FC = () => {
   const uniqueCredItems = useMemo(() => {
     return postFeed?.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
   }, [postFeed])
+
+  const jumpToCredential = (credItemId: string) => {
+    const cred = formatedCredentials.find((c) => c.credId === credItemId)
+    if (cred) router.push(`/creds/detail/${cred.id}`)
+  }
 
   return (
     <>
@@ -110,6 +117,7 @@ export const PostAllFeedContainer: FC = () => {
           >
             {selectedPostFeed && (
               <CredListItem
+                onClick={() => jumpToCredential(selectedPostFeed.id)}
                 key={selectedPostFeed.id}
                 title={selectedPostFeed.title}
                 icon={selectedPostFeed.image || selectedPostFeed.icon || ''}
