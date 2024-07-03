@@ -19,6 +19,7 @@ import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
+import { StickerImageItemList } from '../sticker/StickerImageItemList'
 import { IdPlate } from './IdPlate'
 import { SocialLink } from '@/@types/user'
 import { PIZZA_PARTY_CRED_ID } from '@/constants/campaign'
@@ -29,6 +30,7 @@ import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
 import { useShareLink } from '@/hooks/useShareLink'
 import { removeStickerIdSurfix } from '@/hooks/useStickers'
+import { useUserCredItem } from '@/hooks/useUserCredItem'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
@@ -44,7 +46,8 @@ type ProfileContainerProps = {
 }
 
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
-  const { did: myDid } = useVESSAuthUser()
+  const { did: myDid, id } = useVESSAuthUser()
+  const { userCredentialItems } = useUserCredItem(id)
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar } = useAvatar(did)
   const { openModal } = useModal()
@@ -247,6 +250,23 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               flexWrap='nowrap'
               style={{ overflowY: 'scroll' }}
             >
+              <FlexVertical
+                gap='var(--kai-size-sys-space-sm)'
+                width='100%'
+                style={{ overflowY: 'visible' }}
+              >
+                <Text
+                  typo='title-md'
+                  color='var(--kai-color-sys-on-layer)'
+                  style={{
+                    padding: '0 var(--kai-size-sys-space-md)',
+                    flexShrink: 0,
+                  }}
+                >
+                  Myステッカー
+                </Text>
+                <StickerImageItemList items={userCredentialItems} isMe={isEditable} />
+              </FlexVertical>
               {hasCredential && (
                 <FlexVertical
                   gap='var(--kai-size-sys-space-sm)'
