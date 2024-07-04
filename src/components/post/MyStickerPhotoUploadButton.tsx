@@ -48,7 +48,7 @@ const PhotoFrame = styled.div`
   gap: var(--kai-size-sys-space-sm);
   justify-content: center;
   align-items: center;
-  background: var(--kai-color-sys-layer-nearer);
+  background: transparent;
   aspect-ratio: 1;
   position: relative;
   width: 100%;
@@ -77,7 +77,7 @@ const PhotoFrame = styled.div`
 
 const StyledButton = styled(Button)`
   border: none;
-  background: var(--kai-color-sys-layer-nearer);
+  background: transparent;
   display: flex;
   flex-direction: column;
   width: 120px;

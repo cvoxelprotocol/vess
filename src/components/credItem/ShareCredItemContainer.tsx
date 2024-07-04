@@ -64,6 +64,7 @@ export const ShareCredItemContainer: FC<ShareCredentialProps> = ({ id }) => {
                     width='var(--kai-size-ref-80)'
                     objectFit='contain'
                     height='auto'
+                    style={{ background: 'transparent' }}
                   />
                 ))}
               </FlexHorizontal>

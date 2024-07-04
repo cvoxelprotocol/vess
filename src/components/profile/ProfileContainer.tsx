@@ -240,7 +240,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               flexWrap='nowrap'
               style={{ overflowY: 'scroll' }}
             >
-              {/* {shouldShowMySticker && (
+              {shouldShowMySticker && (
                 <FlexVertical
                   gap='var(--kai-size-sys-space-sm)'
                   width='100%'
@@ -258,7 +258,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   </Text>
                   <StickerImageItemList items={userCredentialItems} isMe={isEditable} />
                 </FlexVertical>
-              )} */}
+              )}
 
               {hasCredential && (
                 <FlexVertical

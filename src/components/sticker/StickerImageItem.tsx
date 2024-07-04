@@ -10,7 +10,7 @@ export const StickerImageItem: FC<Props> = ({ image, handleClick }) => {
     <ImageContainer
       src={image}
       width='auto'
-      height='100%'
+      height='56px'
       objectFit='contain'
       style={{ minWidth: '56px' }}
       onClick={() => {

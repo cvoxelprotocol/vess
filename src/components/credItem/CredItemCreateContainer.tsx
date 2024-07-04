@@ -16,8 +16,10 @@ import { MyStickerPhotoUploadButton } from '../post/MyStickerPhotoUploadButton'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { IIssueCredentialItemByUserRequest, VSCredentialItemFromBuckup } from '@/@types/credential'
 import { useFileUpload } from '@/hooks/useFileUpload'
+import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
 import { useUserCredItem } from '@/hooks/useUserCredItem'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
+import { getCredentialItem } from '@/lib/vessApi'
 import { checkAndConvertImageResolution } from '@/utils/hexImage'
 import { isGoodResponse } from '@/utils/http'
 import { compressImage } from '@/utils/image'
@@ -36,6 +38,7 @@ export const CredItemCreateContainer: FC = () => {
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const [uploadError, setUploadError] = useState<any>()
   const router = useRouter()
+  const { issue } = useMyVerifiableCredential()
 
   const {
     handleSubmit,
@@ -81,7 +84,17 @@ export const CredItemCreateContainer: FC = () => {
         if (resPost.id) {
           setIcon(undefined)
           setUploadError(undefined)
-          router.push(`/creds/items/share/${resPost.id}`)
+          const credItem = await getCredentialItem(resPost.id)
+          if (credItem) {
+            const isSuccess = await issue(credItem)
+            if (isSuccess) {
+              router.push(`/creds/items/share/${resPost.id}`)
+            } else {
+              setUploadError("something's wrong! please try again!")
+            }
+          } else {
+            setUploadError("something's wrong! please try again!")
+          }
         } else {
           setUploadError("something's wrong! please try again!")
         }

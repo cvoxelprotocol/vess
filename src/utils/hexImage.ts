@@ -29,18 +29,22 @@ export const checkAndConvertImageResolution = async (file: File): Promise<File> 
             // Resize canvas to the target dimensions
             canvas.width = targetWidth
             canvas.height = targetHeight
+
+            ctx.fillStyle = 'rgba(0,0,0,0)' // Set the fill style to transparent
+            ctx.fillRect(0, 0, targetWidth, targetHeight) // Fill the canvas with a transparent color
+
             ctx.drawImage(img, 0, 0, targetWidth, targetHeight)
             canvas.toBlob((blob) => {
               if (blob) {
-                const newFile = new File([blob], `${file.name}.jpeg`, {
-                  type: 'image/jpeg',
+                const newFile = new File([blob], `${file.name}.png`, {
+                  type: 'image/png',
                   lastModified: Date.now(),
                 })
                 resolve(newFile)
               } else {
                 reject(new Error('Failed to create blob from canvas'))
               }
-            }, 'image/jpeg')
+            }, 'image/png')
           } else {
             reject(new Error('Failed to get canvas context'))
           }
