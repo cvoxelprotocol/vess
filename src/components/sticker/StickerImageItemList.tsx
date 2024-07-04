@@ -35,20 +35,22 @@ export const StickerImageItemList: FC<Props> = ({ items, isMe, isLoading }) => {
             />
           )
         })}
-      <IconButton
-        icon={<PiPlus size={18} />}
-        color='dominant'
-        variant='tonal'
-        onPress={() => router.push('/creds/items/create')}
-        style={{
-          padding: '11px',
-          width: '40px',
-          height: '40px',
-          borderRadius: '12px',
-          border: '1px solid #CD8DF2',
-          background: '#EED3FF',
-        }}
-      />
+      {isMe && (
+        <IconButton
+          icon={<PiPlus size={18} />}
+          color='dominant'
+          variant='tonal'
+          onPress={() => router.push('/creds/items/create')}
+          style={{
+            padding: '11px',
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            border: '1px solid #CD8DF2',
+            background: '#EED3FF',
+          }}
+        />
+      )}
     </List>
   )
 }
@@ -62,4 +64,5 @@ const List = styled.div`
   padding: 0 var(--kai-size-sys-space-md);
   overflow-x: scroll;
   overflow-y: visible;
+  scrollbar-width: none;
 `

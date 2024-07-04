@@ -126,6 +126,11 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                   >
                     受け取りが完了しました！
                   </Text>
+                  {credItem?.sticker && credItem?.sticker.length > 0 && (
+                    <Button width='100%' onPress={() => router.push(`/post/add`)}>
+                      ステッカーを使ってみる
+                    </Button>
+                  )}
                 </>
               )}
             </>
@@ -178,7 +183,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                 ) : (
                   <>
                     <Button
-                      variant='filled'
+                      variant='text'
                       width='100%'
                       onPress={() => {
                         if (vessId) {

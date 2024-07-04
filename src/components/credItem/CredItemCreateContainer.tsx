@@ -81,6 +81,9 @@ export const CredItemCreateContainer: FC = () => {
         if (resPost.id) {
           setIcon(undefined)
           setUploadError(undefined)
+          router.push(`/creds/items/share/${resPost.id}`)
+        } else {
+          setUploadError("something's wrong! please try again!")
         }
       } else {
         setUploadError("something's wrong! please try again!")

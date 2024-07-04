@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import copy from 'copy-to-clipboard'
-import { Button, FlexHorizontal, Skelton, Text } from 'kai-kit'
+import { Button, FlexHorizontal, Skelton, Text, useSnackbar } from 'kai-kit'
 import React, { FC, useMemo } from 'react'
 import { QRCode } from '../sticker/QRCode'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
@@ -13,6 +13,11 @@ export const ShareCredItemContainer: FC<ShareCredentialProps> = ({ id }) => {
   const { id: userId } = useVESSAuthUser()
   const { isInitialLoading, userCredentialItems } = useUserCredItem(userId)
 
+  const { openSnackbar } = useSnackbar({
+    id: 'share-url-copied',
+    text: '共有用URLをコピーしました。',
+  })
+
   const item = useMemo(() => {
     return userCredentialItems?.find((item) => item.id === id)
   }, [userCredentialItems, id])
@@ -23,12 +28,12 @@ export const ShareCredItemContainer: FC<ShareCredentialProps> = ({ id }) => {
   }, [item])
 
   const handleShare = () => {
-    console.log('share')
     copy(recieveLink)
+    openSnackbar()
   }
 
   return (
-    <ReceiveCredentialFrame className='dark'>
+    <ReceiveCredentialFrame>
       <CredentialFrame>
         <Skelton
           width='var(--kai-size-ref-192)'
@@ -37,34 +42,16 @@ export const ShareCredItemContainer: FC<ShareCredentialProps> = ({ id }) => {
           className='dark'
           isLoading={isInitialLoading}
         ></Skelton>
-        <FlexVertical gap='24px' justifyContent='center' alignItems='center'>
+        <FlexVertical gap='4px' justifyContent='center' alignItems='center'>
           {!isInitialLoading && item && <QRCode url={recieveLink} />}
-          <Text
-            as='h2'
-            typo='headline-sm'
-            align='center'
-            color='var(--kai-color-sys-on-background)'
-          >
+          <Text as='h2' typo='title-lg' align='center' color='var(--kai-color-sys-on-background)'>
             {item?.title}
           </Text>
-          <Text
-            as='h2'
-            typo='headline-sm'
-            align='center'
-            color='var(--kai-color-sys-on-background)'
-          >
+          <Text as='p' typo='body-sm' align='center' color='var(--kai-color-sys-neutral)'>
             {item?.description}
           </Text>
           {item?.sticker && item?.sticker.length > 0 && (
-            <FlexVertical
-              gap='var(--kai-size-sys-space-md)'
-              justifyContent='center'
-              alignItems='center'
-              padding='32px 0'
-            >
-              <Text as='span' typo='title-md' color='var(--kai-color-sys-neutral)'>
-                ステッカー
-              </Text>
+            <FlexVertical justifyContent='center' alignItems='center'>
               <FlexHorizontal
                 gap='var(--kai-size-sys-space-sm)'
                 justifyContent='center'
@@ -85,7 +72,7 @@ export const ShareCredItemContainer: FC<ShareCredentialProps> = ({ id }) => {
         </FlexVertical>
       </CredentialFrame>
       <ActionFrame>
-        <Button width='100%' onPress={handleShare}>
+        <Button width='100%' onPress={handleShare} variant='filled' color='neutral'>
           共有する
         </Button>
       </ActionFrame>
@@ -100,37 +87,34 @@ const ReceiveCredentialFrame = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  gap: var(--kai-size-ref-96);
+  gap: var(--kai-size-ref-24);
   padding: var(--kai-size-ref-24);
   background: var(--kai-color-sys-background);
+  scrollbar-width: none;
 `
 
 const CredentialFrame = styled.div`
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  gap: var(--kai-size-sys-space-lg);
-  width: 100%;
-  padding: var(--kai-size-sys-space-md);
-  padding-top: var(--kai-size-ref-112);
-  padding-bottom: var(--kai-size-ref-320);
+  gap: var(--kai-size-sys-space-sm);
+  padding: 32px 40px;
   overflow: scroll;
+  border-radius: 24px;
+  border: 1px solid var(--neutral-neutral-outline, #b5a8aa);
+  background: var(--layer-layer-farthest, #fff);
+  /* card-shadow-default */
+  box-shadow: 0px 2px 0px 0px var(--layer-shadow, #b5a8aa);
 `
 
 const ActionFrame = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--kai-size-sys-space-sm);
   width: 100%;
   padding: var(--kai-size-sys-space-md);
-  background: linear-gradient(to top, #000000ff, #00000000);
 
   & > button {
     max-width: var(--kai-size-ref-320);
