@@ -36,28 +36,28 @@ export const useUserCredItem = (userId?: string) => {
     }
   }
 
-  const { mutateAsync: create } = useMutation<Response, unknown, IIssueCredentialItemByUserRequest>(
-    (param) => createCredentialItem(param),
-    {
-      onMutate: async () => {
-        showLoading()
-      },
-      onSuccess(data, v, _) {
-        console.log('createCredentialItem: ', v)
-        queryClient.invalidateQueries(['userCredentialItems', userId])
-        if (data.status === 200) {
-          closeLoading()
-        } else {
-          closeLoading()
-        }
-      },
-      onError(error) {
-        console.error('error', error)
-        queryClient.invalidateQueries(['userCredentialItems', userId])
-        closeLoading()
-      },
+  const { mutateAsync: create, isLoading: isCreating } = useMutation<
+    Response,
+    unknown,
+    IIssueCredentialItemByUserRequest
+  >((param) => createCredentialItem(param), {
+    onMutate: async () => {
+      showLoading()
     },
-  )
+    onSuccess(data, v, _) {
+      queryClient.invalidateQueries(['userCredentialItems', userId])
+      if (data.status === 200) {
+        closeLoading()
+      } else {
+        closeLoading()
+      }
+    },
+    onError(error) {
+      console.error('error', error)
+      queryClient.invalidateQueries(['userCredentialItems', userId])
+      closeLoading()
+    },
+  })
 
   const { mutateAsync: deleteitem } = useMutation<Response, unknown, string>(
     (itemId) => deleteCredentialItem(itemId),
@@ -132,6 +132,7 @@ export const useUserCredItem = (userId?: string) => {
     userCredentialItems,
     isInitialLoading,
     create,
+    isCreating,
     deleteitem,
     addContent,
     deleteContent,

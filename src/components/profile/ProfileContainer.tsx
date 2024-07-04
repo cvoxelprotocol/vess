@@ -19,21 +19,28 @@ import { useNCLayoutContext } from '../app/NCLayout'
 import { AvatarEditModal } from '../avatar/AvatarEditModal'
 import { CredItem } from '../home/CredItem'
 import { ProfileEditModal } from '../home/ProfileEditModal'
+import { StickerImageItemList } from '../sticker/StickerImageItemList'
 import { IdPlate } from './IdPlate'
 import { SocialLink } from '@/@types/user'
 import { PIZZA_PARTY_CRED_ID } from '@/constants/campaign'
-import { X_URL } from '@/constants/common'
+import { X_URL, isProd } from '@/constants/common'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useImage } from '@/hooks/useImage'
 import { useShareLink } from '@/hooks/useShareLink'
 import { removeStickerIdSurfix } from '@/hooks/useStickers'
+import { useUserCredItem } from '@/hooks/useUserCredItem'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 import { getAddressFromPkh } from '@/utils/did'
 import { shortenStr } from '@/utils/objectUtil'
+
+const EARLY_ACCESS_CRED_ID = [
+  '0899105e-f914-432c-afa2-57acaec6ab6d',
+  '60772e5b-03b7-472e-9e4d-239619e17301',
+]
 
 const AvatarForDisplay = dynamic(() => import('@/components/avatar/AvatarForDisplay'), {
   ssr: false,
@@ -44,7 +51,8 @@ type ProfileContainerProps = {
 }
 
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
-  const { did: myDid } = useVESSAuthUser()
+  const { did: myDid, id } = useVESSAuthUser()
+  const { userCredentialItems } = useUserCredItem(id)
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar } = useAvatar(did)
   const { openModal } = useModal()
@@ -75,8 +83,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
     return formatedCredentials.some((c) => c.credId === PIZZA_PARTY_CRED_ID)
   }, [formatedCredentials])
 
-  const { image: avatarImage } = useImage(avatarImageUrl)
-
   const isEditable = useMemo(() => {
     return myDid === did
   }, [did, myDid])
@@ -87,27 +93,14 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
       : undefined
   }, [vsUser?.socialLink])
 
-  // const downloadAvatar = async () => {
-  //   if (!avatarImage || !avatarImageUrl) return
-  //   const ext = avatarImageUrl.split('.').pop()
-  //   const canvas = document.createElement('canvas')
-  //   canvas.width = avatarImage.naturalWidth
-  //   canvas.height = avatarImage.naturalHeight
-  //   const context = canvas.getContext('2d')
-  //   if (context) {
-  //     context.drawImage(avatarImage, 0, 0)
-  //     const a = document.createElement('a')
-  //     canvas.toBlob((blob: Blob | null) => {
-  //       if (blob) {
-  //         a.href = URL.createObjectURL(blob)
-  //         a.download = `vess-avatar.${ext}`
-  //         document.body.appendChild(a)
-  //         a.click()
-  //         document.body.removeChild(a)
-  //       }
-  //     })
-  //   }
-  // }
+  const shouldShowMySticker = useMemo(() => {
+    const hasEarlyAccessCred = formatedCredentials.some((item) =>
+      EARLY_ACCESS_CRED_ID.includes(item.credId),
+    )
+    console.log({ hasEarlyAccessCred })
+    if (!isProd()) return true
+    return isProd() && hasEarlyAccessCred
+  }, [formatedCredentials])
 
   const jumpToVcDetail = (id: string) => {
     router.push(`/creds/detail/${removeStickerIdSurfix(id)}`)
@@ -247,6 +240,26 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
               flexWrap='nowrap'
               style={{ overflowY: 'scroll' }}
             >
+              {shouldShowMySticker && (
+                <FlexVertical
+                  gap='var(--kai-size-sys-space-sm)'
+                  width='100%'
+                  style={{ overflowY: 'visible' }}
+                >
+                  <Text
+                    typo='title-md'
+                    color='var(--kai-color-sys-on-layer)'
+                    style={{
+                      padding: '0 var(--kai-size-sys-space-md)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    Myステッカー
+                  </Text>
+                  <StickerImageItemList items={userCredentialItems} isMe={isEditable} />
+                </FlexVertical>
+              )}
+
               {hasCredential && (
                 <FlexVertical
                   gap='var(--kai-size-sys-space-sm)'
