@@ -13,10 +13,6 @@ type Props = {
 export const AvatarDetailContainer: FC<Props> = ({ canvasId }) => {
   const { avatar, isLoadingAvatar } = useAvatar(undefined, canvasId)
 
-  useEffect(() => {
-    console.log({ avatar })
-  }, [avatar])
-
   const creds = useMemo(() => {
     return avatar?.canvasCredentials?.map((c) => c.credential) || []
   }, [avatar])

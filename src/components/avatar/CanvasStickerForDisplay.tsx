@@ -7,7 +7,6 @@ import { usePostImageSizeAtom } from '@/jotai/ui'
 export type StickerImageProps = {
   onSelect: () => void
   isSelected?: boolean
-  selectedId?: string
 } & StickerType
 
 const CanvasStickerForDisplay: FC<StickerImageProps> = ({

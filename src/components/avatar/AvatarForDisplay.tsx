@@ -6,7 +6,7 @@ import { Stage, Layer, Image } from 'react-konva'
 import { StickerType } from '@/@types/avatar'
 import { Avatar } from '@/@types/user'
 import { useImage } from '@/hooks/useImage'
-import { usePostImageSizeAtom, useSelectedIDAtom, useStickersAtom } from '@/jotai/ui'
+import { usePostImageSizeAtom, useSelectedIDAtom } from '@/jotai/ui'
 
 const CanvasStickerForDisplay = dynamic(
   () => import('@/components/avatar/CanvasStickerForDisplay'),
@@ -21,7 +21,6 @@ type AvatarForDisplayProps = {
 
 const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
   ({ profileAvatar, avatarImageUrl, onSelectSticker }, stageRef) => {
-    const [stickers, setStickers] = useStickersAtom()
     const [selectedID, setSelectedID] = useSelectedIDAtom()
     const frameRef = useRef<any>()
     const router = useRouter()
@@ -42,9 +41,14 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
     useEffect(() => {
       const updateSize = () => {
         if (frameRef.current) {
-          const { width, height } = frameRef.current.getBoundingClientRect()
-          console.log('width: ', width, 'height: ', height, 'aspectRatio: ', image?.aspectRatio)
-          setPostImageSize({ w: width, h: width / (image?.aspectRatio ?? 1) })
+          const { width } = frameRef.current.getBoundingClientRect()
+          const currentHeight = width / (image?.aspectRatio ?? 1)
+          setPostImageSize((prevSize) => {
+            if (prevSize.w !== width || prevSize.h !== currentHeight) {
+              return { w: width, h: currentHeight }
+            }
+            return prevSize
+          })
         }
       }
 
@@ -80,12 +84,6 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
       )
     }, [profileAvatar])
 
-    useEffect(() => {
-      if (profileAvatar) {
-        setStickers(currentStickers)
-      }
-    }, [profileAvatar])
-
     return (
       <DroppableFrame ref={frameRef}>
         <Stage width={postImageSize.w} height={postImageSize.h} ref={stageRef}>
@@ -100,12 +98,11 @@ const _AvatarForDisplay = forwardRef<any, AvatarForDisplayProps>(
             />
           </Layer>
           <Layer listening={false}>
-            {stickers.map((sticker, index) => (
+            {currentStickers.map((sticker, index) => (
               <CanvasStickerForDisplay
                 key={`${sticker.id}-${index}`}
                 {...sticker}
                 onSelect={() => onTapSticker(sticker)}
-                selectedId={selectedID}
                 isSelected={selectedID === sticker.id}
               />
             ))}

@@ -2,7 +2,7 @@
 import { useDraggable, DragOverlay } from '@dnd-kit/core'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { FC, useState, useRef, useEffect, useMemo } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Button } from 'react-aria-components'
 import { useStickers } from '@/hooks/useStickers'
 import { useAvatarSizeAtom } from '@/jotai/ui'
@@ -51,12 +51,7 @@ const DraggableSticker: FC<DraggableStickerProps> = ({ id, credId, imageUrl, onA
         })
       }
     }
-    // console.log('image size: ', imageSize)
   }, [imageSize])
-
-  // useEffect(() => {
-  //   console.log('sticker size: ', stickerSize)
-  // }, [stickerSize])
 
   return (
     <StickerFrame

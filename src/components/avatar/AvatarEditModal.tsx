@@ -113,11 +113,10 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   }, [profileAvatar])
 
   useEffect(() => {
-    console.log({ profileAvatar })
-    if (profileAvatar) {
+    if (currentStickers && currentStickers.length > 0) {
       setStickers(currentStickers)
     }
-  }, [profileAvatar])
+  }, [currentStickers])
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event

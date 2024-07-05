@@ -37,13 +37,13 @@ type Props = {
 export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const { closeModal } = useModal()
   const { breakpointProps } = useBreakpoint()
-  const [_, setPost] = useSelectedPostAtom()
+  const [_post, setPost] = useSelectedPostAtom()
   const { id: myId } = useVESSAuthUser()
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const { deleteItem, post: detailedPost, isInitialLoading } = usePost(post?.id)
   const router = useRouter()
   const stageRef = useRef<any>()
-  const [stickers, setStickers] = useStickersAtom()
+  const [_, setStickers] = useStickersAtom()
 
   const incluedCredItems = useMemo(() => {
     if (

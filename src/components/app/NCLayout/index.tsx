@@ -64,10 +64,6 @@ export const NCLayout: FC<Props> = ({
   const { matches, breakpointProps } = useBreakpoint()
 
   useEffect(() => {
-    console.log('navigation state: ', isNavigationOpen)
-  }, [isNavigationOpen])
-
-  useEffect(() => {
     if (matches.lg) {
       if (isDefaultOpenOnDesktop) {
         setIsNavigationOpen(true)

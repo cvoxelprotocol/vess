@@ -75,6 +75,8 @@ export const StickerImage: FC<StickerImageProps> = ({
 
     let oldRotation = 0
     let startScale = 1
+    let offsetX = 0
+    let offsetY = 0
 
     hammertime.on('press', () => {
       console.log('press')
@@ -88,6 +90,9 @@ export const StickerImage: FC<StickerImageProps> = ({
       oldRotation = ev.rotation
       startScale = node.scaleX()
       node.stopDrag()
+      // 要素の中心を計算
+      offsetX = node.width() / 2
+      offsetY = node.height() / 2
       setImageAttrs((prev) => ({
         ...prev,
         draggable: false,
@@ -101,6 +106,9 @@ export const StickerImage: FC<StickerImageProps> = ({
         rotation: (prev.rotation ?? 0) - delta,
         scaleX: startScale * ev.scale,
         scaleY: startScale * ev.scale,
+        // 回転の中心を設定
+        offsetX: offsetX,
+        offsetY: offsetY,
       }))
       oldRotation = ev.rotation
     })

@@ -1,11 +1,11 @@
 import { useDroppable } from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import dynamic from 'next/dynamic'
-import { FC, useEffect, useState, forwardRef } from 'react'
-import { Stage, Layer, Image, Transformer } from 'react-konva'
+import { useEffect, forwardRef } from 'react'
+import { Stage, Layer, Image } from 'react-konva'
 import { useImage } from '@/hooks/useImage'
-import { selectedID, stickers as stickersAtom, useAvatarSizeAtom } from '@/jotai/ui'
+import { selectedID, useAvatarSizeAtom } from '@/jotai/ui'
 
 const StickerImages = dynamic(() => import('@/components/avatar/CanvasSticker'), { ssr: false })
 

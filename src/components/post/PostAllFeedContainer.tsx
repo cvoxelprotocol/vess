@@ -24,8 +24,7 @@ export const PostAllFeedContainer: FC = () => {
   const { did } = useVESSAuthUser()
   const { postFeed, isInitialLoading } = usePostFeed(did)
   const { formatedCredentials } = useVerifiableCredentials(did)
-  const { setIsDefaultOpenOnDesktop, setIsFullContent, openNavigation } = useNCLayoutContext()
-  const { matches, breakpointProps } = useBreakpoint()
+  const { breakpointProps } = useBreakpoint()
   const { openModal, closeModal } = useModal()
   const [selectedPost, setPost] = useSelectedPostAtom()
   const [selectedPostFeed, setPostFeed] = useSelectedPostFeedAtom()
@@ -56,8 +55,6 @@ export const PostAllFeedContainer: FC = () => {
       []
     )
   }, [postFeed, selectedPostFeed])
-
-  console.log({ allItems })
 
   const uniqueCredItems = useMemo(() => {
     return postFeed?.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
