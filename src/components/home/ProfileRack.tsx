@@ -30,9 +30,9 @@ type ProfileRackProps = {
 }
 
 export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
-  const { originalAddress, vessId } = useVESSAuthUser()
+  const { address, user } = useVESSAuthUser()
   const { vsUser, isInitialLoading } = useVESSUserProfile(did)
-  const { ccProfile, ccLoading } = useCcProfile(did)
+  const { ccProfile } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(
     getAddressFromPkh(did) as `0x${string}`,
   )
@@ -161,7 +161,7 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 width='var(--kai-size-ref-112)'
                 lineClamp={1}
               >
-                {originalAddress}
+                {address}
               </Text>
             </FlexHorizontal>
           </>
@@ -317,8 +317,8 @@ export const ProfileRack: FC<ProfileRackProps> = ({ did, isEditable }) => {
                 isDisabled={isInitialLoading}
                 onPress={() => {
                   openProfileURLCopied()
-                  const url = vessId
-                    ? `https://app.vess.id/${vessId}`
+                  const url = user?.vessId
+                    ? `https://app.vess.id/${user?.vessId}`
                     : `https://app.vess.id/did/${did}`
                   copy(url)
                 }}

@@ -34,12 +34,13 @@ export interface saveCredentialToComposeDBResponse {
 export const useMyVerifiableCredential = () => {
   const queryClient = useQueryClient()
   const { showLoading, closeLoading } = useVESSLoading()
-  const { did } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
 
   const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {
-    if (!did) {
+    if (!user?.did) {
       return false
     }
+    const did = user?.did
     showLoading()
     try {
       const type = item.credentialType?.name ? (item.credentialType?.name as CredType) : 'default'

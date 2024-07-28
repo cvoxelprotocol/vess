@@ -8,7 +8,7 @@ import { getCredential, setVisibleVerifiableCredential } from '@/lib/vessApi'
 export const useVerifiableCredential = (id?: string) => {
   const { showLoading, closeLoading } = useVESSLoading()
   const queryClient = useQueryClient()
-  const { did } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
 
   const { data: verifiableCredential, isInitialLoading } = useQuery<CredentialResponse | null>(
     ['verifiableCredential', id],
@@ -78,7 +78,7 @@ export const useVerifiableCredential = (id?: string) => {
     },
     onSuccess(d, v, _) {
       queryClient.invalidateQueries(['verifiableCredential', v.credentialId])
-      queryClient.invalidateQueries(['CredentialsByHolder', did])
+      queryClient.invalidateQueries(['CredentialsByHolder', user?.did])
       closeLoading()
     },
     onError(error) {

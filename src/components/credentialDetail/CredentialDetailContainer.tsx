@@ -31,7 +31,7 @@ export type CredDetailProps = {
 }
 
 export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
-  const { did } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const router = useRouter()
   const { isInitialLoading, credential, holder, setVisible, isLoadingSetVisible } =
     useVerifiableCredential(id)
@@ -69,8 +69,8 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
 
   //=== FIXME: temporary implementation ===
   const isMine = useMemo(() => {
-    return did === credential?.holderDid
-  }, [did, credential])
+    return user?.did === credential?.holderDid
+  }, [user?.did, credential])
 
   const switchVisible = async () => {
     if (!credential) return
@@ -147,7 +147,9 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
     )
       return []
     return removeUndefinedFromArray<VSUser>(
-      credItemWithHolder.credentialsWithHolder.map((ch) => ch.holder).filter((h) => h?.did !== did),
+      credItemWithHolder.credentialsWithHolder
+        .map((ch) => ch.holder)
+        .filter((h) => h?.did !== user?.did),
     )
   }, [credItemWithHolder])
 

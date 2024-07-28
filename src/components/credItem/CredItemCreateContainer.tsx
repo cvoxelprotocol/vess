@@ -32,8 +32,8 @@ type Input = {
   link?: string
 }
 export const CredItemCreateContainer: FC = () => {
-  const { id } = useVESSAuthUser()
-  const { userCredentialItems, create, isCreating } = useUserCredItem(id)
+  const { user } = useVESSAuthUser()
+  const { userCredentialItems, create, isCreating } = useUserCredItem(user?.id)
   const { breakpointProps } = useBreakpoint()
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const [uploadError, setUploadError] = useState<any>()
@@ -57,7 +57,7 @@ export const CredItemCreateContainer: FC = () => {
   }, [userCredentialItems])
 
   const addItem = async (data: Input) => {
-    if (!id) return
+    if (!user?.id) return
     if (!icon) {
       setUploadError('please upload icon!')
       return
@@ -65,7 +65,7 @@ export const CredItemCreateContainer: FC = () => {
     const { title, description, startDate, endDate, link } = data
     try {
       const param: IIssueCredentialItemByUserRequest = {
-        userId: id,
+        userId: user?.id,
         title,
         description: description || '',
         icon: icon,

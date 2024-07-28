@@ -6,8 +6,8 @@ import { useUserCredItem } from '@/hooks/useUserCredItem'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 
 export const CredItemListContainer: FC = () => {
-  const { id } = useVESSAuthUser()
-  const { isInitialLoading, userCredentialItems } = useUserCredItem(id)
+  const { user } = useVESSAuthUser()
+  const { isInitialLoading, userCredentialItems } = useUserCredItem(user?.id)
   const router = useRouter()
 
   useEffect(() => {

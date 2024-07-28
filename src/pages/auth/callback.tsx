@@ -11,7 +11,7 @@ import { DidAuthService } from '@/lib/didAuth'
 const Callback: NextPage = () => {
   const { kai } = useKai()
   const didAuthService = DidAuthService.getInstance()
-  const { did, vessId } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const [rPath, setRpath] = useStateRPath()
 
   useEffect(() => {
@@ -23,22 +23,22 @@ const Callback: NextPage = () => {
   }, [])
 
   useEffect(() => {
-    if (did) {
+    if (user?.did) {
       if (rPath) {
         const returnUrl = rPath.startsWith('/') ? rPath : `/${rPath}`
         setRpath(null)
         router.push(returnUrl)
         return
       } else {
-        if (vessId) {
-          router.push(`/${vessId}`)
+        if (user?.vessId) {
+          router.push(`/${user?.vessId}`)
         } else {
-          router.push(`/did/${did}`)
+          router.push(`/did/${user?.did}`)
         }
         return
       }
     }
-  }, [did])
+  }, [user?.did])
 
   const Wrapper = styled.main`
     width: 100%;

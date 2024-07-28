@@ -45,11 +45,11 @@ type Props = {
 }
 
 export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
-  const { did } = useVESSAuthUser()
-  const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
-  const { avatars } = useAvatar(did)
+  const { user } = useVESSAuthUser()
+  const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(user?.did)
+  const { avatars } = useAvatar(user?.did)
   const { openModal, closeModal } = useModal()
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(user?.did)
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
   const { matches, breakpointProps } = useBreakpoint()
@@ -57,7 +57,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
   const stageRef = useRef<any>()
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const [isTransformer, setIsTransformer] = useIstransformerAtom()
-  const { add } = useAvatar(did)
+  const { add } = useAvatar(user?.did)
   const [isSaving, setIsSaving] = useState(false)
   const [avatarSize, setAvatarSize] = useAvatarSizeAtom()
   const { addSticker } = useStickers()
@@ -204,7 +204,7 @@ export const AvatarEditModal: FC<Props> = ({ profileAvatar }) => {
       ]
       console.log({ vcs })
       const avatarRequest: AddAvatarRequest = {
-        did: did || '',
+        did: user?.did || '',
         sourcePhotoUrl:
           icon ||
           sourcePhoto?.url ||

@@ -24,14 +24,14 @@ type Props = {
 }
 export const PostDetailContainer: FC<Props> = ({ id }) => {
   const { post, deleteItem, isInitialLoading } = usePost(id)
-  const { id: myId } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const router = useRouter()
   const stageRef = useRef<any>()
   const [selectedID, setSelectedID] = useSelectedIDAtom()
 
   const isEditable = useMemo(() => {
-    return myId === post?.userId
-  }, [myId, post?.userId])
+    return user?.id === post?.userId
+  }, [user?.id, post?.userId])
 
   const incluedCredItems = useMemo(() => {
     if (!post?.canvas?.canvasCredentials || post?.canvas?.canvasCredentials?.length === 0) return
@@ -48,8 +48,8 @@ export const PostDetailContainer: FC<Props> = ({ id }) => {
   }, [incluedCredItems, selectedID])
 
   const deletePost = async () => {
-    if (!post?.id || !post?.credentialItemId || !myId) return
-    await deleteItem({ postId: post.id, userId: myId, credentialItemId: post.credentialItemId })
+    if (!post?.id || !post?.credentialItemId || !user?.id) return
+    await deleteItem({ postId: post.id, userId: user?.id, credentialItemId: post.credentialItemId })
   }
 
   const onClose = () => {

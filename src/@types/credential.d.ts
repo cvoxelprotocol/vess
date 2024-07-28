@@ -16,18 +16,18 @@ export type CredentialType = {
 
 export type VSCredentialItem = {
   id: string
-  ceramicId: string | null
-  organizationId: string | null
+  ceramicId: string | undifined
+  organizationId: string | undifined
   credentialTypeId: string
   collectionId: string
   title: string
-  description: string | null
-  link: string | null
-  icon: string | null
-  image: string | null
-  primaryColor: string | null
+  description: string | undifined
+  link: string | undifined
+  icon: string | undifined
+  image: string | undifined
+  primaryColor: string | undifined
   startDate: Date
-  endDate: Date | null
+  endDate: Date | undifined
   createdAt: Date
   updatedAt: Date
 }
@@ -51,7 +51,7 @@ export type CredentialStruct = {
 }
 
 export type CredentialWithHolderUser = CredentialStruct & {
-  holder?: VSUser | null
+  holder?: VSUser | undifined
 }
 
 export type CredentialResponse = {
@@ -118,38 +118,49 @@ type CredItemRequest = CredItemInput & {
 
 export type OrganizationType = {
   address: string
-  ceramicId: string | null
+  ceramicId: string | undefined
   id: string
   keyId: string
   name: string
-  desc: string | null
-  icon: string | null
-  primaryColor: string | null
-  useCompose: boolean | null
+  desc: string | undefined
+  icon: string | undefined
+  primaryColor: string | undifined
+  useCompose: boolean | undifined
 }
 
 export type VSUser = {
   id: string
-  name: string | null
-  avatar: string | null
-  description: string | null
-  did: string | null
-  email: string | null
-  vessId: string | null
+  name: string | undefined
+  avatar: string | undefined
+  description: string | undefined
+  did: string | undefined
+  email: string | undefined
+  vessId: string | undefined
   createdAt: Date
   updatedAt: Date
   profiles?: Profile[]
   socialLink?: SocialLink[]
+  post?: Post[]
+  userDIDs?: UserDID[]
 }
 
 export type Profile = {
   id: string
   providerUserId: string
-  did: string | null
-  email: string | null
+  did: string | undefined
+  email: string | undefined
   userId: string
   providerId: string
   provider?: Provider
+}
+
+export type UserDID = {
+  id: string
+  userId: string
+  didType: string
+  didValue: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type Provider = {
@@ -201,20 +212,20 @@ export type VSCredentialItemFromBuckup = {
   credentialTypeId?: string
   credentialType?: CredentialType
   collectionId?: string
-  organizationId?: string | null
+  organizationId?: string | undifined
   title: string
-  description: string | null
-  icon: string | null
-  image: string | null
-  primaryColor: string | null
-  startDate: string | null
-  endDate: string | null
+  description: string | undifined
+  icon: string | undifined
+  image: string | undifined
+  primaryColor: string | undifined
+  startDate: string | undifined
+  endDate: string | undifined
   createdAt: string
   updatedAt: string
-  organization?: OrganizationType | null
+  organization?: OrganizationType | undifined
   Tagged: Tagged[]
   credentials?: VSCredential[]
-  userId?: string | null
+  userId?: string | undifined
   user?: VSUser
   sticker?: Sticker[]
   post?: Post[]
@@ -222,14 +233,25 @@ export type VSCredentialItemFromBuckup = {
   holderContents?: HolderContent[]
 }
 
+export type Post = {
+  id: string
+  userId: string
+  text: string | undifined
+  image: string | undifined
+  createdAt: Date
+  updatedAt: Date
+  credentialItemId: string | undifined
+  canvasId: string | undifined
+}
+
 export interface CredentialWithHolder extends VSCredential {
-  holder: VSUser | null
+  holder: VSUser | undifined
 }
 
 export type HolderContent = {
   id: string
-  credentialItemId: string | null
-  type: string | null
+  credentialItemId: string | undifined
+  type: string | undifined
   content: string
 }
 

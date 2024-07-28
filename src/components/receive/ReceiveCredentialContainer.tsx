@@ -15,10 +15,10 @@ import { useStateRPath } from '@/jotai/ui'
 import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 
 export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
-  const { did, vessId } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const router = useRouter()
   const { credItem, isInitialLoading } = useCredentialItem(id)
-  const { formatedCredentials } = useVerifiableCredentials(did)
+  const { formatedCredentials } = useVerifiableCredentials(user?.did)
   const [rPath, setRpath] = useStateRPath()
   const { issue } = useMyVerifiableCredential()
   const [receiveStatus, setReceiveStatus] = React.useState<
@@ -32,7 +32,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   }, [])
 
   const handleIssue = async () => {
-    if (!did) {
+    if (!user?.did) {
       setRpath(router.asPath)
       router.push(`/login`)
       return
@@ -149,7 +149,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
         </FlexVertical>
       </CredentialFrame>
       <ActionFrame>
-        {!did ? (
+        {!user?.did ? (
           <>
             <Button variant='filled' width='100%' onPress={handleIssue}>
               ログインして受け取る
@@ -186,10 +186,10 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                       variant='text'
                       width='100%'
                       onPress={() => {
-                        if (vessId) {
-                          router.push(`/${vessId}`)
-                        } else if (did) {
-                          return router.push(`/did/${did}`)
+                        if (user?.vessId) {
+                          router.push(`/${user?.vessId}`)
+                        } else if (user?.did) {
+                          return router.push(`/did/${user?.did}`)
                         } else {
                           return router.push(`/`)
                         }
@@ -243,10 +243,10 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                   width='100%'
                   isDisabled={receiveStatus === 'receiving'}
                   onPress={() => {
-                    if (vessId) {
-                      router.push(`/${vessId}`)
-                    } else if (did) {
-                      return router.push(`/did/${did}`)
+                    if (user?.vessId) {
+                      router.push(`/${user?.vessId}`)
+                    } else if (user?.did) {
+                      return router.push(`/did/${user?.did}`)
                     } else {
                       return router.push(`/`)
                     }

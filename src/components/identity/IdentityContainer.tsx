@@ -15,23 +15,22 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 
 export const IdentityContainer: FC = () => {
-  const { did } = useVESSAuthUser()
-  const { originalAddress } = useVESSAuthUser()
-  const { ccProfile, ccLoading } = useCcProfile(did)
-  const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
-  const { lensProfile, lensLoading } = useLensProfile(did)
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
+  const { user, address } = useVESSAuthUser()
+  const { ccProfile, ccLoading } = useCcProfile(user?.did)
+  const { ensProfile, isInitialLoading: ensLoading } = useENS(address as `0x${string}`)
+  const { lensProfile, lensLoading } = useLensProfile(user?.did)
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(user?.did)
   const router = useRouter()
   const [tabKey, setTabKey] = useState<Key>('attendance')
 
   useEffect(() => {
-    if (!did) {
+    if (!user?.did) {
       router.push(`/login`)
     }
     if (router.query.tab) {
       setTabKey(router.query.tab as Key)
     }
-  }, [did, router])
+  }, [user?.did, router])
 
   return (
     <>
@@ -84,7 +83,7 @@ export const IdentityContainer: FC = () => {
                       color='var(--kai-color-sys-on-layer)'
                       lineClamp={1}
                     >
-                      {originalAddress}
+                      {address}
                     </Text>
                   </FlexHorizontal>
                   <NextImageContainer

@@ -105,3 +105,41 @@ type ImageSize = {
 export type ImageWithSize = ImageSize & {
   image: HTMLImageElement | undefined
 }
+
+export type NonNullableRecursive<T> = T extends (infer U)[]
+  ? NonNullableRecursive<U>[]
+  : T extends Map<infer K, infer V>
+  ? Map<K, NonNullableRecursive<V>>
+  : T extends object
+  ? { [K in keyof T]: NonNullableRecursive<T[K]> }
+  : T
+
+export const convertNullToUndefined = <T>(
+  value: T | null | undefined,
+): NonNullableRecursive<T> | undefined => {
+  if (value === null || value === undefined) {
+    return undefined
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => convertNullToUndefined(item)) as unknown as NonNullableRecursive<T>
+  }
+
+  if (value instanceof Map) {
+    const newMap = new Map()
+    value.forEach((v, k) => {
+      newMap.set(k, convertNullToUndefined(v))
+    })
+    return newMap as unknown as NonNullableRecursive<T>
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    const newObj: any = {}
+    Object.keys(value).forEach((key) => {
+      newObj[key] = convertNullToUndefined((value as any)[key])
+    })
+    return newObj as NonNullableRecursive<T>
+  }
+
+  return value as NonNullableRecursive<T>
+}

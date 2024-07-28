@@ -12,7 +12,6 @@ import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
 import { useLensProfile } from '@/hooks/useLensProfile'
-import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useVESSUserProfile } from '@/hooks/useVESSUserProfile'
 import { useVerifiableCredentials } from '@/hooks/useVerifiableCredentials'
 
@@ -24,8 +23,7 @@ const ImageCanvas = dynamic(() => import('@/components/avatar/ImageCanvas'), { s
 
 export const AvatarContainer: FC<Props> = ({ did }) => {
   const router = useRouter()
-  const { avatars, isInitialLoading: isLoadingAvatars } = useAvatar(did)
-  const { did: myDid } = useVESSAuthUser()
+  const { avatars } = useAvatar(did)
   const { vsUser } = useVESSUserProfile(did)
   const { ccProfile } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(

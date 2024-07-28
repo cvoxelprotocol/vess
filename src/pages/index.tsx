@@ -7,18 +7,18 @@ import { LoginPage } from '@/components/login/LoginPage'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 
 const Home: NextPage = () => {
-  const { did, connection, vessId } = useVESSAuthUser()
+  const { user, connectionStatus } = useVESSAuthUser()
   const router = useRouter()
 
   useEffect(() => {
-    if (vessId) {
-      router.push(`/${vessId}`)
-    } else if (did) {
-      router.push(`/did/${did}`)
+    if (user?.vessId) {
+      router.push(`/${user?.vessId}`)
+    } else if (user?.did) {
+      router.push(`/did/${user?.did}`)
     }
-  }, [did, vessId])
+  }, [user?.did, user?.vessId])
 
-  if (connection === 'connecting') {
+  if (connectionStatus === 'connecting') {
     return <></>
   }
 

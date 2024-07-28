@@ -14,12 +14,12 @@ type Props = {
 }
 
 export const HomeContainer: FC<Props> = ({ did }) => {
-  const { did: myDid } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const { isInitialLoading, formatedCredentials } = useVerifiableCredentials(did)
 
   const isEditable = useMemo(() => {
-    return myDid === did
-  }, [did, myDid])
+    return user?.did === did
+  }, [did, user?.did])
 
   return (
     <>

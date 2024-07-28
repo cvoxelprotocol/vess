@@ -32,8 +32,11 @@ export const autoVESSConnect = async () => {
     }
 
     setVESSAuth({
-      user: undefined,
       connectionStatus: 'connecting',
+      user: undefined,
+      address: undefined,
+      chainId: undefined,
+      stateLoginType: undefined,
     })
     const env = isProd() ? 'mainnet' : 'testnet-clay'
     const vess = getVESSService()
@@ -44,37 +47,33 @@ export const autoVESSConnect = async () => {
       // @ts-ignore TODO:fixed
       composeClient.setDID(session.did)
       const vessAuth = getVESSAuth()
-      const address = getAddress(getAddressFromPkh(session.did.parent))
-
       const res = await userAuth({ did: session.did.parent })
       const resJson = (await res.json()) as VSUser
-      const { name, avatar, description, id, vessId } = resJson
+      const { createdAt, updatedAt, profiles, socialLink, post, ...rest } = resJson
       setVESSAuth({
-        user: {
-          id,
-          did: session.did.parent,
-          account: address,
-          originalAddress: address,
-          chainId: 1,
-          stateLoginType: vessAuth?.user?.stateLoginType,
-          name,
-          avatar,
-          description,
-          vessId,
-        },
+        user: rest,
         connectionStatus: 'connected',
+        stateLoginType: vessAuth?.stateLoginType,
+        address: getAddress(getAddressFromPkh(session.did.parent)),
+        chainId: 1,
       })
       console.log('Connection restored!')
     } else {
       setVESSAuth({
+        connectionStatus: 'disconnected',
         user: undefined,
-        connectionStatus: 'connecting',
+        address: undefined,
+        chainId: undefined,
+        stateLoginType: undefined,
       })
     }
   } catch (error) {
     setVESSAuth({
-      user: undefined,
       connectionStatus: 'disconnected',
+      user: undefined,
+      address: undefined,
+      chainId: undefined,
+      stateLoginType: undefined,
     })
   }
 }

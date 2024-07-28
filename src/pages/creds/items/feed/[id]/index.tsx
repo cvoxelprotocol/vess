@@ -12,8 +12,8 @@ const AddPostPage: NextPage = () => {
   const router = useRouter()
   const id = router.query.id as string
   const feedOnly = router.query.feedOnly as string
-  const { did, connectionStatus } = useVESSAuthUser()
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
+  const { user, connectionStatus } = useVESSAuthUser()
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(user?.did)
 
   const hasCredential = useMemo(() => {
     return formatedCredentials.some((c) => c.credId === id)
@@ -35,7 +35,7 @@ const AddPostPage: NextPage = () => {
     )
   }
 
-  if (!did) {
+  if (!user?.did) {
     return (
       <FlexVertical
         gap='var(--kai-size-sys-space-md)'

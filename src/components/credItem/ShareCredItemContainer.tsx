@@ -10,8 +10,8 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { ShareCredentialProps } from '@/pages/creds/items/share/[id]'
 
 export const ShareCredItemContainer: FC<ShareCredentialProps> = ({ id }) => {
-  const { id: userId } = useVESSAuthUser()
-  const { isInitialLoading, userCredentialItems } = useUserCredItem(userId)
+  const { user } = useVESSAuthUser()
+  const { isInitialLoading, userCredentialItems } = useUserCredItem(user?.id)
 
   const { openSnackbar } = useSnackbar({
     id: 'share-url-copied',

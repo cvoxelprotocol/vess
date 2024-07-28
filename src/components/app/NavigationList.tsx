@@ -23,9 +23,9 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
   const router = useRouter()
   const { closeNavigation } = useNCLayoutContext()
   const { selectedNavi, setSelectedNavi, selectedNaviMeta } = useNavigationContext()
-  const { did, connection, vessId } = useVESSAuthUser()
-  const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
-  const { profileAvatar, isInitialLoading: isLoadingAvatars } = useAvatar(did)
+  const { user, connectionStatus } = useVESSAuthUser()
+  const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(user?.did)
+  const { profileAvatar, isInitialLoading: isLoadingAvatars } = useAvatar(user?.did)
   const { setMode, currentMode } = useKai()
 
   // Avoid hydration error
@@ -61,16 +61,16 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
           }}
           {...props}
         >
-          {connection === 'connected' && (
+          {connectionStatus === 'connected' && (
             <>
               <NavigationItem
                 value='PROFILE'
                 onPress={() => {
                   closeNavigation()
-                  if (vessId) {
-                    router.push(`/${vessId}`)
+                  if (user?.vessId) {
+                    router.push(`/${user?.vessId}`)
                   } else {
-                    router.push(`/did/${did}`)
+                    router.push(`/did/${user?.did}`)
                   }
                 }}
               >
@@ -141,7 +141,7 @@ export const NavigationList: FC<NavigationListProps> = ({ value, onChange, ...pr
             ダークモード
           </Text>
         </Switch>
-        {connection === 'connected' ? (
+        {connectionStatus === 'connected' ? (
           <LogoutButton />
         ) : (
           <Button

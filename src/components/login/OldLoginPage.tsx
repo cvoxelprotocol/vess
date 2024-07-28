@@ -15,22 +15,22 @@ export const OldLoginPage: FC = () => {
   const { kai } = useKai()
   const didAuthService = DidAuthService.getInstance()
   const router = useRouter()
-  const { did } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const [rPath, setRpath] = useStateRPath()
 
   useEffect(() => {
-    if (did) {
+    if (user?.did) {
       if (rPath) {
         const returnUrl = rPath.startsWith('/') ? rPath : `/${rPath}`
         setRpath(null)
         router.push(returnUrl)
         return
       } else {
-        router.push(`/did/${did}`)
+        router.push(`/did/${user?.did}`)
         return
       }
     }
-  }, [did])
+  }, [user?.did])
 
   return (
     <HCLayout>

@@ -25,7 +25,7 @@ export const LoginPage: FC = () => {
   const { kai } = useKai()
   const router = useRouter()
   const didAuthService = DidAuthService.getInstance()
-  const { did, vessId } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const [rPath, setRpath] = useStateRPath()
 
   // Avoid hydration error
@@ -36,19 +36,19 @@ export const LoginPage: FC = () => {
   }, [])
 
   useEffect(() => {
-    if (did || vessId) {
+    if (user?.did || user?.vessId) {
       if (rPath) {
         const returnUrl = rPath.startsWith('/') ? rPath : `/${rPath}`
         setRpath(null)
         router.push(returnUrl)
         return
       } else {
-        const path = vessId ? `/${vessId}` : `/did/${did}`
+        const path = user?.vessId ? `/${user?.vessId}` : `/did/${user?.did}`
         router.push(path)
         return
       }
     }
-  }, [did, vessId])
+  }, [user?.did, user?.vessId])
 
   const {
     handleSubmit,

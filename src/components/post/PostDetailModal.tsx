@@ -38,7 +38,7 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   const { closeModal } = useModal()
   const { breakpointProps } = useBreakpoint()
   const [_post, setPost] = useSelectedPostAtom()
-  const { id: myId } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const { deleteItem, post: detailedPost, isInitialLoading } = usePost(post?.id)
   const router = useRouter()
@@ -64,13 +64,13 @@ export const PostDetailModal: FC<Props> = ({ post, ...props }) => {
   }, [incluedCredItems, selectedID])
 
   const deletePost = async () => {
-    if (!post?.id || !post?.credentialItemId || !myId) return
-    await deleteItem({ postId: post.id, userId: myId, credentialItemId: post.credentialItemId })
+    if (!post?.id || !post?.credentialItemId || !user?.id) return
+    await deleteItem({ postId: post.id, userId: user?.id, credentialItemId: post.credentialItemId })
   }
 
   const isEditable = useMemo(() => {
-    return myId === post?.userId
-  }, [myId, post?.userId])
+    return user?.id === post?.userId
+  }, [user?.id, post?.userId])
 
   const onClose = () => {
     setPost(undefined)

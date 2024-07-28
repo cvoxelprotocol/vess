@@ -21,9 +21,9 @@ import { formatDate } from '@/utils/date'
 import { getAddressFromPkh } from '@/utils/did'
 
 export const PostAllFeedContainer: FC = () => {
-  const { did } = useVESSAuthUser()
-  const { postFeed, isInitialLoading } = usePostFeed(did)
-  const { formatedCredentials } = useVerifiableCredentials(did)
+  const { user } = useVESSAuthUser()
+  const { postFeed, isInitialLoading } = usePostFeed(user?.did)
+  const { formatedCredentials } = useVerifiableCredentials(user?.did)
   const { breakpointProps } = useBreakpoint()
   const { openModal, closeModal } = useModal()
   const [selectedPost, setPost] = useSelectedPostAtom()

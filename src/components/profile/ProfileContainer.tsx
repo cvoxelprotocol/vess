@@ -51,8 +51,8 @@ type ProfileContainerProps = {
 }
 
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
-  const { did: myDid, id } = useVESSAuthUser()
-  const { userCredentialItems } = useUserCredItem(id)
+  const { user } = useVESSAuthUser()
+  const { userCredentialItems } = useUserCredItem(user?.id)
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar } = useAvatar(did)
   const { openModal } = useModal()
@@ -84,8 +84,8 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   }, [formatedCredentials])
 
   const isEditable = useMemo(() => {
-    return myDid === did
-  }, [did, myDid])
+    return user?.did === did
+  }, [did, user?.did])
 
   const xLink = useMemo(() => {
     return vsUser?.socialLink?.some((link) => link.title === 'X' && !!link.url && link.url !== '')

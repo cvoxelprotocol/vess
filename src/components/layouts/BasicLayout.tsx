@@ -12,7 +12,7 @@ type Props = {
 }
 export const BasicLayout: FC<Props> = ({ children }) => {
   const { showLoading, closeLoading } = useVESSLoading()
-  const { did } = useVESSAuthUser()
+  const { user } = useVESSAuthUser()
   const { openModal, closeModal } = useModal()
   const { setLightMode } = useKai()
   const { breakpointProps } = useBreakpoint()
@@ -42,7 +42,7 @@ export const BasicLayout: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function init() {
-      if (!did) {
+      if (!user?.did) {
         await autoVESSConnect()
       }
     }

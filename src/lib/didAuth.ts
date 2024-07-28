@@ -28,7 +28,7 @@ import {
   vessLogout,
 } from './vessApi'
 import { clearWeb3ConnectorCache, config } from './wagmi'
-import { VSUser } from '@/@types/credential'
+import { UserDID, VSUser } from '@/@types/credential'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
 import { getAddressFromPkh } from '@/utils/did'
@@ -91,28 +91,9 @@ export class DidAuthService {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
         const resJson = (await res.json()) as VSUser
-        const { name, avatar, description, id, vessId } = resJson
-        this.setLoginState(
-          id,
-          session.did.parent,
-          getAddress(getAddressFromPkh(session.did.parent)),
-          name,
-          avatar,
-          description,
-          vessId,
-          'wallet',
-        )
+        this.setLoginState(session.did.parent, resJson, 'wallet')
       } else {
-        this.setLoginState(
-          '',
-          session.did.parent,
-          getAddress(getAddressFromPkh(session.did.parent)),
-          null,
-          null,
-          null,
-          null,
-          'wallet',
-        )
+        this.setLoginState(session.did.parent, undefined, 'wallet')
       }
       return isLoginSucceeded
     } catch (error) {
@@ -254,31 +235,14 @@ export class DidAuthService {
       if (isLoginSucceeded) {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
-
         if (res) {
           const resJson = (await res.json()) as VSUser
-          const { name, avatar, description, id, vessId } = resJson
-          this.setLoginState(
-            id,
-            session.did.parent,
-            addresses[0],
-            name,
-            avatar,
-            description,
-            vessId,
-            user.typeOfLogin,
-          )
+          const { name, avatar, description, id, vessId, userDIDs } = resJson
+          //create or set did:jwk
+
+          this.setLoginState(session.did.parent, resJson, user.typeOfLogin)
         } else {
-          this.setLoginState(
-            '',
-            session.did.parent,
-            addresses[0],
-            null,
-            null,
-            null,
-            null,
-            user.typeOfLogin,
-          )
+          this.setLoginState(session.did.parent, undefined, user.typeOfLogin)
         }
       } else {
         this.clearState()
@@ -367,44 +331,48 @@ export class DidAuthService {
   }
 
   private setLoginState(
-    id: string,
     did: string,
-    address: string,
-    name: string | null,
-    avatar: string | null,
-    description: string | null,
-    vessId?: string | null,
+    user: VSUser | undefined,
     loginType?: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE,
   ): void {
     console.log('setVESSAuth called')
-    setVESSAuth({
-      user: {
-        id: id,
-        did: did,
-        account: address,
-        originalAddress: address,
-        chainId: 1,
+    if (!user) {
+      setVESSAuth({
+        user: undefined,
+        connectionStatus: 'connected',
         stateLoginType: loginType,
-        name: name,
-        avatar: avatar,
-        description: description,
-        vessId: vessId,
-      },
-      connectionStatus: 'connected',
-    })
+        address: getAddress(getAddressFromPkh(did)),
+        chainId: 1,
+      })
+    } else {
+      const { createdAt, updatedAt, profiles, socialLink, post, ...rest } = user
+      setVESSAuth({
+        user: rest,
+        connectionStatus: 'connected',
+        stateLoginType: loginType,
+        address: getAddress(getAddressFromPkh(did)),
+        chainId: 1,
+      })
+    }
   }
 
   private clearState(): void {
     setVESSAuth({
-      user: undefined,
       connectionStatus: 'disconnected',
+      user: undefined,
+      address: undefined,
+      chainId: undefined,
+      stateLoginType: undefined,
     })
   }
 
   private loadingState(): void {
     setVESSAuth({
-      user: undefined,
       connectionStatus: 'connecting',
+      user: undefined,
+      address: undefined,
+      chainId: undefined,
+      stateLoginType: undefined,
     })
   }
 
@@ -412,7 +380,7 @@ export class DidAuthService {
     try {
       disconnectVESSAuth()
       const vessAuth = getVESSAuth()
-      if (vessAuth?.user?.stateLoginType === 'wallet') {
+      if (vessAuth?.stateLoginType === 'wallet') {
         disconnect(config)
       }
       if (this.web3auth && this.web3auth.connected) {

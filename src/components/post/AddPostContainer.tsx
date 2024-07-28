@@ -64,8 +64,8 @@ type Input = {
 }
 
 export const AddPostContainer: FC = () => {
-  const { did } = useVESSAuthUser()
-  const { vsUser } = useVESSUserProfile(did)
+  const { user } = useVESSAuthUser()
+  const { vsUser } = useVESSUserProfile(user?.did)
   const router = useRouter()
   const { addItem } = usePost()
   const [rPath, setRpath] = useStateRPath()
@@ -74,7 +74,7 @@ export const AddPostContainer: FC = () => {
   >('default')
 
   const { openModal, closeModal } = useModal()
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
+  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(user?.did)
   const [selectedID, setSelectedID] = useSelectedIDAtom()
   const [stickers, setStickers] = useStickersAtom()
   const { matches, breakpointProps } = useBreakpoint()
@@ -82,7 +82,7 @@ export const AddPostContainer: FC = () => {
   const stageRef = useRef<any>()
   const { uploadIcon, status, icon, setIcon } = useFileUpload()
   const [isTransformer, setIsTransformer] = useIstransformerAtom()
-  const { add } = useAvatar(did)
+  const { add } = useAvatar(user?.did)
   const [isSaving, setIsSaving] = useState(false)
   const [postImageSize, _] = usePostImageSizeAtom()
   const { addSticker } = useStickers()
@@ -162,7 +162,7 @@ export const AddPostContainer: FC = () => {
   }
 
   const handleSave = async (comment?: string) => {
-    if (!did) {
+    if (!user?.did) {
       setRpath(router.asPath)
       router.push(`/login`)
       return
@@ -236,7 +236,7 @@ export const AddPostContainer: FC = () => {
         ]
         console.log({ vcs })
         const avatarRequest: AddAvatarRequest = {
-          did: did || '',
+          did: user?.did || '',
           sourcePhotoUrl: icon,
           canvasJson: canvasJson,
           isProfilePhoto: false,

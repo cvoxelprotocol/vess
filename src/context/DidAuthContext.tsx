@@ -1,22 +1,18 @@
 import type { LOGIN_PROVIDER_TYPE, CUSTOM_LOGIN_PROVIDER_TYPE } from '@web3auth/openlogin-adapter'
 import { atom, createStore } from 'jotai'
 import React, { createContext, useContext } from 'react'
+import { VSUser } from '@/@types/credential'
 
-export type VESSUser = {
-  id: string
-  did: string | undefined
-  account: string | undefined
-  originalAddress: string | undefined
-  chainId: number | undefined
-  stateLoginType: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE | undefined
-  name: string | null
-  avatar?: string | null
-  description?: string | null
-  vessId?: string | null
-}
+export type PartialVESSUser = Omit<
+  VSUser,
+  'createdAt' | 'updatedAt' | 'profiles' | 'socialLink' | 'post'
+>
 
 export type VESSUserInfo = {
-  user: VESSUser | undefined
+  user: PartialVESSUser | undefined
+  address: string | undefined
+  chainId: number | undefined
+  stateLoginType: LOGIN_PROVIDER_TYPE | CUSTOM_LOGIN_PROVIDER_TYPE | undefined
   connectionStatus:
     | 'connected'
     | 'disconnected'
@@ -28,6 +24,9 @@ export type VESSUserInfo = {
 
 const initialVESSUserInfo: VESSUserInfo = {
   user: undefined,
+  address: undefined,
+  chainId: undefined,
+  stateLoginType: undefined,
   connectionStatus: 'disconnected',
 }
 
