@@ -25,10 +25,13 @@ import {
   createUserWithDiscord,
   createUserWithEmail,
   createUserWithGoogle,
+  linkDid,
   vessLogout,
 } from './vessApi'
+import { createDIDJWK } from './vessDiwApi'
 import { clearWeb3ConnectorCache, config } from './wagmi'
 import { UserDID, VSUser } from '@/@types/credential'
+import { LinkDIDInfo } from '@/@types/user'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
 import { getAddressFromPkh } from '@/utils/did'
@@ -52,6 +55,7 @@ export class DidAuthService {
   public composeClient: ComposeClient | null
   public isInitialized: boolean = false
   public isConnecting: boolean = false
+  private isAlpha: boolean = false
 
   private constructor() {
     this.web3auth = new Web3AuthNoModal({
@@ -62,6 +66,11 @@ export class DidAuthService {
     this.provider = null
     const { composeClient } = initializeApolloForCompose()
     this.composeClient = composeClient
+  }
+
+  //===isAlpha===
+  setIsAlpha(isAlpha: boolean): void {
+    this.isAlpha = isAlpha
   }
 
   //===Wallet(wagmi)===
@@ -91,7 +100,29 @@ export class DidAuthService {
         // @ts-ignore TODO:fixed
         this.composeClient.setDID(session.did)
         const resJson = (await res.json()) as VSUser
-        this.setLoginState(session.did.parent, resJson, 'wallet')
+        const { id, userDIDs } = resJson
+        let userWithDidJwk = resJson
+
+        if (this.isAlpha) {
+          //check if a user already have own did:jwk
+          const existingDidJwk = userDIDs?.some((item: UserDID) => item.didType === 'jwk')
+          // if not, create a new one
+          if (!existingDidJwk) {
+            const newDidJwk = await createDIDJWK()
+            //link the new did:jwk to the user
+            const linkInfo: LinkDIDInfo = {
+              didType: 'jwk',
+              didValue: newDidJwk.did,
+            }
+            const resLink = await linkDid(id, linkInfo)
+            if (!isGoodResponse(resLink.status)) {
+              throw new Error('Failed to link did:jwk')
+            }
+            const resLinkJson = (await resLink.json()) as UserDID
+            userWithDidJwk = { ...resJson, userDIDs: [resLinkJson] }
+          }
+        }
+        this.setLoginState(session.did.parent, userWithDidJwk, 'wallet')
       } else {
         this.setLoginState(session.did.parent, undefined, 'wallet')
       }
@@ -237,10 +268,28 @@ export class DidAuthService {
         this.composeClient.setDID(session.did)
         if (res) {
           const resJson = (await res.json()) as VSUser
-          const { name, avatar, description, id, vessId, userDIDs } = resJson
-          //create or set did:jwk
-
-          this.setLoginState(session.did.parent, resJson, user.typeOfLogin)
+          const { id, userDIDs } = resJson
+          let userWithDidJwk = resJson
+          if (this.isAlpha) {
+            //check if a user already have own did:jwk
+            const existingDidJwk = userDIDs?.some((item: UserDID) => item.didType === 'jwk')
+            // if not, create a new one
+            if (!existingDidJwk) {
+              const newDidJwk = await createDIDJWK()
+              //link the new did:jwk to the user
+              const linkInfo: LinkDIDInfo = {
+                didType: 'jwk',
+                didValue: newDidJwk.did,
+              }
+              const resLink = await linkDid(id, linkInfo)
+              if (!isGoodResponse(resLink.status)) {
+                throw new Error('Failed to link did:jwk')
+              }
+              const resLinkJson = (await resLink.json()) as UserDID
+              userWithDidJwk = { ...resJson, userDIDs: [resLinkJson] }
+            }
+          }
+          this.setLoginState(session.did.parent, userWithDidJwk, user.typeOfLogin)
         } else {
           this.setLoginState(session.did.parent, undefined, user.typeOfLogin)
         }

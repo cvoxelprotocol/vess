@@ -11,6 +11,7 @@ import {
   Avatar,
   CreateUserInfo,
   CreateUserWithGoogleInfo,
+  LinkDIDInfo,
   Post,
   PostFeed,
   PostWithUser,
@@ -422,6 +423,15 @@ export const userAuth = async (body: UserAuthInfo): Promise<Response> => {
 export const vessLogout = async (): Promise<Response> => {
   try {
     return await baseVessApi('GET', '/auth/logout')
+  } catch (error) {
+    throw error
+  }
+}
+
+export const linkDid = async (userId: string, body: LinkDIDInfo): Promise<Response> => {
+  try {
+    const endpoint = `/v2/did/${userId}/dids`
+    return await baseVessApi('POST', endpoint, undefined, undefined, body)
   } catch (error) {
     throw error
   }

@@ -143,3 +143,13 @@ export const convertNullToUndefined = <T>(
 
   return value as NonNullableRecursive<T>
 }
+
+export const isImage = (text: string) => {
+  // determine the text is image(base64 encoded image or image url(end with png, jpg, jpeg)) or not
+  return (
+    text.startsWith('data:image/') ||
+    text.endsWith('.png') ||
+    text.endsWith('.jpg') ||
+    text.endsWith('.jpeg')
+  )
+}

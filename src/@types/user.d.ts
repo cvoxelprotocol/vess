@@ -13,6 +13,11 @@ export interface UpdateUserInfo {
   socialLink?: (Partial<SocialLink> & { title: string; url: string })[]
 }
 
+export interface LinkDIDInfo {
+  didType: string
+  didValue: string
+}
+
 export interface UserAuthInfo {
   did: string
 }

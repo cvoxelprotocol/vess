@@ -1,3 +1,5 @@
+import { isJWS } from '@sphereon/oid4vci-common'
+import { getDidJwkResolver } from '@sphereon/ssi-sdk-ext.did-resolver-jwk'
 import { createAgent } from '@veramo/core'
 import type { TAgent, IResolver, ICredentialPlugin } from '@veramo/core-types'
 import { CredentialIssuerEIP712 } from '@veramo/credential-eip712'
@@ -28,6 +30,7 @@ export class VeramoAgent {
             resolver: new Resolver({
               ...pkhDidResolver(),
               ...webDidResolver(),
+              ...getDidJwkResolver(),
             }),
           }),
           new CredentialPlugin(),
@@ -48,11 +51,13 @@ export class VeramoAgent {
   }
 }
 
-export const verifyCredential = async (vc: any) => {
+export const verifyCredential = async (vc: any, isJWT: boolean = false) => {
   const veramo = VeramoAgent.getAgent()
+  const credential = !isJWT ? JSON.parse(vc) : vc
   const veramoRes = await veramo.verifyCredential({
-    credential: JSON.parse(vc),
+    credential: credential,
+    fetchRemoteContexts: true,
   })
-  console.log(JSON.stringify(veramoRes, null, 2))
+  console.log('verifyCredential', JSON.stringify(veramoRes, null, 2))
   return veramoRes
 }

@@ -22,12 +22,13 @@ import { ProfileEditModal } from '../home/ProfileEditModal'
 import { StickerImageItemList } from '../sticker/StickerImageItemList'
 import { IdPlate } from './IdPlate'
 import { SocialLink } from '@/@types/user'
+import { OIDCredItem } from '@/components/home/OIDCredItem'
 import { PIZZA_PARTY_CRED_ID } from '@/constants/campaign'
 import { X_URL, isProd } from '@/constants/common'
 import { useAvatar } from '@/hooks/useAvatar'
 import { useCcProfile } from '@/hooks/useCcProfile'
 import { useENS } from '@/hooks/useENS'
-import { useImage } from '@/hooks/useImage'
+import { useOIDCredentials } from '@/hooks/useOIDCredentials'
 import { useShareLink } from '@/hooks/useShareLink'
 import { removeStickerIdSurfix } from '@/hooks/useStickers'
 import { useUserCredItem } from '@/hooks/useUserCredItem'
@@ -51,7 +52,8 @@ type ProfileContainerProps = {
 }
 
 export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
-  const { user } = useVESSAuthUser()
+  const { user, userJwk } = useVESSAuthUser()
+  const { oidCredentials } = useOIDCredentials(userJwk?.didValue)
   const { userCredentialItems } = useUserCredItem(user?.id)
   const { vsUser, isInitialLoading: isLoadingUser } = useVESSUserProfile(did)
   const { profileAvatar } = useAvatar(did)
@@ -302,7 +304,27 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   最新の証明
                 </Text>
                 <CredList>
-                  {formatedCredentials && formatedCredentials.length > 0 ? (
+                  {(!formatedCredentials || formatedCredentials.length === 0) &&
+                    (!oidCredentials?.credentials || oidCredentials?.credentials.length === 0) && (
+                      <Text typo='label-lg' color='var(--kai-color-sys-neutral)'>
+                        最新の証明はありません
+                      </Text>
+                    )}
+                  {oidCredentials?.credentials && oidCredentials?.credentials.length > 0 && (
+                    <>
+                      {oidCredentials?.credentials.map((cred, index) => (
+                        <>
+                          <OIDCredItem
+                            key={`${cred.credential.credential.decodedPayload?.credentialSubject?.id}-${index}`}
+                            brandings={cred.brandings}
+                            credId={cred.id}
+                            width={'100%'}
+                          />
+                        </>
+                      ))}
+                    </>
+                  )}
+                  {formatedCredentials && formatedCredentials.length > 0 && (
                     <>
                       {formatedCredentials.map((credential, index) => (
                         <>
@@ -316,10 +338,6 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                         </>
                       ))}
                     </>
-                  ) : (
-                    <Text typo='label-lg' color='var(--kai-color-sys-neutral)'>
-                      最新の証明はありません
-                    </Text>
                   )}
                 </CredList>
               </FlexVertical>

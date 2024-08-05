@@ -1,23 +1,36 @@
 import styled from '@emotion/styled'
+import { ICredentialBranding } from '@sphereon/ssi-sdk.data-store'
 import { Skelton } from 'kai-kit'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useMemo, useRef } from 'react'
 import { Button } from 'react-aria-components'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { NextImageContainer } from '../ui-v1/Images/NextImageContainer'
 
 type Props = {
-  image?: string
-  name?: string
+  brandings?: ICredentialBranding[]
   credId?: string
   width?: string
   height?: string
 }
 
-export const CredItem: FC<Props> = ({ image, name, credId, width, height }) => {
+export const OIDCredItem: FC<Props> = ({ brandings, credId, width, height }) => {
   const router = useRouter()
   const imgRef = useRef<HTMLImageElement>(null)
   const [isSquare, setIsSquare] = React.useState(false)
+
+  const localeBranding = useMemo(() => {
+    if (!brandings || brandings.length === 0 || brandings[0].localeBranding.length === 0) return
+    return brandings[0].localeBranding[0]
+  }, [brandings])
+
+  const name = useMemo(() => {
+    return localeBranding ? localeBranding.alias : 'verifiable credential'
+  }, [localeBranding])
+
+  const image = useMemo(() => {
+    return localeBranding ? localeBranding.background?.image?.uri || localeBranding.logo?.uri : ''
+  }, [localeBranding])
 
   useEffect(() => {
     if (imgRef.current) {
@@ -34,7 +47,7 @@ export const CredItem: FC<Props> = ({ image, name, credId, width, height }) => {
 
   const handleClick = () => {
     if (credId) {
-      router.push(`/creds/detail/${credId}`)
+      router.push(`/oid/detail/${credId}`)
     }
   }
 
