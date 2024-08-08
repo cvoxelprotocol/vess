@@ -112,26 +112,19 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
           )}
           {receiveStatus === 'success' && (
             <>
-              {/* DELETEME: */}
-              {id && isPizzaPartyCred(id) ? (
-                <></>
-              ) : (
-                <>
-                  <Text
-                    as='span'
-                    typo='title-md'
-                    align='center'
-                    color='var(--kai-color-sys-secondary)'
-                    startContent={<PiCheckCircleDuotone size='24px' />}
-                  >
-                    受け取りが完了しました！
-                  </Text>
-                  {credItem?.sticker && credItem?.sticker.length > 0 && (
-                    <Button width='100%' onPress={() => router.push(`/post/add`)}>
-                      ステッカーを使ってみる
-                    </Button>
-                  )}
-                </>
+              <Text
+                as='span'
+                typo='title-md'
+                align='center'
+                color='var(--kai-color-sys-secondary)'
+                startContent={<PiCheckCircleDuotone size='24px' />}
+              >
+                受け取りが完了しました！
+              </Text>
+              {credItem?.sticker && credItem?.sticker.length > 0 && (
+                <Button width='100%' onPress={() => router.push(`/post/add`)}>
+                  ステッカーを使ってみる
+                </Button>
               )}
             </>
           )}
@@ -170,15 +163,6 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                     >
                       受け取りが完了しました！
                     </Text>
-                    {id && isPizzaPartyCred(id) && (
-                      <Button
-                        width='100%'
-                        onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
-                      >
-                        限定キャンペーンに参加する
-                      </Button>
-                    )}
-                    {/* DELETEME: */}
                   </>
                 ) : (
                   <>
@@ -208,34 +192,15 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
             )}
             {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
               <>
-                {/* DELETEME: */}
-                {alreadyReceived && id && isPizzaPartyCred(id) ? (
-                  <>
-                    <Text
-                      as='span'
-                      typo='title-sm'
-                      align='center'
-                      color='var(--kai-color-sys-secondary)'
-                      startContent={<PiCheckCircleDuotone size='24px' />}
-                    >
-                      下のバナーからキャンペーンへ参加しよう！
-                    </Text>
-                    <Banner
-                      imgUrl='/banner/pizzaDAO2024.jpg'
-                      onPress={() => router.push(`/creds/items/feed/${PIZZA_PARTY_CRED_ID}`)}
-                    />
-                    {/* DELETEME: */}
-                  </>
-                ) : (
-                  <Button
-                    width='100%'
-                    onPress={handleIssue}
-                    isLoading={receiveStatus === 'receiving'}
-                    loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
-                  >
-                    受け取る
-                  </Button>
-                )}
+                <Button
+                  width='100%'
+                  onPress={handleIssue}
+                  isLoading={receiveStatus === 'receiving'}
+                  loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
+                >
+                  受け取る
+                </Button>
+
                 <Button
                   variant='text'
                   size='sm'
