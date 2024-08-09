@@ -4,9 +4,11 @@ import { useRouter } from 'next/router'
 import React, { FC, useEffect, useMemo } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
 import { Banner } from '../app/Banner'
+import { Checkbox } from '../app/Checkbox'
 import { FlexVertical } from '../ui-v1/Common/FlexVertical'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { PIZZA_PARTY_CRED_ID, isPizzaPartyCred } from '@/constants/campaign'
+import { SCALABLY_VC_IDS } from '@/constants/ui'
 import { useCredentialItem } from '@/hooks/useCredentialItem'
 import { useMyVerifiableCredential } from '@/hooks/useMyVerifiableCredential'
 import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
@@ -21,6 +23,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   const { formatedCredentials } = useVerifiableCredentials(did)
   const [rPath, setRpath] = useStateRPath()
   const { issue } = useMyVerifiableCredential()
+  const [isCheckedEmailShare, setIsCheckedEmailShare] = React.useState(true)
   const [receiveStatus, setReceiveStatus] = React.useState<
     'default' | 'receiving' | 'success' | 'failed'
   >('default')
@@ -192,9 +195,20 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
             )}
             {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
               <>
+                {SCALABLY_VC_IDS.includes(credItem?.id || '') && (
+                  <Checkbox
+                    isSelected={isCheckedEmailShare}
+                    onChange={setIsCheckedEmailShare}
+                    isDisabled={receiveStatus === 'receiving'}
+                    style={{ paddingLeft: '4px' }}
+                  >
+                    メールアドレスをScalablyへ共有します
+                  </Checkbox>
+                )}
                 <Button
                   width='100%'
                   onPress={handleIssue}
+                  isDisabled={!isCheckedEmailShare}
                   isLoading={receiveStatus === 'receiving'}
                   loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
                 >

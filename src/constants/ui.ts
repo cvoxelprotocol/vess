@@ -43,3 +43,5 @@ export const NAVIGATION_LIST: NavigationItemType[] = [
   //   path: '/setting',
   // },
 ]
+
+export const SCALABLY_VC_IDS = ['3288bc77-724a-4325-9c95-5f226b8973dd']
