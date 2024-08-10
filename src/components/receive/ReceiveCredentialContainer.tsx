@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, FlexHorizontal, Skelton, Text } from 'kai-kit'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import React, { FC, useEffect, useMemo } from 'react'
 import { PiCheckCircleDuotone, PiWarningDuotone } from 'react-icons/pi'
 import { Banner } from '../app/Banner'
@@ -21,6 +22,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   const { formatedCredentials } = useVerifiableCredentials(did)
   const [rPath, setRpath] = useStateRPath()
   const { issue } = useMyVerifiableCredential()
+  const { t } = useTranslation()
   const [receiveStatus, setReceiveStatus] = React.useState<
     'default' | 'receiving' | 'success' | 'failed'
   >('default')
@@ -233,7 +235,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                     isLoading={receiveStatus === 'receiving'}
                     loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
                   >
-                    受け取る
+                    {t('receive')}
                   </Button>
                 )}
                 <Button

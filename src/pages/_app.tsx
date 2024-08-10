@@ -5,6 +5,7 @@ import { Provider as JotaiProvider } from 'jotai'
 import { KaiProvider } from 'kai-kit'
 import type { AppProps } from 'next/app'
 import { Noto_Sans } from 'next/font/google'
+import { appWithTranslation } from 'next-i18next'
 import { useState } from 'react'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { GATracking } from '@/components/ui-v1/Common/GATracking'
@@ -36,10 +37,7 @@ const global = css`
   }
 `
 
-export default function App({
-  Component,
-  pageProps,
-}: AppProps<{ dehydratedState: DehydratedState }>) {
+function App({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState }>) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -76,3 +74,5 @@ export default function App({
     </>
   )
 }
+
+export default appWithTranslation(App)

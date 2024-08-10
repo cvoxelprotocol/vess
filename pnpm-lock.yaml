@@ -164,6 +164,9 @@ dependencies:
   next:
     specifier: ^13.5.6
     version: 13.5.6(@babel/core@7.24.5)(react-dom@18.2.0)(react@18.2.0)
+  next-i18next:
+    specifier: ^15.3.1
+    version: 15.3.1(i18next@23.12.2)(next@13.5.6)(react-i18next@13.5.0)(react@18.2.0)
   next-qrcode:
     specifier: ^2.4.0
     version: 2.4.0(react@18.2.0)
@@ -9270,6 +9273,13 @@ packages:
     resolution: {integrity: sha512-RpQH4rXLuvTXKR0zqHq3go0RVXYv/YVqv4TnPH95VbwUxZdQlK1EtcMvQvMpDngHbt13Csh9Z4qT9AbkiQH5BA==}
     dev: false
 
+  /@types/hoist-non-react-statics@3.3.5:
+    resolution: {integrity: sha512-SbcrWzkKBw2cdwRTwQAswfpB9g9LJWfjtUeW/jvNwbhC8cpmmNYVePa+ncbUe0rGTQ7G3Ff6mYUN2VMfLVr+Sg==}
+    dependencies:
+      '@types/react': 18.0.27
+      hoist-non-react-statics: 3.3.2
+    dev: false
+
   /@types/istanbul-lib-coverage@2.0.6:
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
     dev: false
@@ -10479,7 +10489,7 @@ packages:
       bigint-mod-arith: 3.3.1
       conf: 11.0.2
       multiformats: 12.1.3
-      one-webcrypto: github.com/web3-storage/one-webcrypto/5148cd14d5489a8ac4cd38223870e02db15a2382
+      one-webcrypto: github.com/web3-storage/one-webcrypto/9e029e2fd477bd95bb80abd3553bbac704ccc7a6
       p-defer: 4.0.1
       type-fest: 3.13.1
       uint8arrays: 4.0.10
@@ -12297,6 +12307,11 @@ packages:
     resolution: {integrity: sha512-9TNiImhKvQqSUkOvk/mMRZzOANTiEVC7WaBNhHcKM7x+/5E1l5NvsysR19zuDQScE8k+kfQXWRN3AtS/eOSHpg==}
     dependencies:
       browserslist: 4.23.0
+    dev: false
+
+  /core-js@3.38.0:
+    resolution: {integrity: sha512-XPpwqEodRljce9KswjZShh95qJ1URisBeKCjUdq27YdenkslVe7OO0ZJhlYXAChW7OhXaRLl8AAba7IBfoIHug==}
+    requiresBuild: true
     dev: false
 
   /core-util-is@1.0.2:
@@ -15122,8 +15137,18 @@ packages:
       '@babel/runtime': 7.24.5
     dev: false
 
+  /i18next-fs-backend@2.3.2:
+    resolution: {integrity: sha512-LIwUlkqDZnUI8lnUxBnEj8K/FrHQTT/Sc+1rvDm9E8YvvY5YxzoEAASNx+W5M9DfD5s77lI5vSAFWeTp26B/3Q==}
+    dev: false
+
   /i18next@22.5.1:
     resolution: {integrity: sha512-8TGPgM3pAD+VRsMtUMNknRz3kzqwp/gPALrWMsDnmC1mKqJwpWyooQRLMcbTwq8z8YwSmuj+ZYvc+xCuEpkssA==}
+    dependencies:
+      '@babel/runtime': 7.24.5
+    dev: false
+
+  /i18next@23.12.2:
+    resolution: {integrity: sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==}
     dependencies:
       '@babel/runtime': 7.24.5
     dev: false
@@ -17454,6 +17479,26 @@ packages:
     dev: false
     optional: true
 
+  /next-i18next@15.3.1(i18next@23.12.2)(next@13.5.6)(react-i18next@13.5.0)(react@18.2.0):
+    resolution: {integrity: sha512-+pa2pZJb7B6k5PKW3TLVMmAodqkNaOBWVYlpWX56mgcEJz0UMW+MKSdKM9Z72CHp6Bp48g7OWwDnLqxXNp/84w==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      i18next: '>= 23.7.13'
+      next: '>= 12.0.0'
+      react: '>= 17.0.2'
+      react-i18next: '>= 13.5.0'
+    dependencies:
+      '@babel/runtime': 7.24.5
+      '@types/hoist-non-react-statics': 3.3.5
+      core-js: 3.38.0
+      hoist-non-react-statics: 3.3.2
+      i18next: 23.12.2
+      i18next-fs-backend: 2.3.2
+      next: 13.5.6(@babel/core@7.24.5)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-i18next: 13.5.0(i18next@23.12.2)(react-dom@18.2.0)(react-native@0.74.1)(react@18.2.0)
+    dev: false
+
   /next-qrcode@2.4.0(react@18.2.0):
     resolution: {integrity: sha512-ShgAyiYvd91k7IkgZEQSzS8UAJAX+XWekUgwPcO9FrQIpjiWHtB0OuSbuTims7GgyN76ceR7MFHMxebrIbNfZg==}
     engines: {node: '>=8', npm: '>=5'}
@@ -18863,6 +18908,27 @@ packages:
       '@babel/runtime': 7.24.5
       html-parse-stringify: 3.0.1
       i18next: 22.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.0.27)(react@18.2.0)
+    dev: false
+
+  /react-i18next@13.5.0(i18next@23.12.2)(react-dom@18.2.0)(react-native@0.74.1)(react@18.2.0):
+    resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
+    peerDependencies:
+      i18next: '>= 23.2.3'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.24.5
+      html-parse-stringify: 3.0.1
+      i18next: 23.12.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.0.27)(react@18.2.0)
@@ -21824,8 +21890,8 @@ packages:
       - web-streams-polyfill
     dev: false
 
-  github.com/web3-storage/one-webcrypto/5148cd14d5489a8ac4cd38223870e02db15a2382:
-    resolution: {tarball: https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/5148cd14d5489a8ac4cd38223870e02db15a2382}
-    name: one-webcrypto
-    version: 1.0.3
+  github.com/web3-storage/one-webcrypto/9e029e2fd477bd95bb80abd3553bbac704ccc7a6:
+    resolution: {tarball: https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/9e029e2fd477bd95bb80abd3553bbac704ccc7a6}
+    name: '@storacha/one-webcrypto'
+    version: 1.0.1
     dev: false
