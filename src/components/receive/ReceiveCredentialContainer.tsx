@@ -46,6 +46,8 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
         const isSuccess = await issue(credItem)
         if (isSuccess) {
           setReceiveStatus('success')
+        } else {
+          setReceiveStatus('failed')
         }
       }
     } catch (error) {
@@ -189,13 +191,30 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
               </>
             )}
             {receiveStatus === 'failed' && (
-              <Button width='100%' onPress={handleIssue}>
-                もう一度試す
-              </Button>
+              <>
+                <Button width='1000%' onPress={handleIssue}>
+                  もう一度試す
+                </Button>
+                <Button
+                  variant='text'
+                  width='100%'
+                  onPress={() => {
+                    if (vessId) {
+                      router.push(`/${vessId}`)
+                    } else if (did) {
+                      return router.push(`/did/${did}`)
+                    } else {
+                      return router.push(`/`)
+                    }
+                  }}
+                >
+                  ホームに戻る
+                </Button>
+              </>
             )}
             {(receiveStatus === 'default' || receiveStatus === 'receiving') && (
               <>
-                {SCALABLY_VC_IDS.includes(credItem?.id || '') && (
+                {SCALABLY_VC_IDS.includes(credItem?.id || '') && !alreadyReceived && (
                   <Checkbox
                     isSelected={isCheckedEmailShare}
                     onChange={setIsCheckedEmailShare}
@@ -208,11 +227,16 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
                 <Button
                   width='100%'
                   onPress={handleIssue}
-                  isDisabled={!isCheckedEmailShare}
+                  isDisabled={
+                    !isCheckedEmailShare ||
+                    (SCALABLY_VC_IDS.includes(credItem?.id || '') && alreadyReceived)
+                  }
                   isLoading={receiveStatus === 'receiving'}
                   loadingText={receiveStatus === 'receiving' ? '受け取り中' : '受け取る'}
                 >
-                  受け取る
+                  {SCALABLY_VC_IDS.includes(credItem?.id || '') && alreadyReceived
+                    ? 'すでに取得しています'
+                    : '受け取る'}
                 </Button>
 
                 <Button
