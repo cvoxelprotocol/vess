@@ -23,6 +23,7 @@ import { useVESSAuthUser } from '@/hooks/useVESSAuthUser'
 import { useStateVcVerifiedStatus } from '@/jotai/ui'
 import { verifyCredential } from '@/lib/veramo'
 import { formatDate, isExpired } from '@/utils/date'
+import { isBase64Image, unescapeHtml } from '@/utils/image'
 import { isImage } from '@/utils/objectUtil'
 
 export type CredDetailProps = {
@@ -32,6 +33,7 @@ export type CredDetailProps = {
 export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { user, userJwk } = useVESSAuthUser()
   const { isInitialLoading, oidCredential } = useOIDCredential(id)
+
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
     id: 'plain-cred-copied',
@@ -287,7 +289,10 @@ export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                       {prop.key}
                     </Text>
                     {isImage(prop.value) ? (
-                      <ImageContainer src={prop.value} width={'100%'} />
+                      <ImageContainer
+                        src={isBase64Image(prop.value) ? unescapeHtml(prop.value) : prop.value}
+                        width={'100%'}
+                      />
                     ) : (
                       <Text typo='body-lg' color='var(--kai-color-sys-on-layer)'>
                         {prop.value}

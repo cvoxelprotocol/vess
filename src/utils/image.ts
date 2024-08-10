@@ -19,3 +19,13 @@ export const compressImage = async (
     throw error
   }
 }
+
+export const unescapeHtml = (text: string) => {
+  const textarea = document.createElement('textarea')
+  textarea.innerHTML = text
+  return textarea.value
+}
+
+export const isBase64Image = (image: string) => {
+  return image.startsWith('data:image/')
+}
