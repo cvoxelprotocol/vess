@@ -58,6 +58,5 @@ export const verifyCredential = async (vc: any, isJWT: boolean = false) => {
     credential: credential,
     fetchRemoteContexts: true,
   })
-  console.log('verifyCredential', JSON.stringify(veramoRes, null, 2))
   return veramoRes
 }

@@ -19,6 +19,11 @@ export interface AcquireCredentialDto {
   pinCode?: string
 }
 
+export interface DidBindingCredentialDto {
+  didjwk: string
+  didpkh: string
+}
+
 export interface CredentialResponseDto {
   id: string
   credential: string

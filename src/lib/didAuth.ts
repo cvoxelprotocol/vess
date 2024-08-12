@@ -28,12 +28,13 @@ import {
   linkDid,
   vessLogout,
 } from './vessApi'
-import { createDIDJWK } from './vessDiwApi'
+import { createDIDJWK, issueDidBindingCredential } from './vessDiwApi'
 import { clearWeb3ConnectorCache, config } from './wagmi'
 import { UserDID, VSUser } from '@/@types/credential'
 import { LinkDIDInfo } from '@/@types/user'
 import { isProd } from '@/constants/common'
 import { getVESSAuth, setVESSAuth } from '@/context/DidAuthContext'
+import { DidBindingCredentialDto } from '@/hooks/useOID4VCI'
 import { getAddressFromPkh } from '@/utils/did'
 import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
@@ -120,6 +121,13 @@ export class DidAuthService {
             }
             const resLinkJson = (await resLink.json()) as UserDID
             userWithDidJwk = { ...resJson, userDIDs: [resLinkJson] }
+
+            const body: DidBindingCredentialDto = {
+              didjwk: newDidJwk.did,
+              didpkh: session.did.parent,
+            }
+            const resIssue = await issueDidBindingCredential(body)
+            console.log({ resIssue })
           }
         }
         this.setLoginState(session.did.parent, userWithDidJwk, 'wallet')
@@ -287,6 +295,14 @@ export class DidAuthService {
               }
               const resLinkJson = (await resLink.json()) as UserDID
               userWithDidJwk = { ...resJson, userDIDs: [resLinkJson] }
+
+              //create self-issued credential
+              const body: DidBindingCredentialDto = {
+                didjwk: newDidJwk.did,
+                didpkh: session.did.parent,
+              }
+              const resIssue = await issueDidBindingCredential(body)
+              console.log({ resIssue })
             }
           }
           this.setLoginState(session.did.parent, userWithDidJwk, user.typeOfLogin)

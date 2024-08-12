@@ -2,7 +2,11 @@ import { CredentialOfferRequestWithBaseUrl, EndpointMetadataResult } from '@sphe
 import { ICredentialBranding } from '@sphereon/ssi-sdk.data-store'
 import { WrappedVerifiableCredential } from '@sphereon/ssi-types'
 import { DIDJWK } from '@/@types/did'
-import { AcquireCredentialDto, CredentialResponseDto } from '@/hooks/useOID4VCI'
+import {
+  AcquireCredentialDto,
+  CredentialResponseDto,
+  DidBindingCredentialDto,
+} from '@/hooks/useOID4VCI'
 import { isGoodResponse } from '@/utils/http'
 import { getCurrentDomain } from '@/utils/url'
 
@@ -108,6 +112,23 @@ export const acquireCredential = async (
   try {
     console.log({ body })
     const res = await baseDiwVessApi('POST', '/api/v1/credential/acquire', body)
+    if (isGoodResponse(res.status)) {
+      const resJson = (await res.json()) as CredentialResponseDto
+      return resJson
+    } else {
+      console.error('res', JSON.stringify(res))
+      throw new Error('failed to create DID JWK')
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+export const issueDidBindingCredential = async (
+  body: DidBindingCredentialDto,
+): Promise<CredentialResponseDto> => {
+  try {
+    const res = await baseDiwVessApi('POST', '/api/v1/credential/issue/did_binding', body)
     if (isGoodResponse(res.status)) {
       const resJson = (await res.json()) as CredentialResponseDto
       return resJson
