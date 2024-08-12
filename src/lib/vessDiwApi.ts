@@ -25,6 +25,26 @@ export type CredentialResponse = {
 export type CredentialListResponse = {
   credentials: CredentialEntity[]
 }
+export type DeleteCredentailResponse = {
+  success: boolean
+  message: string
+}
+
+export const deleteCredential = async (id?: string): Promise<DeleteCredentailResponse> => {
+  try {
+    const endpoint = `/api/v1/credential/delete/${id}`
+    const res = await baseDiwVessApi('POST', endpoint)
+    if (isGoodResponse(res.status)) {
+      const resJson = (await res.json()) as DeleteCredentailResponse
+      return resJson
+    } else {
+      console.error('res', JSON.stringify(res))
+      throw new Error('failed to create DID JWK')
+    }
+  } catch (error) {
+    throw error
+  }
+}
 
 export const getCredential = async (id?: string): Promise<CredentialResponse | null> => {
   try {

@@ -12,7 +12,6 @@ import {
   Spinner,
   Switch,
 } from 'kai-kit'
-import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
@@ -32,7 +31,7 @@ export type CredDetailProps = {
 
 export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { user, userJwk } = useVESSAuthUser()
-  const { isInitialLoading, oidCredential } = useOIDCredential(id)
+  const { isInitialLoading, oidCredential, deleteItem } = useOIDCredential(id)
 
   const [verified, setVerified] = useStateVcVerifiedStatus()
   const { openSnackbar } = useSnackbar({
@@ -42,6 +41,14 @@ export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const { openSnackbar: openURLCopied } = useSnackbar({
     id: 'share-url-copied',
     text: '共有用URLをコピーしました。',
+  })
+  const { openSnackbar: openDeleteCredSnackBar } = useSnackbar({
+    id: 'delete-cred-item',
+    text: '削除しました',
+  })
+  const { openSnackbar: openDeleteCredFailedSnackBar } = useSnackbar({
+    id: 'delete-cred-item-failed',
+    text: '削除に失敗しました',
   })
   const scrollRef = useRef<HTMLDivElement>(null)
   const { scrollInfo } = useScrollCondition(scrollRef)
@@ -103,6 +110,10 @@ export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
     }
   }, [oidCredential?.credentials.credential])
 
+  const isMine = useMemo(() => {
+    return oidCredential?.credentials.credential.decoded.credentialSubject.id === userJwk?.didValue
+  }, [userJwk?.didValue, oidCredential])
+
   const issuer = useMemo(() => {
     console.log({ oidCredential })
     if (!oidCredential) return { name: 'Unknown', icon: '/default_profile.jpg' }
@@ -120,6 +131,16 @@ export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
       icon: '/default_profile.jpg',
     }
   }, [oidCredential])
+
+  const handleDelete = async () => {
+    if (!id) return
+    const res = await deleteItem(id)
+    if (res.success) {
+      openDeleteCredSnackBar()
+    } else {
+      openDeleteCredFailedSnackBar()
+    }
+  }
 
   return (
     <>
@@ -226,7 +247,7 @@ export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   color='var(--kai-color-sys-on-layer)'
                   isLoading={isInitialLoading}
                 >
-                  {issuer.name}
+                  {issuer.name.id || issuer.name}
                 </Text>
               </FlexHorizontal>
             </InfoItemFrame>
@@ -328,6 +349,20 @@ export const OIDCredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 </JsonFrame>
               </PlainCredFrame>
             </InfoItemFrame>
+            {isMine && (
+              <InfoItemFrame>
+                <Button
+                  variant='tonal'
+                  color='subdominant'
+                  onPress={() => {
+                    handleDelete()
+                  }}
+                  size='sm'
+                >
+                  削除する
+                </Button>
+              </InfoItemFrame>
+            )}
           </InfoItemsFrame>
           <ActionFrame>
             <Button
