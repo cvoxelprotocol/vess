@@ -89,7 +89,10 @@ export const ProfileEditModal: FC<ProfileEditModalProps> = ({ did, name }) => {
     }
   }
 
-  const hasVESSId = useMemo(() => !!vsUser?.vessId && vsUser?.vessId !== '', [vsUser?.vessId])
+  const hasVESSId = useMemo(
+    () => !!vsUser?.vessId && vsUser?.vessId !== '' && vsUser.vessId !== vsUser.did,
+    [vsUser?.vessId, vsUser?.did],
+  )
   const isAvailableId = async (vessId?: string) => {
     try {
       console.log({ vessId })
