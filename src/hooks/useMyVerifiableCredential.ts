@@ -1,7 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { did } from '@ucanto/core/schema'
 import { useVESSAuthUser } from './useVESSAuthUser'
 import { useVESSLoading } from './useVESSLoading'
-import { CredType, VSCredentialItemFromBuckup } from '@/@types/credential'
+import {
+  CredType,
+  OBCredentialItemFromBackup,
+  VSCredentialItemFromBuckup,
+} from '@/@types/credential'
 import { issueSocialVerifiableCredentials, issueVerifiableCredentials } from '@/lib/vessApi'
 
 export interface SubjectUniqueInput {
@@ -36,7 +41,9 @@ export const useMyVerifiableCredential = () => {
   const { showLoading, closeLoading } = useVESSLoading()
   const { did } = useVESSAuthUser()
 
-  const issue = async (item: VSCredentialItemFromBuckup): Promise<boolean> => {
+  const issue = async (
+    item: VSCredentialItemFromBuckup | OBCredentialItemFromBackup,
+  ): Promise<boolean> => {
     if (!did) {
       return false
     }
@@ -50,60 +57,85 @@ export const useMyVerifiableCredential = () => {
       let commonContent
       switch (type) {
         case 'attendance':
+          const attendance = item as VSCredentialItemFromBuckup
           commonContent = {
-            eventId: !!item.ceramicId && item.ceramicId !== '' ? item.ceramicId : item.id,
-            eventName: item.title,
-            eventIcon: item.image,
-            startDate: item.startDate ? item.startDate : '',
-            endDate: item.endDate ? item.endDate : '',
+            eventId:
+              !!attendance.ceramicId && attendance.ceramicId !== ''
+                ? attendance.ceramicId
+                : attendance.id,
+            eventName: attendance.title,
+            eventIcon: attendance.image,
+            startDate: attendance.startDate ? attendance.startDate : '',
+            endDate: attendance.endDate ? attendance.endDate : '',
             sticker:
-              item.sticker && item.sticker.length > 0
-                ? item.sticker.map((s) => s.image)
+              attendance.sticker && attendance.sticker.length > 0
+                ? attendance.sticker.map((s) => s.image)
                 : undefined,
           }
           break
         case 'membership':
+          const membership = item as VSCredentialItemFromBuckup
           commonContent = {
             organizationName: workspace?.name,
             organizationId: workspace?.ceramicId || workspace?.id,
             organizationIcon: workspace?.icon || '',
-            membershipName: item.title,
-            membershipIcon: item.image,
-            startDate: item.startDate ? item.startDate : '',
-            endDate: item.endDate ? item.endDate : '',
+            membershipName: membership.title,
+            membershipIcon: membership.image,
+            startDate: membership.startDate ? membership.startDate : '',
+            endDate: membership.endDate ? membership.endDate : '',
             sticker:
-              item.sticker && item.sticker.length > 0
-                ? item.sticker.map((s) => s.image)
+              membership.sticker && membership.sticker.length > 0
+                ? membership.sticker.map((s) => s.image)
                 : undefined,
           }
           break
         case 'certificate':
+          const certificate = item as VSCredentialItemFromBuckup
           commonContent = {
-            certificationId: !!item.ceramicId && item.ceramicId !== '' ? item.ceramicId : item.id,
-            certificationName: item.title,
-            image: item.image || '',
-            startDate: item.startDate ? item.startDate : '',
-            endDate: item.endDate ? item.endDate : '',
+            certificationId:
+              !!certificate.ceramicId && certificate.ceramicId !== ''
+                ? certificate.ceramicId
+                : certificate.id,
+            certificationName: certificate.title,
+            image: certificate.image || '',
+            startDate: certificate.startDate ? certificate.startDate : '',
+            endDate: certificate.endDate ? certificate.endDate : '',
             sticker:
-              item.sticker && item.sticker.length > 0
-                ? item.sticker.map((s) => s.image)
+              certificate.sticker && certificate.sticker.length > 0
+                ? certificate.sticker.map((s) => s.image)
                 : undefined,
           }
           break
 
-        default:
+        case 'openbadge':
+          const openbadge = item as OBCredentialItemFromBackup
           commonContent = {
-            name: item.title,
-            image: item.icon || item.image || '',
-            description: item.description || '',
-            primaryColor: item.primaryColor || '',
-            startDate: item.startDate ? item.startDate : '',
-            endDate: item.endDate ? item.endDate : '',
-            itemId: item.id,
-            ceramicId: item.ceramicId || '',
+            name: openbadge.name,
+            description: openbadge.description,
+            criteria: openbadge.criteria,
+            image: openbadge.image,
+            achievementType: openbadge.achievementType,
+            activityStartDate: openbadge.activityStartDate,
+            activityEndDate: openbadge.activityEndDate,
+            validFrom: openbadge.validFrom,
+            validUntil: openbadge.validUntil,
+          }
+          break
+
+        default:
+          const defaultCredential = item as VSCredentialItemFromBuckup
+          commonContent = {
+            name: defaultCredential.title,
+            image: defaultCredential.icon || defaultCredential.image || '',
+            description: defaultCredential.description || '',
+            primaryColor: defaultCredential.primaryColor || '',
+            startDate: defaultCredential.startDate ? defaultCredential.startDate : '',
+            endDate: defaultCredential.endDate ? defaultCredential.endDate : '',
+            itemId: defaultCredential.id,
+            ceramicId: defaultCredential.ceramicId || '',
             sticker:
-              item.sticker && item.sticker.length > 0
-                ? item.sticker.map((s) => s.image)
+              defaultCredential.sticker && defaultCredential.sticker.length > 0
+                ? defaultCredential.sticker.map((s) => s.image)
                 : undefined,
           }
           break
@@ -146,6 +178,7 @@ export const useMyVerifiableCredential = () => {
       const vcs = resJson.data as saveCredentialToComposeDBResponse[]
       console.log({ vcs })
       queryClient.invalidateQueries(['credItem', item.id])
+      queryClient.invalidateQueries(['obCredItem', item.id])
       queryClient.invalidateQueries(['CredentialsByHolder', did])
       if (vcs && vcs.length > 0) {
         closeLoading()

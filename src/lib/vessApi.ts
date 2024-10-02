@@ -1,6 +1,7 @@
 import {
   ICreateHolderContentsRequest,
   IIssueCredentialItemByUserRequest,
+  OBCredentialItemFromBackup,
   SetVisibleRequest,
   VSCredentialItemFromBuckup,
   VSUser,
@@ -193,6 +194,25 @@ export const getCredentialItem = async (
     const res = await baseVessApi('GET', '/v2/creditems/item', id, q)
     const resjson = await res.json()
     return resjson as VSCredentialItemFromBuckup
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getOBCredentialItem = async (
+  id?: string,
+  showHolders: boolean = false,
+  userId?: string,
+): Promise<OBCredentialItemFromBackup> => {
+  if (!id) {
+    throw new Error('id is undefined')
+  }
+  try {
+    let q = userId ? `userId=${userId}&` : ''
+    q = showHolders ? `${q}showHolders=true` : q
+    const res = await baseVessApi('GET', '/v2/creditems/ob-item', id, q)
+    const resjson = await res.json()
+    return resjson as OBCredentialItemFromBackup
   } catch (error) {
     throw error
   }

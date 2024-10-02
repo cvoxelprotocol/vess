@@ -45,9 +45,12 @@ export const useVerifiableCredentials = (did?: string) => {
         } else if (item.credentialType?.name === 'certificate') {
           title = item.credentialSubject.certificationName
           image = item.credentialSubject.image
-        } else {
+        } else if (item.credentialType?.name === 'openbadge') {
           title = item.credentialSubject.name || item.credentialSubject.title
           image = item.credentialSubject.image || item.credentialSubject.icon
+        } else {
+          title = item.name
+          image = item.credentialSubject.image
         }
         return {
           ...item,

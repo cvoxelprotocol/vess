@@ -32,6 +32,26 @@ export type VSCredentialItem = {
   updatedAt: Date
 }
 
+export type OBCredentialItem = {
+  id: string
+  ceramicId: string | undefined
+  credentialTypeId: string
+  collectionId: string
+  organizationId: string | null
+  name: string
+  description: string
+  criteria: string
+  image: string
+  bakedImage?: string
+  achievementType?: string
+  activityStartDate?: string
+  activityEndDate?: string
+  validFrom?: string
+  validUntil?: string
+  createdAt: string
+  updatedAt: string
+}
+
 export type CredentialStruct = {
   id: string
   organizationId: string
@@ -45,6 +65,7 @@ export type CredentialStruct = {
   updatedAt: Date
   credentialType?: CredentialType
   credentialItem?: VSCredentialItem
+  credentialItemOB?: OBCredentialItem
   organization?: WorkspaceType
   user?: VSUser
   hideFromPublic?: boolean
@@ -89,7 +110,13 @@ type CredentialSubject = {
   [x: string]: any
 }
 
-export const CredTypeUnion = ['membership', 'attendance', 'certificate', 'default'] as const
+export const CredTypeUnion = [
+  'membership',
+  'attendance',
+  'certificate',
+  'default',
+  'openbadge',
+] as const
 export type CredType = typeof CredTypeUnion[number]
 export type CredTypeProps = {
   type?: CredType
@@ -214,6 +241,35 @@ export type VSCredentialItemFromBuckup = {
   organization?: OrganizationType | null
   Tagged: Tagged[]
   credentials?: VSCredential[]
+  userId?: string | null
+  user?: VSUser
+  sticker?: Sticker[]
+  post?: Post[]
+  credentialsWithHolder?: CredentialWithHolder[]
+  holderContents?: HolderContent[]
+}
+
+export type OBCredentialItemFromBackup = {
+  id: string
+  ceramicId: string | undefined
+  credentialTypeId?: string
+  credentialType?: CredentialType
+  collectionId?: string
+  organizationId?: string | null
+  name: string
+  description: string
+  criteria: string
+  image: string
+  bakedImage?: string
+  achievementType?: string
+  activityStartDate?: string
+  activityEndDate?: string
+  validFrom?: string
+  validUntil?: string
+  createdAt: string
+  updatedAt: string
+  organization?: OrganizationType | null
+  credentials?: OBCredential[]
   userId?: string | null
   user?: VSUser
   sticker?: Sticker[]
