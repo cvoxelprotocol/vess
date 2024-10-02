@@ -1,0 +1,49 @@
+{
+  "AchievementCredential": [
+    { "name": "@context", "type": "string[]" },
+    { "name": "id", "type": "string" },
+    { "name": "type", "type": "string[]" },
+    { "name": "issuer", "type": "Profile" },
+    { "name": "name", "type": "string" },
+    { "name": "description", "type": "string" },
+    { "name": "issuanceDate", "type": "string" },
+    { "name": "validFrom", "type": "string" },
+    { "name": "validUntil", "type": "string" },
+    { "name": "credentialSubject", "type": "AchievementSubject" },
+    { "name": "credentialSchema", "type": "CredentialSchema" },
+    { "name": "proof", "type": "Proof" }
+  ],
+  "AchievementSubject": [
+    { "name": "id", "type": "string" },
+    { "name": "type", "type": "string[]" },
+    { "name": "achievement", "type": "Achievement" },
+    { "name": "activityEndDate", "type": "string" },
+    { "name": "activityStartDate", "type": "string" },
+    { "name": "description", "type": "string" },
+    { "name": "image", "type": "string" }
+  ],
+  "Profile": [
+    { "name": "id", "type": "string" },
+    { "name": "type", "type": "string[]" },
+    { "name": "name", "type": "string" }
+  ],
+  "Achievement": [
+    { "name": "id", "type": "string" },
+    { "name": "type", "type": "string[]" },
+    { "name": "name", "type": "string" },
+    { "name": "description", "type": "string" },
+    { "name": "image", "type": "string" },
+    { "name": "criteria", "type": "Criteria" }
+  ],
+  "Criteria": [{ "name": "narrative", "type": "string" }],
+  "CredentialSchema": [
+    { "name": "id", "type": "string" },
+    { "name": "type", "type": "string" }
+  ],
+  "Proof": [
+    { "name": "created", "type": "string" },
+    { "name": "proofPurpose", "type": "string" },
+    { "name": "type", "type": "string" },
+    { "name": "verificationMethod", "type": "string" }
+  ]
+}
