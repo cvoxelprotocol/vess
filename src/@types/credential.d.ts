@@ -65,7 +65,7 @@ export type CredentialStruct = {
   updatedAt: Date
   credentialType?: CredentialType
   credentialItem?: VSCredentialItem
-  credentialItemOB?: OBCredentialItem
+  OBcredentialItem?: OBCredentialItem
   organization?: WorkspaceType
   user?: VSUser
   hideFromPublic?: boolean

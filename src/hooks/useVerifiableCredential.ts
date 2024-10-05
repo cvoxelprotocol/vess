@@ -31,6 +31,7 @@ export const useVerifiableCredential = (id?: string) => {
     const vc = JSON.parse(verifiableCredential.data.plainCredential)
     let title = ''
     let image = ''
+    console.log('🍅', vc)
     if (verifiableCredential.data?.credentialType?.name === 'attendance') {
       title = vc.credentialSubject.eventName
       image = vc.credentialSubject.eventIcon
@@ -40,6 +41,9 @@ export const useVerifiableCredential = (id?: string) => {
     } else if (verifiableCredential.data?.credentialType?.name === 'certificate') {
       title = vc.credentialSubject.certificationName
       image = vc.credentialSubject.image
+    } else if (verifiableCredential.data?.credentialType?.name === 'openbadge') {
+      title = vc.name || vc.credentialSubject.title
+      image = vc.credentialSubject.image || vc.credentialSubject.icon
     } else {
       title = vc.credentialSubject.name || vc.credentialSubject.title
       image = vc.credentialSubject.image || vc.credentialSubject.icon

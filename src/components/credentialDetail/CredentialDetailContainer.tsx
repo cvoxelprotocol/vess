@@ -223,7 +223,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               color='var(--kai-color-sys-on-layer)'
               isLoading={isInitialLoading}
             >
-              {credential?.credentialItem?.title || ''}
+              {credential?.title || ''}
             </Text>
           </div>
           {isMine && (
