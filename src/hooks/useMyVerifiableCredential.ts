@@ -1,5 +1,4 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { did } from '@ucanto/core/schema'
 import { useVESSAuthUser } from './useVESSAuthUser'
 import { useVESSLoading } from './useVESSLoading'
 import {

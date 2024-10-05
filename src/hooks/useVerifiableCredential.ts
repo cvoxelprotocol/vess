@@ -31,7 +31,6 @@ export const useVerifiableCredential = (id?: string) => {
     const vc = JSON.parse(verifiableCredential.data.plainCredential)
     let title = ''
     let image = ''
-    console.log('🍅', vc)
     if (verifiableCredential.data?.credentialType?.name === 'attendance') {
       title = vc.credentialSubject.eventName
       image = vc.credentialSubject.eventIcon
