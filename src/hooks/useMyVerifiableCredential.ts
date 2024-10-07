@@ -32,7 +32,6 @@ export interface IssueSocialCredentialRequest {
 
 export interface saveCredentialToComposeDBResponse {
   vc: any
-  ceramicId?: string
 }
 
 export const useMyVerifiableCredential = () => {
@@ -58,10 +57,7 @@ export const useMyVerifiableCredential = () => {
         case 'attendance':
           const attendance = item as VSCredentialItemFromBuckup
           commonContent = {
-            eventId:
-              !!attendance.ceramicId && attendance.ceramicId !== ''
-                ? attendance.ceramicId
-                : attendance.id,
+            eventId: attendance.id,
             eventName: attendance.title,
             eventIcon: attendance.image,
             startDate: attendance.startDate ? attendance.startDate : '',
@@ -76,7 +72,7 @@ export const useMyVerifiableCredential = () => {
           const membership = item as VSCredentialItemFromBuckup
           commonContent = {
             organizationName: workspace?.name,
-            organizationId: workspace?.ceramicId || workspace?.id,
+            organizationId: workspace?.id,
             organizationIcon: workspace?.icon || '',
             membershipName: membership.title,
             membershipIcon: membership.image,
@@ -91,10 +87,7 @@ export const useMyVerifiableCredential = () => {
         case 'certificate':
           const certificate = item as VSCredentialItemFromBuckup
           commonContent = {
-            certificationId:
-              !!certificate.ceramicId && certificate.ceramicId !== ''
-                ? certificate.ceramicId
-                : certificate.id,
+            certificationId: certificate.id,
             certificationName: certificate.title,
             image: certificate.image || '',
             startDate: certificate.startDate ? certificate.startDate : '',
@@ -131,7 +124,6 @@ export const useMyVerifiableCredential = () => {
             startDate: defaultCredential.startDate ? defaultCredential.startDate : '',
             endDate: defaultCredential.endDate ? defaultCredential.endDate : '',
             itemId: defaultCredential.id,
-            ceramicId: defaultCredential.ceramicId || '',
             sticker:
               defaultCredential.sticker && defaultCredential.sticker.length > 0
                 ? defaultCredential.sticker.map((s) => s.image)
