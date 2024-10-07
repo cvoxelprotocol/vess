@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { BaseCredential, CredentialsResponse, WithCeramicId } from '@/@types/credential'
+import { BaseCredential, CredentialsResponse, WithCredentialType } from '@/@types/credential'
 import { getCredentials } from '@/lib/vessApi'
 import { isExpired } from '@/utils/date'
 
@@ -21,14 +21,13 @@ export const useVerifiableCredentials = (did?: string) => {
     return (await res.json()) as CredentialsResponse
   }
 
-  const formatedCredentials = useMemo<WithCeramicId<BaseCredential>[]>(() => {
+  const formatedCredentials = useMemo<WithCredentialType<BaseCredential>[]>(() => {
     if (!CredentialsByHolder || CredentialsByHolder.data.length === 0) return []
     return CredentialsByHolder.data
       .map((item) => {
         const plainCredential = JSON.parse(item.plainCredential)
         return {
           ...plainCredential,
-          ceramicId: item.ceramicId,
           credentialType: item.credentialType,
           credId: item.credentialItem?.id,
         }

@@ -3,10 +3,10 @@ import { Skelton } from 'kai-kit'
 import React, { FC } from 'react'
 import { Button } from 'react-aria-components'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
-import { WithCeramicId, BaseCredential } from '@/@types/credential'
+import { WithCredentialType, BaseCredential } from '@/@types/credential'
 
 export type EventItemProps = {
-  item?: WithCeramicId<BaseCredential>
+  item?: WithCredentialType<BaseCredential>
   size?: string
 }
 

@@ -1,7 +1,6 @@
 export type WorkspaceType = {
   id: string
   address: string
-  ceramicId: string
   name: string
   desc?: string
   icon?: string
@@ -16,7 +15,6 @@ export type CredentialType = {
 
 export type VSCredentialItem = {
   id: string
-  ceramicId: string | null
   organizationId: string | null
   credentialTypeId: string
   collectionId: string
@@ -34,7 +32,6 @@ export type VSCredentialItem = {
 
 export type OBCredentialItem = {
   id: string
-  ceramicId: string | undefined
   credentialTypeId: string
   collectionId: string
   organizationId: string | null
@@ -58,8 +55,6 @@ export type CredentialStruct = {
   credentialTypeId: string
   issuerDid: string
   holderDid: string
-  ceramicId: string
-  groupCeramicId: string
   plainCredential: string
   createdAt: Date
   updatedAt: Date
@@ -83,8 +78,7 @@ export type CredentialsResponse = {
   data: CredentialStruct[]
 }
 
-export type WithCeramicId<T> = T & {
-  ceramicId: string
+export type WithCredentialType<T> = T & {
   credentialType: CredentialType
 }
 
@@ -145,7 +139,6 @@ type CredItemRequest = CredItemInput & {
 
 export type OrganizationType = {
   address: string
-  ceramicId: string | null
   id: string
   keyId: string
   name: string
@@ -187,7 +180,6 @@ export type Provider = {
 export type GetCollectionResponse = {
   id: string
   organizationId: string
-  ceramicId: string
   name: string
   parentId?: string
   parent?: GetCollectionResponse
@@ -203,7 +195,6 @@ export type VSCredential = {
   credentialTypeId: string | null
   issuerDid: string
   holderDid: string
-  ceramicId: string | null
   plainCredential: string
   createdAt: Date
   updatedAt: Date
@@ -224,7 +215,6 @@ type Tagged = {
 
 export type VSCredentialItemFromBuckup = {
   id: string
-  ceramicId: string | undefined
   credentialTypeId?: string
   credentialType?: CredentialType
   collectionId?: string
@@ -251,7 +241,6 @@ export type VSCredentialItemFromBuckup = {
 
 export type OBCredentialItemFromBackup = {
   id: string
-  ceramicId: string | undefined
   credentialTypeId?: string
   credentialType?: CredentialType
   collectionId?: string
