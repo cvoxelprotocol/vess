@@ -11,13 +11,11 @@
     "lint": "next lint --dir src",
     "lint:fix": "pnpm lint --fix",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
-    "codegen": "graphql-codegen --config codegen.yml",
     "bundle-analyzer": "ANALYZE=true pnpm build"
   },
   "dependencies": {
     "@apollo/client": "^3.7.9",
     "@aws-sdk/client-s3": "^3.572.0",
-    "@composedb/client": "0.4.0",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@emotion/css": "^11.11.2",
@@ -91,7 +89,6 @@
     "web-did-resolver": "^2.0.27"
   },
   "devDependencies": {
-    "@composedb/types": "0.4.0",
     "@graphql-codegen/cli": "^3.1.0",
     "@graphql-codegen/typed-document-node": "^3.0.1",
     "@graphql-codegen/typescript": "^3.0.1",

@@ -19,7 +19,6 @@ export interface IssueCredentialRequest {
   holders: SubjectUniqueInput[]
   credentialItemId: string
   expirationDate?: string
-  saveCompose?: boolean
 }
 
 export interface IssueSocialCredentialRequest {
@@ -30,7 +29,7 @@ export interface IssueSocialCredentialRequest {
   expirationDate?: string
 }
 
-export interface saveCredentialToComposeDBResponse {
+export interface saveCredentialToDBResponse {
   vc: any
 }
 
@@ -145,7 +144,6 @@ export const useMyVerifiableCredential = () => {
           holders: [subjectUniqueInput],
           credentialItemId: item.id,
           expirationDate: undefined,
-          saveCompose: workspace.useCompose || false,
         }
         res = await issueVerifiableCredentials(body)
       } else if (user) {
@@ -166,7 +164,7 @@ export const useMyVerifiableCredential = () => {
       }
       const resJson = await res.json()
       console.log({ resJson })
-      const vcs = resJson.data as saveCredentialToComposeDBResponse[]
+      const vcs = resJson.data as saveCredentialToDBResponse[]
       console.log({ vcs })
       queryClient.invalidateQueries(['credItem', item.id])
       queryClient.invalidateQueries(['obCredItem', item.id])

@@ -1,4 +1,3 @@
-import { ComposeClient } from '@composedb/client'
 import { connect, disconnect } from '@wagmi/core'
 import type { Connector } from '@wagmi/core'
 import {
@@ -18,7 +17,6 @@ import {
 } from '@web3auth/openlogin-adapter'
 import { createWalletClient, custom, getAddress } from 'viem'
 import { mainnet } from 'viem/chains'
-import { initializeApolloForCompose } from './apolloForCompose'
 import { connectVESSAuth, disconnectVESSAuth } from './vess'
 import {
   createUserOnlyWithDid,
@@ -49,7 +47,6 @@ export class DidAuthService {
     blockExplorer: this.chains[0]?.blockExplorers.default?.url,
   }
   public provider: IProvider | null
-  public composeClient: ComposeClient | null
   public isInitialized: boolean = false
   public isConnecting: boolean = false
 
@@ -60,8 +57,6 @@ export class DidAuthService {
       web3AuthNetwork: isProd() ? 'sapphire_mainnet' : 'sapphire_devnet',
     })
     this.provider = null
-    const { composeClient } = initializeApolloForCompose()
-    this.composeClient = composeClient
   }
 
   //===Wallet(wagmi)===
@@ -88,8 +83,6 @@ export class DidAuthService {
       const isLoginSucceeded = isGoodResponse(res.status)
       console.log({ isLoginSucceeded })
       if (isLoginSucceeded) {
-        // @ts-ignore TODO:fixed
-        this.composeClient.setDID(session.did)
         const resJson = (await res.json()) as VSUser
         const { name, avatar, description, id, vessId } = resJson
         this.setLoginState(
@@ -252,9 +245,6 @@ export class DidAuthService {
       }
 
       if (isLoginSucceeded) {
-        // @ts-ignore TODO:fixed
-        this.composeClient.setDID(session.did)
-
         if (res) {
           const resJson = (await res.json()) as VSUser
           const { name, avatar, description, id, vessId } = resJson

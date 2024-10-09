@@ -19,14 +19,6 @@ export function isEthereumAddress(address: string): boolean {
   return /^0x[0-9a-f]{40}$/i.test(address)
 }
 
-export const removeCeramicPrefix = (docUrl?: string) => {
-  if (!docUrl) return ''
-  return docUrl.replace(`ceramic://`, '')
-}
-export const addCeramicPrefix = (backupId: string) => {
-  return backupId.startsWith('ceramic://') ? backupId : `ceramic://${backupId}`
-}
-
 export const isDIDstring = (did: string): boolean => {
   const didRegex = /^did:([A-Za-z0-9]+):([A-Za-z0-9.\-:_]+)$/
   return didRegex.test(did)

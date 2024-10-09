@@ -63,16 +63,6 @@ export const useUpdateProfile = (did?: string) => {
   )
 
   const updateProfile = async (params: UpdateUserInfo): Promise<Response> => {
-    //update vess auth user
-    // const orbisPromise = updateOrbisProfile({
-    //   did: params.did,
-    //   content: {
-    //     username: params.name || '',
-    //     pfp: params.avatar || '',
-    //     description: params.description || '',
-    //   },
-    // })
-    // const res = await Promise.all([vessAuthPromise, orbisPromise])
     const vessAuthPromise = updateUserProfile(params)
     const res = await Promise.all([vessAuthPromise])
     return res[0]

@@ -5,7 +5,6 @@ export type WorkspaceType = {
   desc?: string
   icon?: string
   primaryColor?: string
-  useCompose?: boolean
 }
 
 export type CredentialType = {
@@ -133,7 +132,6 @@ type CredItemRequest = CredItemInput & {
   endDate: string
   collectionId: string
   credentialTypeName: string
-  saveCompose: boolean
   icon?: string
 }
 
@@ -145,7 +143,6 @@ export type OrganizationType = {
   desc: string | null
   icon: string | null
   primaryColor: string | null
-  useCompose: boolean | null
 }
 
 export type VSUser = {
@@ -300,7 +297,6 @@ export interface IIssueCredentialItemByUserRequest {
   tags?: string[]
   link?: string
   credentialTypeName?: string
-  saveCompose: boolean
   expirationDate?: string
   validDuraion?: string
   collectionId?: string
