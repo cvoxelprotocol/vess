@@ -9,7 +9,6 @@ import { useState } from 'react'
 import { BasicLayout } from '@/components/layouts/BasicLayout'
 import { GATracking } from '@/components/ui-v1/Common/GATracking'
 import { VESSAuthProvider } from '@/context/DidAuthContext'
-import { ComposeWrapper } from '@/context/compose'
 import { theme } from '@/lib/theme'
 import { kaiTokens } from '@/styles/kaiTokens'
 import 'modern-css-reset/dist/reset.min.css'
@@ -60,14 +59,12 @@ export default function App({
           <Hydrate state={dehydratedState}>
             <ThemeProvider theme={theme}>
               <KaiProvider style={kaiTokens}>
-                <ComposeWrapper>
-                  <VESSAuthProvider>
-                    <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
-                    <BasicLayout>
-                      <Component {...props} />
-                    </BasicLayout>
-                  </VESSAuthProvider>
-                </ComposeWrapper>
+                <VESSAuthProvider>
+                  <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
+                  <BasicLayout>
+                    <Component {...props} />
+                  </BasicLayout>
+                </VESSAuthProvider>
               </KaiProvider>
             </ThemeProvider>
           </Hydrate>

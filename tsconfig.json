@@ -18,7 +18,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      // "@orbisclub/orbis-sdk": ["./@types/orbis.d.ts"],
       "@emotion/react/theme": ["./@types/theme.d.ts"]
     }
   },

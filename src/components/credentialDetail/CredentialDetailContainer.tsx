@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
 import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
+import { OBCredentialInfo } from './CredentialDetailInfo'
 import { VSUser, SetVisibleRequest } from '@/@types/credential'
 import { ReservedPropKeys } from '@/constants/credential'
 import { useCredentialItemWithHolder } from '@/hooks/useCredentialItemWithHolder'
@@ -223,7 +224,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               color='var(--kai-color-sys-on-layer)'
               isLoading={isInitialLoading}
             >
-              {credential?.credentialItem?.title || ''}
+              {credential?.title || ''}
             </Text>
           </div>
           {isMine && (
@@ -255,18 +256,6 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   </StickerListFrame>
                 </InfoItemFrame>
               )}
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                説明文
-              </Text>
-              <Text
-                typo='body-lg'
-                color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
-              >
-                {credential?.credentialItem?.description || '説明文はありません。'}
-              </Text>
-            </InfoItemFrame>
             <InfoItemFrame>
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 発行者
@@ -302,7 +291,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
               <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
                 所有者
               </Text>
-              <FlexHorizontal gap='var(--kai-size-sys-space-xs)'>
+              <FlexHorizontal gap='var(--kai-size-sys-space-xs)' flexWrap='nowrap'>
                 <ImageContainer
                   src={holderInfo.icon}
                   width='20px'
@@ -311,7 +300,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   alt='Organization Icon'
                 />
                 <Button
-                  style={{ padding: '0' }}
+                  style={{ padding: '0 4px' }}
                   align='start'
                   variant='text'
                   // color='var(--kai-color-sys-on-layer)'
@@ -319,10 +308,29 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                   onPress={() => router.push(`/did/${credential?.vc.credentialSubject.id}`)}
                   size='sm'
                 >
-                  {holderInfo.name}
+                  <Text typo='body-md' color='var(--kai-color-sys-on-layer)' lineClamp={1}>
+                    {holderInfo.name}
+                  </Text>
                 </Button>
               </FlexHorizontal>
             </InfoItemFrame>
+            <InfoItemFrame>
+              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
+                説明文
+              </Text>
+              <Text
+                typo='body-lg'
+                color='var(--kai-color-sys-on-layer)'
+                isLoading={isInitialLoading}
+              >
+                {credential?.credentialItem?.description ||
+                  credential?.vc.description ||
+                  '説明文はありません。'}
+              </Text>
+            </InfoItemFrame>
+            {credential?.credentialType?.name === 'openbadge' && (
+              <OBCredentialInfo vc={credential?.vc} />
+            )}
             {credential?.credentialType?.name === 'attendance' &&
               credential?.vc.credentialSubject.startDate && (
                 <InfoItemFrame>
@@ -365,19 +373,7 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
                 {formatDate(credential?.vc.issuanceDate)}
               </Text>
             </InfoItemFrame>
-            <InfoItemFrame>
-              <Text typo='label-lg' color='var(--kai-color-sys-on-layer-minor)'>
-                有効期限日
-              </Text>
-              <Text
-                typo='body-lg'
-                color='var(--kai-color-sys-on-layer)'
-                isLoading={isInitialLoading}
-              >
-                {formatDate(credential?.vc.expirationDate) || '無期限'}
-              </Text>
-            </InfoItemFrame>
-            {otherSubjectProps.length > 0 && (
+            {credential?.credentialType?.name !== 'openbadge' && otherSubjectProps.length > 0 && (
               <>
                 <InfoItemFrame>
                   <Text typo='title-lg' color='var(--kai-color-sys-on-layer-minor)'>

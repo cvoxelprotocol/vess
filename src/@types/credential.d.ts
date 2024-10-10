@@ -1,12 +1,10 @@
 export type WorkspaceType = {
   id: string
   address: string
-  ceramicId: string
   name: string
   desc?: string
   icon?: string
   primaryColor?: string
-  useCompose?: boolean
 }
 
 export type CredentialType = {
@@ -16,7 +14,6 @@ export type CredentialType = {
 
 export type VSCredentialItem = {
   id: string
-  ceramicId: string | null
   organizationId: string | null
   credentialTypeId: string
   collectionId: string
@@ -32,19 +29,37 @@ export type VSCredentialItem = {
   updatedAt: Date
 }
 
+export type OBCredentialItem = {
+  id: string
+  credentialTypeId: string
+  collectionId: string
+  organizationId: string | null
+  name: string
+  description: string
+  criteria: string
+  image: string
+  bakedImage?: string
+  achievementType?: string
+  activityStartDate?: string
+  activityEndDate?: string
+  validFrom?: string
+  validUntil?: string
+  createdAt: string
+  updatedAt: string
+}
+
 export type CredentialStruct = {
   id: string
   organizationId: string
   credentialTypeId: string
   issuerDid: string
   holderDid: string
-  ceramicId: string
-  groupCeramicId: string
   plainCredential: string
   createdAt: Date
   updatedAt: Date
   credentialType?: CredentialType
   credentialItem?: VSCredentialItem
+  OBcredentialItem?: OBCredentialItem
   organization?: WorkspaceType
   user?: VSUser
   hideFromPublic?: boolean
@@ -62,8 +77,7 @@ export type CredentialsResponse = {
   data: CredentialStruct[]
 }
 
-export type WithCeramicId<T> = T & {
-  ceramicId: string
+export type WithCredentialType<T> = T & {
   credentialType: CredentialType
 }
 
@@ -89,7 +103,13 @@ type CredentialSubject = {
   [x: string]: any
 }
 
-export const CredTypeUnion = ['membership', 'attendance', 'certificate', 'default'] as const
+export const CredTypeUnion = [
+  'membership',
+  'attendance',
+  'certificate',
+  'default',
+  'openbadge',
+] as const
 export type CredType = typeof CredTypeUnion[number]
 export type CredTypeProps = {
   type?: CredType
@@ -112,20 +132,17 @@ type CredItemRequest = CredItemInput & {
   endDate: string
   collectionId: string
   credentialTypeName: string
-  saveCompose: boolean
   icon?: string
 }
 
 export type OrganizationType = {
   address: string
-  ceramicId: string | null
   id: string
   keyId: string
   name: string
   desc: string | null
   icon: string | null
   primaryColor: string | null
-  useCompose: boolean | null
 }
 
 export type VSUser = {
@@ -160,7 +177,6 @@ export type Provider = {
 export type GetCollectionResponse = {
   id: string
   organizationId: string
-  ceramicId: string
   name: string
   parentId?: string
   parent?: GetCollectionResponse
@@ -176,7 +192,6 @@ export type VSCredential = {
   credentialTypeId: string | null
   issuerDid: string
   holderDid: string
-  ceramicId: string | null
   plainCredential: string
   createdAt: Date
   updatedAt: Date
@@ -197,7 +212,6 @@ type Tagged = {
 
 export type VSCredentialItemFromBuckup = {
   id: string
-  ceramicId: string | undefined
   credentialTypeId?: string
   credentialType?: CredentialType
   collectionId?: string
@@ -214,6 +228,34 @@ export type VSCredentialItemFromBuckup = {
   organization?: OrganizationType | null
   Tagged: Tagged[]
   credentials?: VSCredential[]
+  userId?: string | null
+  user?: VSUser
+  sticker?: Sticker[]
+  post?: Post[]
+  credentialsWithHolder?: CredentialWithHolder[]
+  holderContents?: HolderContent[]
+}
+
+export type OBCredentialItemFromBackup = {
+  id: string
+  credentialTypeId?: string
+  credentialType?: CredentialType
+  collectionId?: string
+  organizationId?: string | null
+  name: string
+  description: string
+  criteria: string
+  image: string
+  bakedImage?: string
+  achievementType?: string
+  activityStartDate?: string
+  activityEndDate?: string
+  validFrom?: string
+  validUntil?: string
+  createdAt: string
+  updatedAt: string
+  organization?: OrganizationType | null
+  credentials?: OBCredential[]
   userId?: string | null
   user?: VSUser
   sticker?: Sticker[]
@@ -255,7 +297,6 @@ export interface IIssueCredentialItemByUserRequest {
   tags?: string[]
   link?: string
   credentialTypeName?: string
-  saveCompose: boolean
   expirationDate?: string
   validDuraion?: string
   collectionId?: string

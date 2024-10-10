@@ -73,7 +73,6 @@ export const CredItemCreateContainer: FC = () => {
         startDate: startDate || '',
         endDate: endDate || '',
         link: link || '',
-        saveCompose: false,
         stickers: [icon],
       }
       const res = await create(param)

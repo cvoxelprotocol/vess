@@ -17,7 +17,7 @@ import { CredReceiveProps } from '@/pages/creds/receive/[id]'
 export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   const { did, vessId } = useVESSAuthUser()
   const router = useRouter()
-  const { credItem, isInitialLoading } = useCredentialItem(id)
+  const { credItem, isInitialLoading, obCredItem, isOBInitialLoading } = useCredentialItem(id)
   const { formatedCredentials } = useVerifiableCredentials(did)
   const [rPath, setRpath] = useStateRPath()
   const { issue } = useMyVerifiableCredential()
@@ -26,6 +26,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
   >('default')
 
   console.log({ credItem })
+  console.log('obCredItem', obCredItem?.image)
 
   useEffect(() => {
     setReceiveStatus('default')
@@ -41,6 +42,12 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
       if (credItem) {
         setReceiveStatus('receiving')
         const isSuccess = await issue(credItem)
+        if (isSuccess) {
+          setReceiveStatus('success')
+        }
+      }
+      if (obCredItem) {
+        const isSuccess = await issue(obCredItem)
         if (isSuccess) {
           setReceiveStatus('success')
         }
@@ -64,12 +71,12 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
           height='var(--kai-size-ref-192)'
           radius='var(--kai-size-sys-round-full)'
           className='dark'
-          isLoading={isInitialLoading}
+          isLoading={isInitialLoading || isOBInitialLoading}
         ></Skelton>
         <FlexVertical gap='24px' justifyContent='center' alignItems='center'>
-          {!isInitialLoading && credItem?.image && (
+          {!isInitialLoading && !isOBInitialLoading && (obCredItem?.image || credItem?.image) && (
             <ImageContainer
-              src={credItem?.image}
+              src={obCredItem?.image || credItem?.image || ''}
               width='var(--kai-size-ref-192)'
               height='auto'
               objectFit='contain'
@@ -81,7 +88,7 @@ export const ReceiveCredentialContainer: FC<CredReceiveProps> = ({ id }) => {
             align='center'
             color='var(--kai-color-sys-on-background)'
           >
-            {credItem?.title}
+            {credItem?.title || obCredItem?.name}
           </Text>
           {credItem?.sticker && credItem?.sticker.length > 0 && (
             <FlexVertical
