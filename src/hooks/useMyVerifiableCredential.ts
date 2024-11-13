@@ -104,6 +104,7 @@ export const useMyVerifiableCredential = () => {
             name: openbadge.name,
             description: openbadge.description,
             criteria: openbadge.criteria,
+            bakedImage: openbadge.bakedImage,
             image: openbadge.image,
             achievementType: openbadge.achievementType,
             activityStartDate: openbadge.activityStartDate,

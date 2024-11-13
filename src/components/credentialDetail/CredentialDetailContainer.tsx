@@ -13,7 +13,13 @@ import {
 } from 'kai-kit'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useRef } from 'react'
-import { PiArrowClockwise, PiCheckCircle, PiX, PiCopyBold, PiWarning } from 'react-icons/pi'
+import {
+  PiArrowClockwise,
+  PiCheckCircle,
+  PiCopyBold,
+  PiWarning,
+  PiDownloadSimpleDuotone,
+} from 'react-icons/pi'
 import { ImageContainer } from '../ui-v1/Images/ImageContainer'
 import { OBCredentialInfo } from './CredentialDetailInfo'
 import { VSUser, SetVisibleRequest } from '@/@types/credential'
@@ -52,6 +58,9 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
 
   const vcImage = useMemo(() => {
     if (!credential) return ''
+    if (credential.credentialType?.name === 'openbadge') {
+      return credential.vc.credentialSubject.image
+    }
     return credential.image || credential.credentialItem?.image || '/VESS_app_icon.png'
   }, [credential])
 
@@ -472,6 +481,7 @@ const CredDetailFrame = styled.div`
 
 const CredImageFrame = styled.div`
   grid-row: 1 / 2;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
