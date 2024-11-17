@@ -306,13 +306,15 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                     <>
                       {formatedCredentials.map((credential, index) => (
                         <>
-                          <CredItem
-                            key={`${credential.id}-${index}`}
-                            image={credential.image}
-                            name={credential.title}
-                            credId={credential.id}
-                            width={'100%'}
-                          />
+                          {!credential.hideFromPublic && (
+                            <CredItem
+                              key={`${credential.id}-${index}`}
+                              image={credential.image}
+                              name={credential.title}
+                              credId={credential.id}
+                              width={'100%'}
+                            />
+                          )}
                         </>
                       ))}
                     </>

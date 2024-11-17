@@ -30,6 +30,7 @@ export const useVerifiableCredentials = (did?: string) => {
           ...plainCredential,
           credentialType: item.credentialType,
           credId: item.credentialItem?.id,
+          hideFromPublic: item.hideFromPublic,
         }
       })
       .map((item) => {

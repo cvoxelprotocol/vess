@@ -44,23 +44,50 @@ export const IdentityContainer: FC = () => {
           >
             <TabList style={{ flex: 0 }}>
               <Tab id='attendance'>デジタル証明</Tab>
+              <Tab id='private'>非公開証明</Tab>
               <Tab id='id'>ID</Tab>
             </TabList>
             <TabPanel id='attendance' style={{}}>
               {formatedCredentials.length > 0 ? (
                 <EventListFrame>
                   {formatedCredentials.map((credential) => (
-                    <CredItem
-                      key={credential.id}
-                      image={credential.image}
-                      name={credential.title}
-                      credId={credential.id}
-                    />
+                    <>
+                      {!credential.hideFromPublic && (
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                        />
+                      )}
+                    </>
                   ))}
                 </EventListFrame>
               ) : (
                 <FlexVertical width='100%' alignItems='center'>
                   <div>証明書はありません。</div>
+                </FlexVertical>
+              )}
+            </TabPanel>
+            <TabPanel id='private' style={{}}>
+              {formatedCredentials.length > 0 ? (
+                <EventListFrame>
+                  {formatedCredentials.map((credential) => (
+                    <>
+                      {credential.hideFromPublic && (
+                        <CredItem
+                          key={credential.id}
+                          image={credential.image}
+                          name={credential.title}
+                          credId={credential.id}
+                        />
+                      )}
+                    </>
+                  ))}
+                </EventListFrame>
+              ) : (
+                <FlexVertical width='100%' alignItems='center'>
+                  <div>非公開証明はありません。</div>
                 </FlexVertical>
               )}
             </TabPanel>
