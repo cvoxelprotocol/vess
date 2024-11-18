@@ -302,7 +302,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   最新の証明
                 </Text>
                 <CredList>
-                  {formatedCredentials && formatedCredentials.length > 0 ? (
+                  {publicCredentials && publicCredentials.length > 0 ? (
                     <>
                       {publicCredentials.map((credential, index) => (
                         <>

@@ -49,7 +49,7 @@ export const IdentityContainer: FC = () => {
               <Tab id='id'>ID</Tab>
             </TabList>
             <TabPanel id='attendance' style={{}}>
-              {formatedCredentials.length > 0 ? (
+              {publicCredentials.length > 0 ? (
                 <EventListFrame>
                   {publicCredentials.map((credential) => (
                     <>
@@ -69,7 +69,7 @@ export const IdentityContainer: FC = () => {
               )}
             </TabPanel>
             <TabPanel id='private' style={{}}>
-              {formatedCredentials.length > 0 ? (
+              {privateCredentials.length > 0 ? (
                 <EventListFrame>
                   {privateCredentials.map((credential) => (
                     <CredItem
