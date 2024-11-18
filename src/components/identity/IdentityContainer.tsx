@@ -20,7 +20,8 @@ export const IdentityContainer: FC = () => {
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
   const { lensProfile, lensLoading } = useLensProfile(did)
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
+  const { formatedCredentials, publicCredentials, privateCredentials, isInitialLoading } =
+    useVerifiableCredentials(did)
   const router = useRouter()
   const [tabKey, setTabKey] = useState<Key>('attendance')
 
@@ -50,16 +51,14 @@ export const IdentityContainer: FC = () => {
             <TabPanel id='attendance' style={{}}>
               {formatedCredentials.length > 0 ? (
                 <EventListFrame>
-                  {formatedCredentials.map((credential) => (
+                  {publicCredentials.map((credential) => (
                     <>
-                      {!credential.hideFromPublic && (
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                        />
-                      )}
+                      <CredItem
+                        key={credential.id}
+                        image={credential.image}
+                        name={credential.title}
+                        credId={credential.id}
+                      />
                     </>
                   ))}
                 </EventListFrame>
@@ -72,17 +71,13 @@ export const IdentityContainer: FC = () => {
             <TabPanel id='private' style={{}}>
               {formatedCredentials.length > 0 ? (
                 <EventListFrame>
-                  {formatedCredentials.map((credential) => (
-                    <>
-                      {credential.hideFromPublic && (
-                        <CredItem
-                          key={credential.id}
-                          image={credential.image}
-                          name={credential.title}
-                          credId={credential.id}
-                        />
-                      )}
-                    </>
+                  {privateCredentials.map((credential) => (
+                    <CredItem
+                      key={credential.id}
+                      image={credential.image}
+                      name={credential.title}
+                      credId={credential.id}
+                    />
                   ))}
                 </EventListFrame>
               ) : (
