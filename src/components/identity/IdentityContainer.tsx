@@ -20,7 +20,8 @@ export const IdentityContainer: FC = () => {
   const { ccProfile, ccLoading } = useCcProfile(did)
   const { ensProfile, isInitialLoading: ensLoading } = useENS(originalAddress as `0x${string}`)
   const { lensProfile, lensLoading } = useLensProfile(did)
-  const { formatedCredentials, isInitialLoading } = useVerifiableCredentials(did)
+  const { formatedCredentials, publicCredentials, privateCredentials, isInitialLoading } =
+    useVerifiableCredentials(did)
   const router = useRouter()
   const [tabKey, setTabKey] = useState<Key>('attendance')
 
@@ -44,12 +45,33 @@ export const IdentityContainer: FC = () => {
           >
             <TabList style={{ flex: 0 }}>
               <Tab id='attendance'>デジタル証明</Tab>
+              <Tab id='private'>非公開証明</Tab>
               <Tab id='id'>ID</Tab>
             </TabList>
             <TabPanel id='attendance' style={{}}>
-              {formatedCredentials.length > 0 ? (
+              {publicCredentials.length > 0 ? (
                 <EventListFrame>
-                  {formatedCredentials.map((credential) => (
+                  {publicCredentials.map((credential) => (
+                    <>
+                      <CredItem
+                        key={credential.id}
+                        image={credential.image}
+                        name={credential.title}
+                        credId={credential.id}
+                      />
+                    </>
+                  ))}
+                </EventListFrame>
+              ) : (
+                <FlexVertical width='100%' alignItems='center'>
+                  <div>証明書はありません。</div>
+                </FlexVertical>
+              )}
+            </TabPanel>
+            <TabPanel id='private' style={{}}>
+              {privateCredentials.length > 0 ? (
+                <EventListFrame>
+                  {privateCredentials.map((credential) => (
                     <CredItem
                       key={credential.id}
                       image={credential.image}
@@ -60,7 +82,7 @@ export const IdentityContainer: FC = () => {
                 </EventListFrame>
               ) : (
                 <FlexVertical width='100%' alignItems='center'>
-                  <div>証明書はありません。</div>
+                  <div>非公開証明はありません。</div>
                 </FlexVertical>
               )}
             </TabPanel>

@@ -58,7 +58,7 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
   const { openModal } = useModal()
   const { ccProfile } = useCcProfile(did)
   const { ensProfile } = useENS(getAddressFromPkh(did) as `0x${string}`)
-  const { formatedCredentials } = useVerifiableCredentials(did)
+  const { formatedCredentials, publicCredentials } = useVerifiableCredentials(did)
   const { openNavigation } = useNCLayoutContext()
   const { matches } = useBreakpoint()
   const { shareLink } = useShareLink(undefined)
@@ -302,9 +302,9 @@ export const ProfileContainer: FC<ProfileContainerProps> = ({ did }) => {
                   最新の証明
                 </Text>
                 <CredList>
-                  {formatedCredentials && formatedCredentials.length > 0 ? (
+                  {publicCredentials && publicCredentials.length > 0 ? (
                     <>
-                      {formatedCredentials.map((credential, index) => (
+                      {publicCredentials.map((credential, index) => (
                         <>
                           <CredItem
                             key={`${credential.id}-${index}`}

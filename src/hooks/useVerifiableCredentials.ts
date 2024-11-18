@@ -30,6 +30,7 @@ export const useVerifiableCredentials = (did?: string) => {
           ...plainCredential,
           credentialType: item.credentialType,
           credId: item.credentialItem?.id,
+          hideFromPublic: item.hideFromPublic,
         }
       })
       .map((item) => {
@@ -61,8 +62,18 @@ export const useVerifiableCredentials = (did?: string) => {
       .filter((item) => !item.expirationDate || !isExpired(item.expirationDate))
   }, [CredentialsByHolder])
 
+  const publicCredentials = useMemo(() => {
+    return formatedCredentials.filter((item) => !item.hideFromPublic)
+  }, [formatedCredentials])
+
+  const privateCredentials = useMemo(() => {
+    return formatedCredentials.filter((item) => item.hideFromPublic)
+  }, [formatedCredentials])
+
   return {
     isInitialLoading,
     formatedCredentials,
+    publicCredentials,
+    privateCredentials,
   }
 }
