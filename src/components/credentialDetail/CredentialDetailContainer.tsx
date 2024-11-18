@@ -99,8 +99,13 @@ export const CredentialDetailContainer: FC<CredDetailProps> = ({ id }) => {
   const verify = async (plainCred?: string) => {
     if (!plainCred) return
     setVerified('verifying')
+    let exp = false
     const vc = JSON.parse(plainCred)
-    const exp = isExpired(vc.expirationDate as string | undefined)
+    if (credential?.credentialType?.name == 'openbadge') {
+      exp = isExpired(vc.validUntil as string | undefined)
+    } else {
+      exp = isExpired(vc.expirationDate as string | undefined)
+    }
     if (exp) {
       setVerified('expired')
       return
