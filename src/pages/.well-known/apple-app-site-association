@@ -1,0 +1,24 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "id.vess.vess",
+        "paths": [
+          "*"
+        ],
+        "components": [
+          {
+            "/": "/vci-cb",
+            "comment": "Matches URL path /vci-cb"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "id.vess.vess"
+    ]
+  }
+}
