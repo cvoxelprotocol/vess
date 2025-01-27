@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "id.vess.vess",
+        "appID": "7K8N8J7Y63.id.vess.vess",
         "paths": [
           "*"
         ],
@@ -18,7 +18,7 @@
   },
   "webcredentials": {
     "apps": [
-      "id.vess.vess"
+      "7K8N8J7Y63.id.vess.vess"
     ]
   }
 }
