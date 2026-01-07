@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Text, TextInput, useKai } from 'kai-kit'
-import { FC, useEffect, useState, useCallback } from 'react'
+import { FC, useEffect, useState, useCallback, PropsWithChildren } from 'react'
 import {
   PiCheckCircle,
   PiWarningCircle,
@@ -294,7 +294,7 @@ export const DCApiTestPage: FC = () => {
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<PropsWithChildren>`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -302,7 +302,7 @@ const Container = styled.div`
   padding: var(--kai-size-ref-16);
 `
 
-const StatusCard = styled.div`
+const StatusCard = styled.div<PropsWithChildren>`
   width: 100%;
   padding: var(--kai-size-ref-16);
   background: var(--kai-color-sys-layer-default);
@@ -312,13 +312,13 @@ const StatusCard = styled.div`
   gap: var(--kai-size-ref-12);
 `
 
-const StatusRow = styled.div`
+const StatusRow = styled.div<PropsWithChildren>`
   display: flex;
   align-items: center;
   gap: var(--kai-size-ref-8);
 `
 
-const ButtonGroup = styled.div`
+const ButtonGroup = styled.div<PropsWithChildren>`
   display: flex;
   flex-wrap: wrap;
   gap: var(--kai-size-ref-8);
@@ -330,14 +330,14 @@ const ButtonGroup = styled.div`
   }
 `
 
-const ErrorCard = styled.div`
+const ErrorCard = styled.div<PropsWithChildren>`
   width: 100%;
   padding: var(--kai-size-ref-16);
   background: var(--kai-color-sys-error-container);
   border-radius: var(--kai-size-ref-12);
 `
 
-const LogContainer = styled.div`
+const LogContainer = styled.div<PropsWithChildren>`
   width: 100%;
   max-height: 400px;
   overflow-y: auto;
@@ -346,7 +346,7 @@ const LogContainer = styled.div`
   padding: var(--kai-size-ref-12);
 `
 
-const LogEntry = styled.div`
+const LogEntry = styled.div<PropsWithChildren>`
   padding: var(--kai-size-ref-4) 0;
   border-bottom: 1px solid var(--kai-color-sys-outline-variant);
   word-break: break-all;
@@ -356,7 +356,7 @@ const LogEntry = styled.div`
   }
 `
 
-const CodeBlock = styled.div`
+const CodeBlock = styled.div<PropsWithChildren>`
   width: 100%;
   max-height: 300px;
   overflow: auto;
