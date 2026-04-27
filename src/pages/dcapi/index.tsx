@@ -1,8 +1,8 @@
 import { NextPage } from 'next'
-import { DCApiTestPage } from '@/components/dcapi/DCApiTestPage'
+import { DCApiMenuPage } from '@/components/dcapi/DCApiMenuPage'
 
 const DCApiPage: NextPage = () => {
-  return <DCApiTestPage />
+  return <DCApiMenuPage />
 }
 
 export default DCApiPage
