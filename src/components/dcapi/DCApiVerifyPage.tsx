@@ -125,6 +125,7 @@ export const DCApiVerifyPage: FC = () => {
     try {
       addLog('navigator.credentials.get() を呼び出し中... (org-iso-mdoc)')
       const credential = await navigator.credentials.get({
+        mediation: 'required',
         digital: {
           requests: [
             {

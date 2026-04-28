@@ -76,6 +76,7 @@ export const DCApiIssuePage: FC = () => {
 
       addLog('navigator.credentials.create() を呼び出し中... (openid4vci)')
       const credential = await navigator.credentials.create({
+        mediation: 'required',
         digital: {
           requests: [
             {
