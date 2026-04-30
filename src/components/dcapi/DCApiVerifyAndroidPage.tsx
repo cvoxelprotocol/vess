@@ -55,11 +55,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
   const [protocol, setProtocol] = useState<Protocol>('openid4vp-v1-unsigned')
   const [responseMode, setResponseMode] = useState<ResponseMode>('dc_api')
   const [docType, setDocType] = useState<string>('org.iso.18013.5.1.mDL')
-  const [nameSpace, setNameSpace] = useState<string>(
-    MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultNamespace
-  )
   const [elements, setElements] = useState<RequestedElement[]>(
     MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultElements.map((id) => ({
+      namespace: MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultNamespace,
       identifier: id,
       intentToRetain: false,
     }))
@@ -88,8 +86,13 @@ export const DCApiVerifyAndroidPage: FC = () => {
     setDocType(newDocType)
     const preset = ANDROID_DOC_TYPE_PRESETS.find((p) => p.docType === newDocType)
     if (preset) {
-      setNameSpace(preset.namespace)
-      setElements(preset.elements.map((id) => ({ identifier: id, intentToRetain: false })))
+      setElements(
+        preset.elements.map((id) => ({
+          namespace: preset.namespace,
+          identifier: id,
+          intentToRetain: false,
+        }))
+      )
     }
     setBuilt(null)
   }
@@ -98,8 +101,16 @@ export const DCApiVerifyAndroidPage: FC = () => {
     setElements((prev) => prev.map((el, i) => (i === index ? { ...el, ...patch } : el)))
   }
 
+  const lastNamespace =
+    elements[elements.length - 1]?.namespace ??
+    ANDROID_DOC_TYPE_PRESETS.find((p) => p.docType === docType)?.namespace ??
+    ''
+
   const addElement = () =>
-    setElements((prev) => [...prev, { identifier: '', intentToRetain: false }])
+    setElements((prev) => [
+      ...prev,
+      { namespace: lastNamespace, identifier: '', intentToRetain: false },
+    ])
 
   const removeElement = (index: number) =>
     setElements((prev) => prev.filter((_, i) => i !== index))
@@ -107,16 +118,21 @@ export const DCApiVerifyAndroidPage: FC = () => {
   const buildRequest = async () => {
     setError(null)
     try {
-      const sanitized = elements.filter((e) => e.identifier.trim().length > 0)
+      const sanitized = elements
+        .filter((e) => e.identifier.trim().length > 0 && e.namespace.trim().length > 0)
+        .map((e) => ({
+          namespace: e.namespace.trim(),
+          identifier: e.identifier.trim(),
+          intentToRetain: e.intentToRetain,
+        }))
       if (sanitized.length === 0) {
-        throw new Error('要求する element が空です')
+        throw new Error('要求する element が空です ( namespace と identifier 両方必須 )')
       }
 
       addLog('リーダーエフェメラル鍵 (P-256) を生成中...')
       const readerKey = await generateReaderKey()
       const nonceBytes = generateNonce(16)
       const nonce = base64urlEncode(nonceBytes)
-      const trimmedNs = nameSpace.trim()
       const dcqlId = docType.replace(/\./g, '_')
 
       const readerJwk: ReaderEncJwk = {
@@ -137,8 +153,8 @@ export const DCApiVerifyAndroidPage: FC = () => {
             multiple: false,
             format: 'mso_mdoc',
             claims: sanitized.map((el) => ({
-              id: `${trimmedNs}_${el.identifier.trim()}`,
-              path: [trimmedNs, el.identifier.trim()],
+              id: `${el.namespace}_${el.identifier}`,
+              path: [el.namespace, el.identifier],
               ...(el.intentToRetain ? { intent_to_retain: true } : {}),
             })),
             meta: { doctype_value: docType },
@@ -327,25 +343,13 @@ export const DCApiVerifyAndroidPage: FC = () => {
             ))}
           </datalist>
           <p style={{ color: '#666', fontSize: 12, marginTop: 4 }}>
-            プリセットを選ぶと nameSpace / element を自動補完。カスタム値も入力可能。
+            プリセットを選ぶと element 行 ( namespace / identifier ) を自動補完。カスタム値も入力可能。
           </p>
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>
-            nameSpace
-          </label>
-          <input
-            type="text"
-            value={nameSpace}
-            onChange={(e) => setNameSpace(e.target.value)}
-            style={{ ...inputStyle, width: '100%' }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>
-            要求する element (DCQL claims)
+            要求する element (DCQL claims) — claim ごとに namespace を別にできる
           </label>
           {elements.map((el, i) => (
             <div
@@ -354,9 +358,16 @@ export const DCApiVerifyAndroidPage: FC = () => {
             >
               <input
                 type="text"
+                value={el.namespace}
+                onChange={(e) => updateElement(i, { namespace: e.target.value })}
+                placeholder="namespace (path[0])"
+                style={{ ...inputStyle, flex: 1 }}
+              />
+              <input
+                type="text"
                 value={el.identifier}
                 onChange={(e) => updateElement(i, { identifier: e.target.value })}
-                placeholder="element identifier"
+                placeholder="element (path[1])"
                 style={{ ...inputStyle, flex: 1 }}
               />
               <label

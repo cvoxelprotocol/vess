@@ -27,11 +27,9 @@ const inputStyle: React.CSSProperties = {
 
 export const DCApiVerifyIOSPage: FC = () => {
   const [docType, setDocType] = useState<MobileDocumentType>('org.iso.18013.5.1.mDL')
-  const [nameSpace, setNameSpace] = useState<string>(
-    MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultNamespace
-  )
   const [elements, setElements] = useState<RequestedElement[]>(
     MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultElements.map((id) => ({
+      namespace: MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultNamespace,
       identifier: id,
       intentToRetain: false,
     }))
@@ -58,9 +56,12 @@ export const DCApiVerifyIOSPage: FC = () => {
   const onChangeDocType = (newDocType: MobileDocumentType) => {
     const meta = MOBILE_DOCUMENT_TYPE_META[newDocType]
     setDocType(newDocType)
-    setNameSpace(meta.defaultNamespace)
     setElements(
-      meta.defaultElements.map((id) => ({ identifier: id, intentToRetain: false }))
+      meta.defaultElements.map((id) => ({
+        namespace: meta.defaultNamespace,
+        identifier: id,
+        intentToRetain: false,
+      }))
     )
     setBuilt(null)
   }
@@ -71,8 +72,15 @@ export const DCApiVerifyIOSPage: FC = () => {
     )
   }
 
+  const lastNamespace =
+    elements[elements.length - 1]?.namespace ??
+    MOBILE_DOCUMENT_TYPE_META[docType].defaultNamespace
+
   const addElement = () =>
-    setElements((prev) => [...prev, { identifier: '', intentToRetain: false }])
+    setElements((prev) => [
+      ...prev,
+      { namespace: lastNamespace, identifier: '', intentToRetain: false },
+    ])
 
   const removeElement = (index: number) =>
     setElements((prev) => prev.filter((_, i) => i !== index))
@@ -80,16 +88,22 @@ export const DCApiVerifyIOSPage: FC = () => {
   const buildRequest = async () => {
     setError(null)
     try {
-      const sanitized = elements.filter((e) => e.identifier.trim().length > 0)
+      const sanitized = elements
+        .filter((e) => e.identifier.trim().length > 0 && e.namespace.trim().length > 0)
+        .map((e) => ({
+          namespace: e.namespace.trim(),
+          identifier: e.identifier.trim(),
+          intentToRetain: e.intentToRetain,
+        }))
       if (sanitized.length === 0) {
-        throw new Error('要求する element が空です')
+        throw new Error('要求する element が空です ( namespace と identifier 両方必須 )')
       }
       addLog('リーダーエフェメラル鍵 (P-256) を生成中...')
       const readerKey = await generateReaderKey()
       const nonce = generateNonce(16)
 
       addLog('DeviceRequest CBOR を構築中...')
-      const deviceRequestBytes = buildDeviceRequest(docType, nameSpace.trim(), sanitized)
+      const deviceRequestBytes = buildDeviceRequest(docType, sanitized)
 
       addLog('EncryptionInfo CBOR を構築中...')
       const encryptionInfoBytes = buildEncryptionInfo(nonce, readerKey.publicKeyXY)
@@ -220,22 +234,20 @@ export const DCApiVerifyIOSPage: FC = () => {
 
         <div style={{ marginBottom: 12 }}>
           <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>
-            nameSpace
-          </label>
-          <input
-            type="text"
-            value={nameSpace}
-            onChange={(e) => setNameSpace(e.target.value)}
-            style={{ ...inputStyle, width: '100%' }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>
-            要求する element
+            要求する element ( namespace ごとにグルーピングされる )
           </label>
           {elements.map((el, i) => (
-            <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4, alignItems: 'center' }}>
+            <div
+              key={i}
+              style={{ display: 'flex', gap: 8, marginBottom: 4, alignItems: 'center' }}
+            >
+              <input
+                type="text"
+                value={el.namespace}
+                onChange={(e) => updateElement(i, { namespace: e.target.value })}
+                placeholder="namespace"
+                style={{ ...inputStyle, flex: 1 }}
+              />
               <input
                 type="text"
                 value={el.identifier}

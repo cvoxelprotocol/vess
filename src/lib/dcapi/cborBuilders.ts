@@ -1,6 +1,7 @@
 import { encode, Tag } from 'cbor2'
 
 export interface RequestedElement {
+  namespace: string
   identifier: string
   intentToRetain: boolean
 }
@@ -15,16 +16,22 @@ export interface RequestedElement {
 // ItemsRequestBytes = #6.24(bstr .cbor ItemsRequest)
 // ItemsRequest = { "docType": DocType, "nameSpaces": NameSpaces, ? "requestInfo": ... }
 // NameSpaces = {+ NameSpace => {+ DataElement => IntentToRetain}}
+//
+// elements は namespace 別にグルーピングされ、 1 ドキュメントの中で
+// 複数 namespace を要求できる。
 export const buildDeviceRequest = (
   docType: string,
-  nameSpace: string,
   elements: RequestedElement[]
 ): Uint8Array => {
-  const dataElements = new Map<string, boolean>()
-  for (const el of elements) dataElements.set(el.identifier, el.intentToRetain)
-
   const nameSpaces = new Map<string, Map<string, boolean>>()
-  nameSpaces.set(nameSpace, dataElements)
+  for (const el of elements) {
+    let ns = nameSpaces.get(el.namespace)
+    if (!ns) {
+      ns = new Map<string, boolean>()
+      nameSpaces.set(el.namespace, ns)
+    }
+    ns.set(el.identifier, el.intentToRetain)
+  }
 
   const itemsRequest = new Map<string, unknown>()
   itemsRequest.set('docType', docType)
