@@ -2,15 +2,26 @@ import Link from 'next/link'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { base64urlEncode, bytesToHex } from '@/lib/dcapi/base64url'
 import { RequestedElement } from '@/lib/dcapi/cborBuilders'
-import {
-  MobileDocumentType,
-  MOBILE_DOCUMENT_TYPES,
-  MOBILE_DOCUMENT_TYPE_META,
-} from '@/lib/dcapi/mobileDocumentType'
+import { MOBILE_DOCUMENT_TYPES, MOBILE_DOCUMENT_TYPE_META } from '@/lib/dcapi/mobileDocumentType'
 import { generateNonce, generateReaderKey } from '@/lib/dcapi/readerKey'
 
 type Protocol = 'openid4vp-v1-unsigned' | 'openid4vp'
 type ResponseMode = 'dc_api' | 'dc_api.jwt'
+
+// Android Wallet 側で扱う独自 docType。 ISO 標準 (MOBILE_DOCUMENT_TYPES) に
+// 加えて、 social プロトコルなどのカスタムも自由入力できる。
+const ANDROID_DOC_TYPE_PRESETS: { docType: string; namespace: string; elements: string[] }[] = [
+  ...MOBILE_DOCUMENT_TYPES.map((dt) => ({
+    docType: dt,
+    namespace: MOBILE_DOCUMENT_TYPE_META[dt].defaultNamespace,
+    elements: MOBILE_DOCUMENT_TYPE_META[dt].defaultElements,
+  })),
+  {
+    docType: 'com.vess-api.dev.testoda.mdoc.original.B',
+    namespace: 'com.vess-api.dev.testoda.mdoc.original.B',
+    elements: [],
+  },
+]
 
 interface ReaderEncJwk {
   kty: 'EC'
@@ -43,7 +54,7 @@ const inputStyle: React.CSSProperties = {
 export const DCApiVerifyAndroidPage: FC = () => {
   const [protocol, setProtocol] = useState<Protocol>('openid4vp-v1-unsigned')
   const [responseMode, setResponseMode] = useState<ResponseMode>('dc_api')
-  const [docType, setDocType] = useState<MobileDocumentType>('org.iso.18013.5.1.mDL')
+  const [docType, setDocType] = useState<string>('org.iso.18013.5.1.mDL')
   const [nameSpace, setNameSpace] = useState<string>(
     MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultNamespace
   )
@@ -73,11 +84,13 @@ export const DCApiVerifyAndroidPage: FC = () => {
     addLog(`Digital Credentials API: ${isSupported ? 'サポート' : '未サポート'}`)
   }, [addLog])
 
-  const onChangeDocType = (newDocType: MobileDocumentType) => {
-    const meta = MOBILE_DOCUMENT_TYPE_META[newDocType]
+  const onChangeDocType = (newDocType: string) => {
     setDocType(newDocType)
-    setNameSpace(meta.defaultNamespace)
-    setElements(meta.defaultElements.map((id) => ({ identifier: id, intentToRetain: false })))
+    const preset = ANDROID_DOC_TYPE_PRESETS.find((p) => p.docType === newDocType)
+    if (preset) {
+      setNameSpace(preset.namespace)
+      setElements(preset.elements.map((id) => ({ identifier: id, intentToRetain: false })))
+    }
     setBuilt(null)
   }
 
@@ -296,17 +309,22 @@ export const DCApiVerifyAndroidPage: FC = () => {
 
         <div style={{ marginBottom: 12 }}>
           <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>docType</label>
-          <select
+          <input
+            type="text"
+            list="android-doctype-suggestions"
             value={docType}
-            onChange={(e) => onChangeDocType(e.target.value as MobileDocumentType)}
+            onChange={(e) => onChangeDocType(e.target.value)}
+            placeholder="例: org.iso.18013.5.1.mDL / com.vess-api.dev.testoda.mdoc.original.B"
             style={{ ...inputStyle, width: '100%' }}
-          >
-            {MOBILE_DOCUMENT_TYPES.map((dt) => (
-              <option key={dt} value={dt}>
-                {MOBILE_DOCUMENT_TYPE_META[dt].displayName} ({dt})
-              </option>
+          />
+          <datalist id="android-doctype-suggestions">
+            {ANDROID_DOC_TYPE_PRESETS.map((p) => (
+              <option key={p.docType} value={p.docType} />
             ))}
-          </select>
+          </datalist>
+          <p style={{ color: '#666', fontSize: 12, marginTop: 4 }}>
+            プリセットを選ぶと nameSpace / element を自動補完。カスタム値も入力可能。
+          </p>
         </div>
 
         <div style={{ marginBottom: 12 }}>
