@@ -18,8 +18,8 @@ const ANDROID_DOC_TYPE_PRESETS: { docType: string; namespace: string; elements: 
   })),
   {
     docType: 'com.vess-api.dev.testoda.mdoc.original.B',
-    namespace: 'com.vess-api.dev.testoda.mdoc.original.B',
-    elements: [],
+    namespace: 'name',
+    elements: ['familyName'],
   },
 ]
 
@@ -116,7 +116,8 @@ export const DCApiVerifyAndroidPage: FC = () => {
       const readerKey = await generateReaderKey()
       const nonceBytes = generateNonce(16)
       const nonce = base64urlEncode(nonceBytes)
-      const dcqlId = 'cred1'
+      const trimmedNs = nameSpace.trim()
+      const dcqlId = docType.replace(/\./g, '_')
 
       const readerJwk: ReaderEncJwk = {
         kty: 'EC',
@@ -132,12 +133,15 @@ export const DCApiVerifyAndroidPage: FC = () => {
         credentials: [
           {
             id: dcqlId,
+            require_cryptographic_holder_binding: true,
+            multiple: false,
             format: 'mso_mdoc',
-            meta: { doctype_value: docType },
             claims: sanitized.map((el) => ({
-              path: [nameSpace.trim(), el.identifier.trim()],
+              id: `${trimmedNs}_${el.identifier.trim()}`,
+              path: [trimmedNs, el.identifier.trim()],
               ...(el.intentToRetain ? { intent_to_retain: true } : {}),
             })),
+            meta: { doctype_value: docType },
           },
         ],
       }
