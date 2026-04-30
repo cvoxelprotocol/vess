@@ -25,7 +25,7 @@ const inputStyle: React.CSSProperties = {
   fontSize: 14,
 }
 
-export const DCApiVerifyPage: FC = () => {
+export const DCApiVerifyIOSPage: FC = () => {
   const [docType, setDocType] = useState<MobileDocumentType>('org.iso.18013.5.1.mDL')
   const [nameSpace, setNameSpace] = useState<string>(
     MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultNamespace
@@ -182,9 +182,10 @@ export const DCApiVerifyPage: FC = () => {
       <div style={{ marginBottom: 12 }}>
         <Link href="/dcapi">← DC API メニュー</Link>
       </div>
-      <h1>Verifier (org-iso-mdoc)</h1>
+      <h1>Verifier — iOS Safari (org-iso-mdoc)</h1>
       <p style={{ color: '#666' }}>
         ISO 18013-7 Annex C の DC API 経由で iOS Wallet に提示要求を送る。
+        protocol は <code>org-iso-mdoc</code>。Android Chrome では動かない。
       </p>
 
       <div style={{ marginBottom: 20 }}>

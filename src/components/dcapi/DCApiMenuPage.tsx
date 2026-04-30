@@ -6,15 +6,23 @@ export const DCApiMenuPage: FC = () => {
     <div style={{ padding: 20, maxWidth: 900, margin: '0 auto', fontFamily: 'system-ui' }}>
       <h1>Digital Credentials API デモ</h1>
       <p style={{ color: '#666' }}>
-        対向の iOS app:{' '}
-        <code>~/Workspace/DC API Demo</code> の <code>IdentityProvider</code> extension。
+        対向 Wallet:{' '}
+        iOS は <code>~/Workspace/dc-api-demo</code> の <code>IdentityProvider</code> extension、
+        Android は <code>~/Workspace/dc-api-demo-android</code>。
       </p>
       <ul style={{ lineHeight: 1.8 }}>
         <li>
-          <Link href="/dcapi/verify">
-            <strong>Verifier</strong>
+          <Link href="/dcapi/verify-ios">
+            <strong>Verifier — iOS Safari</strong>
           </Link>{' '}
-          — <code>org-iso-mdoc</code> ( ISO 18013-7 Annex C ) で提示要求。
+          — <code>org-iso-mdoc</code> ( ISO 18013-7 Annex C / Apple/WebKit 形式 ) で提示要求。
+          <code>navigator.credentials.get()</code>。
+        </li>
+        <li>
+          <Link href="/dcapi/verify-android">
+            <strong>Verifier — Android Chrome</strong>
+          </Link>{' '}
+          — <code>openid4vp-v1-unsigned</code> ( OpenID4VP DC API + DCQL ) で提示要求。
           <code>navigator.credentials.get()</code>。
         </li>
         <li>
