@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { base64urlEncode, bytesToHex } from '@/lib/dcapi/base64url'
 import { buildDeviceRequest, buildEncryptionInfo, RequestedElement } from '@/lib/dcapi/cborBuilders'
+import { extractCredentialFields, stringifySafe } from '@/lib/dcapi/decodeResponse'
 import {
   MobileDocumentType,
   MOBILE_DOCUMENT_TYPES,
@@ -170,24 +171,12 @@ export const DCApiVerifyIOSPage: FC = () => {
     setLogs([])
   }
 
-  const responseDisplay = useMemo(() => {
+  const credentialView = useMemo(() => {
     if (credentialResponse === null) return null
-    try {
-      return JSON.stringify(
-        credentialResponse,
-        (_key, value) => {
-          if (value instanceof ArrayBuffer) {
-            return base64urlEncode(new Uint8Array(value))
-          }
-          if (value instanceof Uint8Array) {
-            return base64urlEncode(value)
-          }
-          return value
-        },
-        2
-      )
-    } catch {
-      return String(credentialResponse)
+    const fields = extractCredentialFields(credentialResponse)
+    return {
+      protocol: fields.protocol,
+      dataJson: stringifySafe(fields.data),
     }
   }, [credentialResponse])
 
@@ -324,11 +313,28 @@ export const DCApiVerifyIOSPage: FC = () => {
         </div>
       )}
 
-      {responseDisplay !== null && (
-        <section style={{ marginBottom: 20 }}>
-          <h2>3. Credential Response</h2>
-          <pre style={preStyle}>{responseDisplay}</pre>
-          <p style={{ color: '#666', fontSize: 13 }}>
+      {credentialView && (
+        <section
+          style={{
+            marginBottom: 20,
+            padding: 16,
+            border: '2px solid #2e7d32',
+            borderRadius: 8,
+            background: '#f1f8e9',
+          }}
+        >
+          <h2 style={{ marginTop: 0, color: '#2e7d32' }}>3. Credential Response</h2>
+          <p style={{ margin: '4px 0 12px', fontWeight: 'bold' }}>
+            ✅ VC 提示が完了しました ( protocol:{' '}
+            <code>{credentialView.protocol ?? '(unknown)'}</code> )
+          </p>
+          <details open>
+            <summary>
+              <strong>credential.data</strong>
+            </summary>
+            <pre style={preStyle}>{credentialView.dataJson}</pre>
+          </details>
+          <p style={{ color: '#666', fontSize: 13, marginTop: 8 }}>
             HPKE 暗号化された CBOR DeviceResponse はこのページでは復号せず raw のまま表示。
             検証はバックエンドで実施する想定。
           </p>

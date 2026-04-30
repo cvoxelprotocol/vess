@@ -2,6 +2,12 @@ import Link from 'next/link'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { base64urlEncode, bytesToHex } from '@/lib/dcapi/base64url'
 import { RequestedElement } from '@/lib/dcapi/cborBuilders'
+import {
+  decodeOpenId4VpResponse,
+  DecodedVpToken,
+  extractCredentialFields,
+  stringifySafe,
+} from '@/lib/dcapi/decodeResponse'
 import { MOBILE_DOCUMENT_TYPES, MOBILE_DOCUMENT_TYPE_META } from '@/lib/dcapi/mobileDocumentType'
 import { generateNonce, generateReaderKey } from '@/lib/dcapi/readerKey'
 
@@ -239,24 +245,14 @@ export const DCApiVerifyAndroidPage: FC = () => {
     setLogs([])
   }
 
-  const responseDisplay = useMemo(() => {
+  const credentialView = useMemo(() => {
     if (credentialResponse === null) return null
-    try {
-      return JSON.stringify(
-        credentialResponse,
-        (_key, value) => {
-          if (value instanceof ArrayBuffer) {
-            return base64urlEncode(new Uint8Array(value))
-          }
-          if (value instanceof Uint8Array) {
-            return base64urlEncode(value)
-          }
-          return value
-        },
-        2
-      )
-    } catch {
-      return String(credentialResponse)
+    const fields = extractCredentialFields(credentialResponse)
+    const decoded: DecodedVpToken[] | null = decodeOpenId4VpResponse(fields.data)
+    return {
+      protocol: fields.protocol,
+      dataJson: stringifySafe(fields.data),
+      decodedVpTokens: decoded,
     }
   }, [credentialResponse])
 
@@ -427,12 +423,67 @@ export const DCApiVerifyAndroidPage: FC = () => {
         </div>
       )}
 
-      {responseDisplay !== null && (
-        <section style={{ marginBottom: 20 }}>
-          <h2>3. Credential Response</h2>
-          <pre style={preStyle}>{responseDisplay}</pre>
-          <p style={{ color: '#666', fontSize: 13 }}>
-            JWE / DeviceResponse はこのページでは復号せず raw のまま表示。 検証はバックエンドで実施する想定。
+      {credentialView && (
+        <section
+          style={{
+            marginBottom: 20,
+            padding: 16,
+            border: '2px solid #2e7d32',
+            borderRadius: 8,
+            background: '#f1f8e9',
+          }}
+        >
+          <h2 style={{ marginTop: 0, color: '#2e7d32' }}>3. Credential Response</h2>
+          <p style={{ margin: '4px 0 12px', fontWeight: 'bold' }}>
+            ✅ VC 提示が完了しました ( protocol:{' '}
+            <code>{credentialView.protocol ?? '(unknown)'}</code> )
+          </p>
+
+          {credentialView.decodedVpTokens && credentialView.decodedVpTokens.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <h3 style={{ marginBottom: 8 }}>提示された Credentials</h3>
+              {credentialView.decodedVpTokens.map((vp) => (
+                <div
+                  key={vp.credentialId}
+                  style={{
+                    marginBottom: 12,
+                    padding: 10,
+                    background: '#fff',
+                    border: '1px solid #c8e6c9',
+                    borderRadius: 4,
+                  }}
+                >
+                  <div style={{ marginBottom: 6 }}>
+                    <strong>credential id:</strong> <code>{vp.credentialId}</code>
+                  </div>
+                  {vp.error ? (
+                    <div style={{ color: '#c62828', fontSize: 13 }}>{vp.error}</div>
+                  ) : (
+                    <details open>
+                      <summary>
+                        <strong>DeviceResponse (CBOR デコード)</strong>
+                      </summary>
+                      <pre style={preStyle}>{stringifySafe(vp.decoded)}</pre>
+                    </details>
+                  )}
+                  <details style={{ marginTop: 6 }}>
+                    <summary>raw (base64url)</summary>
+                    <pre style={preStyle}>{vp.rawBase64Url}</pre>
+                  </details>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <details>
+            <summary>
+              <strong>credential.data</strong> (raw)
+            </summary>
+            <pre style={preStyle}>{credentialView.dataJson}</pre>
+          </details>
+
+          <p style={{ color: '#666', fontSize: 12, marginTop: 8 }}>
+            DeviceResponse の署名検証はバックエンドで実施する想定。 dc_api.jwt 応答時はこの場では復号しない。
           </p>
         </section>
       )}
