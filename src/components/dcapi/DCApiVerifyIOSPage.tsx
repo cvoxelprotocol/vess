@@ -296,7 +296,9 @@ export const DCApiVerifyIOSPage: FC = () => {
             <pre style={preStyle}>{built.encryptionInfoB64u}</pre>
           </details>
           <details style={{ marginBottom: 8 }}>
-            <summary>リーダー公開鍵 (P-256) / nonce</summary>
+            <summary>
+              <strong>リーダー公開鍵 (P-256) / nonce</strong>
+            </summary>
             <pre style={preStyle}>
               {`x:     ${built.publicKeyHex.x}\ny:     ${built.publicKeyHex.y}\nnonce: ${built.nonceHex}`}
             </pre>

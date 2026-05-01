@@ -401,7 +401,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
             <pre style={preStyle}>{built.authorizationRequestJson}</pre>
           </details>
           <details style={{ marginBottom: 8 }}>
-            <summary>リーダー公開鍵 (P-256) / nonce</summary>
+            <summary>
+              <strong>リーダー公開鍵 (P-256) / nonce</strong>
+            </summary>
             <pre style={preStyle}>
               {`x:     ${built.publicKeyHex.x}\ny:     ${built.publicKeyHex.y}\nnonce: ${built.nonce} (hex: ${built.nonceHex})`}
             </pre>
@@ -485,7 +487,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
                     </details>
                   )}
                   <details style={{ marginTop: 6 }}>
-                    <summary>raw (base64url)</summary>
+                    <summary>
+                      <strong>raw (base64url)</strong>
+                    </summary>
                     <pre style={preStyle}>{vp.rawBase64Url}</pre>
                   </details>
                 </div>
