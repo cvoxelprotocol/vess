@@ -129,8 +129,9 @@ export const DCApiIssuePage: FC = () => {
       </div>
       <h1>Issuer (openid4vci over DC API)</h1>
       <p style={{ color: '#666' }}>
-        OpenID4VCI の Credential Offer を DC API ( navigator.credentials.create ) 経由で iOS Wallet
-        に渡し、 mdoc を発行・保存させる。
+        OpenID4VCI の Credential Offer を DC API ( navigator.credentials.create ) 経由で OS の DC
+        API に登録された任意の Wallet ( iOS Safari / Android Chrome ) に渡し、 mdoc
+        を発行・保存させる。
       </p>
 
       <div style={{ marginBottom: 20 }}>
@@ -148,7 +149,7 @@ export const DCApiIssuePage: FC = () => {
       <section style={{ marginBottom: 24 }}>
         <h2>1. Credential Offer URI</h2>
         <p style={{ color: '#666', fontSize: 13 }}>
-          社内 Issuer から取得した Offer URI を貼り付け。形式例:
+          Issuer から取得した Offer URI を貼り付け。形式例:
           <br />
           <code>openid-credential-offer://?credential_offer=...</code>
           <br />

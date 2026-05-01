@@ -5,7 +5,10 @@ import { RequestedElement } from '@/lib/dcapi/cborBuilders'
 import {
   decodeOpenId4VpResponse,
   DecodedVpToken,
+  ExtractedMdocDocument,
   extractCredentialFields,
+  extractMdocDocuments,
+  formatElementValue,
   stringifySafe,
 } from '@/lib/dcapi/decodeResponse'
 import { MOBILE_DOCUMENT_TYPES, MOBILE_DOCUMENT_TYPE_META } from '@/lib/dcapi/mobileDocumentType'
@@ -244,10 +247,16 @@ export const DCApiVerifyAndroidPage: FC = () => {
     if (credentialResponse === null) return null
     const fields = extractCredentialFields(credentialResponse)
     const decoded: DecodedVpToken[] | null = decodeOpenId4VpResponse(fields.data)
+    const decodedWithClaims = decoded?.map((vp) => ({
+      ...vp,
+      mdocDocuments: vp.decoded ? extractMdocDocuments(vp.decoded) : [],
+    }))
     return {
       protocol: fields.protocol,
       dataJson: stringifySafe(fields.data),
-      decodedVpTokens: decoded,
+      decodedVpTokens: decodedWithClaims as
+        | (DecodedVpToken & { mdocDocuments: ExtractedMdocDocument[] })[]
+        | undefined,
     }
   }, [credentialResponse])
 
@@ -486,12 +495,77 @@ export const DCApiVerifyAndroidPage: FC = () => {
                   {vp.error ? (
                     <div style={{ color: '#c62828', fontSize: 13 }}>{vp.error}</div>
                   ) : (
-                    <details open>
-                      <summary>
-                        <strong>DeviceResponse (CBOR デコード)</strong>
-                      </summary>
-                      <pre style={preStyle}>{stringifySafe(vp.decoded)}</pre>
-                    </details>
+                    <>
+                      {vp.mdocDocuments.length > 0 && (
+                        <div style={{ marginBottom: 8 }}>
+                          <strong>提示された element ( IssuerSignedItem )</strong>
+                          {vp.mdocDocuments.map((doc) => (
+                            <div
+                              key={doc.docType}
+                              style={{
+                                marginTop: 6,
+                                padding: 8,
+                                background: '#fafafa',
+                                border: '1px solid #e0e0e0',
+                                borderRadius: 4,
+                              }}
+                            >
+                              <div style={{ marginBottom: 4 }}>
+                                <span style={{ color: '#666', fontSize: 12 }}>docType:</span>{' '}
+                                <code>{doc.docType}</code>
+                              </div>
+                              {Object.entries(doc.namespaces).map(([ns, claims]) => (
+                                <div key={ns} style={{ marginTop: 4 }}>
+                                  <div style={{ color: '#666', fontSize: 12 }}>
+                                    namespace: <code>{ns}</code>
+                                  </div>
+                                  <table
+                                    style={{
+                                      borderCollapse: 'collapse',
+                                      fontSize: 13,
+                                      marginTop: 2,
+                                    }}
+                                  >
+                                    <tbody>
+                                      {claims.map((c) => (
+                                        <tr key={c.elementIdentifier}>
+                                          <td
+                                            style={{
+                                              padding: '2px 8px 2px 0',
+                                              verticalAlign: 'top',
+                                              fontFamily: 'monospace',
+                                              whiteSpace: 'nowrap',
+                                            }}
+                                          >
+                                            {c.elementIdentifier}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding: '2px 0',
+                                              verticalAlign: 'top',
+                                              fontFamily: 'monospace',
+                                              wordBreak: 'break-all',
+                                            }}
+                                          >
+                                            {formatElementValue(c.elementValue)}
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <details>
+                        <summary>
+                          <strong>DeviceResponse (CBOR デコード) — 全体</strong>
+                        </summary>
+                        <pre style={preStyle}>{stringifySafe(vp.decoded)}</pre>
+                      </details>
+                    </>
                   )}
                   <details style={{ marginTop: 6 }}>
                     <summary>

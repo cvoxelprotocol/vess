@@ -1,4 +1,4 @@
-import { decode } from 'cbor2'
+import { decode, Tag } from 'cbor2'
 import { base64urlDecode, base64urlEncode } from './base64url'
 
 // JSON 化用に Uint8Array / Map を扱える形へ変換する。
@@ -114,4 +114,100 @@ export const decodeOpenId4VpResponse = (data: unknown): DecodedVpToken[] | null 
     })
   }
   return result
+}
+
+// mso_mdoc DeviceResponse から (docType, namespace, elementIdentifier, elementValue) を取り出す。
+// IssuerSignedItem は CBOR Tag 24 ( 内部 CBOR バイト列 ) なので二重デコードが必要。
+export interface MdocClaim {
+  elementIdentifier: string
+  elementValue: unknown
+  digestID?: number
+}
+
+export interface ExtractedMdocDocument {
+  docType: string
+  namespaces: Record<string, MdocClaim[]>
+}
+
+const getField = (input: unknown, key: string): unknown => {
+  if (input instanceof Map) return input.get(key)
+  if (input && typeof input === 'object') return (input as Record<string, unknown>)[key]
+  return undefined
+}
+
+const decodeIssuerSignedItem = (item: unknown): MdocClaim | null => {
+  let inner: unknown = item
+  if (item instanceof Tag && item.tag === 24 && item.contents instanceof Uint8Array) {
+    try {
+      inner = decode(item.contents)
+    } catch {
+      return null
+    }
+  } else if (item instanceof Uint8Array) {
+    try {
+      inner = decode(item)
+    } catch {
+      return null
+    }
+  }
+  const elementIdentifier = getField(inner, 'elementIdentifier')
+  const elementValue = getField(inner, 'elementValue')
+  const digestID = getField(inner, 'digestID')
+  if (typeof elementIdentifier !== 'string') return null
+  return {
+    elementIdentifier,
+    elementValue,
+    digestID: typeof digestID === 'number' ? digestID : undefined,
+  }
+}
+
+export const extractMdocDocuments = (decoded: unknown): ExtractedMdocDocument[] => {
+  if (!decoded) return []
+  const documents = getField(decoded, 'documents')
+  if (!Array.isArray(documents)) return []
+
+  const result: ExtractedMdocDocument[] = []
+  for (const doc of documents) {
+    const docType = getField(doc, 'docType')
+    const issuerSigned = getField(doc, 'issuerSigned')
+    const nameSpaces = getField(issuerSigned, 'nameSpaces')
+    if (typeof docType !== 'string' || !nameSpaces) continue
+
+    const nsEntries: [unknown, unknown][] =
+      nameSpaces instanceof Map
+        ? Array.from(nameSpaces.entries())
+        : Object.entries(nameSpaces as Record<string, unknown>)
+
+    const namespaces: ExtractedMdocDocument['namespaces'] = {}
+    for (const [ns, items] of nsEntries) {
+      if (!Array.isArray(items)) continue
+      const claims = items
+        .map(decodeIssuerSignedItem)
+        .filter((c): c is MdocClaim => c !== null)
+      if (claims.length > 0) namespaces[String(ns)] = claims
+    }
+    if (Object.keys(namespaces).length > 0) {
+      result.push({ docType, namespaces })
+    }
+  }
+  return result
+}
+
+// elementValue を画面表示用の文字列にする。
+// bytes は base64url 短縮表示、 Date / Tag / Map / object は再帰的に整形。
+export const formatElementValue = (value: unknown): string => {
+  if (value === null) return 'null'
+  if (value === undefined) return 'undefined'
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (value instanceof Uint8Array) {
+    const b64u = base64urlEncode(value)
+    const head = b64u.length > 32 ? `${b64u.slice(0, 32)}…` : b64u
+    return `<bytes ${value.byteLength}B / b64u: ${head}>`
+  }
+  if (value instanceof Date) return value.toISOString()
+  if (value instanceof Tag) {
+    return `Tag(${value.tag}: ${formatElementValue(value.contents)})`
+  }
+  return stringifySafe(value)
 }
