@@ -307,10 +307,6 @@ export const DCApiVerifyAndroidPage: FC = () => {
             <option value="dc_api">dc_api (平文応答)</option>
             <option value="dc_api.jwt">dc_api.jwt (JWE 応答 / ECDH-ES + A128GCM)</option>
           </select>
-          <p style={{ color: '#666', fontSize: 12, marginTop: 4 }}>
-            ※ dc_api.jwt 時もこのページではレスポンスを復号せず raw のまま表示する。
-            復号はバックエンドで実施する想定。
-          </p>
         </div>
 
         <div style={{ marginBottom: 12 }}>
@@ -439,6 +435,25 @@ export const DCApiVerifyAndroidPage: FC = () => {
             <code>{credentialView.protocol ?? '(unknown)'}</code> )
           </p>
 
+          {built?.authorizationRequest.response_mode === 'dc_api.jwt' &&
+            (!credentialView.decodedVpTokens || credentialView.decodedVpTokens.length === 0) && (
+              <div
+                style={{
+                  marginBottom: 12,
+                  padding: 8,
+                  background: '#fffde7',
+                  border: '1px solid #fbc02d',
+                  borderRadius: 4,
+                  fontSize: 13,
+                }}
+              >
+                <strong>ℹ️ response_mode = dc_api.jwt</strong> のため、応答全体は JWE で
+                暗号化されており、このページでは復号しないので element 値は見えません。
+                復号はリーダー秘密鍵を持つバックエンドで実施する想定です。下の{' '}
+                <code>credential.data</code> ( raw ) が JWE 本体です。
+              </div>
+            )}
+
           {credentialView.decodedVpTokens && credentialView.decodedVpTokens.length > 0 && (
             <div style={{ marginBottom: 12 }}>
               <h3 style={{ marginBottom: 8 }}>提示された Credentials</h3>
@@ -481,10 +496,6 @@ export const DCApiVerifyAndroidPage: FC = () => {
             </summary>
             <pre style={preStyle}>{credentialView.dataJson}</pre>
           </details>
-
-          <p style={{ color: '#666', fontSize: 12, marginTop: 8 }}>
-            DeviceResponse の署名検証はバックエンドで実施する想定。 dc_api.jwt 応答時はこの場では復号しない。
-          </p>
         </section>
       )}
 
