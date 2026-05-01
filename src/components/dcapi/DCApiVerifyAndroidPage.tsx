@@ -394,7 +394,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
       {built && (
         <section style={{ marginBottom: 24 }}>
           <h2>2. 構築結果</h2>
-          <details open style={{ marginBottom: 8 }}>
+          <details style={{ marginBottom: 8 }}>
             <summary>
               <strong>Authorization Request</strong> (JSON / data フィールドの中身)
             </summary>
