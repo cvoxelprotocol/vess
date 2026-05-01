@@ -57,6 +57,7 @@ export const extractCredentialFields = (
 
 export interface DecodedVpToken {
   credentialId: string
+  index?: number
   rawBase64Url: string
   decoded?: unknown
   error?: string
@@ -67,6 +68,7 @@ export interface DecodedVpToken {
 //
 // data 形式 (response_mode: dc_api):
 //   { vp_token: { <credId>: "<base64url CBOR DeviceResponse>" } }
+//   { vp_token: { <credId>: ["<base64url CBOR>", ...] } }   // OpenID4VP 1.0 で許容
 // JWE 応答 (response_mode: dc_api.jwt) は本関数では復号しない。
 export const decodeOpenId4VpResponse = (data: unknown): DecodedVpToken[] | null => {
   if (!data || typeof data !== 'object') return null
@@ -75,25 +77,41 @@ export const decodeOpenId4VpResponse = (data: unknown): DecodedVpToken[] | null 
 
   const result: DecodedVpToken[] = []
   for (const [credentialId, value] of Object.entries(vpToken as Record<string, unknown>)) {
-    if (typeof value !== 'string') {
+    const tokens: string[] = Array.isArray(value)
+      ? (value.filter((v) => typeof v === 'string') as string[])
+      : typeof value === 'string'
+      ? [value]
+      : []
+
+    if (tokens.length === 0) {
       result.push({
         credentialId,
         rawBase64Url: '',
-        error: '値が string ではない (JWE などの可能性)',
+        error: `vp_token の値が string でも string[] でもない: ${typeof value}`,
       })
       continue
     }
-    try {
-      const bytes = base64urlDecode(value)
-      const decoded = decode(bytes)
-      result.push({ credentialId, rawBase64Url: value, decoded })
-    } catch (e) {
-      result.push({
-        credentialId,
-        rawBase64Url: value,
-        error: `CBOR デコード失敗: ${(e as Error).message}`,
-      })
-    }
+
+    const isArray = Array.isArray(value)
+    tokens.forEach((token, i) => {
+      try {
+        const bytes = base64urlDecode(token)
+        const decoded = decode(bytes)
+        result.push({
+          credentialId,
+          index: isArray ? i : undefined,
+          rawBase64Url: token,
+          decoded,
+        })
+      } catch (e) {
+        result.push({
+          credentialId,
+          index: isArray ? i : undefined,
+          rawBase64Url: token,
+          error: `CBOR デコード失敗: ${(e as Error).message}`,
+        })
+      }
+    })
   }
   return result
 }

@@ -478,9 +478,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
           {credentialView.decodedVpTokens && credentialView.decodedVpTokens.length > 0 && (
             <div style={{ marginBottom: 12 }}>
               <h3 style={{ marginBottom: 8 }}>提示された Credentials</h3>
-              {credentialView.decodedVpTokens.map((vp) => (
+              {credentialView.decodedVpTokens.map((vp, idx) => (
                 <div
-                  key={vp.credentialId}
+                  key={`${vp.credentialId}-${vp.index ?? idx}`}
                   style={{
                     marginBottom: 12,
                     padding: 10,
@@ -491,6 +491,11 @@ export const DCApiVerifyAndroidPage: FC = () => {
                 >
                   <div style={{ marginBottom: 6 }}>
                     <strong>credential id:</strong> <code>{vp.credentialId}</code>
+                    {vp.index !== undefined && (
+                      <span style={{ marginLeft: 6, color: '#666', fontSize: 12 }}>
+                        ( vp_token[{vp.index}] )
+                      </span>
+                    )}
                   </div>
                   {vp.error ? (
                     <div style={{ color: '#c62828', fontSize: 13 }}>{vp.error}</div>
