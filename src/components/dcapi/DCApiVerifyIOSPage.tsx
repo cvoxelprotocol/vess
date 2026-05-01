@@ -187,8 +187,12 @@ export const DCApiVerifyIOSPage: FC = () => {
       </div>
       <h1>Verifier — iOS Safari (org-iso-mdoc)</h1>
       <p style={{ color: '#666' }}>
-        ISO 18013-7 Annex C の DC API 経由で iOS Wallet に提示要求を送る。
-        protocol は <code>org-iso-mdoc</code>。Android Chrome では動かない。
+        iOS Safari の DC API ( ISO 18013-7 Annex C ) 経由で、 <code>IdentityDocumentProvider</code>{' '}
+        extension を実装した任意の Wallet に提示要求を送る。複数の対応 Wallet が要件を満たすと iOS のシステム UI で選択ピッカーが出る。 protocol は{' '}
+        <code>org-iso-mdoc</code>。 Android Chrome では動かない。
+      </p>
+      <p style={{ color: '#888', fontSize: 12 }}>
+        動作確認用 Wallet ( 参考実装 ): <code>~/Workspace/dc-api-demo</code>
       </p>
 
       <div style={{ marginBottom: 20 }}>

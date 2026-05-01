@@ -263,9 +263,12 @@ export const DCApiVerifyAndroidPage: FC = () => {
       </div>
       <h1>Verifier — Android Chrome (openid4vp-v1-unsigned)</h1>
       <p style={{ color: '#666' }}>
-        OpenID4VP DC API + DCQL で Android Wallet (本リポジトリ対向の{' '}
-        <code>~/Workspace/dc-api-demo-android</code>) に提示要求を送る。 protocol は{' '}
+        Android Chrome の DC API 経由で、 OpenID4VP + DCQL に対応した任意の Wallet に提示要求を送る。
+        端末に複数の対応 Wallet が入っていれば Android のシステム UI で選択ピッカーが出る。 protocol は{' '}
         <code>openid4vp-v1-unsigned</code> / <code>openid4vp</code>。 iOS Safari では動かない。
+      </p>
+      <p style={{ color: '#888', fontSize: 12 }}>
+        動作確認用 Wallet ( 参考実装 ): <code>~/Workspace/dc-api-demo-android</code>
       </p>
 
       <div style={{ marginBottom: 20 }}>

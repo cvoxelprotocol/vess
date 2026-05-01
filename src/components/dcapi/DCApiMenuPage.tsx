@@ -6,10 +6,18 @@ export const DCApiMenuPage: FC = () => {
     <div style={{ padding: 20, maxWidth: 900, margin: '0 auto', fontFamily: 'system-ui' }}>
       <h1>Digital Credentials API デモ</h1>
       <p style={{ color: '#666' }}>
-        対向 Wallet:{' '}
-        iOS は <code>~/Workspace/dc-api-demo</code> の <code>IdentityProvider</code> extension、
-        Android は <code>~/Workspace/dc-api-demo-android</code>。
+        DC API 仕様上は OS の DC API に登録された任意の Wallet が候補になる。
+        動作確認用の参考実装 Wallet:
       </p>
+      <ul style={{ color: '#666', fontSize: 13, marginTop: 0 }}>
+        <li>
+          iOS: <code>~/Workspace/dc-api-demo</code> ( <code>IdentityDocumentProvider</code>{' '}
+          extension )
+        </li>
+        <li>
+          Android: <code>~/Workspace/dc-api-demo-android</code>
+        </li>
+      </ul>
       <ul style={{ lineHeight: 1.8 }}>
         <li>
           <Link href="/dcapi/verify-ios">
