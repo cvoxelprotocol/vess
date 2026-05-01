@@ -126,8 +126,10 @@ export const DCApiVerifyAndroidPage: FC = () => {
   const removeElement = (index: number) =>
     setElements((prev) => prev.filter((_, i) => i !== index))
 
-  const buildRequest = async () => {
+  const submit = async () => {
     setError(null)
+    setIsLoading(true)
+    setCredentialResponse(null)
     try {
       const sanitized = elements
         .filter((e) => e.identifier.trim().length > 0 && e.namespace.trim().length > 0)
@@ -207,27 +209,15 @@ export const DCApiVerifyAndroidPage: FC = () => {
       addLog(
         `Authorization Request 構築完了 (protocol=${protocol}, response_mode=${responseMode}, claims=${sanitized.length})`
       )
-    } catch (e) {
-      const message = e instanceof Error ? e.message : String(e)
-      setError(message)
-      addLog(`構築エラー: ${message}`)
-    }
-  }
 
-  const callDCApi = async () => {
-    if (!built) return
-    setIsLoading(true)
-    setError(null)
-    setCredentialResponse(null)
-    try {
-      addLog(`navigator.credentials.get() を呼び出し中... (${built.protocol})`)
+      addLog(`navigator.credentials.get() を呼び出し中... (${result.protocol})`)
       const credential = await navigator.credentials.get({
         mediation: 'required',
         digital: {
           requests: [
             {
-              protocol: built.protocol,
-              data: built.authorizationRequest,
+              protocol: result.protocol,
+              data: result.authorizationRequest,
             },
           ],
         },
@@ -402,8 +392,11 @@ export const DCApiVerifyAndroidPage: FC = () => {
           </button>
         </div>
 
-        <button onClick={buildRequest} type="button">
-          Request を構築
+        <button onClick={submit} disabled={isLoading || !dcApiSupported} type="button">
+          {isLoading ? '処理中...' : 'navigator.credentials.get() を呼び出し'}
+        </button>
+        <button onClick={reset} type="button" style={{ marginLeft: 8 }}>
+          リセット
         </button>
       </section>
 
@@ -424,13 +417,6 @@ export const DCApiVerifyAndroidPage: FC = () => {
               {`x:     ${built.publicKeyHex.x}\ny:     ${built.publicKeyHex.y}\nnonce: ${built.nonce} (hex: ${built.nonceHex})`}
             </pre>
           </details>
-
-          <button onClick={callDCApi} disabled={isLoading || !dcApiSupported} type="button">
-            {isLoading ? '処理中...' : 'navigator.credentials.get() を呼び出し'}
-          </button>
-          <button onClick={reset} type="button" style={{ marginLeft: 8 }}>
-            リセット
-          </button>
         </section>
       )}
 

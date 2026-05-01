@@ -86,8 +86,10 @@ export const DCApiVerifyIOSPage: FC = () => {
   const removeElement = (index: number) =>
     setElements((prev) => prev.filter((_, i) => i !== index))
 
-  const buildRequest = async () => {
+  const submit = async () => {
     setError(null)
+    setIsLoading(true)
+    setCredentialResponse(null)
     try {
       const sanitized = elements
         .filter((e) => e.identifier.trim().length > 0 && e.namespace.trim().length > 0)
@@ -125,19 +127,7 @@ export const DCApiVerifyIOSPage: FC = () => {
       addLog(
         `Request 構築完了 (deviceRequest=${deviceRequestBytes.length}B, encryptionInfo=${encryptionInfoBytes.length}B)`
       )
-    } catch (e) {
-      const message = e instanceof Error ? e.message : String(e)
-      setError(message)
-      addLog(`構築エラー: ${message}`)
-    }
-  }
 
-  const callDCApi = async () => {
-    if (!built) return
-    setIsLoading(true)
-    setError(null)
-    setCredentialResponse(null)
-    try {
       addLog('navigator.credentials.get() を呼び出し中... (org-iso-mdoc)')
       const credential = await navigator.credentials.get({
         mediation: 'required',
@@ -146,8 +136,8 @@ export const DCApiVerifyIOSPage: FC = () => {
             {
               protocol: 'org-iso-mdoc',
               data: {
-                deviceRequest: built.deviceRequestB64u,
-                encryptionInfo: built.encryptionInfoB64u,
+                deviceRequest: result.deviceRequestB64u,
+                encryptionInfo: result.encryptionInfoB64u,
               },
             },
           ],
@@ -158,7 +148,7 @@ export const DCApiVerifyIOSPage: FC = () => {
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e)
       setError(message)
-      addLog(`DC API エラー: ${message}`)
+      addLog(`エラー: ${message}`)
     } finally {
       setIsLoading(false)
     }
@@ -269,15 +259,18 @@ export const DCApiVerifyIOSPage: FC = () => {
           </button>
         </div>
 
-        <button onClick={buildRequest} type="button">
-          Request を構築
+        <button onClick={submit} disabled={isLoading || !dcApiSupported} type="button">
+          {isLoading ? '処理中...' : 'navigator.credentials.get() を呼び出し'}
+        </button>
+        <button onClick={reset} type="button" style={{ marginLeft: 8 }}>
+          リセット
         </button>
       </section>
 
       {built && (
         <section style={{ marginBottom: 24 }}>
           <h2>2. 構築結果</h2>
-          <details open style={{ marginBottom: 8 }}>
+          <details style={{ marginBottom: 8 }}>
             <summary>
               <strong>deviceRequest</strong> (base64url, {built.deviceRequestBytes.length}B)
             </summary>
@@ -289,7 +282,7 @@ export const DCApiVerifyIOSPage: FC = () => {
             </summary>
             <pre style={preStyle}>{bytesToHex(built.deviceRequestBytes)}</pre>
           </details>
-          <details open style={{ marginBottom: 8 }}>
+          <details style={{ marginBottom: 8 }}>
             <summary>
               <strong>encryptionInfo</strong> (base64url, {built.encryptionInfoBytes.length}B)
             </summary>
@@ -303,13 +296,6 @@ export const DCApiVerifyIOSPage: FC = () => {
               {`x:     ${built.publicKeyHex.x}\ny:     ${built.publicKeyHex.y}\nnonce: ${built.nonceHex}`}
             </pre>
           </details>
-
-          <button onClick={callDCApi} disabled={isLoading || !dcApiSupported} type="button">
-            {isLoading ? '処理中...' : 'navigator.credentials.get() を呼び出し'}
-          </button>
-          <button onClick={reset} type="button" style={{ marginLeft: 8 }}>
-            リセット
-          </button>
         </section>
       )}
 
