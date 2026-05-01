@@ -34,7 +34,6 @@
 |---|---|---|
 | protocol | `openid4vp-v1-unsigned` (デフォルト) | DCQL外 — `navigator.credentials.get` の protocol |
 | response_mode | `dc_api` (デフォルト) | DCQL外 — `authorizationRequest.response_mode` |
-| client_id | 任意 (デフォルト `vess-dc-api-demo-verifier` でOK) | DCQL外 — `authorizationRequest.client_id` |
 | docType | `com.vess-api.dev.testoda.mdoc.original.B` | `meta.doctype_value` に入る。同時に `.` を `_` に置換した `com_vess-api_dev_testoda_mdoc_original_B` が `credentials[0].id` に入る |
 | element 行 #1 namespace | `name` | `claims[0].path[0]`、 `claims[0].id` の前半 |
 | element 行 #1 identifier | `familyName` | `claims[0].path[1]`、 `claims[0].id` の後半 |

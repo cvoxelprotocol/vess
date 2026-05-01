@@ -68,7 +68,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
       intentToRetain: false,
     }))
   )
-  const [clientId, setClientId] = useState<string>('vess-dc-api-demo-verifier')
+  // OpenID4VP DC API の client_id は Verifier ( このページ自身 ) の identity。
+  // OpenID4VP 1.0 の web-origin scheme に従い、 ページの origin から自動導出する。
+  const [clientId, setClientId] = useState<string>('')
 
   const [built, setBuilt] = useState<BuiltRequest | null>(null)
   const [credentialResponse, setCredentialResponse] = useState<unknown>(null)
@@ -86,6 +88,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
     const isSupported = typeof window !== 'undefined' && 'DigitalCredential' in window
     setDcApiSupported(isSupported)
     addLog(`Digital Credentials API: ${isSupported ? 'サポート' : '未サポート'}`)
+    if (typeof window !== 'undefined') {
+      setClientId(`web-origin:${window.location.origin}`)
+    }
   }, [addLog])
 
   const onChangeDocType = (newDocType: string) => {
@@ -314,12 +319,23 @@ export const DCApiVerifyAndroidPage: FC = () => {
 
         <div style={{ marginBottom: 12 }}>
           <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>client_id</label>
-          <input
-            type="text"
-            value={clientId}
-            onChange={(e) => setClientId(e.target.value)}
-            style={{ ...inputStyle, width: '100%' }}
-          />
+          <code
+            style={{
+              display: 'block',
+              padding: 6,
+              background: '#f5f5f5',
+              border: '1px solid #ddd',
+              borderRadius: 4,
+              fontSize: 13,
+              wordBreak: 'break-all',
+            }}
+          >
+            {clientId || '(マウント待ち)'}
+          </code>
+          <p style={{ color: '#666', fontSize: 12, marginTop: 4 }}>
+            OpenID4VP の <code>client_id</code> は Verifier ( = このページ ) の identity。
+            DC API では <code>web-origin:&lt;origin&gt;</code> スキームに従い、 ページの origin から自動生成する。
+          </p>
         </div>
 
         <div style={{ marginBottom: 12 }}>
