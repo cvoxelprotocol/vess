@@ -37,7 +37,7 @@ export const DCApiMenuPage: FC = () => {
           <Link href="/dcapi/issue">
             <strong>Issuer</strong>
           </Link>{' '}
-          — <code>openid4vci</code> で発行要求。
+          — <code>openid4vci-v1</code> で発行要求。
           <code>navigator.credentials.create()</code>。 Offer URI を手入力。
         </li>
       </ul>

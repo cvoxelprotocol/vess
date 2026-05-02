@@ -74,13 +74,13 @@ export const DCApiIssuePage: FC = () => {
       if (parsed.credentialOffer) data.credential_offer = parsed.credentialOffer
       if (parsed.credentialOfferUri) data.credential_offer_uri = parsed.credentialOfferUri
 
-      addLog('navigator.credentials.create() を呼び出し中... (openid4vci)')
+      addLog('navigator.credentials.create() を呼び出し中... (openid4vci-v1)')
       const credential = await navigator.credentials.create({
         mediation: 'required',
         digital: {
           requests: [
             {
-              protocol: 'openid4vci',
+              protocol: 'openid4vci-v1',
               data,
             },
           ],
@@ -127,7 +127,7 @@ export const DCApiIssuePage: FC = () => {
       <div style={{ marginBottom: 12 }}>
         <Link href="/dcapi">← DC API メニュー</Link>
       </div>
-      <h1>Issuer (openid4vci over DC API)</h1>
+      <h1>Issuer (openid4vci-v1 over DC API)</h1>
       <p style={{ color: '#666' }}>
         OpenID4VCI の Credential Offer を DC API ( navigator.credentials.create ) 経由で OS の DC
         API に登録された任意の Wallet ( iOS Safari / Android Chrome ) に渡し、 mdoc
