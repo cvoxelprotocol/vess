@@ -132,8 +132,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.1(date-fns@2.30.0)
       dcapi-issuer-verifier:
-        specifier: github:cvoxelprotocol/dcapi-issuer-verifier
-        version: git+https://git@github.com:cvoxelprotocol/dcapi-issuer-verifier.git#29aacad3ca17768f61bc7d6c6960663aa1c7e300
+        specifier: github:vess-id/dcapi-issuer-verifier
+        version: https://codeload.github.com/vess-id/dcapi-issuer-verifier/tar.gz/29aacad3ca17768f61bc7d6c6960663aa1c7e300
       did-resolver:
         specifier: ^4.1.0
         version: 4.1.0
@@ -5586,8 +5586,8 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
 
-  dcapi-issuer-verifier@git+https://git@github.com:cvoxelprotocol/dcapi-issuer-verifier.git#29aacad3ca17768f61bc7d6c6960663aa1c7e300:
-    resolution: {commit: 29aacad3ca17768f61bc7d6c6960663aa1c7e300, repo: git@github.com:cvoxelprotocol/dcapi-issuer-verifier.git, type: git}
+  dcapi-issuer-verifier@https://codeload.github.com/vess-id/dcapi-issuer-verifier/tar.gz/29aacad3ca17768f61bc7d6c6960663aa1c7e300:
+    resolution: {tarball: https://codeload.github.com/vess-id/dcapi-issuer-verifier/tar.gz/29aacad3ca17768f61bc7d6c6960663aa1c7e300}
     version: 0.1.0
 
   debounce-fn@5.1.2:
@@ -19036,7 +19036,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.4
 
-  dcapi-issuer-verifier@git+https://git@github.com:cvoxelprotocol/dcapi-issuer-verifier.git#29aacad3ca17768f61bc7d6c6960663aa1c7e300:
+  dcapi-issuer-verifier@https://codeload.github.com/vess-id/dcapi-issuer-verifier/tar.gz/29aacad3ca17768f61bc7d6c6960663aa1c7e300:
     dependencies:
       cbor2: 2.3.0
 
@@ -19231,7 +19231,7 @@ snapshots:
 
   dotenv-expand@11.0.7:
     dependencies:
-      dotenv: 16.4.7
+      dotenv: 16.6.1
     optional: true
 
   dotenv@16.4.7:
