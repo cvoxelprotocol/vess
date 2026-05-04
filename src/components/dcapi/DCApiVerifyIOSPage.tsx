@@ -1,24 +1,18 @@
+import {
+  buildPresentationRequestIOS,
+  bytesToHex,
+  decodeIOSPresentationResponse,
+  stringifySafe,
+  type IOSPresentationRequest,
+  type RequestedElement,
+} from 'dcapi-issuer-verifier'
 import Link from 'next/link'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { base64urlEncode, bytesToHex } from '@/lib/dcapi/base64url'
-import { buildDeviceRequest, buildEncryptionInfo, RequestedElement } from '@/lib/dcapi/cborBuilders'
-import { extractCredentialFields, stringifySafe } from '@/lib/dcapi/decodeResponse'
 import {
   MobileDocumentType,
   MOBILE_DOCUMENT_TYPES,
   MOBILE_DOCUMENT_TYPE_META,
 } from '@/lib/dcapi/mobileDocumentType'
-import { generateNonce, generateReaderKey } from '@/lib/dcapi/readerKey'
-
-interface BuiltRequest {
-  deviceRequestBytes: Uint8Array
-  encryptionInfoBytes: Uint8Array
-  deviceRequestB64u: string
-  encryptionInfoB64u: string
-  nonceHex: string
-  publicKeyHex: { x: string; y: string }
-  privateKey: CryptoKey
-}
 
 const inputStyle: React.CSSProperties = {
   padding: 6,
@@ -36,7 +30,7 @@ export const DCApiVerifyIOSPage: FC = () => {
     }))
   )
 
-  const [built, setBuilt] = useState<BuiltRequest | null>(null)
+  const [built, setBuilt] = useState<IOSPresentationRequest | null>(null)
   const [credentialResponse, setCredentialResponse] = useState<unknown>(null)
   const [logs, setLogs] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -91,56 +85,18 @@ export const DCApiVerifyIOSPage: FC = () => {
     setIsLoading(true)
     setCredentialResponse(null)
     try {
-      const sanitized = elements
-        .filter((e) => e.identifier.trim().length > 0 && e.namespace.trim().length > 0)
-        .map((e) => ({
-          namespace: e.namespace.trim(),
-          identifier: e.identifier.trim(),
-          intentToRetain: e.intentToRetain,
-        }))
-      if (sanitized.length === 0) {
-        throw new Error('要求する element が空です ( namespace と identifier 両方必須 )')
-      }
-      addLog('リーダーエフェメラル鍵 (P-256) を生成中...')
-      const readerKey = await generateReaderKey()
-      const nonce = generateNonce(16)
-
-      addLog('DeviceRequest CBOR を構築中...')
-      const deviceRequestBytes = buildDeviceRequest(docType, sanitized)
-
-      addLog('EncryptionInfo CBOR を構築中...')
-      const encryptionInfoBytes = buildEncryptionInfo(nonce, readerKey.publicKeyXY)
-
-      const result: BuiltRequest = {
-        deviceRequestBytes,
-        encryptionInfoBytes,
-        deviceRequestB64u: base64urlEncode(deviceRequestBytes),
-        encryptionInfoB64u: base64urlEncode(encryptionInfoBytes),
-        nonceHex: bytesToHex(nonce),
-        publicKeyHex: {
-          x: bytesToHex(readerKey.publicKeyXY.x),
-          y: bytesToHex(readerKey.publicKeyXY.y),
-        },
-        privateKey: readerKey.privateKey,
-      }
+      addLog('リーダーエフェメラル鍵生成 + DeviceRequest / EncryptionInfo CBOR 構築中...')
+      const result = await buildPresentationRequestIOS({ docType, elements })
       setBuilt(result)
       addLog(
-        `Request 構築完了 (deviceRequest=${deviceRequestBytes.length}B, encryptionInfo=${encryptionInfoBytes.length}B)`
+        `Request 構築完了 (deviceRequest=${result.deviceRequestBytes.length}B, encryptionInfo=${result.encryptionInfoBytes.length}B)`
       )
 
-      addLog('navigator.credentials.get() を呼び出し中... (org-iso-mdoc)')
+      addLog(`navigator.credentials.get() を呼び出し中... (${result.protocol})`)
       const credential = await navigator.credentials.get({
         mediation: 'required',
         digital: {
-          requests: [
-            {
-              protocol: 'org-iso-mdoc',
-              data: {
-                deviceRequest: result.deviceRequestB64u,
-                encryptionInfo: result.encryptionInfoB64u,
-              },
-            },
-          ],
+          requests: [{ protocol: result.protocol, data: result.data }],
         },
       } as CredentialRequestOptions)
       addLog('Credential Response を受信しました')
@@ -163,11 +119,7 @@ export const DCApiVerifyIOSPage: FC = () => {
 
   const credentialView = useMemo(() => {
     if (credentialResponse === null) return null
-    const fields = extractCredentialFields(credentialResponse)
-    return {
-      protocol: fields.protocol,
-      dataJson: stringifySafe(fields.data),
-    }
+    return decodeIOSPresentationResponse(credentialResponse)
   }, [credentialResponse])
 
   return (
@@ -293,7 +245,9 @@ export const DCApiVerifyIOSPage: FC = () => {
               <strong>リーダー公開鍵 (P-256) / nonce</strong>
             </summary>
             <pre style={preStyle}>
-              {`x:     ${built.publicKeyHex.x}\ny:     ${built.publicKeyHex.y}\nnonce: ${built.nonceHex}`}
+              {`x:     ${bytesToHex(built.readerKey.publicKeyXY.x)}\ny:     ${bytesToHex(
+                built.readerKey.publicKeyXY.y
+              )}\nnonce: ${bytesToHex(built.nonceBytes)}`}
             </pre>
           </details>
         </section>
@@ -324,7 +278,7 @@ export const DCApiVerifyIOSPage: FC = () => {
             <summary>
               <strong>credential.data</strong>
             </summary>
-            <pre style={preStyle}>{credentialView.dataJson}</pre>
+            <pre style={preStyle}>{stringifySafe(credentialView.data)}</pre>
           </details>
           <p style={{ color: '#666', fontSize: 13, marginTop: 8 }}>
             HPKE 暗号化された CBOR DeviceResponse はこのページでは復号せず raw のまま表示。

@@ -1,21 +1,17 @@
-import Link from 'next/link'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { base64urlEncode, bytesToHex } from '@/lib/dcapi/base64url'
-import { RequestedElement } from '@/lib/dcapi/cborBuilders'
 import {
-  decodeOpenId4VpResponse,
-  DecodedVpToken,
-  ExtractedMdocDocument,
-  extractCredentialFields,
-  extractMdocDocuments,
+  buildPresentationRequestAndroid,
+  bytesToHex,
+  decodeAndroidPresentationResponse,
   formatElementValue,
   stringifySafe,
-} from '@/lib/dcapi/decodeResponse'
+  type AndroidPresentationProtocol,
+  type AndroidPresentationRequest,
+  type AndroidResponseMode,
+  type RequestedElement,
+} from 'dcapi-issuer-verifier'
+import Link from 'next/link'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { MOBILE_DOCUMENT_TYPES, MOBILE_DOCUMENT_TYPE_META } from '@/lib/dcapi/mobileDocumentType'
-import { generateNonce, generateReaderKey } from '@/lib/dcapi/readerKey'
-
-type Protocol = 'openid4vp-v1-unsigned' | 'openid4vp'
-type ResponseMode = 'dc_api' | 'dc_api.jwt'
 
 // Android Wallet 側で扱う独自 docType。 ISO 標準 (MOBILE_DOCUMENT_TYPES) に
 // 加えて、 social プロトコルなどのカスタムも自由入力できる。
@@ -32,28 +28,6 @@ const ANDROID_DOC_TYPE_PRESETS: { docType: string; namespace: string; elements: 
   },
 ]
 
-interface ReaderEncJwk {
-  kty: 'EC'
-  crv: 'P-256'
-  x: string
-  y: string
-  use: 'enc'
-  alg: 'ECDH-ES'
-  kid: string
-}
-
-interface BuiltRequest {
-  authorizationRequest: Record<string, unknown>
-  authorizationRequestJson: string
-  protocol: Protocol
-  nonce: string
-  nonceHex: string
-  publicKeyHex: { x: string; y: string }
-  readerJwk: ReaderEncJwk
-  privateKey: CryptoKey
-  dcqlId: string
-}
-
 const inputStyle: React.CSSProperties = {
   padding: 6,
   fontFamily: 'inherit',
@@ -61,8 +35,8 @@ const inputStyle: React.CSSProperties = {
 }
 
 export const DCApiVerifyAndroidPage: FC = () => {
-  const [protocol, setProtocol] = useState<Protocol>('openid4vp-v1-unsigned')
-  const [responseMode, setResponseMode] = useState<ResponseMode>('dc_api')
+  const [protocol, setProtocol] = useState<AndroidPresentationProtocol>('openid4vp-v1-unsigned')
+  const [responseMode, setResponseMode] = useState<AndroidResponseMode>('dc_api')
   const [docType, setDocType] = useState<string>('org.iso.18013.5.1.mDL')
   const [elements, setElements] = useState<RequestedElement[]>(
     MOBILE_DOCUMENT_TYPE_META['org.iso.18013.5.1.mDL'].defaultElements.map((id) => ({
@@ -75,7 +49,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
   // OpenID4VP 1.0 の web-origin scheme に従い、 ページの origin から自動導出する。
   const [clientId, setClientId] = useState<string>('')
 
-  const [built, setBuilt] = useState<BuiltRequest | null>(null)
+  const [built, setBuilt] = useState<AndroidPresentationRequest | null>(null)
   const [credentialResponse, setCredentialResponse] = useState<unknown>(null)
   const [logs, setLogs] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -101,7 +75,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
     const preset = ANDROID_DOC_TYPE_PRESETS.find((p) => p.docType === newDocType)
     if (preset) {
       setElements(
-        preset.elements.map((id) => ({
+        preset.elements.map((id: string) => ({
           namespace: preset.namespace,
           identifier: id,
           intentToRetain: false,
@@ -134,95 +108,24 @@ export const DCApiVerifyAndroidPage: FC = () => {
     setIsLoading(true)
     setCredentialResponse(null)
     try {
-      const sanitized = elements
-        .filter((e) => e.identifier.trim().length > 0 && e.namespace.trim().length > 0)
-        .map((e) => ({
-          namespace: e.namespace.trim(),
-          identifier: e.identifier.trim(),
-          intentToRetain: e.intentToRetain,
-        }))
-      if (sanitized.length === 0) {
-        throw new Error('要求する element が空です ( namespace と identifier 両方必須 )')
-      }
-
-      addLog('リーダーエフェメラル鍵 (P-256) を生成中...')
-      const readerKey = await generateReaderKey()
-      const nonceBytes = generateNonce(16)
-      const nonce = base64urlEncode(nonceBytes)
-      const dcqlId = docType.replace(/\./g, '_')
-
-      const readerJwk: ReaderEncJwk = {
-        kty: 'EC',
-        crv: 'P-256',
-        x: base64urlEncode(readerKey.publicKeyXY.x),
-        y: base64urlEncode(readerKey.publicKeyXY.y),
-        use: 'enc',
-        alg: 'ECDH-ES',
-        kid: 'reader-1',
-      }
-
-      const dcqlQuery = {
-        credentials: [
-          {
-            id: dcqlId,
-            require_cryptographic_holder_binding: true,
-            multiple: false,
-            format: 'mso_mdoc',
-            claims: sanitized.map((el) => ({
-              id: `${el.namespace}_${el.identifier}`,
-              path: [el.namespace, el.identifier],
-              ...(el.intentToRetain ? { intent_to_retain: true } : {}),
-            })),
-            meta: { doctype_value: docType },
-          },
-        ],
-      }
-
-      const authorizationRequest: Record<string, unknown> = {
-        response_type: 'vp_token',
-        response_mode: responseMode,
-        client_id: clientId.trim(),
-        nonce,
-        dcql_query: dcqlQuery,
-      }
-
-      if (responseMode === 'dc_api.jwt') {
-        authorizationRequest.client_metadata = {
-          jwks: { keys: [readerJwk] },
-          authorization_encrypted_response_alg: 'ECDH-ES',
-          authorization_encrypted_response_enc: 'A128GCM',
-        }
-      }
-
-      const result: BuiltRequest = {
-        authorizationRequest,
-        authorizationRequestJson: JSON.stringify(authorizationRequest, null, 2),
+      addLog('リーダーエフェメラル鍵生成 + Authorization Request 構築中...')
+      const result = await buildPresentationRequestAndroid({
         protocol,
-        nonce,
-        nonceHex: bytesToHex(nonceBytes),
-        publicKeyHex: {
-          x: bytesToHex(readerKey.publicKeyXY.x),
-          y: bytesToHex(readerKey.publicKeyXY.y),
-        },
-        readerJwk,
-        privateKey: readerKey.privateKey,
-        dcqlId,
-      }
+        responseMode,
+        docType,
+        elements,
+        clientId,
+      })
       setBuilt(result)
       addLog(
-        `Authorization Request 構築完了 (protocol=${protocol}, response_mode=${responseMode}, claims=${sanitized.length})`
+        `Authorization Request 構築完了 (protocol=${protocol}, response_mode=${responseMode})`
       )
 
       addLog(`navigator.credentials.get() を呼び出し中... (${result.protocol})`)
       const credential = await navigator.credentials.get({
         mediation: 'required',
         digital: {
-          requests: [
-            {
-              protocol: result.protocol,
-              data: result.authorizationRequest,
-            },
-          ],
+          requests: [{ protocol: result.protocol, data: result.data }],
         },
       } as CredentialRequestOptions)
       addLog('Credential Response を受信しました')
@@ -245,19 +148,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
 
   const credentialView = useMemo(() => {
     if (credentialResponse === null) return null
-    const fields = extractCredentialFields(credentialResponse)
-    const decoded: DecodedVpToken[] | null = decodeOpenId4VpResponse(fields.data)
-    const decodedWithClaims = decoded?.map((vp) => ({
-      ...vp,
-      mdocDocuments: vp.decoded ? extractMdocDocuments(vp.decoded) : [],
-    }))
-    return {
-      protocol: fields.protocol,
-      dataJson: stringifySafe(fields.data),
-      decodedVpTokens: decodedWithClaims as
-        | (DecodedVpToken & { mdocDocuments: ExtractedMdocDocument[] })[]
-        | undefined,
-    }
+    return decodeAndroidPresentationResponse(credentialResponse)
   }, [credentialResponse])
 
   return (
@@ -294,7 +185,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
           <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>protocol</label>
           <select
             value={protocol}
-            onChange={(e) => setProtocol(e.target.value as Protocol)}
+            onChange={(e) => setProtocol(e.target.value as AndroidPresentationProtocol)}
             style={{ ...inputStyle, width: '100%' }}
           >
             <option value="openid4vp-v1-unsigned">openid4vp-v1-unsigned (OpenID4VP 1.0)</option>
@@ -308,7 +199,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
           </label>
           <select
             value={responseMode}
-            onChange={(e) => setResponseMode(e.target.value as ResponseMode)}
+            onChange={(e) => setResponseMode(e.target.value as AndroidResponseMode)}
             style={{ ...inputStyle, width: '100%' }}
           >
             <option value="dc_api">dc_api (平文応答)</option>
@@ -423,7 +314,9 @@ export const DCApiVerifyAndroidPage: FC = () => {
               <strong>リーダー公開鍵 (P-256) / nonce</strong>
             </summary>
             <pre style={preStyle}>
-              {`x:     ${built.publicKeyHex.x}\ny:     ${built.publicKeyHex.y}\nnonce: ${built.nonce} (hex: ${built.nonceHex})`}
+              {`x:     ${bytesToHex(built.readerKey.publicKeyXY.x)}\ny:     ${bytesToHex(
+                built.readerKey.publicKeyXY.y
+              )}\nnonce: ${built.nonce} (hex: ${bytesToHex(built.nonceBytes)})`}
             </pre>
           </details>
         </section>
@@ -582,7 +475,7 @@ export const DCApiVerifyAndroidPage: FC = () => {
             <summary>
               <strong>credential.data</strong> (raw)
             </summary>
-            <pre style={preStyle}>{credentialView.dataJson}</pre>
+            <pre style={preStyle}>{stringifySafe(credentialView.data)}</pre>
           </details>
         </section>
       )}

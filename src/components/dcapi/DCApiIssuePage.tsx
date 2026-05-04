@@ -1,7 +1,10 @@
+import {
+  base64urlEncode,
+  buildIssuanceRequest,
+  type IssuanceRequest,
+} from 'dcapi-issuer-verifier'
 import Link from 'next/link'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { base64urlEncode } from '@/lib/dcapi/base64url'
-import { parseCredentialOfferUri, ParsedCredentialOffer } from '@/lib/dcapi/issuanceOffer'
 
 const inputStyle: React.CSSProperties = {
   padding: 8,
@@ -20,7 +23,7 @@ const preStyle: React.CSSProperties = {
 
 export const DCApiIssuePage: FC = () => {
   const [offerUri, setOfferUri] = useState('')
-  const [parsed, setParsed] = useState<ParsedCredentialOffer | null>(null)
+  const [issuanceRequest, setIssuanceRequest] = useState<IssuanceRequest | null>(null)
   const [credentialResponse, setCredentialResponse] = useState<unknown>(null)
   const [logs, setLogs] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -48,14 +51,14 @@ export const DCApiIssuePage: FC = () => {
 
   const onParse = () => {
     setError(null)
-    setParsed(null)
+    setIssuanceRequest(null)
     try {
-      const result = parseCredentialOfferUri(offerUri)
-      setParsed(result)
-      if (result.credentialOffer) {
+      const request = buildIssuanceRequest({ offerUri })
+      setIssuanceRequest(request)
+      if (request.parsed.credentialOffer) {
         addLog('credential_offer (inline JSON) をパースしました')
-      } else if (result.credentialOfferUri) {
-        addLog(`credential_offer_uri を取得: ${result.credentialOfferUri}`)
+      } else if (request.parsed.credentialOfferUri) {
+        addLog(`credential_offer_uri を取得: ${request.parsed.credentialOfferUri}`)
       }
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e)
@@ -65,25 +68,16 @@ export const DCApiIssuePage: FC = () => {
   }
 
   const callDCApi = async () => {
-    if (!parsed) return
+    if (!issuanceRequest) return
     setIsLoading(true)
     setError(null)
     setCredentialResponse(null)
     try {
-      const data: Record<string, unknown> = {}
-      if (parsed.credentialOffer) data.credential_offer = parsed.credentialOffer
-      if (parsed.credentialOfferUri) data.credential_offer_uri = parsed.credentialOfferUri
-
-      addLog('navigator.credentials.create() を呼び出し中... (openid4vci-v1)')
+      addLog(`navigator.credentials.create() を呼び出し中... (${issuanceRequest.protocol})`)
       const credential = await navigator.credentials.create({
         mediation: 'required',
         digital: {
-          requests: [
-            {
-              protocol: 'openid4vci-v1',
-              data,
-            },
-          ],
+          requests: [{ protocol: issuanceRequest.protocol, data: issuanceRequest.data }],
         },
       } as CredentialCreationOptions)
       addLog('Credential Response を受信しました')
@@ -99,7 +93,7 @@ export const DCApiIssuePage: FC = () => {
 
   const reset = () => {
     setOfferUri('')
-    setParsed(null)
+    setIssuanceRequest(null)
     setCredentialResponse(null)
     setError(null)
     setLogs([])
@@ -172,23 +166,25 @@ export const DCApiIssuePage: FC = () => {
         </div>
       </section>
 
-      {parsed && (
+      {issuanceRequest && (
         <section style={{ marginBottom: 24 }}>
           <h2>2. パース結果</h2>
-          {parsed.credentialOffer && (
+          {issuanceRequest.parsed.credentialOffer && (
             <details open style={{ marginBottom: 8 }}>
               <summary>
                 <strong>credential_offer</strong> (inline)
               </summary>
-              <pre style={preStyle}>{JSON.stringify(parsed.credentialOffer, null, 2)}</pre>
+              <pre style={preStyle}>
+                {JSON.stringify(issuanceRequest.parsed.credentialOffer, null, 2)}
+              </pre>
             </details>
           )}
-          {parsed.credentialOfferUri && (
+          {issuanceRequest.parsed.credentialOfferUri && (
             <details open style={{ marginBottom: 8 }}>
               <summary>
                 <strong>credential_offer_uri</strong>
               </summary>
-              <pre style={preStyle}>{parsed.credentialOfferUri}</pre>
+              <pre style={preStyle}>{issuanceRequest.parsed.credentialOfferUri}</pre>
             </details>
           )}
 

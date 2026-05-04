@@ -54,6 +54,7 @@
     "color": "^4.2.3",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
+    "dcapi-issuer-verifier": "github:cvoxelprotocol/dcapi-issuer-verifier",
     "did-resolver": "^4.1.0",
     "extract-colors": "^3.0.0",
     "files-from-path": "^1.0.4",
