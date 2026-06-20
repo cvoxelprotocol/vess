@@ -103,6 +103,8 @@ const TicketPurchase: NextPage = () => {
             <QrBox>
               <QRCode url={authReqUri} width={260} />
             </QrBox>
+            <OpenLink href={authReqUri}>ウォレットで開く（実機はタップ）</OpenLink>
+            <UriBox>{authReqUri}</UriBox>
             <StatusLine>検証待ち… {status && `(${status})`}</StatusLine>
             {error && <Err>{error}</Err>}
           </Center>
@@ -121,6 +123,8 @@ const TicketPurchase: NextPage = () => {
             <QrBox>
               <QRCode url={ticketUri} width={260} />
             </QrBox>
+            <OpenLink href={ticketUri}>ウォレットで開く（実機はタップ）</OpenLink>
+            <UriBox>{ticketUri}</UriBox>
             {ticketId && <Mono>チケットID: {ticketId}</Mono>}
             <Note>入場時は、会員VCとチケットVCの2つを会場ゲートで提示します。</Note>
           </Center>
@@ -206,6 +210,25 @@ const Note = styled.div`
   font-size: 12px;
   opacity: 0.7;
   text-align: center;
+`
+const OpenLink = styled.a`
+  margin-top: 4px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #2d5bd6;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 14px;
+`
+const UriBox = styled.code`
+  width: 100%;
+  word-break: break-all;
+  font-size: 10px;
+  color: #5b6b75;
+  background: rgba(0,0,0,0.04);
+  padding: 8px;
+  border-radius: 8px;
 `
 const Err = styled.div`
   color: #c0392b;

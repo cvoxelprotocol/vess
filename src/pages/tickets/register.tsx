@@ -60,6 +60,8 @@ const TicketRegister: NextPage = () => {
             <QrBox>
               <QRCode url={offerUri} width={260} />
             </QrBox>
+            <OpenLink href={offerUri}>ウォレットで開く（実機はタップ）</OpenLink>
+            <UriBox>{offerUri}</UriBox>
             {memberId && <Mono>会員ID: {memberId}</Mono>}
             <Secondary href='/tickets/purchase'>次へ：チケット購入</Secondary>
           </Result>
@@ -136,6 +138,25 @@ const Secondary = styled.a`
   color: #2d5bd6;
   font-weight: 700;
   text-decoration: none;
+`
+const OpenLink = styled.a`
+  margin-top: 4px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #2d5bd6;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 14px;
+`
+const UriBox = styled.code`
+  width: 100%;
+  word-break: break-all;
+  font-size: 10px;
+  color: #5b6b75;
+  background: rgba(0,0,0,0.04);
+  padding: 8px;
+  border-radius: 8px;
 `
 const Err = styled.div`
   color: #c0392b;
