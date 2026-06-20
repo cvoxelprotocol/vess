@@ -3,6 +3,7 @@ import { eplusConfig, ssiFetch } from '@/lib/eplus/config'
 import { HttpStatus } from '@/utils/error'
 
 // 会員VP を要求する OID4VP authorization request を作成する。
+// （デモ用：認証・レート制限・correlationId のセッション束縛は未実装＝意図的な簡略化）
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(HttpStatus.METHOD_NOT_ALLOWED).end()
@@ -15,14 +16,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       body: { responseURIType: 'response_uri' },
     })
     if (!r.json?.authRequestURI) {
-      res.status(HttpStatus.BAD_GATEWAY).json({ error: 'auth-requests failed', detail: r.json })
+      console.error('[eplus create-vp-request] auth-requests failed', r.json)
+      res.status(HttpStatus.BAD_GATEWAY).json({ error: 'vp request failed' })
       return
     }
-    res.status(200).json({
-      correlationId: r.json.correlationId,
-      authRequestURI: r.json.authRequestURI,
-    })
+    res.status(200).json({ correlationId: r.json.correlationId, authRequestURI: r.json.authRequestURI })
   } catch (e: any) {
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: String(e?.message ?? e) })
+    console.error('[eplus create-vp-request]', e)
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'internal error' })
   }
 }

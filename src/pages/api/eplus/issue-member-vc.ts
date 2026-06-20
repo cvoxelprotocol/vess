@@ -1,31 +1,41 @@
+import crypto from 'crypto'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { eplusConfig, ssiFetch } from '@/lib/eplus/config'
 import { HttpStatus } from '@/utils/error'
 
-// 会員VC offer を発行する。
-// 1) subject attribute（会員の claim）を登録 → 2) credential offer を作成。
+// 会員VC offer を発行する（デモ用：認証・レート制限は未実装＝意図的な簡略化）。
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(HttpStatus.METHOD_NOT_ALLOWED).end()
     return
   }
   try {
-    const { name, email } = req.body ?? {}
-    const memberId = `EP-${Date.now().toString(36).toUpperCase()}`
+    const rawName = (req.body?.name ?? '').toString().trim()
+    const rawEmail = (req.body?.email ?? '').toString().trim()
+    if (rawName.length < 1 || rawName.length > 50) {
+      res.status(HttpStatus.BAD_REQUEST).json({ error: 'name must be 1-50 chars' })
+      return
+    }
+    if (rawEmail.length > 100) {
+      res.status(HttpStatus.BAD_REQUEST).json({ error: 'email too long' })
+      return
+    }
+    const memberId = `EP-${crypto.randomUUID()}`
 
     const subj = await ssiFetch('/subject-attributes', {
       method: 'POST',
       body: {
         credentialType: eplusConfig.memberCredentialType.at(-1),
         issuerId: eplusConfig.issuerId,
-        credentialSubject: { member_id: memberId, name: name ?? '会員', email: email ?? '' },
+        credentialSubject: { member_id: memberId, name: rawName, email: rawEmail },
         source: 'fixed',
         isFixed: true,
       },
     })
     const subjectAttributeId = subj.json?.id ?? subj.json?.subjectAttributeId
     if (!subjectAttributeId) {
-      res.status(HttpStatus.BAD_GATEWAY).json({ error: 'subject-attributes failed', detail: subj.json })
+      console.error('[eplus issue-member-vc] subject-attributes failed', subj.json)
+      res.status(HttpStatus.BAD_GATEWAY).json({ error: 'member VC issuance failed' })
       return
     }
 
@@ -40,11 +50,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     })
     if (!offer.json?.uri) {
-      res.status(HttpStatus.BAD_GATEWAY).json({ error: 'credential_offers failed', detail: offer.json })
+      console.error('[eplus issue-member-vc] credential_offers failed', offer.json)
+      res.status(HttpStatus.BAD_GATEWAY).json({ error: 'member VC issuance failed' })
       return
     }
     res.status(200).json({ uri: offer.json.uri, memberId })
   } catch (e: any) {
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: String(e?.message ?? e) })
+    console.error('[eplus issue-member-vc]', e)
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'internal error' })
   }
 }

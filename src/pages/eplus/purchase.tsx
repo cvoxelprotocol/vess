@@ -50,11 +50,11 @@ const EplusPurchase: NextPage = () => {
         if (j.status === 'authorization_response_verified') {
           clearInterval(timer)
           setPhase('issuing')
-          const claims = j.verifiedData?.credential_claims?.[0]?.claims ?? {}
+          // member_id はクライアントで抽出せず、サーバが correlationId を検証して取り出す
           const tr = await fetch('/api/eplus/issue-ticket-vc', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ memberId: claims.member_id, eventName: 'DEMO LIVE 2026', seat: 'A-1' }),
+            body: JSON.stringify({ correlationId, eventName: 'DEMO LIVE 2026', seat: 'A-1' }),
           })
           const tj = await tr.json()
           if (tj.uri) {
