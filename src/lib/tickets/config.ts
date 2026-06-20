@@ -1,4 +1,4 @@
-// eplus 不正転売対策デモの設定。
+// Ticket Provider 不正転売対策デモの設定。
 // 発行(OID4VCI)は issuer サブドメイン、検証(OID4VP)は verifier サブドメインと
 // ホストが分かれるため、2つの backend URL を持つ。サーバ側(APIルート)からのみ参照。
 
@@ -13,22 +13,22 @@ export const issuerBackend = (): string => {
 
 // 検証(oid4vp auth-requests / auth-status)用 = verifier サブドメイン
 export const verifierBackend = (): string => {
-  const url = process.env.EPLUS_VERIFIER_BACKEND || process.env.NEXT_PUBLIC_VESS_BACKEND
-  if (!url) throw new Error('EPLUS_VERIFIER_BACKEND is not set')
+  const url = process.env.TP_VERIFIER_BACKEND || process.env.NEXT_PUBLIC_VESS_BACKEND
+  if (!url) throw new Error('TP_VERIFIER_BACKEND is not set')
   return strip(url)
 }
 
-export const ssiApiKey = (): string | undefined => process.env.EPLUS_API_KEY || undefined
+export const ssiApiKey = (): string | undefined => process.env.TP_API_KEY || undefined
 
-export const eplusConfig = {
-  issuerId: process.env.EPLUS_ISSUER_ID ?? '',
-  memberCredentialType: (process.env.EPLUS_MEMBER_CREDENTIAL_TYPE ?? 'EplusMemberVC')
+export const ticketConfig = {
+  issuerId: process.env.TP_ISSUER_ID ?? '',
+  memberCredentialType: (process.env.TP_MEMBER_CREDENTIAL_TYPE ?? 'TicketProviderMemberVC')
     .split(',')
     .map((s) => s.trim()),
-  ticketCredentialType: (process.env.EPLUS_TICKET_CREDENTIAL_TYPE ?? 'EplusTicketVC')
+  ticketCredentialType: (process.env.TP_TICKET_CREDENTIAL_TYPE ?? 'TicketProviderTicketVC')
     .split(',')
     .map((s) => s.trim()),
-  memberVpDefinitionId: process.env.EPLUS_MEMBER_VP_DEFINITION_ID ?? '',
+  memberVpDefinitionId: process.env.TP_MEMBER_VP_DEFINITION_ID ?? '',
 }
 
 // サーバ側: backend への共通 fetch。base で issuer/verifier ホストを選ぶ。

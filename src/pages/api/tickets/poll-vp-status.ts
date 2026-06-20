@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { eplusConfig, ssiFetch } from '@/lib/eplus/config'
+import { ticketConfig, ssiFetch } from '@/lib/tickets/config'
 import { HttpStatus } from '@/utils/error'
 
 // 会員VP 検証ステータスのみを返す（開示claim/PIIはここでは返さない）。
@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(HttpStatus.BAD_REQUEST).json({ error: 'correlationId required' })
       return
     }
-    const def = eplusConfig.memberVpDefinitionId
+    const def = ticketConfig.memberVpDefinitionId
     const r = await ssiFetch(`/oid4vp/definitions/${encodeURIComponent(def)}/auth-status`, {
       method: 'POST',
       body: { correlationId, includeVerifiedData: 'NONE' },
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // status 文字列だけをクライアントへ返す
     res.status(200).json({ status: r.json?.status ?? 'unknown' })
   } catch (e: any) {
-    console.error('[eplus poll-vp-status]', e)
+    console.error('[tickets poll-vp-status]', e)
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'internal error' })
   }
 }

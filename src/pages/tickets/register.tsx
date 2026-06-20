@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { QRCode } from '@/components/sticker/QRCode'
 
-const EplusRegister: NextPage = () => {
+const TicketRegister: NextPage = () => {
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
   const [offerUri, setOfferUri] = useState<string | null>(null)
@@ -142,4 +142,4 @@ const Err = styled.div`
   font-size: 13px;
 `
 
-export default EplusRegister
+export default TicketRegister

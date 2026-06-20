@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { eplusConfig, ssiFetch } from '@/lib/eplus/config'
+import { ticketConfig, ssiFetch } from '@/lib/tickets/config'
 import { HttpStatus } from '@/utils/error'
 
 // 会員VC offer を発行する（デモ用：認証・レート制限は未実装＝意図的な簡略化）。
@@ -25,8 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const subj = await ssiFetch('/subject-attributes', {
       method: 'POST',
       body: {
-        credentialType: eplusConfig.memberCredentialType.at(-1),
-        issuerId: eplusConfig.issuerId,
+        credentialType: ticketConfig.memberCredentialType.at(-1),
+        issuerId: ticketConfig.issuerId,
         credentialSubject: { member_id: memberId, name: rawName, email: rawEmail },
         source: 'fixed',
         isFixed: true,
@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
     const subjectAttributeId = subj.json?.id ?? subj.json?.subjectAttributeId
     if (!subjectAttributeId) {
-      console.error('[eplus issue-member-vc] subject-attributes failed', subj.json)
+      console.error('[tickets issue-member-vc] subject-attributes failed', subj.json)
       res.status(HttpStatus.BAD_GATEWAY).json({ error: 'member VC issuance failed' })
       return
     }
@@ -42,21 +42,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const offer = await ssiFetch('/credential_offers', {
       method: 'POST',
       body: {
-        credentialType: eplusConfig.memberCredentialType,
-        issuerId: eplusConfig.issuerId,
+        credentialType: ticketConfig.memberCredentialType,
+        issuerId: ticketConfig.issuerId,
         flowType: 'pre-authorized',
         subjectAttributeId,
         txCodeRequired: false,
       },
     })
     if (!offer.json?.uri) {
-      console.error('[eplus issue-member-vc] credential_offers failed', offer.json)
+      console.error('[tickets issue-member-vc] credential_offers failed', offer.json)
       res.status(HttpStatus.BAD_GATEWAY).json({ error: 'member VC issuance failed' })
       return
     }
     res.status(200).json({ uri: offer.json.uri, memberId })
   } catch (e: any) {
-    console.error('[eplus issue-member-vc]', e)
+    console.error('[tickets issue-member-vc]', e)
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'internal error' })
   }
 }

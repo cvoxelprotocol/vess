@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { eplusConfig, ssiFetch } from '@/lib/eplus/config'
+import { ticketConfig, ssiFetch } from '@/lib/tickets/config'
 import { HttpStatus } from '@/utils/error'
 
 // 会員VP の検証済み correlationId を消費し、その会員に束ねた チケットVC を発行する。
@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // 1) サーバ側で会員VPの検証結果を確認し member_id を取り出す
-    const def = eplusConfig.memberVpDefinitionId
+    const def = ticketConfig.memberVpDefinitionId
     const statusRes = await ssiFetch(
       `/oid4vp/definitions/${encodeURIComponent(def)}/auth-status`,
       { method: 'POST', body: { correlationId, includeVerifiedData: 'VERIFIED_DATA' }, base: 'verifier' },
@@ -51,8 +51,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const subj = await ssiFetch('/subject-attributes', {
       method: 'POST',
       body: {
-        credentialType: eplusConfig.ticketCredentialType.at(-1),
-        issuerId: eplusConfig.issuerId,
+        credentialType: ticketConfig.ticketCredentialType.at(-1),
+        issuerId: ticketConfig.issuerId,
         credentialSubject: { ticket_id: ticketId, member_id: memberId, event_name: eventNameSafe, seat: seatSafe },
         source: 'fixed',
         isFixed: true,
@@ -60,28 +60,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
     const subjectAttributeId = subj.json?.id ?? subj.json?.subjectAttributeId
     if (!subjectAttributeId) {
-      console.error('[eplus issue-ticket-vc] subject-attributes failed', subj.json)
+      console.error('[tickets issue-ticket-vc] subject-attributes failed', subj.json)
       res.status(HttpStatus.BAD_GATEWAY).json({ error: 'ticket issuance failed' })
       return
     }
     const offer = await ssiFetch('/credential_offers', {
       method: 'POST',
       body: {
-        credentialType: eplusConfig.ticketCredentialType,
-        issuerId: eplusConfig.issuerId,
+        credentialType: ticketConfig.ticketCredentialType,
+        issuerId: ticketConfig.issuerId,
         flowType: 'pre-authorized',
         subjectAttributeId,
         txCodeRequired: false,
       },
     })
     if (!offer.json?.uri) {
-      console.error('[eplus issue-ticket-vc] credential_offers failed', offer.json)
+      console.error('[tickets issue-ticket-vc] credential_offers failed', offer.json)
       res.status(HttpStatus.BAD_GATEWAY).json({ error: 'ticket issuance failed' })
       return
     }
     res.status(200).json({ uri: offer.json.uri, ticketId })
   } catch (e: any) {
-    console.error('[eplus issue-ticket-vc]', e)
+    console.error('[tickets issue-ticket-vc]', e)
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'internal error' })
   }
 }

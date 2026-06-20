@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import { Meta } from '@/components/layouts/Meta'
 
-const EplusHome: NextPage = () => {
+const TicketHome: NextPage = () => {
   return (
     <>
       <Meta pageTitle='Ticket Provider 不正転売対策デモ' />
@@ -105,4 +105,4 @@ const StepDesc = styled.div`
   opacity: 0.7;
 `
 
-export default EplusHome
+export default TicketHome

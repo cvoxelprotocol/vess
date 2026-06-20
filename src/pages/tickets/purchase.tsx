@@ -6,7 +6,7 @@ import { QRCode } from '@/components/sticker/QRCode'
 
 type Phase = 'idle' | 'present' | 'issuing' | 'ticket'
 
-const EplusPurchase: NextPage = () => {
+const TicketPurchase: NextPage = () => {
   const [phase, setPhase] = useState<Phase>('idle')
   const [authReqUri, setAuthReqUri] = useState<string | null>(null)
   const [correlationId, setCorrelationId] = useState<string | null>(null)
@@ -212,4 +212,4 @@ const Err = styled.div`
   font-size: 13px;
 `
 
-export default EplusPurchase
+export default TicketPurchase
