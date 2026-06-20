@@ -30,7 +30,11 @@ export async function ssiFetch(
   path: string,
   init: { method: string; body?: unknown },
 ): Promise<{ status: number; json: any }> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    // ngrok 無料版のブラウザ警告ページを回避（API が JSON を返すように）
+    'ngrok-skip-browser-warning': 'true',
+  }
   const key = ssiApiKey()
   if (key) headers['X-API-Key'] = key
   const res = await fetch(`${ssiBackend()}${path}`, {
