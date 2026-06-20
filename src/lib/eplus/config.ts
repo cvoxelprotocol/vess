@@ -1,43 +1,50 @@
 // eplus 不正転売対策デモの設定。
-// バックエンド(vess-ssi-api)の発行/検証エンドポイントを叩くための値。
-// 値は backend のセットアップ(issuer 登録・credential config・presentation definition)後に
-// 環境変数で確定する。サーバ側(API ルート)からのみ参照する。
+// 発行(OID4VCI)は issuer サブドメイン、検証(OID4VP)は verifier サブドメインと
+// ホストが分かれるため、2つの backend URL を持つ。サーバ側(APIルート)からのみ参照。
 
-export const ssiBackend = (): string => {
+const strip = (u: string) => u.replace(/\/$/, '')
+
+// 発行(credential_offers / subject-attributes)用 = issuer サブドメイン
+export const issuerBackend = (): string => {
   const url = process.env.NEXT_PUBLIC_VESS_BACKEND
   if (!url) throw new Error('NEXT_PUBLIC_VESS_BACKEND is not set')
-  return url.replace(/\/$/, '')
+  return strip(url)
 }
 
-// vess-ssi-api は SIMPLE_API_KEY_AUTH_ENABLED の場合 X-API-Key を要求する
-export const ssiApiKey = (): string | undefined => process.env.EPLUS_API_KEY
+// 検証(oid4vp auth-requests / auth-status)用 = verifier サブドメイン
+export const verifierBackend = (): string => {
+  const url = process.env.EPLUS_VERIFIER_BACKEND || process.env.NEXT_PUBLIC_VESS_BACKEND
+  if (!url) throw new Error('EPLUS_VERIFIER_BACKEND is not set')
+  return strip(url)
+}
+
+export const ssiApiKey = (): string | undefined => process.env.EPLUS_API_KEY || undefined
 
 export const eplusConfig = {
   issuerId: process.env.EPLUS_ISSUER_ID ?? '',
-  // 会員VC / チケットVC の credentialType（vct）。backend の credential config と一致させる
-  memberCredentialType: (process.env.EPLUS_MEMBER_CREDENTIAL_TYPE ?? '会員VC')
+  memberCredentialType: (process.env.EPLUS_MEMBER_CREDENTIAL_TYPE ?? 'EplusMemberVC')
     .split(',')
     .map((s) => s.trim()),
-  ticketCredentialType: (process.env.EPLUS_TICKET_CREDENTIAL_TYPE ?? 'チケットVC')
+  ticketCredentialType: (process.env.EPLUS_TICKET_CREDENTIAL_TYPE ?? 'EplusTicketVC')
     .split(',')
     .map((s) => s.trim()),
-  // 会員VP を要求する presentation definition の ID
   memberVpDefinitionId: process.env.EPLUS_MEMBER_VP_DEFINITION_ID ?? '',
 }
 
-// サーバ側: backend への共通 fetch。X-API-Key を付与する。
+// サーバ側: backend への共通 fetch。base で issuer/verifier ホストを選ぶ。
 export async function ssiFetch(
   path: string,
-  init: { method: string; body?: unknown },
+  init: { method: string; body?: unknown; base?: 'issuer' | 'verifier' },
 ): Promise<{ status: number; json: any }> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    // ngrok 無料版のブラウザ警告ページを回避（API が JSON を返すように）
+    // ngrok等のブラウザ警告ページ回避（実害なし）
     'ngrok-skip-browser-warning': 'true',
   }
   const key = ssiApiKey()
   if (key) headers['X-API-Key'] = key
-  const res = await fetch(`${ssiBackend()}${path}`, {
+  const base = init.base === 'verifier' ? verifierBackend() : issuerBackend()
+  const res = await fetch(`${base}${path}`, {
     method: init.method,
     headers,
     body: init.body ? JSON.stringify(init.body) : undefined,

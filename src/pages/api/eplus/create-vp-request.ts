@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const r = await ssiFetch(`/oid4vp/definitions/${encodeURIComponent(def)}/auth-requests`, {
       method: 'POST',
       body: { responseURIType: 'response_uri' },
+      base: 'verifier',
     })
     if (!r.json?.authRequestURI) {
       console.error('[eplus create-vp-request] auth-requests failed', r.json)

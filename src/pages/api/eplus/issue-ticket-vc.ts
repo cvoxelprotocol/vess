@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const def = eplusConfig.memberVpDefinitionId
     const statusRes = await ssiFetch(
       `/oid4vp/definitions/${encodeURIComponent(def)}/auth-status`,
-      { method: 'POST', body: { correlationId, includeVerifiedData: 'VERIFIED_DATA' } },
+      { method: 'POST', body: { correlationId, includeVerifiedData: 'VERIFIED_DATA' }, base: 'verifier' },
     )
     if (statusRes.json?.status !== 'authorization_response_verified') {
       res.status(HttpStatus.FORBIDDEN).json({ error: 'member presentation not verified' })
