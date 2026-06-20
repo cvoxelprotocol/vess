@@ -19,7 +19,7 @@ const EplusPurchase: NextPage = () => {
   const startPurchase = async () => {
     setError(null)
     try {
-      const res = await fetch('/api/eplus/create-vp-request', { method: 'POST' })
+      const res = await fetch('/api/tickets/create-vp-request', { method: 'POST' })
       const json = await res.json()
       if (!res.ok || !json.authRequestURI) {
         setError(json.error ?? '会員VP要求の作成に失敗しました')
@@ -40,7 +40,7 @@ const EplusPurchase: NextPage = () => {
       if (busy.current) return
       busy.current = true
       try {
-        const r = await fetch('/api/eplus/poll-vp-status', {
+        const r = await fetch('/api/tickets/poll-vp-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ correlationId }),
@@ -51,7 +51,7 @@ const EplusPurchase: NextPage = () => {
           clearInterval(timer)
           setPhase('issuing')
           // member_id はクライアントで抽出せず、サーバが correlationId を検証して取り出す
-          const tr = await fetch('/api/eplus/issue-ticket-vc', {
+          const tr = await fetch('/api/tickets/issue-ticket-vc', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ correlationId, eventName: 'DEMO LIVE 2026', seat: 'A-1' }),
@@ -80,9 +80,9 @@ const EplusPurchase: NextPage = () => {
 
   return (
     <>
-      <Meta pageTitle='チケット購入 - eplus デモ' />
+      <Meta pageTitle='チケット購入 - Ticket Provider デモ' />
       <Wrapper>
-        <Brand>eplus</Brand>
+        <Brand>Ticket Provider</Brand>
         <Title>チケット購入</Title>
         <EventCard>
           <EventName>DEMO LIVE 2026</EventName>
@@ -141,7 +141,7 @@ const Wrapper = styled.main`
 `
 const Brand = styled.div`
   font-weight: 800;
-  color: #d6006c;
+  color: #2d5bd6;
 `
 const Title = styled.h1`
   font-size: 24px;
@@ -150,7 +150,7 @@ const Title = styled.h1`
 const EventCard = styled.div`
   padding: 16px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #d6006c, #7a0040);
+  background: linear-gradient(135deg, #2d5bd6, #1b3a8a);
   color: #fff;
 `
 const EventName = styled.div`
@@ -171,7 +171,7 @@ const Primary = styled.button`
   padding: 14px;
   border-radius: 10px;
   border: none;
-  background: #d6006c;
+  background: #2d5bd6;
   color: #fff;
   font-weight: 700;
   font-size: 15px;

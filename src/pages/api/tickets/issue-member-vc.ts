@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(HttpStatus.BAD_REQUEST).json({ error: 'email too long' })
       return
     }
-    const memberId = `EP-${crypto.randomUUID()}`
+    const memberId = `TP-${crypto.randomUUID()}`
 
     const subj = await ssiFetch('/subject-attributes', {
       method: 'POST',

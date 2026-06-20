@@ -15,7 +15,7 @@ const EplusRegister: NextPage = () => {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/eplus/issue-member-vc', {
+      const res = await fetch('/api/tickets/issue-member-vc', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
@@ -36,9 +36,9 @@ const EplusRegister: NextPage = () => {
 
   return (
     <>
-      <Meta pageTitle='会員登録 - eplus デモ' />
+      <Meta pageTitle='会員登録 - Ticket Provider デモ' />
       <Wrapper>
-        <Brand>eplus</Brand>
+        <Brand>Ticket Provider</Brand>
         <Title>会員登録</Title>
         {!offerUri ? (
           <>
@@ -61,7 +61,7 @@ const EplusRegister: NextPage = () => {
               <QRCode url={offerUri} width={260} />
             </QrBox>
             {memberId && <Mono>会員ID: {memberId}</Mono>}
-            <Secondary href='/eplus/purchase'>次へ：チケット購入</Secondary>
+            <Secondary href='/tickets/purchase'>次へ：チケット購入</Secondary>
           </Result>
         )}
       </Wrapper>
@@ -80,7 +80,7 @@ const Wrapper = styled.main`
 `
 const Brand = styled.div`
   font-weight: 800;
-  color: #d6006c;
+  color: #2d5bd6;
 `
 const Title = styled.h1`
   font-size: 24px;
@@ -106,7 +106,7 @@ const Primary = styled.button`
   padding: 14px;
   border-radius: 10px;
   border: none;
-  background: #d6006c;
+  background: #2d5bd6;
   color: #fff;
   font-weight: 700;
   font-size: 15px;
@@ -133,7 +133,7 @@ const Mono = styled.div`
 `
 const Secondary = styled.a`
   margin-top: 8px;
-  color: #d6006c;
+  color: #2d5bd6;
   font-weight: 700;
   text-decoration: none;
 `

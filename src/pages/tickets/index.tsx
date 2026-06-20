@@ -6,20 +6,20 @@ import { Meta } from '@/components/layouts/Meta'
 const EplusHome: NextPage = () => {
   return (
     <>
-      <Meta pageTitle='eplus 不正転売対策デモ' />
+      <Meta pageTitle='Ticket Provider 不正転売対策デモ' />
       <Wrapper>
-        <Brand>eplus</Brand>
+        <Brand>Ticket Provider</Brand>
         <Title>不正転売対策デモ</Title>
         <Lead>
           会員VCを発行し、それを提示してチケットを購入、チケットVCを受け取り、入場時に2つのVCで本人確認する一気通貫の流れを体験できます。
         </Lead>
         <Steps>
-          <StepCard href='/eplus/register'>
+          <StepCard href='/tickets/register'>
             <Num>1</Num>
             <StepTitle>会員登録</StepTitle>
             <StepDesc>会員VCをウォレットに発行</StepDesc>
           </StepCard>
-          <StepCard href='/eplus/purchase'>
+          <StepCard href='/tickets/purchase'>
             <Num>2</Num>
             <StepTitle>チケット購入</StepTitle>
             <StepDesc>会員VPを提示 → チケットVCを発行</StepDesc>
@@ -47,7 +47,7 @@ const Wrapper = styled.main`
 const Brand = styled.div`
   font-weight: 800;
   font-size: 20px;
-  color: #d6006c;
+  color: #2d5bd6;
   letter-spacing: 0.04em;
 `
 const Title = styled.h1`
@@ -78,7 +78,7 @@ const cardCss = `
 `
 const StepCard = styled(Link)`
   ${cardCss}
-  &:hover { background: rgba(214,0,108,0.06); border-color: #d6006c; }
+  &:hover { background: rgba(45,91,214,0.08); border-color: #2d5bd6; }
 `
 const StepCardStatic = styled.div`
   ${cardCss}
@@ -89,7 +89,7 @@ const Num = styled.div`
   height: 34px;
   flex: 0 0 34px;
   border-radius: 999px;
-  background: #d6006c;
+  background: #2d5bd6;
   color: #fff;
   font-weight: 800;
   display: flex;
