@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
   try {
-    const { correlationId, eventName, seat } = req.body ?? {}
+    const { correlationId } = req.body ?? {}
     if (!correlationId || typeof correlationId !== 'string') {
       res.status(HttpStatus.BAD_REQUEST).json({ error: 'correlationId required' })
       return
@@ -43,8 +43,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     consumed.add(correlationId)
 
     const ticketId = `TK-${crypto.randomUUID()}`
-    const eventNameSafe = typeof eventName === 'string' ? eventName.slice(0, 80) : 'DEMO LIVE 2026'
-    const seatSafe = typeof seat === 'string' ? seat.slice(0, 16) : 'A-1'
+    // イベント情報はクライアントから受けず、サーバ側の固定カタログを使う（デモは単一公演）
+    const eventNameSafe = 'DEMO LIVE 2026'
+    const seatSafe = 'A-1'
 
     // 2) チケットVC の subject 登録 → offer 作成
     const subj = await ssiFetch('/subject-attributes', {
