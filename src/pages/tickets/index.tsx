@@ -27,7 +27,7 @@ const TicketHome: NextPage = () => {
           <StepCardStatic>
             <Num>3</Num>
             <StepTitle>入場</StepTitle>
-            <StepDesc>会員VC＋チケットVCの二重VPを会場ゲートで検証</StepDesc>
+            <StepDesc>会員VC＋チケットVCの二重VPを会場ゲートで検証（このステップはVESSアプリで実施）</StepDesc>
           </StepCardStatic>
         </Steps>
       </Wrapper>

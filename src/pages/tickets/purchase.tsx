@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Link from 'next/link'
 import { NextPage } from 'next'
 import { useEffect, useRef, useState } from 'react'
 import { Meta } from '@/components/layouts/Meta'
@@ -94,6 +95,7 @@ const TicketPurchase: NextPage = () => {
     <>
       <Meta pageTitle='チケット購入 - Ticket Provider デモ' />
       <Wrapper>
+        <BackLink href='/tickets'>← 一覧へ戻る</BackLink>
         <Brand>Ticket Provider</Brand>
         <Title>チケット購入</Title>
         <EventCard>
@@ -154,6 +156,16 @@ const TicketPurchase: NextPage = () => {
   )
 }
 
+const BackLink = styled(Link)`
+  align-self: flex-start;
+  font-size: 13px;
+  color: #2d5bd6;
+  text-decoration: none;
+  font-weight: 600;
+  &:hover {
+    text-decoration: underline;
+  }
+`
 const Wrapper = styled.main`
   width: 100%;
   max-width: 560px;
