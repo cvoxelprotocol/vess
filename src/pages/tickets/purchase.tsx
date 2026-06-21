@@ -115,7 +115,7 @@ const TicketPurchase: NextPage = () => {
             <QrBox>
               <QRCode url={authReqUri} width={260} />
             </QrBox>
-            <OpenLink href={authReqUri}>ウォレットで開く（実機はタップ）</OpenLink>
+            <OpenLink href={authReqUri}>ウォレットを開いて会員証を提示する</OpenLink>
             <UriBox>{authReqUri}</UriBox>
             <StatusLine>検証待ち… {status && `(${status})`}</StatusLine>
             {error && <Err>{error}</Err>}
@@ -139,11 +139,11 @@ const TicketPurchase: NextPage = () => {
         {phase === 'ticket' && ticketUri && (
           <Center>
             <Ok>✓ 会員確認OK・購入完了</Ok>
-            <Desc>ウォレットでこのQRを読み取り、チケットVCを受け取ってください。</Desc>
+            <Desc>このQRは<b>チケットの受け取り</b>用です。ウォレットでこのQRを読み取り、入場チケットを受け取ってください。</Desc>
             <QrBox>
               <QRCode url={ticketUri} width={260} />
             </QrBox>
-            <OpenLink href={ticketUri}>ウォレットで開く（実機はタップ）</OpenLink>
+            <OpenLink href={ticketUri}>ウォレットを開いてチケットを受け取る</OpenLink>
             <UriBox>{ticketUri}</UriBox>
             {ticketId && <Mono>チケットID: {ticketId}</Mono>}
             <Note>入場時は、会員VCとチケットVCの2つを会場ゲートで提示します。</Note>
