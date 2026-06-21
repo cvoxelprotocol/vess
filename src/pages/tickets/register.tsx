@@ -1,4 +1,3 @@
-import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { NextPage } from 'next'
 import Link from 'next/link'
@@ -6,19 +5,21 @@ import { useState } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { QRCode } from '@/components/sticker/QRCode'
 
-type Phase = 'method' | 'verifying' | 'verified' | 'done'
+type Phase = 'method' | 'skip' | 'verified' | 'done'
 
-// 本人確認の方法（デモ用モック）。実際の読み取り・認証は行わない。
+// 本人確認の方法（デモ用モック）。ボタンは想定ユーザーアクションを表し、実処理はスキップする。
 const METHODS = [
   {
     id: 'mynumber',
-    label: 'マイナンバーカードで本人確認',
+    label: 'マイナンバーカードを読み取る',
     sub: 'ICチップを読み取って公的個人認証（推奨）',
+    skip: 'マイナンバーカードの読み取り',
   },
   {
     id: 'license',
-    label: '運転免許証で本人確認',
+    label: '運転免許証を撮影する',
     sub: '券面の撮影と顔写真の照合',
+    skip: '運転免許証の撮影と顔照合',
   },
 ]
 
@@ -31,14 +32,13 @@ const TicketVCAcquire: NextPage = () => {
   const [memberId, setMemberId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const methodLabel = METHODS.find((m) => m.id === method)?.label ?? '本人確認'
+  const methodObj = METHODS.find((m) => m.id === method)
+  const skipNoun = methodObj?.skip ?? '本人確認'
 
   const startVerify = (id: string) => {
     setMethod(id)
     setError(null)
-    setPhase('verifying')
-    // モック：実際の本人確認の代わりに数秒の処理を演出して確認済みにする
-    setTimeout(() => setPhase('verified'), 1800)
+    setPhase('skip')
   }
 
   const onIssue = async () => {
@@ -91,11 +91,15 @@ const TicketVCAcquire: NextPage = () => {
           </>
         )}
 
-        {phase === 'verifying' && (
+        {phase === 'skip' && (
           <Center>
-            <Spinner />
-            <Desc>{methodLabel}を実行中…</Desc>
-            <Dim>本人確認情報を確認しています（デモ）</Dim>
+            <SkipTitle>デモのため、この操作はスキップします</SkipTitle>
+            <MockNote>
+              本番ではここで <b>{skipNoun}</b> を行い、本人であることを確認します。このデモでは実際の{skipNoun}・認証は行わず、本人確認済みとして次に進みます。
+            </MockNote>
+            <Primary onClick={() => setPhase('verified')}>
+              本人確認済みとして進む（デモ）
+            </Primary>
           </Center>
         )}
 
@@ -103,7 +107,7 @@ const TicketVCAcquire: NextPage = () => {
           <>
             <Center>
               <Ok>✓ 本人確認が完了しました</Ok>
-              <Dim>{methodLabel}で本人であることを確認しました（デモ）</Dim>
+              <Dim>デモのため、実際の{skipNoun}・認証はスキップしています</Dim>
             </Center>
             <Label>確認された氏名（デモのため編集できます）</Label>
             <Input
@@ -138,11 +142,6 @@ const TicketVCAcquire: NextPage = () => {
   )
 }
 
-const spin = keyframes`
-  to {
-    transform: rotate(360deg);
-  }
-`
 const BackLink = styled(Link)`
   align-self: flex-start;
   font-size: 13px;
@@ -219,13 +218,10 @@ const Center = styled.div`
   gap: 10px;
   padding: 10px 0;
 `
-const Spinner = styled.div`
-  width: 30px;
-  height: 30px;
-  border: 3px solid rgba(45, 91, 214, 0.2);
-  border-top-color: #2d5bd6;
-  border-radius: 999px;
-  animation: ${spin} 0.8s linear infinite;
+const SkipTitle = styled.div`
+  font-weight: 800;
+  font-size: 16px;
+  color: #8a5a00;
 `
 const Ok = styled.div`
   color: #2e7d4f;
