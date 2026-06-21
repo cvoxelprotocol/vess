@@ -33,6 +33,18 @@ const TicketPurchase: NextPage = () => {
     }
   }
 
+  // 提示後のredirectで /tickets/purchase?correlationId=... に戻ってきた場合、
+  // その検証セッションを引き継いで「会員確認→チケット発行」まで復元する。
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const cid = new URLSearchParams(window.location.search).get('correlationId')
+    if (cid) {
+      setCorrelationId(cid)
+      setPhase('present')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // 会員VP の検証完了をポーリングし、成功したらチケットVCを発行
   useEffect(() => {
     if (phase !== 'present' || !correlationId) return
@@ -106,6 +118,14 @@ const TicketPurchase: NextPage = () => {
             <OpenLink href={authReqUri}>ウォレットで開く（実機はタップ）</OpenLink>
             <UriBox>{authReqUri}</UriBox>
             <StatusLine>検証待ち… {status && `(${status})`}</StatusLine>
+            {error && <Err>{error}</Err>}
+          </Center>
+        )}
+
+        {phase === 'present' && !authReqUri && (
+          <Center>
+            <Desc>会員提示を確認しています…</Desc>
+            <StatusLine>{status ? `(${status})` : '少々お待ちください'}</StatusLine>
             {error && <Err>{error}</Err>}
           </Center>
         )}

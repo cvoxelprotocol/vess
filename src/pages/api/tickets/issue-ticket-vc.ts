@@ -5,8 +5,10 @@ import { HttpStatus } from '@/utils/error'
 
 // 会員VP の検証済み correlationId を消費し、その会員に束ねた チケットVC を発行する。
 // クライアント供給の member_id は信用せず、サーバ側で auth-status を検証して取り出す。
-// ※ 使い捨て管理はプロセス内メモリ（デモ用途。サーバレスでは厳密でないため本番は永続ストアへ）。
-const consumed = new Set<string>()
+// ※ 発行結果はプロセス内メモリにcorrelationId単位でキャッシュし冪等化する
+// （提示後のredirectで購入ページが再マウントされ再度叩かれても、同じチケットを返す）。
+// デモ用途。サーバレスでは厳密でないため本番は永続ストアへ。
+const issued = new Map<string, { uri: string; ticketId: string }>()
 
 // verifiedData の構造はモードにより変わるため、member_id を再帰的に探す
 function findClaim(obj: any, key: string): string | undefined {
@@ -32,8 +34,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(HttpStatus.BAD_REQUEST).json({ error: 'correlationId required' })
       return
     }
-    if (consumed.has(correlationId)) {
-      res.status(HttpStatus.CONFLICT).json({ error: 'already issued for this verification' })
+    const cached = issued.get(correlationId)
+    if (cached) {
+      // 既に発行済み（redirect再マウント等）。同じチケットを冪等に返す。
+      res.status(200).json(cached)
       return
     }
 
@@ -52,8 +56,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(HttpStatus.FORBIDDEN).json({ error: 'member_id not present in verified data' })
       return
     }
-    consumed.add(correlationId)
-
     const ticketId = `TK-${crypto.randomUUID()}`
     // イベント情報はクライアントから受けず、サーバ側の固定カタログを使う（デモは単一公演）
     const eventNameSafe = 'DEMO LIVE 2026'
@@ -91,7 +93,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(HttpStatus.BAD_GATEWAY).json({ error: 'ticket issuance failed' })
       return
     }
-    res.status(200).json({ uri: offer.json.uri, ticketId })
+    const result = { uri: offer.json.uri as string, ticketId }
+    issued.set(correlationId, result)
+    res.status(200).json(result)
   } catch (e: any) {
     console.error('[tickets issue-ticket-vc]', e)
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'internal error' })
