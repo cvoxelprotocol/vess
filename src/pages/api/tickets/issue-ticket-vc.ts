@@ -8,6 +8,19 @@ import { HttpStatus } from '@/utils/error'
 // ※ 使い捨て管理はプロセス内メモリ（デモ用途。サーバレスでは厳密でないため本番は永続ストアへ）。
 const consumed = new Set<string>()
 
+// verifiedData の構造はモードにより変わるため、member_id を再帰的に探す
+function findClaim(obj: any, key: string): string | undefined {
+  if (obj == null || typeof obj !== 'object') return undefined
+  if (Object.prototype.hasOwnProperty.call(obj, key) && typeof obj[key] !== 'object') {
+    return String(obj[key])
+  }
+  for (const v of Object.values(obj)) {
+    const found = findClaim(v, key)
+    if (found !== undefined) return found
+  }
+  return undefined
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(HttpStatus.METHOD_NOT_ALLOWED).end()
@@ -28,14 +41,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const def = ticketConfig.memberVpDefinitionId
     const statusRes = await ssiFetch(
       `/oid4vp/definitions/${encodeURIComponent(def)}/auth-status`,
-      { method: 'POST', body: { correlationId, includeVerifiedData: 'VERIFIED_DATA' }, base: 'verifier' },
+      { method: 'POST', body: { correlationId, includeVerifiedData: 'credential_claims_deserialized' }, base: 'verifier' },
     )
     if (statusRes.json?.status !== 'authorization_response_verified') {
       res.status(HttpStatus.FORBIDDEN).json({ error: 'member presentation not verified' })
       return
     }
-    const claims = statusRes.json?.verifiedData?.credential_claims?.[0]?.claims ?? {}
-    const memberId = claims.member_id
+    const memberId = findClaim(statusRes.json, 'member_id')
     if (!memberId) {
       res.status(HttpStatus.FORBIDDEN).json({ error: 'member_id not present in verified data' })
       return

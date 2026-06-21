@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const def = ticketConfig.memberVpDefinitionId
     const r = await ssiFetch(`/oid4vp/definitions/${encodeURIComponent(def)}/auth-status`, {
       method: 'POST',
-      body: { correlationId, includeVerifiedData: 'NONE' },
+      body: { correlationId },
       base: 'verifier',
     })
     // status 文字列だけをクライアントへ返す
