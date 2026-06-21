@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import Link from 'next/link'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import { useState } from 'react'
 import { Meta } from '@/components/layouts/Meta'
 import { QRCode } from '@/components/sticker/QRCode'
