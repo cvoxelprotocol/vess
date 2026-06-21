@@ -1,70 +1,11 @@
 import styled from '@emotion/styled'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import { useState } from 'react'
 import { Meta } from '@/components/layouts/Meta'
-import { QRCode } from '@/components/sticker/QRCode'
 
-type Phase = 'method' | 'skip' | 'verified' | 'done'
-
-// 本人確認の方法（デモ用モック）。ボタンは想定ユーザーアクションを表し、実処理はスキップする。
-const METHODS = [
-  {
-    id: 'mynumber',
-    label: 'マイナンバーカードを読み取る',
-    sub: 'ICチップを読み取って公的個人認証（推奨）',
-    skip: 'マイナンバーカードの読み取り',
-  },
-  {
-    id: 'license',
-    label: '運転免許証を撮影する',
-    sub: '券面の撮影と顔写真の照合',
-    skip: '運転免許証の撮影と顔照合',
-  },
-]
-
-const TicketVCAcquire: NextPage = () => {
-  const [phase, setPhase] = useState<Phase>('method')
-  const [method, setMethod] = useState<string | null>(null)
-  const [name, setName] = useState('山田 太郎')
-  const [loading, setLoading] = useState(false)
-  const [offerUri, setOfferUri] = useState<string | null>(null)
-  const [memberId, setMemberId] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  const methodObj = METHODS.find((m) => m.id === method)
-  const skipNoun = methodObj?.skip ?? '本人確認'
-
-  const startVerify = (id: string) => {
-    setMethod(id)
-    setError(null)
-    setPhase('skip')
-  }
-
-  const onIssue = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await fetch('/api/tickets/issue-member-vc', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      })
-      const json = await res.json()
-      if (!res.ok || !json.uri) {
-        setError(json.error ?? '会員VCの発行に失敗しました')
-        return
-      }
-      setOfferUri(json.uri)
-      setMemberId(json.memberId ?? null)
-      setPhase('done')
-    } catch (e: any) {
-      setError(String(e?.message ?? e))
-    } finally {
-      setLoading(false)
-    }
-  }
-
+// 鍵直結デモ：会員VCの取得はVESSアプリ内で本人確認 → この端末の鍵に直接発行する。
+// 譲渡できる受け取りQR（bearerオファー）はWebに出さない。
+const TicketRegister: NextPage = () => {
   return (
     <>
       <Meta pageTitle='会員VC取得 - Ticket Provider デモ' />
@@ -73,70 +14,46 @@ const TicketVCAcquire: NextPage = () => {
         <Brand>Ticket Provider</Brand>
         <Title>会員VCを取得</Title>
 
-        {phase === 'method' && (
-          <>
-            <Desc>
-              「本人確認済みVC」を取得します。まず Ticket Provider の本人確認で「本人であること」を証明してください。確認できた人だけが会員VCを受け取れます。
-            </Desc>
-            <MockNote>
-              ※ 本人確認の方法はこのデモ用のモックです。実際のカード読み取りや認証は行いません（ボタンを押すと確認済みとして進みます）。
-            </MockNote>
-            <Label>本人確認の方法を選ぶ</Label>
-            {METHODS.map((m) => (
-              <MethodBtn key={m.id} onClick={() => startVerify(m.id)}>
-                <MBTitle>{m.label}</MBTitle>
-                <MBSub>{m.sub}</MBSub>
-              </MethodBtn>
-            ))}
-          </>
-        )}
+        <Desc>
+          会員VC（本人確認済みVC）の取得は <b>VESSアプリ内で完結</b> します。アプリで本人確認を行い、<b>その端末（鍵）に直接発行</b> されます。譲渡できる受け取りQRは発行しません（鍵直結）。
+        </Desc>
 
-        {phase === 'skip' && (
-          <Center>
-            <SkipTitle>デモのため、この操作はスキップします</SkipTitle>
-            <MockNote>
-              本番ではここで <b>{skipNoun}</b> を行い、本人であることを確認します。このデモでは実際の{skipNoun}・認証は行わず、本人確認済みとして次に進みます。
-            </MockNote>
-            <Primary onClick={() => setPhase('verified')}>
-              本人確認済みとして進む（デモ）
-            </Primary>
-          </Center>
-        )}
+        <Steps>
+          <Step>
+            <Num>1</Num>
+            <StepBody>
+              <StepTitle>VESSアプリを開く</StepTitle>
+              <StepDesc>会員VCを持たせたい端末で開きます。</StepDesc>
+            </StepBody>
+          </Step>
+          <Step>
+            <Num>2</Num>
+            <StepBody>
+              <StepTitle>設定 →「会員VC取得（本人確認）」</StepTitle>
+              <StepDesc>
+                画面下部の歯車（⚙️）アイコン＝「設定」→「会員VC取得（本人確認）」を開きます。
+              </StepDesc>
+            </StepBody>
+          </Step>
+          <Step>
+            <Num>3</Num>
+            <StepBody>
+              <StepTitle>本人確認 → この端末に直接発行</StepTitle>
+              <StepDesc>
+                本人確認（デモ用モック）を行うと、本人確認済みVCがこの端末の鍵に直接保存されます。受け取りQRは出ません。
+              </StepDesc>
+            </StepBody>
+          </Step>
+        </Steps>
 
-        {phase === 'verified' && (
-          <>
-            <Center>
-              <Ok>✓ 本人確認が完了しました</Ok>
-              <Dim>デモのため、実際の{skipNoun}・認証はスキップしています</Dim>
-            </Center>
-            <Label>確認された氏名（デモのため編集できます）</Label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder='山田 太郎'
-            />
-            <Primary onClick={onIssue} disabled={loading || !name}>
-              {loading ? '発行中…' : 'この内容で会員VC（本人確認済みVC）を発行'}
-            </Primary>
-            {error && <Err>{error}</Err>}
-          </>
-        )}
+        <Why>
+          <WhyTitle>なぜQRを出さないのか（鍵直結）</WhyTitle>
+          <WhyText>
+            受け取りQR（bearerオファー）は、コピーして他人に渡すと別の鍵で発行できてしまいます。アプリ内で本人確認した端末の鍵に直接発行することで、<b>渡せる引換券そのものを作らない</b>＝会員VCのコピー転売を防ぎます。
+          </WhyText>
+        </Why>
 
-        {phase === 'done' && offerUri && (
-          <Result>
-            <Ok>✓ 本人確認済み</Ok>
-            <Desc>
-              ウォレットアプリでこのQRを読み取り、会員VC（本人確認済みVC）を受け取ってください。
-            </Desc>
-            <QrBox>
-              <QRCode url={offerUri} width={260} />
-            </QrBox>
-            <OpenLink href={offerUri}>ウォレットを開いて会員VCを受け取る</OpenLink>
-            <UriBox>{offerUri}</UriBox>
-            {memberId && <Mono>会員ID: {memberId}</Mono>}
-            <Secondary href='/tickets/purchase'>次へ：チケット購入</Secondary>
-          </Result>
-        )}
+        <Secondary href='/tickets/purchase'>次へ：チケット購入</Secondary>
       </Wrapper>
     </>
   )
@@ -159,7 +76,7 @@ const Wrapper = styled.main`
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 `
 const Brand = styled.div`
   font-weight: 800;
@@ -171,103 +88,67 @@ const Title = styled.h1`
 `
 const Desc = styled.p`
   font-size: 13px;
-  opacity: 0.8;
-  line-height: 1.7;
+  opacity: 0.85;
+  line-height: 1.8;
+  margin: 0;
 `
-const MockNote = styled.div`
-  font-size: 12px;
-  line-height: 1.6;
-  color: #8a5a00;
-  background: #fff7e6;
-  border: 1px solid #ffe0a3;
-  border-radius: 10px;
-  padding: 10px 12px;
-`
-const Label = styled.label`
-  font-size: 12px;
-  opacity: 0.7;
-`
-const MethodBtn = styled.button`
-  text-align: left;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(45, 91, 214, 0.35);
-  background: #fff;
-  cursor: pointer;
+const Steps = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  &:hover {
-    background: rgba(45, 91, 214, 0.06);
-    border-color: #2d5bd6;
-  }
-`
-const MBTitle = styled.div`
-  font-weight: 700;
-  font-size: 15px;
-  color: #1c2733;
-`
-const MBSub = styled.div`
-  font-size: 12px;
-  opacity: 0.7;
-`
-const Center = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 10px;
-  padding: 10px 0;
+  margin-top: 4px;
 `
-const SkipTitle = styled.div`
-  font-weight: 800;
-  font-size: 16px;
-  color: #8a5a00;
-`
-const Ok = styled.div`
-  color: #2e7d4f;
-  font-weight: 800;
-  font-size: 18px;
-`
-const Dim = styled.div`
-  font-size: 12px;
-  opacity: 0.7;
-  text-align: center;
-`
-const Input = styled.input`
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 16px;
-`
-const Primary = styled.button`
-  margin-top: 8px;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  background: #2d5bd6;
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-  &:disabled {
-    opacity: 0.5;
-  }
-`
-const Result = styled.div`
+const Step = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 12px;
-`
-const QrBox = styled.div`
-  padding: 16px;
-  background: #fff;
-  border-radius: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 `
-const Mono = styled.div`
-  font-family: monospace;
-  font-size: 12px;
-  opacity: 0.7;
+const Num = styled.div`
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #2d5bd6;
+  color: #fff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+const StepBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`
+const StepTitle = styled.div`
+  font-weight: 700;
+  font-size: 15px;
+`
+const StepDesc = styled.div`
+  font-size: 12.5px;
+  opacity: 0.75;
+  line-height: 1.7;
+`
+const Why = styled.div`
+  background: #fff7e6;
+  border: 1px solid #ffe0a3;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 4px;
+`
+const WhyTitle = styled.div`
+  font-weight: 800;
+  font-size: 13px;
+  color: #8a5a00;
+  margin-bottom: 4px;
+`
+const WhyText = styled.div`
+  font-size: 12.5px;
+  color: #6b4a00;
+  line-height: 1.8;
 `
 const Secondary = styled.a`
   margin-top: 8px;
@@ -275,28 +156,5 @@ const Secondary = styled.a`
   font-weight: 700;
   text-decoration: none;
 `
-const OpenLink = styled.a`
-  margin-top: 4px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: #2d5bd6;
-  color: #fff;
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 14px;
-`
-const UriBox = styled.code`
-  width: 100%;
-  word-break: break-all;
-  font-size: 10px;
-  color: #5b6b75;
-  background: rgba(0, 0, 0, 0.04);
-  padding: 8px;
-  border-radius: 8px;
-`
-const Err = styled.div`
-  color: #c0392b;
-  font-size: 13px;
-`
 
-export default TicketVCAcquire
+export default TicketRegister

@@ -17,7 +17,7 @@ const TicketHome: NextPage = () => {
           <StepCard href='/tickets/register'>
             <Num>1</Num>
             <StepTitle>会員VC取得</StepTitle>
-            <StepDesc>本人確認（デモ用モック）→ 本人確認済みVCをウォレットに発行</StepDesc>
+            <StepDesc>アプリ内で本人確認 → この端末の鍵に直接発行（鍵直結／受け取りQRなし）</StepDesc>
           </StepCard>
           <StepCard href='/tickets/purchase'>
             <Num>2</Num>
