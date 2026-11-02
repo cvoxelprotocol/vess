@@ -11,7 +11,6 @@ interface MetaData {
   pageImg?: string
   pageImgWidth?: number
   pageImgHeight?: number
-  robots?: string
 }
 
 export const Meta: FC<MetaData> = ({
@@ -21,7 +20,6 @@ export const Meta: FC<MetaData> = ({
   pageImg,
   pageImgWidth,
   pageImgHeight,
-  robots = 'index, follow',
 }) => {
   const defaultTitle = 'VESS'
   const defaultDescription =
@@ -55,7 +53,7 @@ export const Meta: FC<MetaData> = ({
       <meta name='twitter:card' content='summary_large_image' key='twittercard' />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description} />
-      <meta name='robots' content={robots} />
+      <meta name='robots' content='noindex' />
     </Head>
   )
 }

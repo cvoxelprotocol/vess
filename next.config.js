@@ -13,6 +13,14 @@ const nextConfig = {
     domains: ['ipfs.io', 'ipfs.infura.io', 'storage.googleapis.com', 'arweave.net', 'localhost'],
   },
   optimizeFonts: true,
+  headers: async () => {
+    return [
+      {
+        source: '/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
+    ]
+  },
   redirects: async () => {
     return [
       {
