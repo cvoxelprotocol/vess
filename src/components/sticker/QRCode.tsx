@@ -10,7 +10,7 @@ export const QRCode: FC<Props> = ({ url, width = 200 }) => {
     <Canvas
       text={url}
       options={{
-        level: 'H',
+        errorCorrectionLevel: 'H',
         margin: 3,
         scale: 4,
         width: width,

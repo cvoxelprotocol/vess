@@ -1,55 +1,70 @@
-import { createAgent } from '@veramo/core'
 import type { TAgent, IResolver, ICredentialPlugin } from '@veramo/core-types'
-import { CredentialIssuerEIP712 } from '@veramo/credential-eip712'
-import {
-  CredentialIssuerLD,
-  LdDefaultContexts,
-  VeramoEcdsaSecp256k1RecoverySignature2020,
-  VeramoEd25519Signature2018,
-  VeramoEd25519Signature2020,
-  VeramoJsonWebSignature2020,
-} from '@veramo/credential-ld'
-import { CredentialPlugin } from '@veramo/credential-w3c'
-import { DIDResolverPlugin } from '@veramo/did-resolver'
-import { Resolver } from 'did-resolver'
-import { getResolver as pkhDidResolver } from 'pkh-did-resolver'
-import { getResolver as webDidResolver } from 'web-did-resolver'
 
-export class VeramoAgent {
-  private static instance: TAgent<IResolver & ICredentialPlugin>
+let agentInstance: TAgent<IResolver & ICredentialPlugin> | null = null
 
-  private constructor() {}
-
-  public static getAgent(): TAgent<IResolver & ICredentialPlugin> {
-    if (!VeramoAgent.instance) {
-      VeramoAgent.instance = createAgent<IResolver & ICredentialPlugin>({
-        plugins: [
-          new DIDResolverPlugin({
-            resolver: new Resolver({
-              ...pkhDidResolver(),
-              ...webDidResolver(),
-            }),
-          }),
-          new CredentialPlugin(),
-          new CredentialIssuerEIP712(),
-          new CredentialIssuerLD({
-            contextMaps: [LdDefaultContexts],
-            suites: [
-              new VeramoEcdsaSecp256k1RecoverySignature2020(),
-              new VeramoJsonWebSignature2020(),
-              new VeramoEd25519Signature2020(),
-              new VeramoEd25519Signature2018(),
-            ],
-          }),
-        ],
-      })
-    }
-    return VeramoAgent.instance
+const getAgent = async (): Promise<TAgent<IResolver & ICredentialPlugin>> => {
+  if (agentInstance) {
+    return agentInstance
   }
+
+  const [
+    { createAgent },
+    { CredentialIssuerEIP712 },
+    {
+      CredentialIssuerLD,
+      LdDefaultContexts,
+      VeramoEcdsaSecp256k1RecoverySignature2020,
+      VeramoEd25519Signature2018,
+      VeramoEd25519Signature2020,
+      VeramoJsonWebSignature2020,
+    },
+    { CredentialPlugin },
+    { DIDResolverPlugin },
+    { Resolver },
+    pkhResolver,
+    webResolver,
+  ] = await Promise.all([
+    import('@veramo/core'),
+    import('@veramo/credential-eip712'),
+    import('@veramo/credential-ld'),
+    import('@veramo/credential-w3c'),
+    import('@veramo/did-resolver'),
+    import('did-resolver'),
+    import('pkh-did-resolver'),
+    import('web-did-resolver'),
+  ])
+
+  agentInstance = createAgent<IResolver & ICredentialPlugin>({
+    plugins: [
+      new DIDResolverPlugin({
+        resolver: new Resolver({
+          ...pkhResolver.getResolver(),
+          ...webResolver.getResolver(),
+        }),
+      }),
+      new CredentialPlugin(),
+      new CredentialIssuerEIP712(),
+      new CredentialIssuerLD({
+        contextMaps: [LdDefaultContexts],
+        suites: [
+          new VeramoEcdsaSecp256k1RecoverySignature2020(),
+          new VeramoJsonWebSignature2020(),
+          new VeramoEd25519Signature2020(),
+          new VeramoEd25519Signature2018(),
+        ],
+      }),
+    ],
+  })
+
+  return agentInstance
 }
 
-export const verifyCredential = async (vc: any) => {
-  const veramo = VeramoAgent.getAgent()
+export const verifyCredential = async (vc: string) => {
+  if (typeof window === 'undefined') {
+    return { verified: false }
+  }
+
+  const veramo = await getAgent()
   const veramoRes = await veramo.verifyCredential({
     credential: JSON.parse(vc),
   })

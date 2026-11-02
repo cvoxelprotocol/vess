@@ -9,6 +9,16 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
+  transpilePackages: [
+    'ox',
+    '@veramo/credential-w3c',
+    '@veramo/credential-ld',
+    '@veramo/core',
+    '@veramo/core-types',
+    '@veramo/credential-eip712',
+    '@veramo/did-resolver',
+    '@veramo/utils',
+  ],
   images: {
     domains: ['ipfs.io', 'ipfs.infura.io', 'storage.googleapis.com', 'arweave.net', 'localhost'],
   },
