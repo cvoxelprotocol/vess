@@ -44,8 +44,8 @@ const RestaurantTop: NextPage = () => (
       <Card>
         <CardTitle>個人情報を預からずに、キャンペーンと分析を</CardTitle>
         <Body>
-          {SHOP_NAME}では、お客さまの個人情報をお店のデータベースに保存しません。キャンペーンや誕生日クーポンに必要な情報は、その都度お客さまの
-          VESS Wallet から提示していただきます。
+          {SHOP_NAME}では、お客さまの個人情報をお店のデータベースに保存しません。キャンペーンや誕生日クーポンに必要な情報は、その都度 VESS Login で
+          提示していただきます。
         </Body>
         <Steps>
           {STEPS.map((s, i) => (

@@ -42,7 +42,7 @@ const CampaignPage: NextPage = () => {
           <>
             <Title>キャンペーンに応募する</Title>
             <Lead>
-              応募フォームへの入力はありません。VESS Wallet から次の4項目を提示するだけで応募できます。生年月日や氏名はお店に渡りません。
+              応募フォームへの入力はありません。VESS Login で次の4項目を提示するだけで応募できます。生年月日や氏名はお店に渡りません。
             </Lead>
             <Card>
               <CardTitle>お店が使う目的</CardTitle>
@@ -54,7 +54,7 @@ const CampaignPage: NextPage = () => {
                 ・メールアドレス：確認メールと当選のご連絡（保存しません）
               </Body>
             </Card>
-            <Primary onClick={start}>VESS Wallet で応募する</Primary>
+            <Primary onClick={start}>VESS Login で応募する</Primary>
             {error && <Err>{error}</Err>}
           </>
         )}

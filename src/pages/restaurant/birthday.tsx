@@ -36,7 +36,7 @@ const BirthdayPage: NextPage = () => {
             <Lead>
               お店が確認するのは「誕生月」だけです。生年月日・年齢・お名前は提示されず、会員登録も不要です。今月がお誕生月なら、その場でクーポンを表示します。
             </Lead>
-            <Primary onClick={start}>VESS Wallet で誕生月を提示する</Primary>
+            <Primary onClick={start}>VESS Login で誕生月を提示する</Primary>
             {error && <Err>{error}</Err>}
           </>
         )}

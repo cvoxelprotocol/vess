@@ -44,7 +44,7 @@ export const PresentPanel: FC<{ uri: string | null; status: string; requested: s
   requested,
 }) => (
   <Card>
-    <CardTitle>VESS Wallet で提示してください</CardTitle>
+    <CardTitle>VESS Login で提示してください</CardTitle>
     <Small>お店が受け取る項目</Small>
     <Chips>
       {requested.map((r) => (
@@ -53,8 +53,8 @@ export const PresentPanel: FC<{ uri: string | null; status: string; requested: s
     </Chips>
     {uri ? (
       <>
-        <OpenButton href={uri}>ウォレットで開く</OpenButton>
-        <Small>パソコンで見ている場合は、スマートフォンの VESS Wallet でこの QR を読み取ってください。</Small>
+        <OpenButton href={uri}>VESS Login</OpenButton>
+        <Small>パソコンで見ている場合は、スマートフォンでこの QR を読み取って VESS Login してください。</Small>
         <QrBox>
           <QRCode url={uri} width={220} />
         </QrBox>
