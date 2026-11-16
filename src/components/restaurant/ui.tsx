@@ -5,16 +5,16 @@ import { FC, ReactNode } from 'react'
 import { QRCode } from '@/components/sticker/QRCode'
 import type { ClaimValue, DemoResult } from '@/lib/restaurant/types'
 
-export const SHOP_NAME = 'そば処 デモ亭'
+export const SHOP_NAME = '麺処 宇田川'
 
 export const color = {
-  ink: '#2b2622',
+  ink: '#231f1c',
   sub: '#6b6159',
-  paper: '#fbf7f0',
+  paper: '#fff9ef',
   card: '#ffffff',
   line: 'rgba(43, 38, 34, 0.12)',
-  accent: '#b5402a',
-  indigo: '#26375a',
+  accent: '#e2711d',
+  indigo: '#1f1b18',
   ok: '#2e7d4f',
 }
 
@@ -23,7 +23,7 @@ export const Shell: FC<{ children: ReactNode; back?: boolean }> = ({ children, b
     <Header>
       <HeaderInner>
         <Logo href='/restaurant'>
-          <LogoMark>蕎</LogoMark>
+          <LogoMark>麺</LogoMark>
           {SHOP_NAME}
         </Logo>
         <DemoBadge>DEMO</DemoBadge>
@@ -330,7 +330,7 @@ const Coupon = styled.div`
   border-radius: 12px;
   padding: 16px;
   text-align: center;
-  background: #fff6f2;
+  background: #fff3e3;
 `
 const CouponLabel = styled.div`
   font-size: 11px;

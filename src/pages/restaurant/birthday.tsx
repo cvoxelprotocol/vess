@@ -27,7 +27,7 @@ const BirthdayPage: NextPage = () => {
       <Shell>
         <Banner>
           <BannerLabel>HAPPY BIRTHDAY</BannerLabel>
-          <BannerTitle>お誕生月は天ざるそば1杯無料</BannerTitle>
+          <BannerTitle>お誕生月は味玉らーめん1杯無料</BannerTitle>
         </Banner>
 
         {phase === 'idle' && (
@@ -64,7 +64,7 @@ const Banner = styled.div`
   border-radius: 16px;
   padding: 22px 20px;
   color: #fff;
-  background: linear-gradient(135deg, ${color.accent}, #7d2a1b);
+  background: linear-gradient(135deg, ${color.accent}, #a8460c);
 `
 const BannerLabel = styled.div`
   font-size: 12px;

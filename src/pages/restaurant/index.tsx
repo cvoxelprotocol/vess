@@ -14,7 +14,7 @@ const MENUS = [
   {
     href: '/restaurant/birthday',
     tag: '誕生日クーポン',
-    title: 'お誕生月は天ざるそば1杯無料',
+    title: 'お誕生月は味玉らーめん1杯無料',
     desc: '提示するのは「誕生月」だけ。生年月日も名前も、お店には渡りません。',
   },
   {
@@ -36,16 +36,16 @@ const RestaurantTop: NextPage = () => (
     <Meta pageTitle={`${SHOP_NAME}（デモ）`} />
     <Shell back={false}>
       <Hero>
-        <HeroSub>手打ち二八そば</HeroSub>
+        <HeroSub>濃厚豚骨醤油らーめん</HeroSub>
         <HeroTitle>{SHOP_NAME}</HeroTitle>
-        <HeroText>毎朝石臼で挽くそば粉と、昆布と鰹の濃いめのつゆでお待ちしています。</HeroText>
+        <HeroText>18時間炊き出した豚骨スープと、自家製の中太ちぢれ麺でお待ちしています。</HeroText>
       </Hero>
 
       <Card>
         <CardTitle>個人情報を預からずに、キャンペーンと分析を</CardTitle>
         <Body>
-          {SHOP_NAME}では、お客さまの個人情報をお店のデータベースに保存しません。キャンペーンや誕生日クーポンに必要な情報は、その都度 VESS Login で
-          提示していただきます。
+          {SHOP_NAME}では、お客さまの個人情報をお店のデータベースに保存しません。キャンペーンや誕生日クーポンに必要な情報は、その都度
+          VESS Login で提示していただきます。
         </Body>
         <Steps>
           {STEPS.map((s, i) => (
@@ -83,7 +83,7 @@ const Hero = styled.div`
   border-radius: 16px;
   padding: 28px 20px;
   color: #fff;
-  background: linear-gradient(135deg, ${color.indigo}, #1a253d);
+  background: linear-gradient(135deg, ${color.indigo}, #4a2a12);
 `
 const HeroSub = styled.div`
   font-size: 12px;

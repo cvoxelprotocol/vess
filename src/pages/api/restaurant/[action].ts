@@ -139,7 +139,7 @@ const birthdayCoupon: Handler = async (req, res) => {
       title: 'クーポンを発行しました',
       message: 'お誕生月おめでとうございます。お会計時にこの画面をスタッフにお見せください。',
       coupon: {
-        name: '天ざるそば 1杯無料',
+        name: '味玉らーめん 1杯無料',
         code: crypto.randomBytes(3).toString('hex').toUpperCase(),
         validUntil: `${month}月末まで`,
       },

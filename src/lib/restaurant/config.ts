@@ -1,4 +1,4 @@
-// 飲食店デモ（そば処 デモ亭）の OID4VP 設定。サーバ側(APIルート)からのみ参照。
+// 飲食店デモ（麺処 宇田川）の OID4VP 設定。サーバ側(APIルート)からのみ参照。
 
 export type DemoKind = 'campaign' | 'birthday'
 
