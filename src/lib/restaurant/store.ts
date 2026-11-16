@@ -25,7 +25,7 @@ const SEED: Record<string, number[]> = {
 }
 
 function seed(): Store {
-  const entries: Store['entries'] = {}
+  const entries: Store['entries'] = Object.create(null)
   for (const [pref, counts] of Object.entries(SEED)) {
     entries[pref] = Object.fromEntries(AGE_BANDS.map((b, i) => [b, counts[i]]))
   }
@@ -42,10 +42,12 @@ const g = globalThis as unknown as { __restaurantDemoStore?: Store }
 export const store: Store = g.__restaurantDemoStore ?? (g.__restaurantDemoStore = seed())
 
 export function addEntry(prefecture: string, ageBand: string): { entryNumber: string; countAfter: number } {
-  const row = (store.entries[prefecture] ??= {})
-  row[ageBand] = (row[ageBand] ?? 0) + 1
+  // 自己申告の値がキーになるため、年代は固定リストに限定し、都道府県は prototype を持たない行に入れる
+  const band = AGE_BANDS.includes(ageBand) ? ageBand : 'その他'
+  const row = (store.entries[prefecture] ??= Object.create(null) as Record<string, number>)
+  row[band] = (row[band] ?? 0) + 1
   const no = store.nextEntryNo++
-  return { entryNumber: `BEER-${String(no).padStart(6, '0')}`, countAfter: row[ageBand] }
+  return { entryNumber: `BEER-${String(no).padStart(6, '0')}`, countAfter: row[band] }
 }
 
 export function addCoupon(month: number): number {
