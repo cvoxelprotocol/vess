@@ -38,7 +38,10 @@ const global = css`
 export default function App({
   Component,
   pageProps,
+  router,
 }: AppProps<{ dehydratedState: DehydratedState }>) {
+  // 飲食店デモは独立した店舗サイトとして見せるため、アプリ共通のレイアウトを外す
+  const standalone = router.pathname.startsWith('/restaurant')
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -61,9 +64,13 @@ export default function App({
               <KaiProvider style={kaiTokens}>
                 <VESSAuthProvider>
                   <GATracking trackingId={process.env.NEXT_PUBLIC_GA_ID} />
-                  <BasicLayout>
+                  {standalone ? (
                     <Component {...props} />
-                  </BasicLayout>
+                  ) : (
+                    <BasicLayout>
+                      <Component {...props} />
+                    </BasicLayout>
+                  )}
                 </VESSAuthProvider>
               </KaiProvider>
             </ThemeProvider>

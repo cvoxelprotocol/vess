@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Shippori_Mincho_B1, Zen_Kaku_Gothic_New } from 'next/font/google'
 import Link from 'next/link'
 import { FC, ReactNode } from 'react'
 import { QRCode } from '@/components/sticker/QRCode'
@@ -7,35 +8,146 @@ import type { ClaimValue, DemoResult } from '@/lib/restaurant/types'
 
 export const SHOP_NAME = '麺処 宇田川'
 
+const mincho = Shippori_Mincho_B1({ weight: ['600', '800'], subsets: ['latin'], display: 'swap', preload: false })
+const gothic = Zen_Kaku_Gothic_New({ weight: ['400', '500', '700'], subsets: ['latin'], display: 'swap', preload: false })
+
+export const font = {
+  mincho: mincho.style.fontFamily,
+  gothic: gothic.style.fontFamily,
+}
+
 export const color = {
-  ink: '#231f1c',
+  ink: '#1f1915',
   sub: '#6b6159',
-  paper: '#fff9ef',
+  paper: '#faf6ef',
+  kraft: '#f1e8d9',
   card: '#ffffff',
   line: 'rgba(43, 38, 34, 0.12)',
   accent: '#e2711d',
+  accentDeep: '#b9560f',
   indigo: '#1f1b18',
+  night: '#15110e',
+  red: '#b8322a',
   ok: '#2e7d4f',
 }
 
-export const Shell: FC<{ children: ReactNode; back?: boolean }> = ({ children, back = true }) => (
+const NAV = [
+  { href: '/restaurant#kodawari', label: 'こだわり' },
+  { href: '/restaurant#menu', label: 'お品書き' },
+  { href: '/restaurant#news', label: 'キャンペーン' },
+  { href: '/restaurant#shop', label: '店舗情報' },
+]
+
+export const Shell: FC<{ children: ReactNode; back?: boolean; bare?: boolean }> = ({
+  children,
+  back = true,
+  bare = false,
+}) => (
   <Page>
+    <DemoStrip>
+      <DemoTag>DEMO</DemoTag>VESS のデモ用に作成した架空の店舗サイトです
+    </DemoStrip>
     <Header>
       <HeaderInner>
         <Logo href='/restaurant'>
           <LogoMark>麺</LogoMark>
-          {SHOP_NAME}
+          <LogoText>
+            <LogoSub>濃厚豚骨醤油</LogoSub>
+            {SHOP_NAME}
+          </LogoText>
         </Logo>
-        <DemoBadge>DEMO</DemoBadge>
+        <Nav>
+          {NAV.map((n) => (
+            <NavLink key={n.href} href={n.href}>
+              {n.label}
+            </NavLink>
+          ))}
+        </Nav>
       </HeaderInner>
     </Header>
-    <Main>
-      {back && <BackLink href='/restaurant'>← トップへ戻る</BackLink>}
-      {children}
-    </Main>
-    <Footer>このサイトは VESS Wallet のデモ用に作成した架空の店舗です。</Footer>
+    {bare ? (
+      children
+    ) : (
+      <Main>
+        {back && <BackLink href='/restaurant'>← トップへ戻る</BackLink>}
+        {children}
+      </Main>
+    )}
+    <Footer>
+      <FooterInner>
+        <FooterBrand>
+          <Logo href='/restaurant'>
+            <LogoMark>麺</LogoMark>
+            <LogoText>{SHOP_NAME}</LogoText>
+          </Logo>
+          <FooterText>
+            東京都渋谷区宇田川町 0-0-0 宇田川ビル1F
+            <br />
+            11:00〜15:00 ／ 17:30〜22:00（火曜定休）
+          </FooterText>
+        </FooterBrand>
+        <FooterLinks>
+          <FooterLink href='/restaurant#menu'>お品書き</FooterLink>
+          <FooterLink href='/restaurant/campaign'>10周年キャンペーン</FooterLink>
+          <FooterLink href='/restaurant/birthday'>誕生日クーポン</FooterLink>
+          <FooterLink href='/restaurant#privacy'>個人情報の取り扱い</FooterLink>
+          <FooterLink href='/restaurant/dashboard'>お店の方へ（集計）</FooterLink>
+        </FooterLinks>
+      </FooterInner>
+      <FooterNote>
+        このサイトは VESS Wallet のデモ用に作成した架空の店舗です。店名・住所・メニュー・キャンペーンはすべて架空のものです。
+      </FooterNote>
+    </Footer>
   </Page>
 )
+
+// 下層ページの見出し帯
+export const PageHero: FC<{ kicker: string; title: string; text?: string; tone?: 'night' | 'gold' | 'orange' }> = ({
+  kicker,
+  title,
+  text,
+  tone = 'night',
+}) => (
+  <HeroBand tone={tone}>
+    <HeroKicker>{kicker}</HeroKicker>
+    <HeroTitle>{title}</HeroTitle>
+    {text && <HeroText>{text}</HeroText>}
+  </HeroBand>
+)
+
+export const StepBar: FC<{ current: 0 | 1 | 2 }> = ({ current }) => (
+  <Steps>
+    {['内容の確認', '提示', '完了'].map((s, i) => (
+      <StepItem key={s} active={i <= current}>
+        <StepDot active={i <= current}>{i + 1}</StepDot>
+        {s}
+      </StepItem>
+    ))}
+  </Steps>
+)
+
+const VessIcon: FC = () => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img src='/VESS_app_icon.png' alt='' width={22} height={22} style={{ borderRadius: 6 }} />
+)
+
+// Google のログインボタンに倣った VESS Login ボタン
+export const LoginButton: FC<{ children: ReactNode; onClick?: () => void; href?: string }> = ({
+  children,
+  onClick,
+  href,
+}) =>
+  href ? (
+    <LoginAnchor href={href}>
+      <VessIcon />
+      {children}
+    </LoginAnchor>
+  ) : (
+    <LoginBtn type='button' onClick={onClick}>
+      <VessIcon />
+      {children}
+    </LoginBtn>
+  )
 
 // ウォレットへの提示依頼（同一端末はボタン、PC は QR）
 export const PresentPanel: FC<{ uri: string | null; status: string; requested: string[] }> = ({
@@ -53,17 +165,21 @@ export const PresentPanel: FC<{ uri: string | null; status: string; requested: s
     </Chips>
     {uri ? (
       <>
-        <OpenButton href={uri}>VESS Login</OpenButton>
-        <Small>パソコンで見ている場合は、スマートフォンでこの QR を読み取って VESS Login してください。</Small>
-        <QrBox>
-          <QRCode url={uri} width={220} />
-        </QrBox>
-        <UriBox>{uri}</UriBox>
+        <LoginButton href={uri}>VESS Login</LoginButton>
+        <QrWrap>
+          <QrBox>
+            <QRCode url={uri} width={200} />
+          </QrBox>
+          <Small>パソコンで見ている場合は、スマートフォンでこの QR を読み取って VESS Login してください。</Small>
+        </QrWrap>
       </>
     ) : (
-      <Small>提示内容を確認しています…</Small>
+      <Small>提示内容を準備しています…</Small>
     )}
-    <StatusLine>検証待ち… {status && `(${status})`}</StatusLine>
+    <StatusLine>
+      <Pulse />
+      VESS Wallet からの提示を待っています {status && `(${status})`}
+    </StatusLine>
   </Card>
 )
 
@@ -82,14 +198,23 @@ export const ResultView: FC<{ result: DemoResult; labels: Record<string, string>
     <Card>
       <ResultTitle ok={result.ok}>{result.title}</ResultTitle>
       <Body>{result.message}</Body>
-      {result.entryNumber && <EntryNo>応募番号 {result.entryNumber}</EntryNo>}
+      {result.entryNumber && (
+        <EntryNo>
+          <EntryLabel>応募番号</EntryLabel>
+          {result.entryNumber}
+        </EntryNo>
+      )}
       {result.coupon && (
         <Coupon>
-          <CouponLabel>BIRTHDAY COUPON</CouponLabel>
-          <CouponName>{result.coupon.name}</CouponName>
-          <CouponMeta>
-            コード {result.coupon.code} ／ {result.coupon.validUntil}
-          </CouponMeta>
+          <CouponLeft>
+            <CouponLabel>BIRTHDAY COUPON</CouponLabel>
+            <CouponName>{result.coupon.name}</CouponName>
+            <CouponMeta>{result.coupon.validUntil}</CouponMeta>
+          </CouponLeft>
+          <CouponRight>
+            <CouponCodeLabel>CODE</CouponCodeLabel>
+            <CouponCode>{result.coupon.code}</CouponCode>
+          </CouponRight>
         </Coupon>
       )}
     </Card>
@@ -136,88 +261,278 @@ const Page = styled.div`
   color: ${color.ink};
   display: flex;
   flex-direction: column;
+  font-family: ${font.gothic}, sans-serif;
+  scroll-behavior: smooth;
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+`
+const DemoStrip = styled.div`
+  background: ${color.night};
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  text-align: center;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+const DemoTag = styled.span`
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: ${color.night};
+  background: ${color.accent};
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 10px;
 `
 const Header = styled.header`
-  background: ${color.indigo};
-  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(250, 246, 239, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid ${color.line};
 `
 const HeaderInner = styled.div`
-  max-width: 720px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 14px 16px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 16px 6px;
+  }
 `
 const Logo = styled(Link)`
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #fff;
-  font-weight: 800;
-  font-size: 18px;
+  color: inherit;
   text-decoration: none;
-  letter-spacing: 0.05em;
 `
 const LogoMark = styled.span`
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background: ${color.accent};
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: ${color.red};
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-family: ${font.mincho}, serif;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
 `
-const DemoBadge = styled.span`
-  font-size: 11px;
-  font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+const LogoText = styled.span`
+  display: flex;
+  flex-direction: column;
+  font-family: ${font.mincho}, serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+`
+const LogoSub = styled.span`
+  font-family: ${font.gothic}, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: ${color.sub};
+`
+const Nav = styled.nav`
+  display: flex;
+  gap: 4px;
+  @media (max-width: 720px) {
+    overflow-x: auto;
+    margin: 0 -16px;
+    padding: 0 12px;
+  }
+`
+const NavLink = styled(Link)`
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${color.ink};
+  text-decoration: none;
+  padding: 8px 12px;
   border-radius: 999px;
-  padding: 2px 8px;
+  &:hover {
+    background: ${color.kraft};
+  }
 `
 const Main = styled.main`
   width: 100%;
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 20px 16px 40px;
+  padding: 20px 16px 56px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   flex: 1;
 `
 const Footer = styled.footer`
-  text-align: center;
+  background: ${color.night};
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: auto;
+`
+const FooterInner = styled.div`
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 36px 20px 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+`
+const FooterBrand = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`
+const FooterText = styled.p`
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.65);
+`
+const FooterLinks = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 8px 28px;
+  align-content: start;
+`
+const FooterLink = styled(Link)`
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  text-decoration: none;
+  &:hover {
+    color: ${color.accent};
+  }
+`
+const FooterNote = styled.div`
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px 20px 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 11px;
-  color: ${color.sub};
-  padding: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
 `
 const BackLink = styled(Link)`
   align-self: flex-start;
   font-size: 13px;
-  color: ${color.indigo};
+  color: ${color.sub};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
+`
+const HeroBand = styled.div<{ tone: 'night' | 'gold' | 'orange' }>`
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 30px 24px;
+  color: ${(p) => (p.tone === 'gold' ? '#3b2a00' : '#fff')};
+  background: ${(p) =>
+    p.tone === 'gold'
+      ? 'linear-gradient(135deg, #ffd66b, #f4a93a)'
+      : p.tone === 'orange'
+        ? `linear-gradient(135deg, ${color.accent}, #9d420a)`
+        : `radial-gradient(circle at 80% 20%, #4a2a12, ${color.night} 60%)`};
+  &::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    bottom: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 18px solid rgba(255, 255, 255, 0.12);
+  }
+`
+const HeroKicker = styled.div`
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  opacity: 0.85;
+`
+const HeroTitle = styled.h1`
+  font-family: ${font.mincho}, serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 8px 0 0;
+  letter-spacing: 0.04em;
+  @media (max-width: 560px) {
+    font-size: 25px;
+  }
+`
+const HeroText = styled.p`
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 10px 0 0;
+  opacity: 0.9;
+  max-width: 520px;
+`
+const Steps = styled.ol`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+`
+const StepItem = styled.li<{ active: boolean }>`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: ${(p) => (p.active ? color.ink : color.sub)};
+  padding-bottom: 8px;
+  border-bottom: 3px solid ${(p) => (p.active ? color.accent : color.line)};
+  @media (max-width: 420px) {
+    font-size: 11px;
+  }
+`
+const StepDot = styled.span<{ active: boolean }>`
+  flex: 0 0 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: ${(p) => (p.active ? color.accent : '#c9bfb3')};
 `
 export const Title = styled.h1`
+  font-family: ${font.mincho}, serif;
   font-size: 24px;
   margin: 0;
   line-height: 1.4;
 `
 export const Lead = styled.p`
   font-size: 14px;
-  line-height: 1.8;
+  line-height: 1.9;
   color: ${color.sub};
   margin: 0;
 `
 export const Card = styled.section`
   background: ${color.card};
   border: 1px solid ${color.line};
-  border-radius: 14px;
-  padding: 18px;
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: 0 1px 2px rgba(31, 25, 21, 0.04);
 `
 export const CardTitle = styled.h2`
   font-size: 17px;
@@ -225,18 +540,18 @@ export const CardTitle = styled.h2`
 `
 export const Body = styled.p`
   font-size: 14px;
-  line-height: 1.8;
+  line-height: 1.85;
   margin: 0;
 `
 export const Small = styled.p`
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.75;
   color: ${color.sub};
   margin: 0;
 `
 export const Primary = styled.button`
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   background: ${color.accent};
   color: #fff;
@@ -244,13 +559,45 @@ export const Primary = styled.button`
   font-size: 16px;
   cursor: pointer;
 `
+const loginCss = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 1px solid #d6cfc6;
+  background: #fff;
+  color: #1f1f1f;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(31, 25, 21, 0.12);
+  transition:
+    box-shadow 0.15s,
+    background 0.15s;
+  &:hover {
+    background: #faf8f5;
+    box-shadow: 0 2px 8px rgba(31, 25, 21, 0.16);
+  }
+`
+const LoginBtn = styled.button`
+  ${loginCss}
+`
+const LoginAnchor = styled.a`
+  ${loginCss}
+`
 const secondaryCss = css`
   flex: 1;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid ${color.indigo};
   background: transparent;
   color: ${color.indigo};
+  font-family: inherit;
   font-weight: 700;
   font-size: 14px;
   text-align: center;
@@ -264,7 +611,7 @@ const SecondaryButton = styled.button`
   ${secondaryCss}
 `
 export const Err = styled.div`
-  color: ${color.accent};
+  color: ${color.red};
   font-size: 13px;
 `
 const Chips = styled.div`
@@ -276,77 +623,118 @@ const Chip = styled.span`
   font-size: 12px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(38, 55, 90, 0.08);
-  color: ${color.indigo};
-  font-weight: 600;
-`
-const OpenButton = styled.a`
-  margin-top: 4px;
-  padding: 15px;
-  border-radius: 10px;
-  background: ${color.indigo};
-  color: #fff;
+  background: ${color.kraft};
+  color: ${color.ink};
   font-weight: 700;
-  font-size: 16px;
-  text-align: center;
-  text-decoration: none;
+`
+const QrWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 4px;
+  @media (max-width: 560px) {
+    flex-direction: column;
+    text-align: center;
+  }
 `
 const QrBox = styled.div`
-  align-self: center;
-  padding: 8px;
+  flex-shrink: 0;
+  padding: 6px;
   background: #fff;
   border-radius: 12px;
   border: 1px solid ${color.line};
 `
-const UriBox = styled.code`
-  word-break: break-all;
-  font-size: 10px;
-  color: ${color.sub};
-  background: rgba(0, 0, 0, 0.04);
-  padding: 8px;
-  border-radius: 8px;
-`
 const StatusLine = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-size: 12px;
   color: ${color.sub};
-  text-align: center;
+`
+const Pulse = styled.span`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ${color.accent};
+  animation: pulse 1.4s ease-in-out infinite;
+  @keyframes pulse {
+    50% {
+      opacity: 0.25;
+    }
+  }
 `
 const ResultTitle = styled.h2<{ ok: boolean }>`
-  font-size: 20px;
+  font-family: ${font.mincho}, serif;
+  font-size: 22px;
   margin: 0;
   color: ${(p) => (p.ok ? color.ok : color.ink)};
 `
 const EntryNo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   font-family: monospace;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   background: rgba(46, 125, 79, 0.08);
-  text-align: center;
+`
+const EntryLabel = styled.span`
+  font-family: ${font.gothic}, sans-serif;
+  font-size: 11px;
+  color: ${color.sub};
 `
 const Coupon = styled.div`
-  border: 2px dashed ${color.accent};
-  border-radius: 12px;
-  padding: 16px;
-  text-align: center;
-  background: #fff3e3;
+  display: flex;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(135deg, ${color.accent}, ${color.accentDeep});
+  color: #fff;
+`
+const CouponLeft = styled.div`
+  flex: 1;
+  padding: 18px;
+  border-right: 2px dashed rgba(255, 255, 255, 0.5);
+`
+const CouponRight = styled.div`
+  flex: 0 0 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.12);
+  padding: 12px;
 `
 const CouponLabel = styled.div`
   font-size: 11px;
   letter-spacing: 0.2em;
-  color: ${color.accent};
-  font-weight: 800;
+  font-weight: 700;
+  opacity: 0.85;
 `
 const CouponName = styled.div`
+  font-family: ${font.mincho}, serif;
   font-size: 22px;
   font-weight: 800;
   margin: 6px 0;
 `
 const CouponMeta = styled.div`
   font-size: 12px;
-  color: ${color.sub};
+  opacity: 0.85;
+`
+const CouponCodeLabel = styled.div`
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  opacity: 0.8;
+`
+const CouponCode = styled.div`
   font-family: monospace;
+  font-size: 15px;
+  font-weight: 700;
+  word-break: break-all;
+  text-align: center;
 `
 const Panels = styled.div`
   display: grid;
@@ -359,7 +747,7 @@ const Panels = styled.div`
 const Panel = styled.div<{ stored?: boolean }>`
   background: ${(p) => (p.stored ? '#f1f6f2' : color.card)};
   border: 1px solid ${(p) => (p.stored ? 'rgba(46, 125, 79, 0.3)' : color.line)};
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -393,7 +781,7 @@ const Dt = styled.dt`
 `
 const Dd = styled.dd`
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
   text-align: right;
   word-break: break-all;
 `

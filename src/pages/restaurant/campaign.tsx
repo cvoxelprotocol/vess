@@ -2,18 +2,18 @@ import styled from '@emotion/styled'
 import { NextPage } from 'next'
 import { Meta } from '@/components/layouts/Meta'
 import {
-  Body,
   Card,
   CardTitle,
   Err,
   Lead,
+  LoginButton,
+  PageHero,
   PresentPanel,
-  Primary,
   ResultView,
   SHOP_NAME,
   Shell,
   Small,
-  Title,
+  StepBar,
   color,
 } from '@/components/restaurant/ui'
 import { useVpFlow } from '@/components/restaurant/useVpFlow'
@@ -25,36 +25,59 @@ const LABELS: Record<string, string> = {
   email: 'メールアドレス',
 }
 
+const PURPOSES = [
+  ['20歳以上か', '応募資格の確認'],
+  ['年代・都道府県', '応募数の集計（個人とは結び付けません）'],
+  ['メールアドレス', '受付確認と当選のご連絡（保存しません）'],
+]
+
 const CampaignPage: NextPage = () => {
   const { phase, authReqUri, status, result, error, start, reset } = useVpFlow('campaign')
+  const step = phase === 'idle' ? 0 : phase === 'done' ? 2 : 1
 
   return (
     <>
-      <Meta pageTitle={`キャンペーン応募 - ${SHOP_NAME}（デモ）`} />
+      <Meta pageTitle={`開店10周年キャンペーン - ${SHOP_NAME}（デモ）`} />
       <Shell>
-        <Prize>
-          <PrizeLabel>開店10周年キャンペーン</PrizeLabel>
-          <PrizeTitle>生ビール1年分が当たる！</PrizeTitle>
-          <PrizeText>抽選で10名さま。20歳以上の方が対象です。</PrizeText>
-        </Prize>
+        <PageHero
+          tone='gold'
+          kicker='開店10周年キャンペーン'
+          title='生ビール1年分が当たる！'
+          text='日頃のご愛顧に感謝を込めて。抽選で10名さまに、生ビール1年分（中ジョッキ365杯分のお食事券）をプレゼントします。'
+        />
+        <Facts>
+          {[
+            ['応募期間', '11/1〜11/30'],
+            ['当選者数', '10名さま'],
+            ['応募資格', '20歳以上の方'],
+          ].map(([k, v]) => (
+            <Fact key={k}>
+              <FactLabel>{k}</FactLabel>
+              <FactValue>{v}</FactValue>
+            </Fact>
+          ))}
+        </Facts>
+
+        <StepBar current={step} />
 
         {phase === 'idle' && (
           <>
-            <Title>キャンペーンに応募する</Title>
-            <Lead>
-              応募フォームへの入力はありません。VESS Login で次の4項目を提示するだけで応募できます。生年月日や氏名はお店に渡りません。
-            </Lead>
             <Card>
-              <CardTitle>お店が使う目的</CardTitle>
-              <Body>
-                ・20歳以上か：応募資格の確認
-                <br />
-                ・年代と都道府県：応募数の集計（個人とは結び付けません）
-                <br />
-                ・メールアドレス：確認メールと当選のご連絡（保存しません）
-              </Body>
+              <CardTitle>応募フォームの入力はありません</CardTitle>
+              <Lead>
+                VESS Login で次の4項目を提示するだけで応募できます。生年月日やお名前はお店に渡りません。
+              </Lead>
+              <Purposes>
+                {PURPOSES.map(([k, v]) => (
+                  <Purpose key={k}>
+                    <PurposeKey>{k}</PurposeKey>
+                    <PurposeVal>{v}</PurposeVal>
+                  </Purpose>
+                ))}
+              </Purposes>
             </Card>
-            <Primary onClick={start}>VESS Login で応募する</Primary>
+            <LoginButton onClick={start}>VESS Login で応募する</LoginButton>
+            <Small style={{ textAlign: 'center' }}>当選はメールでご連絡します。応募は1人1回までです。</Small>
             {error && <Err>{error}</Err>}
           </>
         )}
@@ -78,25 +101,56 @@ const CampaignPage: NextPage = () => {
   )
 }
 
-const Prize = styled.div`
-  border-radius: 16px;
-  padding: 22px 20px;
-  color: #3b2a00;
-  background: linear-gradient(135deg, #ffd66b, #f4a93a);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+const Facts = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 `
-const PrizeLabel = styled.div`
-  font-size: 12px;
+const Fact = styled.div`
+  background: ${color.card};
+  border: 1px solid ${color.line};
+  border-radius: 14px;
+  padding: 12px 14px;
+  @media (max-width: 560px) {
+    padding: 10px;
+  }
+`
+const FactLabel = styled.div`
+  font-size: 11px;
   font-weight: 700;
-  color: ${color.accent};
+  color: ${color.accentDeep};
 `
-const PrizeTitle = styled.div`
-  font-size: 26px;
-  font-weight: 900;
-  margin: 4px 0;
+const FactValue = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 2px;
+  @media (max-width: 560px) {
+    font-size: 12px;
+  }
 `
-const PrizeText = styled.div`
+const Purposes = styled.dl`
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+`
+const Purpose = styled.div`
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid ${color.line};
   font-size: 13px;
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+`
+const PurposeKey = styled.dt`
+  font-weight: 700;
+`
+const PurposeVal = styled.dd`
+  margin: 0;
+  color: ${color.sub};
 `
 
 export default CampaignPage
