@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Shippori_Mincho_B1, Zen_Kaku_Gothic_New } from 'next/font/google'
+import { Noto_Sans_JP, Oswald } from 'next/font/google'
 import Link from 'next/link'
 import { FC, ReactNode } from 'react'
 import { QRCode } from '@/components/sticker/QRCode'
@@ -8,12 +8,13 @@ import type { ClaimValue, DemoResult } from '@/lib/restaurant/types'
 
 export const SHOP_NAME = '麺処 宇田川'
 
-const mincho = Shippori_Mincho_B1({ weight: ['600', '800'], subsets: ['latin'], display: 'swap', preload: false })
-const gothic = Zen_Kaku_Gothic_New({ weight: ['400', '500', '700'], subsets: ['latin'], display: 'swap', preload: false })
+const body = Noto_Sans_JP({ weight: ['400', '500', '700', '900'], subsets: ['latin'], display: 'swap', preload: false })
+const latin = Oswald({ weight: ['500', '600'], subsets: ['latin'], display: 'swap' })
 
 export const font = {
-  mincho: mincho.style.fontFamily,
-  gothic: gothic.style.fontFamily,
+  display: body.style.fontFamily,
+  body: body.style.fontFamily,
+  latin: latin.style.fontFamily,
 }
 
 export const color = {
@@ -261,7 +262,7 @@ const Page = styled.div`
   color: ${color.ink};
   display: flex;
   flex-direction: column;
-  font-family: ${font.gothic}, sans-serif;
+  font-family: ${font.body}, sans-serif;
   scroll-behavior: smooth;
   a {
     -webkit-tap-highlight-color: transparent;
@@ -326,22 +327,22 @@ const LogoMark = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 20px;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
 `
 const LogoText = styled.span`
   display: flex;
   flex-direction: column;
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 20px;
   letter-spacing: 0.12em;
   line-height: 1.2;
 `
 const LogoSub = styled.span`
-  font-family: ${font.gothic}, sans-serif;
+  font-family: ${font.body}, sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -362,10 +363,12 @@ const NavLink = styled(Link)`
   font-weight: 500;
   color: ${color.ink};
   text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 999px;
+  padding: 8px 2px;
+  margin: 0 10px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s;
   &:hover {
-    background: ${color.kraft};
+    border-bottom-color: ${color.accent};
   }
 `
 const Main = styled.main`
@@ -436,7 +439,7 @@ const BackLink = styled(Link)`
 const HeroBand = styled.div<{ tone: 'night' | 'gold' | 'orange' }>`
   position: relative;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 30px 24px;
   color: ${(p) => (p.tone === 'gold' ? '#3b2a00' : '#fff')};
   background: ${(p) =>
@@ -457,15 +460,16 @@ const HeroBand = styled.div<{ tone: 'night' | 'gold' | 'orange' }>`
   }
 `
 const HeroKicker = styled.div`
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.24em;
+  font-family: ${font.latin}, ${font.body}, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   opacity: 0.85;
 `
 const HeroTitle = styled.h1`
-  font-family: ${font.mincho}, serif;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 30px;
-  font-weight: 800;
   line-height: 1.35;
   margin: 8px 0 0;
   letter-spacing: 0.04em;
@@ -513,7 +517,8 @@ const StepDot = styled.span<{ active: boolean }>`
   background: ${(p) => (p.active ? color.accent : '#c9bfb3')};
 `
 export const Title = styled.h1`
-  font-family: ${font.mincho}, serif;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 24px;
   margin: 0;
   line-height: 1.4;
@@ -527,7 +532,7 @@ export const Lead = styled.p`
 export const Card = styled.section`
   background: ${color.card};
   border: 1px solid ${color.line};
-  border-radius: 16px;
+  border-radius: 6px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -549,15 +554,35 @@ export const Small = styled.p`
   color: ${color.sub};
   margin: 0;
 `
+// 角の立った矩形ボタン。右端の矢印が hover で動く
+export const actionCss = css`
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 16px 20px;
+  border-radius: 2px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  &::after {
+    content: '→';
+    font-family: ${font.latin}, sans-serif;
+    font-size: 16px;
+    transition: transform 0.2s;
+  }
+  &:hover::after {
+    transform: translateX(4px);
+  }
+`
 export const Primary = styled.button`
-  padding: 15px;
-  border-radius: 12px;
+  ${actionCss}
   border: none;
   background: ${color.accent};
   color: #fff;
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
 `
 const loginCss = css`
   display: flex;
@@ -565,9 +590,10 @@ const loginCss = css`
   justify-content: center;
   gap: 12px;
   width: 100%;
-  padding: 14px 18px;
-  border-radius: 999px;
-  border: 1px solid #d6cfc6;
+  min-height: 54px;
+  padding: 12px 18px;
+  border-radius: 4px;
+  border: 1px solid #cfc8bf;
   background: #fff;
   color: #1f1f1f;
   font-family: inherit;
@@ -575,13 +601,12 @@ const loginCss = css`
   font-size: 16px;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(31, 25, 21, 0.12);
   transition:
     box-shadow 0.15s,
-    background 0.15s;
+    border-color 0.15s;
   &:hover {
-    background: #faf8f5;
-    box-shadow: 0 2px 8px rgba(31, 25, 21, 0.16);
+    border-color: #a9a097;
+    box-shadow: 0 2px 6px rgba(31, 25, 21, 0.12);
   }
 `
 const LoginBtn = styled.button`
@@ -591,18 +616,11 @@ const LoginAnchor = styled.a`
   ${loginCss}
 `
 const secondaryCss = css`
+  ${actionCss}
   flex: 1;
-  padding: 12px;
-  border-radius: 12px;
   border: 1px solid ${color.indigo};
   background: transparent;
   color: ${color.indigo};
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 14px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
 `
 export const Secondary = styled(Link)`
   ${secondaryCss}
@@ -622,7 +640,8 @@ const Chips = styled.div`
 const Chip = styled.span`
   font-size: 12px;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 2px;
+  border: 1px solid ${color.line};
   background: ${color.kraft};
   color: ${color.ink};
   font-weight: 700;
@@ -641,7 +660,7 @@ const QrBox = styled.div`
   flex-shrink: 0;
   padding: 6px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 6px;
   border: 1px solid ${color.line};
 `
 const StatusLine = styled.div`
@@ -665,7 +684,8 @@ const Pulse = styled.span`
   }
 `
 const ResultTitle = styled.h2<{ ok: boolean }>`
-  font-family: ${font.mincho}, serif;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 22px;
   margin: 0;
   color: ${(p) => (p.ok ? color.ok : color.ink)};
@@ -679,17 +699,17 @@ const EntryNo = styled.div`
   font-size: 20px;
   font-weight: 700;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 6px;
   background: rgba(46, 125, 79, 0.08);
 `
 const EntryLabel = styled.span`
-  font-family: ${font.gothic}, sans-serif;
+  font-family: ${font.body}, sans-serif;
   font-size: 11px;
   color: ${color.sub};
 `
 const Coupon = styled.div`
   display: flex;
-  border-radius: 14px;
+  border-radius: 6px;
   overflow: hidden;
   background: linear-gradient(135deg, ${color.accent}, ${color.accentDeep});
   color: #fff;
@@ -715,9 +735,9 @@ const CouponLabel = styled.div`
   opacity: 0.85;
 `
 const CouponName = styled.div`
-  font-family: ${font.mincho}, serif;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 22px;
-  font-weight: 800;
   margin: 6px 0;
 `
 const CouponMeta = styled.div`
@@ -747,7 +767,7 @@ const Panels = styled.div`
 const Panel = styled.div<{ stored?: boolean }>`
   background: ${(p) => (p.stored ? '#f1f6f2' : color.card)};
   border: 1px solid ${(p) => (p.stored ? 'rgba(46, 125, 79, 0.3)' : color.line)};
-  border-radius: 16px;
+  border-radius: 6px;
   padding: 16px;
   display: flex;
   flex-direction: column;

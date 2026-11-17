@@ -109,7 +109,7 @@ const Facts = styled.div`
 const Fact = styled.div`
   background: ${color.card};
   border: 1px solid ${color.line};
-  border-radius: 14px;
+  border-radius: 6px;
   padding: 12px 14px;
   @media (max-width: 560px) {
     padding: 10px;

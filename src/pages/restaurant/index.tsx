@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import { Meta } from '@/components/layouts/Meta'
 import { BowlVariant, RamenBowl, ShopMap } from '@/components/restaurant/illustrations'
-import { SHOP_NAME, Shell, color, font } from '@/components/restaurant/ui'
+import { SHOP_NAME, Shell, actionCss, color, font } from '@/components/restaurant/ui'
 
 const KODAWARI = [
   {
@@ -154,13 +154,13 @@ const RestaurantTop: NextPage = () => (
             <PromoKicker>開店10周年キャンペーン</PromoKicker>
             <PromoTitle>生ビール1年分が当たる！</PromoTitle>
             <PromoText>抽選で10名さま。応募フォームの入力なし、VESS Login だけで応募できます。</PromoText>
-            <PromoGo>応募する →</PromoGo>
+            <PromoGo>応募する</PromoGo>
           </Promo>
           <Promo href='/restaurant/birthday' tone='orange'>
             <PromoKicker>HAPPY BIRTHDAY</PromoKicker>
             <PromoTitle>お誕生月は味玉らーめん1杯無料</PromoTitle>
             <PromoText>提示するのは「誕生月」だけ。生年月日もお名前も、お店には渡りません。</PromoText>
-            <PromoGo>クーポンを受け取る →</PromoGo>
+            <PromoGo>クーポンを受け取る</PromoGo>
           </Promo>
         </PromoGrid>
       </Section>
@@ -257,17 +257,18 @@ const HeroCopy = styled.div`
   gap: 18px;
 `
 const HeroKicker = styled.div`
-  font-size: 12px;
-  letter-spacing: 0.24em;
+  font-family: ${font.latin}, ${font.body}, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
   color: ${color.accent};
-  font-weight: 700;
+  font-weight: 500;
 `
 const HeroTitle = styled.h1`
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
-  font-size: 56px;
-  line-height: 1.25;
-  letter-spacing: 0.08em;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
+  font-size: 64px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
   margin: 0;
   @media (max-width: 560px) {
     font-size: 40px;
@@ -282,25 +283,24 @@ const HeroText = styled.p`
 `
 const HeroActions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 28px;
   flex-wrap: wrap;
-`
-const heroBtn = `
-  padding: 13px 22px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
+  align-items: center;
 `
 const HeroPrimary = styled(Link)`
-  ${heroBtn}
+  ${actionCss}
+  min-width: 220px;
   background: ${color.accent};
   color: #fff;
 `
 const HeroGhost = styled(Link)`
-  ${heroBtn}
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  ${actionCss}
+  padding-left: 4px;
+  padding-right: 4px;
+  gap: 14px;
   color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0;
 `
 const HeroVisual = styled.div`
   position: relative;
@@ -322,8 +322,8 @@ const Stamp = styled.div`
   border: 2px solid ${color.red};
   background: rgba(184, 50, 42, 0.92);
   color: #fff;
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 14px;
   line-height: 1.3;
   display: flex;
@@ -384,23 +384,34 @@ const Section = styled.section<{ tinted?: boolean; dark?: boolean }>`
   }
 `
 const SectionHead = styled.div`
-  text-align: center;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  padding-bottom: 18px;
   margin-bottom: 36px;
+  border-bottom: 1px solid currentColor;
+  border-bottom-color: rgba(128, 112, 96, 0.35);
 `
 const SectionEn = styled.div`
-  font-size: 11px;
-  letter-spacing: 0.32em;
-  font-weight: 700;
+  font-family: ${font.latin}, sans-serif;
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: ${color.accent};
+  @media (max-width: 560px) {
+    font-size: 40px;
+  }
 `
 const SectionTitle = styled.h2`
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
-  font-size: 30px;
-  letter-spacing: 0.08em;
-  margin: 8px 0 0;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  margin: 0;
   @media (max-width: 560px) {
-    font-size: 24px;
+    font-size: 18px;
   }
 `
 const SectionText = styled.p<{ light?: boolean }>`
@@ -408,9 +419,6 @@ const SectionText = styled.p<{ light?: boolean }>`
   line-height: 1.95;
   margin: 0;
   color: ${(p) => (p.light ? 'rgba(255,255,255,0.8)' : color.sub)};
-  && {
-    ${(p) => (p.light ? 'text-align: center; max-width: 680px;' : '')}
-  }
 `
 const KodawariGrid = styled.div`
   display: grid;
@@ -423,21 +431,22 @@ const KodawariGrid = styled.div`
 const KodawariCard = styled.div`
   background: ${color.card};
   border: 1px solid ${color.line};
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 `
 const KodawariNo = styled.div`
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 40px;
   color: ${color.red};
   line-height: 1;
 `
 const KodawariTitle = styled.h3`
-  font-family: ${font.mincho}, serif;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 19px;
   margin: 0;
 `
@@ -454,7 +463,7 @@ const MenuGrid = styled.div`
 `
 const MenuCard = styled.article`
   background: ${color.card};
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 18px 16px 20px;
   display: flex;
   flex-direction: column;
@@ -479,18 +488,20 @@ const MenuBadge = styled.span`
   font-weight: 700;
   color: #fff;
   background: ${color.red};
-  padding: 3px 9px;
-  border-radius: 999px;
+  padding: 3px 8px;
+  border-radius: 2px;
 `
 const MenuName = styled.h3`
-  font-family: ${font.mincho}, serif;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 16px;
   margin: 0;
   line-height: 1.45;
 `
 const MenuPrice = styled.div`
-  font-size: 20px;
-  font-weight: 700;
+  font-family: ${font.latin}, sans-serif;
+  font-size: 26px;
+  font-weight: 500;
   color: ${color.accentDeep};
   span {
     font-size: 11px;
@@ -508,7 +519,7 @@ const MenuText = styled.p`
 const Sides = styled.div`
   margin-top: 28px;
   background: ${color.card};
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 20px 24px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -539,7 +550,7 @@ const PromoGrid = styled.div`
 const Promo = styled(Link)<{ tone: 'gold' | 'orange' }>`
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 6px;
   padding: 30px 26px;
   display: flex;
   flex-direction: column;
@@ -572,8 +583,8 @@ const PromoKicker = styled.div`
   opacity: 0.85;
 `
 const PromoTitle = styled.div`
-  font-family: ${font.mincho}, serif;
-  font-weight: 800;
+  font-family: ${font.display}, sans-serif;
+  font-weight: 900;
   font-size: 26px;
   line-height: 1.4;
 `
@@ -584,9 +595,22 @@ const PromoText = styled.p`
   opacity: 0.9;
 `
 const PromoGo = styled.div`
-  margin-top: 6px;
+  margin-top: 10px;
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 12px;
   font-weight: 700;
   font-size: 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid currentColor;
+  &::after {
+    content: '→';
+    font-family: ${font.latin}, sans-serif;
+    transition: transform 0.2s;
+  }
+  a:hover > &::after {
+    transform: translateX(4px);
+  }
 `
 const PrivacyGrid = styled.div`
   margin-top: 36px;
@@ -599,14 +623,14 @@ const PrivacyGrid = styled.div`
 `
 const PrivacyItem = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 24px;
   background: rgba(255, 255, 255, 0.03);
 `
 const PrivacyNum = styled.div`
-  font-family: ${font.mincho}, serif;
-  font-size: 28px;
-  font-weight: 800;
+  font-family: ${font.latin}, sans-serif;
+  font-size: 34px;
+  font-weight: 500;
   color: ${color.accent};
 `
 const PrivacyTitle = styled.h3`
@@ -623,7 +647,6 @@ const PrivacyNote = styled.p`
   margin-top: 28px;
   font-size: 12px;
   line-height: 1.8;
-  text-align: center;
   color: rgba(255, 255, 255, 0.6);
   a {
     color: ${color.accent};
@@ -642,7 +665,7 @@ const ShopGrid = styled.div`
 const ShopTable = styled.dl`
   margin: 0;
   background: ${color.card};
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 8px 24px;
   border: 1px solid ${color.line};
 `
@@ -666,7 +689,7 @@ const ShopDd = styled.dd`
   line-height: 1.7;
 `
 const MapBox = styled.div`
-  border-radius: 18px;
+  border-radius: 6px;
   overflow: hidden;
   border: 1px solid ${color.line};
   svg {
