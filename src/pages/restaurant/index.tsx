@@ -62,7 +62,7 @@ const RestaurantTop: NextPage = () => (
       <Hero>
         <HeroInner>
           <HeroCopy>
-            <HeroKicker>SINCE 2016 ／ 渋谷・宇田川町</HeroKicker>
+            <HeroKicker>渋谷・宇田川町 濃厚豚骨醤油</HeroKicker>
             <HeroTitle>
               一杯に、
               <br />
@@ -257,11 +257,11 @@ const HeroCopy = styled.div`
   gap: 18px;
 `
 const HeroKicker = styled.div`
-  font-family: ${font.latin}, ${font.body}, sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.2em;
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.12em;
   color: ${color.accent};
-  font-weight: 500;
 `
 const HeroTitle = styled.h1`
   font-family: ${font.display}, sans-serif;
@@ -405,10 +405,10 @@ const SectionEn = styled.div`
   }
 `
 const SectionTitle = styled.h2`
-  font-family: ${font.display}, sans-serif;
-  font-weight: 900;
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
   font-size: 22px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   margin: 0;
   @media (max-width: 560px) {
     font-size: 18px;
@@ -445,9 +445,10 @@ const KodawariNo = styled.div`
   line-height: 1;
 `
 const KodawariTitle = styled.h3`
-  font-family: ${font.display}, sans-serif;
-  font-weight: 900;
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
   font-size: 19px;
+  letter-spacing: 0.04em;
   margin: 0;
 `
 const MenuGrid = styled.div`
@@ -492,8 +493,8 @@ const MenuBadge = styled.span`
   border-radius: 2px;
 `
 const MenuName = styled.h3`
-  font-family: ${font.display}, sans-serif;
-  font-weight: 900;
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
   font-size: 16px;
   margin: 0;
   line-height: 1.45;
@@ -577,9 +578,10 @@ const Promo = styled(Link)<{ tone: 'gold' | 'orange' }>`
   }
 `
 const PromoKicker = styled.div`
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   opacity: 0.85;
 `
 const PromoTitle = styled.div`

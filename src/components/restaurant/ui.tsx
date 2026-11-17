@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Noto_Sans_JP, Oswald } from 'next/font/google'
+import { Noto_Sans_JP, Noto_Serif_JP, Oswald } from 'next/font/google'
 import Link from 'next/link'
 import { FC, ReactNode } from 'react'
 import { QRCode } from '@/components/sticker/QRCode'
@@ -9,12 +9,14 @@ import type { ClaimValue, DemoResult } from '@/lib/restaurant/types'
 export const SHOP_NAME = '麺処 宇田川'
 
 const body = Noto_Sans_JP({ weight: ['400', '500', '700', '900'], subsets: ['latin'], display: 'swap', preload: false })
+const serif = Noto_Serif_JP({ weight: '600', subsets: ['latin'], display: 'swap', preload: false })
 const latin = Oswald({ weight: ['500', '600'], subsets: ['latin'], display: 'swap' })
 
 export const font = {
   display: body.style.fontFamily,
   body: body.style.fontFamily,
   latin: latin.style.fontFamily,
+  serif: serif.style.fontFamily,
 }
 
 export const color = {
@@ -337,16 +339,16 @@ const LogoText = styled.span`
   flex-direction: column;
   font-family: ${font.display}, sans-serif;
   font-weight: 900;
-  font-size: 20px;
-  letter-spacing: 0.12em;
+  font-size: 21px;
+  letter-spacing: 0.1em;
   line-height: 1.2;
 `
 const LogoSub = styled.span`
-  font-family: ${font.body}, sans-serif;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: ${color.sub};
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: ${color.red};
 `
 const Nav = styled.nav`
   display: flex;
@@ -460,11 +462,10 @@ const HeroBand = styled.div<{ tone: 'night' | 'gold' | 'orange' }>`
   }
 `
 const HeroKicker = styled.div`
-  font-family: ${font.latin}, ${font.body}, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  opacity: 0.85;
+  font-family: ${font.serif}, serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.12em;
 `
 const HeroTitle = styled.h1`
   font-family: ${font.display}, sans-serif;
