@@ -39,6 +39,7 @@ const NAV = [
   { href: '/restaurant#menu', label: 'お品書き' },
   { href: '/restaurant#news', label: 'キャンペーン' },
   { href: '/restaurant#shop', label: '店舗情報' },
+  { href: '/restaurant/member', label: '会員ページ' },
 ]
 
 export const Shell: FC<{ children: ReactNode; back?: boolean; bare?: boolean }> = ({
@@ -91,6 +92,8 @@ export const Shell: FC<{ children: ReactNode; back?: boolean; bare?: boolean }> 
         </FooterBrand>
         <FooterLinks>
           <FooterLink href='/restaurant#menu'>お品書き</FooterLink>
+          <FooterLink href='/restaurant/register'>会員登録</FooterLink>
+          <FooterLink href='/restaurant/member'>会員ページ</FooterLink>
           <FooterLink href='/restaurant/campaign'>10周年キャンペーン</FooterLink>
           <FooterLink href='/restaurant/birthday'>誕生日クーポン</FooterLink>
           <FooterLink href='/restaurant#privacy'>個人情報の取り扱い</FooterLink>
@@ -118,9 +121,12 @@ export const PageHero: FC<{ kicker: string; title: string; text?: string; tone?:
   </HeroBand>
 )
 
-export const StepBar: FC<{ current: 0 | 1 | 2 }> = ({ current }) => (
+export const StepBar: FC<{ current: 0 | 1 | 2; labels?: string[] }> = ({
+  current,
+  labels = ['内容の確認', '提示', '完了'],
+}) => (
   <Steps>
-    {['内容の確認', '提示', '完了'].map((s, i) => (
+    {labels.map((s, i) => (
       <StepItem key={s} active={i <= current}>
         <StepDot active={i <= current}>{i + 1}</StepDot>
         {s}
@@ -183,6 +189,9 @@ export const PresentPanel: FC<{ uri: string | null; status: string; requested: s
       <Pulse />
       VESS Wallet からの提示を待っています {status && `(${status})`}
     </StatusLine>
+    <Small>
+      会員証をお持ちでない方は <Link href='/restaurant/register'>会員登録</Link> から受け取ってください。
+    </Small>
   </Card>
 )
 
@@ -256,6 +265,41 @@ export const ResultView: FC<{ result: DemoResult; labels: Record<string, string>
       <Secondary href='/restaurant/dashboard'>集計ダッシュボードを見る</Secondary>
     </Actions>
   </>
+)
+
+type PanelSpec = { title: string; note: string; rows: Record<string, string | number> | null }
+
+// 「受け取った／渡した値」と「お店が保存した値」を並べる
+export const SplitPanels: FC<{ left: PanelSpec; right: PanelSpec }> = ({ left, right }) => (
+  <Panels>
+    {[left, right].map((p, i) => (
+      <Panel key={p.title} stored={i === 1}>
+        <PanelTitle>{p.title}</PanelTitle>
+        <PanelNote>{p.note}</PanelNote>
+        {p.rows ? (
+          <Dl>
+            {Object.entries(p.rows).map(([k, v]) => (
+              <Row key={k}>
+                <Dt>{k}</Dt>
+                <Dd>{v}</Dd>
+              </Row>
+            ))}
+          </Dl>
+        ) : (
+          <Body>なし</Body>
+        )}
+      </Panel>
+    ))}
+  </Panels>
+)
+
+export const QrBlock: FC<{ uri: string; note: string }> = ({ uri, note }) => (
+  <QrWrap>
+    <QrBox>
+      <QRCode url={uri} width={200} />
+    </QrBox>
+    <Small>{note}</Small>
+  </QrWrap>
 )
 
 const Page = styled.div`

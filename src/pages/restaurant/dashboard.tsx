@@ -71,13 +71,17 @@ const DashboardPage: NextPage = () => {
       <Shell>
         <Title>集計ダッシュボード</Title>
         <Lead>
-          お店に残っているのは、この集計値だけです。誰が応募したか、メールアドレスや誕生日はデータベースにありません。
+          お店に残っているのは、会員番号ごとの利用履歴とこの集計値だけです。会員の氏名・メールアドレス・誕生日はデータベースにありません。
         </Lead>
         {error && <Err>{error}</Err>}
 
         {stats && (
           <>
             <Kpis>
+              <Kpi>
+                <KpiLabel>会員数</KpiLabel>
+                <KpiValue>{stats.members.toLocaleString()}</KpiValue>
+              </Kpi>
               <Kpi>
                 <KpiLabel>キャンペーン応募数</KpiLabel>
                 <KpiValue>{total.toLocaleString()}</KpiValue>
@@ -144,10 +148,10 @@ const DashboardPage: NextPage = () => {
 
 const Kpis = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  @media (max-width: 560px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr 1fr;
   }
 `
 const Kpi = styled.div`

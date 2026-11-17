@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import { Meta } from '@/components/layouts/Meta'
 import { RamenBowl } from '@/components/restaurant/illustrations'
 import {
@@ -19,7 +20,7 @@ import {
 } from '@/components/restaurant/ui'
 import { useVpFlow } from '@/components/restaurant/useVpFlow'
 
-const LABELS: Record<string, string> = { birth_month: '誕生月' }
+const LABELS: Record<string, string> = { member_no: '会員番号', birth_month: '誕生月' }
 
 const BirthdayPage: NextPage = () => {
   const { phase, authReqUri, status, result, error, start, reset } = useVpFlow('birthday')
@@ -33,7 +34,7 @@ const BirthdayPage: NextPage = () => {
           tone='orange'
           kicker='HAPPY BIRTHDAY'
           title='お誕生月は味玉らーめん1杯無料'
-          text='お誕生月にご来店のお客さまに、味玉らーめんを1杯サービスします。会員登録は必要ありません。'
+          text='お誕生月にご来店の会員さまに、味玉らーめんを1杯サービスします。'
         />
 
         <StepBar current={step} />
@@ -50,12 +51,15 @@ const BirthdayPage: NextPage = () => {
               </Offer>
             </Card>
             <Card>
-              <CardTitle>お店が確認するのは「誕生月」だけ</CardTitle>
+              <CardTitle>お店が確認するのは「会員番号」と「誕生月」だけ</CardTitle>
               <Lead>
-                生年月日・年齢・お名前は提示されません。今月がお誕生月なら、その場でクーポンを表示します。
+                生年月日・年齢・お名前は提示されません。今月がお誕生月なら、その場でクーポンを表示します。会員番号は、同じ月に2回受け取っていないかの確認に使います。
               </Lead>
             </Card>
-            <LoginButton onClick={start}>VESS Login で誕生月を提示する</LoginButton>
+            <LoginButton onClick={start}>VESS Login で会員証を提示する</LoginButton>
+            <Small style={{ textAlign: 'center' }}>
+              会員証をお持ちでない方は <Link href='/restaurant/register'>会員登録</Link> へ
+            </Small>
             {error && <Err>{error}</Err>}
           </>
         )}

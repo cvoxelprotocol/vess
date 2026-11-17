@@ -1,4 +1,4 @@
-// デモ用のプロセス内メモリストア。個人を特定する値は持たず、集計値と応募番号だけを保存する。
+// デモ用のプロセス内メモリストア。個人を特定する値は持たず、集計値・応募番号・会員番号ごとの履歴だけを保存する。
 // Vercel ではインスタンスごとに別の値になり、再起動で初期値に戻る（本番は永続ストアへ）。
 
 export const AGE_BANDS = ['20代', '30代', '40代', '50代', '60代以上']
@@ -11,6 +11,18 @@ type Store = {
   coupons: Record<number, number>
   // correlationId -> 保存結果（二重処理防止。PII は含まない）
   processed: Map<string, unknown>
+  // 会員番号 -> 会員の記録（氏名などは持たない）
+  members: Map<string, MemberRecord>
+  // このデモより前からいる会員数（集計表示用）
+  memberBase: number
+}
+
+export type MemberRecord = {
+  // このインスタンスで登録を受け付けていない場合は null
+  joinedAt: string | null
+  history: { at: string; label: string }[]
+  campaignEntryNo?: string
+  couponMonths: number[]
 }
 
 const SEED: Record<string, number[]> = {
@@ -34,6 +46,8 @@ function seed(): Store {
     nextEntryNo: 1288,
     coupons: { 9: 37, 10: 44, 11: 18 },
     processed: new Map(),
+    members: new Map(),
+    memberBase: 1204,
   }
 }
 
@@ -55,10 +69,33 @@ export function addCoupon(month: number): number {
   return store.coupons[month]
 }
 
+const now = () => new Date().toISOString()
+
+export function registerMember(memberNo: string): MemberRecord {
+  const rec: MemberRecord = { joinedAt: now(), history: [{ at: now(), label: '会員登録（会員証を発行）' }], couponMonths: [] }
+  store.members.set(memberNo, rec)
+  return rec
+}
+
+// 会員証の署名を検証済みの会員番号について記録を返す。記録がなければ（別インスタンスで登録など）作る
+export function memberRecord(memberNo: string): MemberRecord {
+  let rec = store.members.get(memberNo)
+  if (!rec) {
+    rec = { joinedAt: null, history: [], couponMonths: [] }
+    store.members.set(memberNo, rec)
+  }
+  return rec
+}
+
+export function addHistory(rec: MemberRecord, label: string) {
+  rec.history.push({ at: now(), label })
+}
+
 export function snapshot() {
   return {
     ageBands: AGE_BANDS,
     entries: store.entries,
     coupons: store.coupons,
+    members: store.memberBase + store.members.size,
   }
 }

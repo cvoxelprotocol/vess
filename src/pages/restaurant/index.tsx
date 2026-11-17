@@ -50,9 +50,9 @@ const SIDES = [
 ]
 
 const PRIVACY = [
-  { t: 'お客さまが持つ', d: '氏名・生年月日・住所などは、お客さまのスマートフォンの VESS Wallet に保存されています。' },
+  { t: 'お客さまが持つ', d: '会員登録の内容は会員証に書き込み、お客さまのスマートフォンの VESS Wallet にお渡しします。' },
   { t: '必要な項目だけ受け取る', d: 'お店は用途ごとに必要な項目だけを依頼し、お客さまは内容を確認してから提示します。' },
-  { t: '使ったら集計だけ残す', d: '受け取った値は応募の判定やご連絡に使い、お店の記録には集計値だけを残します。' },
+  { t: '残すのは会員番号と履歴', d: '受け取った値は応募の判定やご連絡に使い、お店の記録には会員番号・ご利用履歴・集計値だけを残します。' },
 ]
 
 const RestaurantTop: NextPage = () => (
@@ -73,7 +73,7 @@ const RestaurantTop: NextPage = () => (
             </HeroText>
             <HeroActions>
               <HeroPrimary href='#menu'>お品書きを見る</HeroPrimary>
-              <HeroGhost href='/restaurant/campaign'>10周年キャンペーン</HeroGhost>
+              <HeroGhost href='/restaurant/register'>会員登録</HeroGhost>
             </HeroActions>
           </HeroCopy>
           <HeroVisual>
@@ -150,16 +150,24 @@ const RestaurantTop: NextPage = () => (
           <SectionTitle>キャンペーン・特典</SectionTitle>
         </SectionHead>
         <PromoGrid>
+          <Promo href='/restaurant/register' tone='member' style={{ gridColumn: '1 / -1' }}>
+            <PromoKicker>MEMBERSHIP</PromoKicker>
+            <PromoTitle>宇田川 会員証、はじめました</PromoTitle>
+            <PromoText>
+              一度の登録で会員証が VESS Wallet に届きます。ID もパスワードも不要。会員証を見せるだけでログインでき、キャンペーンや誕生日クーポンもご利用いただけます。
+            </PromoText>
+            <PromoGo>会員登録する</PromoGo>
+          </Promo>
           <Promo href='/restaurant/campaign' tone='gold'>
             <PromoKicker>開店10周年キャンペーン</PromoKicker>
             <PromoTitle>生ビール1年分が当たる！</PromoTitle>
-            <PromoText>抽選で10名さま。応募フォームの入力なし、VESS Login だけで応募できます。</PromoText>
+            <PromoText>抽選で10名さま。応募フォームの入力なし、会員証を見せるだけで応募できます。</PromoText>
             <PromoGo>応募する</PromoGo>
           </Promo>
           <Promo href='/restaurant/birthday' tone='orange'>
             <PromoKicker>HAPPY BIRTHDAY</PromoKicker>
             <PromoTitle>お誕生月は味玉らーめん1杯無料</PromoTitle>
-            <PromoText>提示するのは「誕生月」だけ。生年月日もお名前も、お店には渡りません。</PromoText>
+            <PromoText>提示するのは会員番号と「誕生月」だけ。生年月日もお名前も、お店には渡りません。</PromoText>
             <PromoGo>クーポンを受け取る</PromoGo>
           </Promo>
         </PromoGrid>
@@ -171,7 +179,7 @@ const RestaurantTop: NextPage = () => (
           <SectionTitle>個人情報を、お預かりしません</SectionTitle>
         </SectionHead>
         <SectionText light>
-          {SHOP_NAME}は、お客さまの個人情報をお店のデータベースに保存しません。キャンペーンや誕生日クーポンに必要な情報は、その都度
+          {SHOP_NAME}は、会員さまの個人情報をお店のデータベースに保存しません。ログインやキャンペーンに必要な情報は、その都度会員証から
           VESS Login で提示していただきます。
         </SectionText>
         <PrivacyGrid>
@@ -184,7 +192,7 @@ const RestaurantTop: NextPage = () => (
           ))}
         </PrivacyGrid>
         <PrivacyNote>
-          体験には、VESS Wallet に「個人情報」の証明書を登録しておく必要があります。お店の方は
+          体験するには、まず<Link href='/restaurant/register'>会員登録</Link>で会員証を VESS Wallet に受け取ってください。お店の方は
           <Link href='/restaurant/dashboard'>集計ダッシュボード</Link>
           で、お店に残る情報を確認できます。
         </PrivacyNote>
@@ -548,7 +556,7 @@ const PromoGrid = styled.div`
     grid-template-columns: 1fr;
   }
 `
-const Promo = styled(Link)<{ tone: 'gold' | 'orange' }>`
+const Promo = styled(Link)<{ tone: 'gold' | 'orange' | 'member' }>`
   position: relative;
   overflow: hidden;
   border-radius: 6px;
@@ -561,7 +569,9 @@ const Promo = styled(Link)<{ tone: 'gold' | 'orange' }>`
   background: ${(p) =>
     p.tone === 'gold'
       ? 'linear-gradient(135deg, #ffd66b, #f4a93a)'
-      : `linear-gradient(135deg, ${color.accent}, #9d420a)`};
+      : p.tone === 'member'
+        ? 'linear-gradient(135deg, #2b1a12, #5a3420)'
+        : `linear-gradient(135deg, ${color.accent}, #9d420a)`};
   transition: transform 0.15s;
   &:hover {
     transform: translateY(-2px);

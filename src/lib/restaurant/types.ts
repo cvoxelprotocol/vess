@@ -19,4 +19,13 @@ export type Stats = {
   ageBands: string[]
   entries: Record<string, Record<string, number>>
   coupons: Record<number, number>
+  members: number
+}
+
+export type MemberResult = {
+  memberNo: string
+  joinedAt: string | null
+  history: { at: string; label: string }[]
+  // 会員番号に紐づけてお店が保存している値（会員番号・日時・利用履歴のみ）
+  stored: Record<string, string | number>
 }

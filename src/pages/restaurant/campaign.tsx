@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import { Meta } from '@/components/layouts/Meta'
 import {
   Card,
@@ -19,6 +20,7 @@ import {
 import { useVpFlow } from '@/components/restaurant/useVpFlow'
 
 const LABELS: Record<string, string> = {
+  member_no: '会員番号',
   age_over_20: '20歳以上',
   age_band: '年代',
   prefecture: '都道府県',
@@ -26,6 +28,7 @@ const LABELS: Record<string, string> = {
 }
 
 const PURPOSES = [
+  ['会員番号', '応募が1人1回までかの確認'],
   ['20歳以上か', '応募資格の確認'],
   ['年代・都道府県', '応募数の集計（個人とは結び付けません）'],
   ['メールアドレス', '受付確認と当選のご連絡（保存しません）'],
@@ -65,7 +68,7 @@ const CampaignPage: NextPage = () => {
             <Card>
               <CardTitle>応募フォームの入力はありません</CardTitle>
               <Lead>
-                VESS Login で次の4項目を提示するだけで応募できます。生年月日やお名前はお店に渡りません。
+                会員証から次の5項目を提示するだけで応募できます。生年月日やお名前はお店に渡りません。
               </Lead>
               <Purposes>
                 {PURPOSES.map(([k, v]) => (
@@ -77,7 +80,10 @@ const CampaignPage: NextPage = () => {
               </Purposes>
             </Card>
             <LoginButton onClick={start}>VESS Login で応募する</LoginButton>
-            <Small style={{ textAlign: 'center' }}>当選はメールでご連絡します。応募は1人1回までです。</Small>
+            <Small style={{ textAlign: 'center' }}>
+              当選はメールでご連絡します。応募は会員お一人さま1回までです。会員証をお持ちでない方は{' '}
+              <Link href='/restaurant/register'>会員登録</Link> へ
+            </Small>
             {error && <Err>{error}</Err>}
           </>
         )}

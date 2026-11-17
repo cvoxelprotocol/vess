@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { DemoResult } from '@/lib/restaurant/types'
+import type { DemoResult, MemberResult } from '@/lib/restaurant/types'
 
-type Kind = 'campaign' | 'birthday'
+type Kind = 'campaign' | 'birthday' | 'login'
+type ResultOf<K extends Kind> = K extends 'login' ? MemberResult : DemoResult
 export type Phase = 'idle' | 'present' | 'processing' | 'done'
 
 const RESULT_PATH: Record<Kind, string> = {
   campaign: '/api/restaurant/campaign-entry',
   birthday: '/api/restaurant/birthday-coupon',
+  login: '/api/restaurant/member-login',
 }
 
 const post = async (url: string, body: unknown) => {
@@ -19,13 +21,13 @@ const post = async (url: string, body: unknown) => {
 }
 
 // VP 要求の作成 → 検証待ちポーリング → サーバでの結果処理までを扱う
-export function useVpFlow(kind: Kind) {
+export function useVpFlow<K extends Kind>(kind: K) {
   const [phase, setPhase] = useState<Phase>('idle')
   const [authReqUri, setAuthReqUri] = useState<string | null>(null)
   const [correlationId, setCorrelationId] = useState<string | null>(null)
   const [responseCode, setResponseCode] = useState<string | null>(null)
   const [status, setStatus] = useState('')
-  const [result, setResult] = useState<DemoResult | null>(null)
+  const [result, setResult] = useState<ResultOf<K> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const busy = useRef(false)
 
@@ -79,8 +81,8 @@ export function useVpFlow(kind: Kind) {
           setPhase('processing')
           // 開示値はクライアントで扱わず、サーバが correlationId から検証して取り出す
           const r = await post(RESULT_PATH[kind], { correlationId, responseCode })
-          if (r.ok && r.json.title) {
-            setResult(r.json as DemoResult)
+          if (r.ok && (r.json.title || r.json.memberNo)) {
+            setResult(r.json as ResultOf<K>)
             setPhase('done')
           } else {
             setError('提示内容を確認できませんでした。')
